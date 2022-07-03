@@ -1,0 +1,335 @@
+<!-- H5的文档声明 -->
+<!-- 不写文档声明会让浏览器进入 怪异模式(区别于标准模式) -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<!--# <meta>
+		- 细节参见 http://www.w3school.com.cn/tags/tag_meta.asp
+		- 用来设置字符集 charset="编码"
+			- 编码如 UTF-8 GBK ...
+			- 字符集 细节参见 https://blog.csdn.net/qq_42068856/article/details/83792174
+		- 用来设置网页的关键字 name="keywords" content="关键字"
+		- 用来指定网页的描述 name="description" content="描述"
+		- 搜素引擎检索 关键字和描述，但不会影响在搜索中的排名
+		- 用来请求的重定向 http-equiv="refresh" content="几秒;url=路径"
+			- 请求的重定向 简单来说就是 几秒之后跳转另一个网址
+	 -->
+	<meta charset="UTF-8">
+	<title>尚硅谷前端HTML5视频_HTML</title>
+	<meta name="keywords" content="HTML5,Javascript,前端,java" />
+	<meta name="description" content="发布h5,js等前端相关的信息" />
+	<!-- <meta http-equiv="refresh" content="5;url=http://www.baidu.com"> -->
+</head>
+
+<body>
+	<div>
+		<!--# 前言知识
+			- W3C 定义网络标准的组织
+			- XML 可扩展标记语言
+			- WHATWG 成立的原因是W3C意图放弃HTML转为XHTML
+			- 元素==标签 
+		 -->
+		<h1>这是我的尚硅谷前端HTML基础</h1>
+		<hr />
+		<!--# 实体(转义字符串) 
+			- 细节参见 http://www.w3school.com.cn/html/html_entities.asp
+			- 由于<和>特殊字符不能直接使用，故需要 实体
+			- 举例如下	
+			    <     &lt;
+				>     &gt;
+				空格  &nbsp; 
+				版权符号 &copy;
+		 -->
+		a&lt;b&nbsp;&nbsp;&nbsp;版权&copy;
+		<hr />
+		<!--# <img>
+			- src="图片路径" 
+			- alt="图片描述"  
+				- 图片找不到时候显示的文字
+				- 搜索引擎 会根据alt的文字来识别不同的图片
+				- 不写alt 搜索引擎不收录
+			- width="宽度px"
+			- height="高度px"
+		 -->
+		<img src="20150727120638_nFBQ4.jpeg" alt="图片描述" width="100px">
+		<img src="11.jpeg" alt="图片描述">
+		<hr />
+		<!--# 相对路径和绝对路径
+			- 绝对路径  E:\sublime_workspace\Html_demo\20150727120638_nFBQ4.jpeg
+			- 相对路径  20150727120638_nFBQ4.jpeg
+			- ../ 返回上一级目录
+			- ./  当前路径
+		 -->
+		<!--# 图片的格式
+			- JPEG 
+				- 支持的颜色多，图片可以压缩(体积小)，不支持透明
+				- 用于保存照片
+			- GIF
+				- 支持的颜色少，只支持简单的透明，支持动态图
+				- 图片颜色单一或者动态图
+			- PNG
+				- 支持的颜色多，支持复杂的透明
+				- 带透明的图片
+			# 图片使用原则
+			- 效果差不多 用小的
+		 -->
+		<!--# XHTML语法规范
+			- HTML标签 不区分大小写，但一般小写
+			- HTML注释 不能嵌套
+			- HTML标签 必须结构完整
+				- 如<p></p>
+				- 尽管浏览器尽力正确解析页面，但可能会修正错误
+				- 浏览器为了占有更多的市场份额，所以会自动修正错误
+			- HTML标签 不能交叉嵌套
+			- HTML标签属性 必须有值，且值必须加引号" "或者' '
+		 -->
+	</div>
+	<div>
+		<!--# <iframe>
+			- 使用内联框架可以引入外部的页面
+			- 属性
+				- src 指向外部页面的路径，可以使用相对路径
+				- width
+				- height
+				- name 给内联框架一个名字
+			- 现实开发中不推荐使用内联框架，因为内容不会被搜索引擎检索到
+		 -->
+		<iframe src="demo02.html" name="tom"></iframe>
+		<hr>
+		<!--# <a>
+			- 属性
+				- href 跳转到目标地址，可以写一个相对路径也可以写一个完整路径
+						- "#" 除了占位，还可以回到当前页面的顶部
+						- mailto:邮箱地址(用的很少，现在用二维码)	 
+				- target 规定在何处打开链接文档
+					- _blank 新窗口打开
+					- _self 在当窗口中打开(默认)
+					- 可以设置一个内联框架的name属性值
+		 -->
+		<a href="http://www.baidu.com" target="_blank">完整路径&nbsp;百度</a>
+		<a href="demo03.html" target="tom">相对路径&nbsp;demo03.html</a>
+		<!--# <center>
+			- 标签中的内容会在页面居中显示
+			- 不推荐使用
+		 -->
+		<center>
+			<p>我是一个p标签</p>
+		</center>
+		<!--# HTML全局属性id与锚点定位
+			- 标签的唯一标识,不能重复
+			- 锚点定位见 exer-blog.html
+				- <a href="#zJL">去周杰伦</a>
+				- <a href="" id="zJL">周杰伦</a>
+		 -->
+	</div>
+	<hr>
+
+	<div>
+		<!--# 块元素和内联元素
+			- 块元素 
+				- 独占一整行，无论他的内容有多少
+				- <h1> <h2>...
+				- <p>
+				- <br> <hr>
+				- <div>
+			- 内联元素(行内元素)
+				- 只占用自身大小的元素，不会占用一行
+				- <a> 
+				- <img> 
+				- <iframe> 
+				- <span>
+		 -->
+		<!--# <div>和<span>
+			- <div>
+				- 块元素
+				- 无任何语义，主要用来页面布局
+			- <span>	
+				- 内联元素
+				- 专门用来选中文字，来为文字设置样式
+			- 注意事项
+				- 一般用 块元素(如<div>) 包裹 内联元素(如<span>)
+				- <a>元素 可以包含 块元素 和 内联元素，除了他本身
+				- <p>元素 不可以包含 块元素
+		 -->
+		<!--# <em>和<i> <strong>和<b> <small>和<big> <cite> <q> <blockquote> <sub>和<sup> <ins>和<delete> <pre> <code>
+			- <em>     表示语气上的强调 斜体显示
+			- <i> 斜体显示
+			- <strong> 表示内容上的强调 加粗显示
+			- <b> 加粗显示 
+			- <small>  表示细则一类的内容 元素中的内容会比他的父元素中的内容要小
+			- <big> 
+			- <cite> 表示引用的内容 斜体显示 
+			- <q> 短引用 浏览器会在两边加引号
+			- <blockquote> 长引用(块引用)
+			- <sub> 下标
+			- <sup> 上标
+			- <del> 表示删除的内容 删除线
+			- <ins> 表示插入的内容 下划线 
+			- <pre> 预格式标签  会将代码中的格式保留，不会忽略多个空格
+			- <code> 表示代码 只是语义 
+		 -->
+		<!--# 有序列表<ul>和无序列表<ol>
+			- <ul>属性type 
+				- 可以指定序号的类型
+				- circle disc(默认 实心圆) space
+				- 不赞成使用
+			- <ol>属性type
+				- 可以指定序号的类型
+				- 1(默认) a/A  I
+			- <ul>和<li>都是块元素
+			- 列表之间是可以互相嵌套的
+		 -->
+		 <ul type="circle">
+			 <li>123</li>
+			 <li>456</li>
+			 <li>789</li>
+		 </ul>
+		<!--# <dl>定义列表
+			- 用来对一些词汇和内容进行定义
+			- 子标签<dt> <dd>
+		 -->
+		<dl>
+			<dt>武松</dt>
+			<dd>打虎英雄，强无敌</dd>
+			<dd>打死西门庆，强无敌</dd>
+			<dt>武大</dt>
+			<dd>武汉大学不拉不拉</dd>
+		</dl>
+		<!--# 表格<table>
+			- 原始人才用表格布局
+			- <table>是一个块元素
+			- <tr> <td> <th>表头
+			- colspan="" 横向合并单元格
+			- rowspan="" 纵向合并单元格
+		 -->
+		<table border="1">
+			<tr>
+				<th>A1</th>
+				<th>A2</th>
+				<th rowspan="2">A3</th>
+				<th>A4</th>
+			</tr>
+			<tr>
+				<td>123</td>
+				<td>123</td>
+
+				<td>123</td>
+			</tr>
+			<tr>
+				<td>123</td>
+				<td>123</td>
+				<td colspan="2">123</td>
+
+			</tr>
+		</table>
+		<!--# 长表格
+			- 表头thead，表格的主体tbody，表格底部tfoot
+		-->
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>我是表头1</th>
+					<th>我是表头2</th>
+					<th>我是表头3</th>
+					<th>我是表头4</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>我是主体1</td>
+					<td>我是主体2</td>
+					<td>我是主体3</td>
+					<td>我是主体4</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+
+				</tr>
+			</tfoot>
+		</table>
+		<!--# 表单<form> 看实例如下
+			- form 必须制定一个action属性，该属性指向的是一个服务器的地址
+			- <input type="类型" name="提交内容的名字" value="提交的值" id="为label设置的">
+			- 用户填写的信息会在 url地址的后边以查询字符串
+				- ?属性名=属性值&属性名=属性值&属性名=属性值&属性名=属性值
+				- ?username=dby321&password=19970522&gender=male&hobby=aaa&ny=tghlx
+		 -->
+		<form action="target.html">
+			<!-- fieldset用于 表单分组 类似于optgroup用于 下拉列表分组  -->
+			<fieldset>
+				<!-- legend用于指定 表单分组 的组名 -->
+				<legend>用户信息</legend>
+				<!-- label的for 对应 input的id -->
+				<label for="um">用户名</label>
+				<!-- value="" 默认显示文字 HTML5有更好的显示办法 -->
+				<input id="um" type="text" name="username" value="请输入用户名"><br><br>
+				<label for="mm">密码</label>
+				<input id="mm" type="password" name="password"><br><br>
+				性别
+				<input id="male" type="radio" name="gender" value="male" checked="checked"><label for="male">男</label>
+				<input id="female" type="radio" name="gender" value="female"><label for="female">女</label><br><br>
+			</fieldset>
+			<fieldset>
+				<legend>用户爱好</legend>
+				爱好
+				<input type="checkbox" name="hobby" value="zq">足球
+				<input type="checkbox" name="hobby" value="lq">篮球
+				<input type="checkbox" name="hobby" value="aaa">啊啊啊
+				<!--  checked="checked" 多选框默认选中 -->
+				<input type="checkbox" name="hobby" value="np" checked="checked">女票<br><br>
+				你喜欢的明星
+				<!-- multiple="multiple" 设置下拉列表能否多选 -->
+				<select name="ny" multiple="multiple">
+					<!-- <optgroup> 设置选项分组 -->
+					<optgroup label="我女票">
+						<option value="lmx" selected="selected">李铭霞小可爱</option>
+					</optgroup>
+					<optgroup label="其他">
+						<option value="dqwj">大桥未久</option>
+						<option value="tghlx">桃谷绘里香</option>
+						<!--  selected="selected" 下拉菜单默认选中 -->
+						<option value="syrs">上原瑞穗</option>
+						<option value="fly">□立○</option>
+					</optgroup>
+				</select><br><br>
+				<label for="zwjs">自我介绍</label> <textarea name="info" id="zwjs" cols="30" rows="10"></textarea> <br><br>
+			</fieldset>
+
+			<fieldset>
+				<legend>提交信息</legend>
+				<input type="submit" value="提交按钮">
+				<input type="reset" value="重置按钮">
+				<input type="button" value="按钮">
+				<br><br>
+				<!-- 推荐使用这个，更加灵活 -->
+				<button type="submit"><img src="20150727120638_nFBQ4.jpeg" alt="" style="width: 10px"></button>
+				<button type="reset">重置按钮</button>
+				<button type="button">按钮</button>
+			</fieldset>
+
+		</form>
+		<hr><br>
+		<!--# frameset框架集(了解)
+			- 用来创建一个框架集 用于在一个页面引入其他外部的页面
+			- frameset和body水火不容！!
+			- frameset和iframe一样，它里面的内容都不会被搜索引擎所检索
+			- 使用框架集则意味着页面中不能有自己的内容，只能引入其他的页面
+			- 引入几个页面就要向浏览器发送几次请求，用户体验很差
+			- 如果非得用，建议用frameset，不要用iframe
+			- 我怀疑我自己在开车
+			- 细节参见 http://www.w3school.com.cn/tags/tag_frameset.asp
+		 -->
+		<!--# 恶心的IE6中对图片格式png24支持度不高 会导致透明效果无法正常显示
+			- 用ps存储图片为png8就好，不过图片的清晰度会有所下降
+			- 用javascript来解决该问题，需要向页面引入一个外部的js文件DD_belatedPNG_0.0.8a-min.js 
+			- 细节参见 https://www.bilibili.com/video/av21557880/?p=89
+		-->
+	</div>
+
+</body>
+<script type="text/javascript" src="">
+</script>
+
+</html>
