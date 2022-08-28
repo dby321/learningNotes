@@ -253,6 +253,146 @@ const router=new VueRouter({
 props:['keyword','k']
 ```
 
-## 10 重写push与replace方法
+## 010 重写push与replace方法
 
 ![image-20220827221554820](images/image-20220827221554820.png)
+
+## 015 axios二次封装
+
+[掘金-聊聊什么是CommonJs和Es Module及它们的区别](https://juejin.cn/post/6938581764432461854)
+
+> 为什么要二次封装axios?
+>
+> - 请求拦截器
+> - 响应拦截器
+>
+> api文件夹:用来放axios的封装文件
+
+[axios官网-axios拦截器](http://www.axios-js.com/zh-cn/docs/#%E6%8B%A6%E6%88%AA%E5%99%A8)
+
+```js
+// api/request.js
+import axios from 'axios'
+const request=axios.create({
+    // 配置对象
+    baseUrl:'/api'
+    timeout:5000,
+})
+//请求拦截器
+request.interceptors.request.use((config)=>{
+    return config;
+}, error=> {
+    // 对请求错误做些什么
+    return Promise.reject(error);
+});
+//响应拦截器
+request.interceptors.response.use(res=>{
+    return res.data;
+},err=>{
+    return Promise.reject(new Error("fail"));
+});
+export default request;
+```
+
+
+
+```js
+// api/index.js
+import requests from './request.js';
+
+```
+
+
+
+- 配置代理服务器解决跨域问题
+
+```js
+// webpack.config.js vue.config.js
+module.exports = {
+  //...
+  devServer: {
+    proxy: {
+      '/api': {
+        // 后端服务器地址
+        target: 'http://xxx.xxx.xxx',
+        // 如果后台接口地址不带/api，则需要下面这句话
+        pathRewrite: { '^/api': '' },
+      },
+    },
+  },
+};
+```
+
+
+
+## 017 nprogress进度条的使用
+
+[npm-NProgress](https://www.npmjs.com/package/nprogress)
+
+> 安装`cnpm install -S nprogress`
+
+```js
+// api/request.js
+import axios from 'axios';
+import nprogress from 'nprogress';
+import "nprogress/nprogress.css"
+const request=axios.create({
+    // 配置对象
+    baseUrl:'/api'
+    timeout:5000,
+})
+//请求拦截器
+request.interceptors.request.use((config)=>{
+    nprogress.start();
+    return config;
+}, error=> {
+    // 对请求错误做些什么
+    return Promise.reject(error);
+});
+//响应拦截器
+request.interceptors.response.use(res=>{
+    nprogress.done();
+    return res.data;
+},err=>{
+    return Promise.reject(new Error("fail"));
+});
+export default request;
+```
+
+## 018 vuex
+
+> store文件夹
+>
+> - mutations可以修改state
+>
+> - actions不能修改state
+>
+> 模块化开发使用modules
+
+## 023 函数的节流与防抖
+
+> lodash插件
+>
+> [lodash插件-防抖](https://www.lodashjs.com/docs/lodash.debounce#_debouncefunc-wait0-options)
+>
+> [lodash插件-节流](https://www.lodashjs.com/docs/lodash.throttle)
+
+## 032 mockjs
+
+> 安装mockjs
+
+1. 编写假数据
+
+![image-20220828174640720](images/image-20220828174640720.png)
+
+2. 写mockServe.js
+
+![image-20220828174924584](images/image-20220828174924584.png)
+
+3. main.js引入
+
+![image-20220828175038350](images/image-20220828175038350.png)
+
+4. mockAjax.js编写
+
+![image-20220828175340048](images/image-20220828175340048.png)
