@@ -1,5 +1,7 @@
 # 2022Study-Vue项目实战
 
+> webpack,node.js都需要学
+
 ## 002 用Vue-cli初始化项目
 
 1. 本地要有node,webpack,淘宝镜像
@@ -275,7 +277,7 @@ props:['keyword','k']
 import axios from 'axios'
 const request=axios.create({
     // 配置对象
-    baseUrl:'/api'
+    baseUrl:'/api',
     timeout:5000,
 })
 //请求拦截器
@@ -396,3 +398,7 @@ export default request;
 4. mockAjax.js编写
 
 ![image-20220828175340048](images/image-20220828175340048.png)
+
+## 034 swiper轮播图
+
+> 安装5版本
