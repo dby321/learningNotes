@@ -121,3 +121,19 @@ console.log($div1.__proto__===Array.prototype)// false，jquery对象是一个�
 
 ## Jquery选择器
 
+> 和css选择器略有不同
+
+```css
+li:nth-child(even) {
+    background-color: lightyellow;
+}
+```
+
+![1664009658550](images/1664009658550.png)
+
+![1664009799388](images/1664009799388.png)
+
+## Jquery事件
+
+![1664009893612](images/1664009893612.png)
+
