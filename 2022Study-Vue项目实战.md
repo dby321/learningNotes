@@ -76,7 +76,7 @@ module.exports{
 
 > 在vue2项目下：
 >
-> - 安装less和less-loader：`cnpm install --save less less-loader@5` 
+> - 安装less和less-loader：`cnpm install --save less less-loader` 
 >
 > - 安装vue-router：`cnpm install vue-router@3`
 
@@ -375,9 +375,11 @@ export default request;
 
 > lodash插件
 >
-> [lodash插件-防抖](https://www.lodashjs.com/docs/lodash.debounce#_debouncefunc-wait0-options)
+> 回调不要用箭头函数
 >
-> [lodash插件-节流](https://www.lodashjs.com/docs/lodash.throttle)
+> [lodash插件-防抖](https://www.lodashjs.com/docs/lodash.debounce#_debouncefunc-wait0-options)理解为回城,回城打断了要重新来
+>
+> [lodash插件-节流](https://www.lodashjs.com/docs/lodash.throttle)理解为技能CD
 
 ## 032 mockjs
 
