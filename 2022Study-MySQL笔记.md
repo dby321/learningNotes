@@ -136,7 +136,7 @@ mysql> SELECT name FROM person_tbl WHERE name REGEXP '^[aeiou]|ok$';
 >
 > 不同DBMS的函数差别很大，不建议死记
 
-## MYSQL聚合函数
+### MYSQL聚合函数
 
 ```mysql
 -- 五大聚合函数 AVG和SUM只能处理数值类型
@@ -188,11 +188,13 @@ SELECT MIN(avg_sal) FROM (SELECT AVG(salary) avg_sal FROM employees GROUP BY dep
 
 > 阿里巴巴开发规范：TRUNCATE TABLE 比DELETE速度快，且使用的系统和事务日志资源少，但TRUNCATE无事务且不触发TRIGGER，有可能造成事故，故不建议在开发代码中使用此语句
 
-## MYSQL8.0的原子化
+## MYSQL8.0
+
+### MYSQL8.0的原子化
 
 > MYSQL8.0 的一条DROP操作是原子化的，要么成功，要么失败，不会成功一部分
 
-## MYSQL8.0的计算列
+### MYSQL8.0的计算列
 
 ```MYSQL
 CREATE TABLE test1(
@@ -202,4 +204,47 @@ c int GENERATED ALWAYS AS (a+b) VIRTUAL); # 字段c即为计算列
 ```
 
 
+
+## MYSQL数据类型
+
+### 整数类型
+
+```mysql
+CREATE TABLE test_int2(
+f1 int,
+f2 int(5),
+f3 int(5) ZEROFILL)# 1.显示宽度为5，当insert值不足5位时，用0填充 2.当使用ZEROFILL时，自动添加UNSIGNED
+```
+
+> 从MYSQL8.0.17之后，整数数据类型不推荐使用显示宽度属性
+
+### 浮点型和定点型
+
+> 浮点型：FLOAT DOUBLE
+>
+> 定点型：DECIMAL
+
+### 位类型
+
+> 位类型：BIT
+
+###　日期和时间类型
+
+### 文本字符串类型
+
+> CHAR和VARCHAR的选择：
+>
+> 1. 存储很短且位数相对固定的数据，用CHAR
+> 2. 十分频繁改变的column，用CHAR
+> 3. 在MYISAM存储引擎中，用CHAR;在MEMORY存储引擎中都可以；在INNODB存储引擎中，主要影响性能的因素是数据行使用的数据总量，多用VARCHAR
+
+> TEXT文本类型：可以存储比较大的文本段，由于TEXT和BLOB类型的数据删除后容易导致“空洞”，使得文件碎片比较多，所以频繁使用的表不建议包含TEXT类型字段，建议单独分出去一个表
+
+### 枚举ENUM类型和SET类型【了解】
+
+### 二进制字符串类型【了解】
+
+> BLOB:实际工作中，不会用BLOB村大对象数据，会将图片、音频、视频文件存储到服务器的磁盘上，并将图片、音频和视频的访问路径存储到MYSQL中
+
+### JSON类型【了解】
 
