@@ -129,3 +129,66 @@ mysql> SELECT name FROM person_tbl WHERE name REGEXP '^[aeiou]|ok$';
 > UNION 效率低，会去重
 >
 > UNION ALL 效率高，不会去重
+
+## MYSQL函数
+
+> 分为内置函数和自定义函数
+>
+> 不同DBMS的函数差别很大，不建议死记
+
+## MYSQL聚合函数
+
+```mysql
+-- 五大聚合函数 AVG和SUM只能处理数值类型
+SELECT AVG(salary) from employees;
+SELECT SUM(salary) from employees;
+SELECT MAX(salary) from employees;
+SELECT MIN(salary) from employees;
+-- 计算指定字段出现的个数时，是不包含null值的
+SELECT COUNT(salary) from employees;
+-- 比较特殊，返回表有多少行
+SELECT COUNT(1) FROM employees;
+SELECT COUNT(2) FROM employees;
+SELECT COUNT(*) FROM employees;
+-- GROUP BY中使用WITH ROLLUP 除了基本查到的数据，还包括不带GROUP BY的AVG(salary)
+-- 使用WITH ROLLUP时，不能使用ORDER BY
+SELECT department_id,AVG(salary) from employees GROUP BY department_id WITH ROLLUP;
+```
+
+## SQL的执行顺序，WHERE和HAVING效率对比
+
+> FROM …,….->ON->(LEFT/RIGHT JOIN)->WHERE->GROUP BY->HAVING->SELECT->DICTINCT->ORDER BY->LIMIT
+>
+> 在SELECT渔具执行这些步骤时，每个步骤会生成虚拟表，然后将这个虚拟表传入下一个步骤作为输入。这些隐含在SQL执行过程中，对于我们是不可见的
+
+> WHERE效率高于HAVING
+
+## MYSQL子查询
+
+### 单行子查询
+
+> 单行操作符： = != > < >= <=
+
+### 多行子查询
+
+> 多行操作符：IN ANY ALL SOME
+
+```MYSQL
+SELECT employee_id,last_name,job_id,salary FROM employees WHERE job_id<>'IT_PROG' AND salary < ANY (SELECT salary FROM employees WHERE job_id='IT_PROG')
+SELECT employee_id,last_name,job_id,salary FROM employees WHERE job_id<>'IT_PROG' AND salary < ALL (SELECT salary FROM employees WHERE job_id='IT_PROG')
+
+SELECT MIN(avg_sal) FROM (SELECT AVG(salary) avg_sal FROM employees GROUP BY department_id) t_dept_avg_sal
+```
+
+### 相关子查询
+
+> 子查询引用了父查询的数据，而且父子查询不是一个表，就是相关子查询
+
+## MYSQL表和数据库的增删改查
+
+> 阿里巴巴开发规范：TRUNCATE TABLE 比DELETE速度快，且使用的系统和事务日志资源少，但TRUNCATE无事务且不触发TRIGGER，有可能造成事故，故不建议在开发代码中使用此语句
+
+## MYSQL8.0的原子化
+
+> MYSQL8.0 的一条DROP操作是原子化的，要么成功，要么失败，不会成功一部分
+
