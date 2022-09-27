@@ -192,3 +192,14 @@ SELECT MIN(avg_sal) FROM (SELECT AVG(salary) avg_sal FROM employees GROUP BY dep
 
 > MYSQL8.0 的一条DROP操作是原子化的，要么成功，要么失败，不会成功一部分
 
+## MYSQL8.0的计算列
+
+```MYSQL
+CREATE TABLE test1(
+a int,
+b int,
+c int GENERATED ALWAYS AS (a+b) VIRTUAL); # 字段c即为计算列
+```
+
+
+
