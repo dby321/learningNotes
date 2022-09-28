@@ -248,3 +248,103 @@ f3 int(5) ZEROFILL)# 1.显示宽度为5，当insert值不足5位时，用0填充
 
 ### JSON类型【了解】
 
+## MYSQL约束
+
+> 为什么需要约束？ 为了保证数据的完整性
+>
+> 什么叫约束？对表中字段的限制
+
+### 查询某个表的约束
+
+```mysql
+-- 查询某个表的约束
+select * from information_schema.table_constraints where table_name='employees';
+```
+
+### 列级约束和表级约束
+
+```mysql
+-- 创建表时添加列级约束和表级约束
+create table emp(
+    name VARCHAR(15) NOT NULL,
+    last_name VARCHAR(15),
+    salary DECIMAL(10,2),
+    constraint uk_emp_last_name unique(last_name)-- constraint uk_emp_last_name 可省略
+);
+```
+
+```mysql
+-- 修改约束 方式一
+alter table emp
+modify name VARCHAR(15) NULL;
+-- 修改约束 方式二
+alter table test2
+add constraint uk_test2_sal unique(salary);
+```
+
+### 复合唯一性约束
+
+> 创建复合唯一性约束
+
+```mysql
+create table `user`(
+    id int,
+    `name` varchar(15),
+    `password` varchar(25),
+    constraint uk_user_name_pwd unique(`name`,`password`)
+);
+```
+
+> 要删除唯一性约束，就要删除唯一性索引
+
+```mysql
+alter table test2
+drop index last_name;
+```
+
+### 主键约束
+
+> 主键约束=唯一性约束+非空约束
+
+### 自增列
+
+### 外键约束
+
+> 对于外键约束，最好采用下面的方式：
+>
+> on update cascade on delete set null（更新主表数据时从表数据级联更新，删除主表数据时从表数据设为null）
+
+```mysql
+-- 主表
+create table dept(
+    dept_id int primary key,-- 必须有主键约束，不然创建外键会失败报错
+    dept_name varchar(15)
+);
+-- 从表
+create table empl(
+    emp_id int primary key auto_increment,
+    emp_name varchar(15),
+	department_id int,
+    constraint fk_empl_dept_id foreign key (department_id) references dept(dept_id) on update cascade on delete set null
+);
+```
+
+
+
+```mysql
+-- 删除外键约束
+alter table empl 
+drop foreign key fk_empl_dept_id;
+-- 查看empl的索引
+show index from empl;
+alter table empl
+drop index fk_empl_dept_id;
+```
+
+> ==在mysql中，外键约束是有成本的，需要消耗系统资源。对于大并发的sql操作，有可能会不适合==
+
+![image-20220928215516418](images/image-20220928215516418.png)
+
+### 检查约束和默认值约束
+
+> 检查约束在mysql5.7不支持
