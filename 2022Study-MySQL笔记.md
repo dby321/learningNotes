@@ -188,6 +188,14 @@ SELECT MIN(avg_sal) FROM (SELECT AVG(salary) avg_sal FROM employees GROUP BY dep
 
 > 阿里巴巴开发规范：TRUNCATE TABLE 比DELETE速度快，且使用的系统和事务日志资源少，但TRUNCATE无事务且不触发TRIGGER，有可能造成事故，故不建议在开发代码中使用此语句
 
+```mysql
+-- 复制表
+create table employees
+as 
+select * 
+from mydb.`employees`;
+```
+
 ## MYSQL8.0
 
 ### MYSQL8.0的原子化
@@ -348,3 +356,314 @@ drop index fk_empl_dept_id;
 ### 检查约束和默认值约束
 
 > 检查约束在mysql5.7不支持
+
+## MYSQL视图
+
+> [数据库](https://www.huaweicloud.com/product/dbs.html)对象包括：用户（对数据库有权限访问的人）、视图（显示用户需要的数据项）、索引（给用户提供快速访问数据的途径）、触发器（用户定义的SQL事务命令集合）、序列（提供了唯一数值的顺序表）、图表（数据库表之间的一种关系示意图）。
+
+> 视图和表之间是双向绑定的，视图就可以看做存储起来的select语句
+
+```mysql
+-- 创建视图
+create view 视图名称
+as 查询语句
+```
+
+## MYSQL存储过程
+
+[菜鸟教程-MySQL 存储过程](runoob.com/w3cnote/mysql-stored-procedure.html)
+
+> 阿里规范禁止使用存储过程，因为存储过程的移植性很差并且很难调试
+
+``` mysql
+-- 创建存储过程
+delimiter $
+create procedure select_all_data()
+begin 
+	select * from emps;
+end $
+delimiter ;
+```
+
+```mysql
+-- 调用存储过程
+call select_all_data();
+```
+
+-----
+
+```mysql
+-- 带返回值的存储过程
+delimiter $
+create procedure show_min_salary(out ms double)
+begin 
+	select min(salary) into ms 
+	from employees;
+end $
+delimiter ;
+```
+
+```mysql
+-- 调用存储过程，并将返回值存储到用户定义的@ms变量中
+call show_min_salary(@ms);
+```
+
+## MYSQL存储函数
+
+```mysql
+-- 创建存储函数
+delimiter //
+create function email_by_name()
+returns varchar(25)
+deterministic -- 确定性的 
+contains sql -- 包含sql的
+reads sql data -- 读取sql数据的
+begin
+	select email from employees where last_name='Abel'；
+end //
+delimiter ;
+```
+
+```mysql
+-- 调用存储函数
+select email_by_name();
+```
+
+----
+
+```mysql
+set global log_bin_trust_function_creator=1;-- 创建函数前执行此语句，保证函数的创建会执行成功
+delimiter //
+create function email_by_name(emp_id int)
+returns varchar(25)
+begin
+	return (select email from employees where employee_id=emp_id)；
+end //
+delimiter ;
+```
+
+```mysql
+set @emp_id=102;
+select email_by_name(@emp_id);
+```
+
+## 变量、流程控制和游标
+
+### 变量
+
+> 变量：
+>
+> - 系统变量
+>   - 全局系统变量(global):不能跨重启
+>   - 会话系统变量(session)
+> - 用户自定义变量
+>   - 会话用户变量
+>   - 局部变量：写在存储过程或存储函数中
+
+```mysql
+show global variables；
+show session variables;
+show variables;-- 默认查询的是会话系统变量
+```
+
+```mysql
+select @@global.max_connections;-- 查看指定的全局系统变量
+select @@session.pseudo_thread_id；-- 查看指定的会话系统变量
+select @@character_set_client;-- 先查询会话系统变量，再查询全局系统变量
+```
+
+```mysql
+-- 修改全局系统变量
+set @@global.max_connections=161;
+set global max_connections=161;
+```
+
+-----
+
+```mysql
+-- set @用户变量:=表达式
+set @m1=1;
+select @count:=count(*) from employees;
+select avg(salary) into @avg_sal from employees;
+```
+
+----
+
+```mysql
+delimiter $
+create procedure test_var()
+begin 
+	declare a int default 0;
+	declare b int;
+end $
+delimiter ;
+```
+
+### 定义条件与处理程序
+
+![image-20221002174808150](images/image-20221002174808150.png)
+
+> 错误码的说明：
+>
+> `MySQL_error_code`和`sqlstate_value`都可以表示MYSQL的错误
+>
+> - `MySQL_error_code`是数值类型错误代码
+> - `sqlstate_value`是长度为5的字符串类型错误代码
+>
+> 例如：在ERROR 1418(HY000)中，1418是`MySQL_error_code`，HY000是`sqlstate_value`
+
+```mysql
+-- 定义条件
+declare Field_Not_Be_Null condition for 1048;-- `MySQL_error_code`
+declare Field_Not_Be_Null condition for sqlstate '23000';-- `sqlstate_value`
+```
+
+```mysql
+-- 定义处理程序
+-- declare 处理方式 handler for 错误类型 处理语句
+```
+
+MySQL 中可以使用 **DECLARE** 关键字来定义处理程序。其基本语法如下：
+
+```mysql
+DECLARE handler_type HANDLER FOR condition_value[...] sp_statement
+handler_type:
+CONTINUE | EXIT | UNDO
+condition_value:
+SQLSTATE [VALUE] sqlstate_value | condition_name | SQLWARNING | NOT FOUND | SQLEXCEPTION | mysql_error_code
+```
+
+其中，handler_type 参数指明错误的处理方式，该参数有 3 个取值。这 3 个取值分别是 CONTINUE、EXIT 和 UNDO。
+
+- CONTINUE 表示遇到错误不进行处理，继续向下执行；
+- EXIT 表示遇到错误后马上退出；
+- UNDO 表示遇到错误后撤回之前的操作，MySQL 中暂时还不支持这种处理方式。
+
+
+注意：通常情况下，执行过程中遇到错误应该立刻停止执行下面的语句，并且撤回前面的操作。但是，MySQL 中现在还不能支持 UNDO 操作。因此，遇到错误时最好执行 EXIT 操作。如果事先能够预测错误类型，并且进行相应的处理，那么可以执行 CONTINUE 操作。
+
+参数指明错误类型，该参数有 6 个取值：
+
+- sqlstate_value：包含 5 个字符的字符串错误值；
+- condition_name：表示 DECLARE 定义的错误条件名称；
+- SQLWARNING：匹配所有以 01 开头的 sqlstate_value 值；
+- NOT FOUND：匹配所有以 02 开头的 sqlstate_value 值；
+- SQLEXCEPTION：匹配所有没有被 SQLWARNING 或 NOT FOUND 捕获的 sqlstate_value 值；
+- mysql_error_code：匹配数值类型错误代码。
+
+下面是定义处理程序的几种方式，代码如下：
+
+```mysql
+//方法一：捕获 sqlstate_value
+DECLARE CONTINUE HANDLER FOR SQLSTATE '42S02' SET @info='CAN NOT FIND';
+
+//方法二：捕获 mysql_error_code
+DECLARE CONTINUE HANDLER FOR 1146 SET @info='CAN NOT FIND';
+
+//方法三：先定义条件，然后调用
+DECLARE can_not_find CONDITION FOR 1146;
+DECLARE CONTINUE HANDLER FOR can_not_find SET @info='CAN NOT FIND';
+
+//方法四：使用 SQLWARNING
+DECLARE EXIT HANDLER FOR SQLWARNING SET @info='ERROR';
+
+//方法五：使用 NOT FOUND
+DECLARE EXIT HANDLER FOR NOT FOUND SET @info='CAN NOT FIND';
+
+//方法六：使用 SQLEXCEPTION
+DECLARE EXIT HANDLER FOR SQLEXCEPTION SET @info='ERROR';
+```
+
+### 流程控制
+
+> 流程控制只能在存储过程和存储函数中执行
+
+[C语言中文网-MySQL流程控制语句详解](http://c.biancheng.net/view/7853.html)
+
+### 游标【不用】
+
+## 触发器
+
+> 触发器可以保证数据的完整性
+
+```mysql
+CREATE <触发器名> < BEFORE | AFTER >
+<INSERT | UPDATE | DELETE >
+ON <表名> FOR EACH Row<触发器主体>
+```
+
+```mysql
+delimiter $
+create trigger after_insert_test_tri
+after insert on test_trigger
+for each row
+begin
+	insert into test_trigger_log(t_log)
+	values('after insert...');
+end $
+delimiter ;
+```
+
+> 下面触发器声明过程中NEW关键字代表insert添加语句的新纪录
+
+```mysql
+delimiter $
+create trigger salary_check_trigger
+before insert on employees for each row
+begin 
+	declare mgrsalary double;
+	select salary into mgrsalary from employees where employee_id=NEW.manager_id;
+	if NEW.salary > mgrsalary then
+		signal sqlstate 'HY000' set message_text='薪资高于领导薪资错误';
+	end if
+end $
+delimiter ;
+```
+
+## MYSQL8新特性
+
+> 还没普及
+
+
+
+## SQL大小写规范和SQL_MODE
+
+> MYSQL在Linux下数据库名、表名、列名、别名大小写规则是这样的：
+>
+> 1. 数据库名、表名、表的别名、变量名是严格区分大小写的
+> 2. 关键字、函数名称在sql中不区分大小写
+> 3. 列名（或字段名）与列的别名在所有的情况下均是忽略大小写的
+>
+> MYSQL在windows的环境下全部不区分大小写
+
+
+
+> SQL_MODE：
+>
+> - 宽松模式
+> - 严格模式
+
+## MYSQL用户管理
+
+[C语言中文网-MYSQL用户管理](http://c.biancheng.net/mysql/100/)
+
+## MYSQL逻辑架构
+
+[尚硅谷MYSQL-P109](https://www.bilibili.com/video/BV1iq4y1u7vj?p=109&vd_source=f58f2e2144be4e99a8cf800afeecbbcb)
+
+> MYSQL是典型的C/S架构，服务端程序使用的时`mysqld`
+
+![image-20221003172902388](images/image-20221003172902388.png)
+
+### 第一层：连接层
+
+> 系统（客户端）访问MYSQL服务器前，做的第一件事就是建立`TCP连接`，三次握手之后，MYSQL服务器对TCP传输过来的账号密码做身份认证、权限获取
+
+### 第二层：服务层
+
+### 第三层：引擎层
+
+### 存储层
+
+## SQL执行流程
+
