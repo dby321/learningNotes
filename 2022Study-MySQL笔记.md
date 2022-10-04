@@ -624,6 +624,25 @@ delimiter ;
 
 > 还没普及
 
+## 字符集的相关操作
+
+> 在MYSQL8.0之前，默认字符集为latin1，utf8字符集指向的时utfmb3.
+>
+> 从MYSQL8.0开始，数据库的默认编码将改为utf8mb4,从而解决中文乱码问题
+>
+> Linux解决乱码可以修改它的配置文件
+>
+> 字符集分为四个级别：
+>
+> - 服务器级别
+> - 数据库级别
+> - 表级别
+> - 列级别
+
+```mysql
+show variables like '%character%';-- 查看字符集
+```
+
 
 
 ## SQL大小写规范和SQL_MODE
@@ -642,28 +661,49 @@ delimiter ;
 >
 > - 宽松模式
 > - 严格模式
+> 
+## MYSQL数据目录
+
+![image-20221004153519723](images/image-20221004153519723.png)
+
+![image-20221004153532701](images/image-20221004153532701.png)
 
 ## MYSQL用户管理
 
 [C语言中文网-MYSQL用户管理](http://c.biancheng.net/mysql/100/)
 
+
+
+
+
 ## MYSQL逻辑架构
 
 [尚硅谷MYSQL-P109](https://www.bilibili.com/video/BV1iq4y1u7vj?p=109&vd_source=f58f2e2144be4e99a8cf800afeecbbcb)
+
+[51CTO-一篇带给你MySQL逻辑架构](https://www.51cto.com/article/649711.html)
 
 > MYSQL是典型的C/S架构，服务端程序使用的时`mysqld`
 
 ![image-20221003172902388](images/image-20221003172902388.png)
 
-### 第一层：连接层
 
-> 系统（客户端）访问MYSQL服务器前，做的第一件事就是建立`TCP连接`，三次握手之后，MYSQL服务器对TCP传输过来的账号密码做身份认证、权限获取
 
-### 第二层：服务层
+## MYSQL执行流程
 
-### 第三层：引擎层
+```mysql
+show profiles;-- 查询最近执行的SQL语句
+show profile  for query 7;-- 查询某个SQL语句的执行细节
+show profile cpu,block io for query 7;-- 查看包括cpu、IO阻塞等参数的SQL执行细节
+```
 
-### 存储层
+## 数据库缓冲池
 
-## SQL执行流程
+> BufferPool就是存储引擎向操作系统申请一段连续的内存空间
+>
+> 查询缓存和数据库缓冲池不是一个东西
+
+```mysql
+show variable like 'innodb_buffer_pool_size';-- 查看INNODB的缓冲池大小
+show variable like 'innodb_buffer_pool_instance'；-- 查看缓冲池实例个数
+```
 
