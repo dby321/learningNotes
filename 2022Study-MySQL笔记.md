@@ -690,33 +690,86 @@ show variables like '%character%';-- 查看字符集
 
 ## MYSQL执行流程
 
+> SQL执行流程：SQL语句->查询缓存->解析器->优化器->执行引擎
+
+
+
 ```mysql
+select @@session.profiling;-- 0 默认执行过程是关闭的
+set profiling=1;-- 开启执行细节
+
+
 show profiles;-- 查询最近执行的SQL语句
+show profile;-- 查看最近一次SQL执行细节
 show profile  for query 7;-- 查询某个SQL语句的执行细节
 show profile cpu,block io for query 7;-- 查看包括cpu、IO阻塞等参数的SQL执行细节
 ```
 
-## BufferPool数据库缓冲池
+![image-20221008195528028](images/image-20221008195528028.png)
 
-> BufferPool就是存储引擎向操作系统申请一段连续的内存空间
->
-> 查询缓存和数据库缓冲池不是一个东西
+> 查询缓存往往弊大于利，所以在MYSQL8.0中去掉了，而在MYSQL5.7中，可以编辑`my.cnf`开启查询缓存
+
+```properties
+# query_cache_type有三个值（0代表关闭查询缓存OFF,1代表开启ON，2代表DEMAND（当sql语句中有SQL_CACHE关键词才缓存））
+query_cache_type=2
+```
+
+```MYSQL
+select SQL_CACHE * from test where ID=5;
+select SQL_NO_CACHE * from test where ID=5;
+```
 
 ```mysql
+show status like '%Qcache%';-- 查询缓存相关情况
+```
+
+
+
+## BufferPool数据库缓冲池
+
+> BufferPool就是存储引擎向操作系统申请一段连续的内存空间，是为了减少与磁盘进行IO的时间，缓存的是热点数据。
+>
+> 数据库缓冲池还具有预读的特性，当我们使用了某些数据页的数据，在缓冲池空间足够的情况下，会将该数据页前后的数据页加载到数据库缓冲池。
+>
+> 缓冲池会采用checkpoint检查点机制将更新之后缓存的数据刷盘到磁盘上。
+>
+> 多实例的数据库缓冲池是为了缓解多线程并发压力，当缓冲池大小小于1GB时，设置多实例是无效的。
+>
+> 查询缓存和数据库缓冲池不是一个东西：
+>
+> - 查询缓存是缓存SQL语句
+> - 缓冲池缓存的时数据页数据
+
+```mysql
+show variables like 'key_buffer_size';-- 查看MYISAM缓冲池大小
 show variables like 'innodb_buffer_pool_size';-- 查看INNODB的缓冲池大小
 show variables like 'innodb_buffer_pool_instance'；-- 查看缓冲池实例个数
 ```
 
+
+
+```properties
+[server]
+# 配置多实例的数据库缓冲池
+innodb_buffer_pool_instances=2 
+```
+
+
+
 ## Engine存储引擎
 
-> 存储引擎决定表和数据在底层的存储方式
+> 存储引擎（也叫表处理器）决定表和数据在底层的存储方式
 
 ```mysql
 show engines;-- 查看数据库支持的存储引擎
 show variables like '%storage_engine%';-- 查看当前使用的存储引擎 
 ```
 
-![image-20221004162456429](images/image-20221004162456429.png)
+> 下图可知：
+>
+> InnoDB是唯一支持事务、分布式事务(XA)、保存点（部分事务回滚）的存储引擎
+
+![查看数据库支持的存储引擎](images/image-20221004162456429.png)
 
 ### InnoDB:具备外键支持功能的事务存储引擎
 
@@ -809,3 +862,108 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 > InnoDB、MyISAM、Memory都支持B+树索引
 >
 > MyISAM使用B+树作为索引结构，叶子节点的data域存放的是数据记录的地址
+>
+> MyISAM中只有非聚簇索引
+
+### MyISAM和InnoDB的对比
+
+> 1. MyISAM中的索引方式都是非聚簇的，InnoDB中必然包含一个聚簇索引
+> 2. 在InnoDB中，只需要根据主键值进行一次查询就能找到对应的记录，因为InnoDB中索引即数据，而在MyISAM中却需要进行一次回表操作，意味着MyISAM中建立的索引全部都是二级索引
+> 3. MyISAM中索引和数据是分离的，InnoDB中索引即数据
+> 4. InnoDB的非聚簇索引data域存储的是主键的值，而MyISAM索引data域记录的是回表的地址
+> 5. MyISAM回表是十分快速的，因为拿着地址偏移量直接到文件中取数据；InnoDB是通过获取主键之后再去聚簇索引中招记录。
+> 6. InnoDB必须有主键，如果没有显式指定，MYSQL会自动选择一个可以非空且唯一标识的数据记录的列作为主键，如果不存在这种咧，MYSQL会为InnoDB表生成一个隐含字段作为主键；MyISAM不一定有主键，但推荐加主键
+
+
+
+### MYSQL数据结构选择的合理性
+
+> Hash结构效率高，为什么索引结构要设计成树型？
+>
+> - Hash索引仅能满足（=）（<>）和IN查询。如果进行范围查询，哈希型的索引，时间复杂度会退化成O（n）;而属性的有序特性，依然能够保持O（log2N）的高效率
+> - Hash索引数据的存储是没有顺序的，在order by的情况下，使用Hash索引还需要对数据进行重新排序
+> - 对于联合索引，Hash值是将联合索引键合并后一起来计算的，无法对单独的一个键或者几个索引键进行查询
+> - 对于等值查询，通常Hash索引的效率更高，不过如果索引列的重复值很多，效率就会降低
+>
+> Redis存储到核心就是Hash表
+>
+> Memory的默认索引是Hash索引
+>
+> InnoDB本身不支持Hash索引，但是提供`自适应Hash索引`，会将热点数据的数据页地址存放到Hash表中。这样让B+树也具备了Hash索引的优点
+>
+> 因为同样的磁盘页大小，B+树可以存储更多的节点关键字，所以B+树通常比B树更加矮胖，查询所需要的磁盘IO会更少
+
+![B树](images/image-20221005103857698.png)
+
+![B树和B+树的差异](images/image-20221005104014433.png)
+
+![思考题：B+树的存储能力如何？为何说一般查找行记录，最多秩序1~3次磁盘IO](images/image-20221005104624110.png)
+
+### InnoDB数据存储结构
+
+> InnoDB页的默认大小是16KB
+>
+> 页的结构概述：
+>
+> - `页`作为磁盘和内存之间交互的`基本单位`,页与页之间`不在物理结构上相连`，只需通过`双向链表`相关联即可。每个数据页中的记录是按照主键值从小到大的顺序组成一个`单向链表`，每个数据页都会为存储在它里面的记录生成一个`页目录`,通过主键查找某条记录的时候可以在页目录中使用二分法快速定位到对应的槽，然后再便利该槽对应分组中的记录即可快速找到指定的记录
+>
+> 页的上层结构：
+>
+> - 区：在InnoDB中，一个区会分配64各连续的页
+> - 段：是数据库中分配的单位，不同类型的数据库对象以不同的段形式存在,常见的段有`数据段`、`索引段`、`回滚段`
+> - 表空间：是一个逻辑容器，分为系统表空间、用户表空间、撤销表空间、临时表空间等，数据库由一个或多个表空间组成
+>
+> 页的内部结构：
+>
+> - 页如果按类型划分的话，常见的有`数据页`、`系统页`、`Undo页`和`事务数据页`等 
+>
+> InnoDB行格式row_format：
+>
+> - Compact
+> - Dynamic
+> - Compressed
+> - Redundant
+>
+> 碎片区：有些页能用于段A，有些页能用于段B，碎片去直属于表空间
+
+![页的上层结构](images/image-20221005110235024.png)
+
+![页的结构](images/image-20221005110805786.png)                
+
+### 索引的创建与设计原则
+
+> 索引的分类：
+>
+> - 从功能逻辑上分
+>   - 普通索引
+>   - 唯一索引
+>   - 主键索引
+>   - 全文索引
+> - 从物理实现方式分
+>   - 聚簇索引
+>   - 非聚簇索引
+> - 从作用字段个数分
+>   - 单列索引
+>   - 联合索引
+
+![存储引擎对索引的支持](images/image-20221005161851378.png)
+
+> 创建索引的方式
+>
+> - 隐式创建索引：在声明有主键约束、唯一性约束、外键约束的字段上，会自动添加相关索引
+>
+> - 显式创建索引
+
+[C语言中文网-MySQL创建索引（CREATE INDEX）](http://c.biancheng.net/view/2605.html)
+
+[数据库学习摘记-mysql的索引设计原则以及常见索引的区别](https://www.kancloud.cn/hx78/sql/333932)
+
+```mysql
+-- 查看索引
+show create table book;
+select index from book;
+```
+
+### 性能分析工具的使用
+
+[yangh124博客-MySQL性能分析工具的使用](https://yh124.space/2022/06/06/MySQL%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/index.html)
