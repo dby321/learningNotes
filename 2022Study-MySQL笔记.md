@@ -901,7 +901,7 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 
 ### InnoDB数据存储结构
 
-> InnoDB页的默认大小是16KB
+> InnoDB页的默认大小是16KB,不同的DBMS的数据页大小不同
 >
 > 页的结构概述：
 >
@@ -965,5 +965,11 @@ select index from book;
 ```
 
 ### 性能分析工具的使用
+
+```mysql
+show status like 'slow_queries';
+```
+
+
 
 [yangh124博客-MySQL性能分析工具的使用](https://yh124.space/2022/06/06/MySQL%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/index.html)
