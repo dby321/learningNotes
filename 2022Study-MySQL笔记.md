@@ -21,7 +21,7 @@ select 1=2,1!=2,1='1',1='a',0='a' from dual; -- 0 1 1 0 1
 > 只要有null参与预算，结果就为null
 
 ```mysql
-select 1=null,null=null from dual; --null null
+select 1=null,null=null from dual; -- null null
 ```
 
 ### MYSQL:安全等于
@@ -973,3 +973,9 @@ show status like 'slow_queries';
 
 
 [yangh124博客-MySQL性能分析工具的使用](https://yh124.space/2022/06/06/MySQL%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/index.html)
+
+### 索引优化与查询优化
+
+> Or并不是必然索引失效，前后都有索引时，不会失效
+
+[51CTO-索引失效](https://www.51cto.com/article/702691.html)
