@@ -1019,3 +1019,56 @@ show status like 'slow_queries';
 > 简单来说，在查`索引列+主键`以内的字段时，会用到覆盖索引
 
 ![image-20221012220703730](images/image-20221012220703730.png)
+
+###  索引下推（ICP）
+
+> 索引下推是查询优化器的策略，回表前过滤，可以减少回表次数
+
+```mysql
+# 关闭索引下推
+set optimizer_switch='index_condition_pushdown=off'
+```
+
+
+
+![image-20221013210239520](images/image-20221013210239520.png)
+
+### 其他查询优化策略
+
+#### Exists和In的区分
+
+```mysql
+# B表是小表选Exists
+select * from A where cc in (select cc from B);
+# A表时小表时选in
+select * from A where exists (select cc from B where B.cc=A.cc);
+```
+
+ #### limit 1对优化的影响
+
+> 如果可以确定结果集只有一条，那么加上limit 1时，找到一条结果就不会继续扫描了，会加快查询速度
+>
+> 如果数据表已经对字段建立了唯一索引，就不需要加上limit 1 了
+
+#### 多使用commit
+
+> Commit释放的资源：
+>
+> - 回滚段上用于回复数据的信息
+> - 被程序语句获得的锁
+> - redo/undo log buffer中的空间
+> - 管理上述3种资源中的内部花费
+
+## MYSQL事务日志
+
+> 事务的合理性由锁机制实现
+>
+> 而事务的原子性、一致性和持久性由REDO日志和UNDO日志来保证：
+>
+> - `REDO LOG` 称为 重做日志，记录的是物理级别上页修改操作，比如页号xxx、偏移量yyy写入了zzz数据。用于保证事务的持久性
+> - `UNDO LOG` 称为 回滚日志，记录的是逻辑操作日志，比如对某一行数据进行了insert语句，UNDO LOG就记录一条预支相反的DELETE操作。用于回滚行记录到特定版本，用来保证事务的原子性、一致性
+>
+> REDO和UNDO都可以视为一种`恢复操作`
+
+## 锁
+
