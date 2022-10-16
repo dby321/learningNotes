@@ -1072,3 +1072,145 @@ select * from A where exists (select cc from B where B.cc=A.cc);
 
 ## 锁
 
+### MYSQL并发概述
+
+> 锁是计算机协调多个进程或线程并发访问某一资源的机制
+>
+> MYSQL并发事务访问相同记录：
+>
+> - 读读情况：不会产生并发问题
+> - 写写情况：锁机制可以解决，任何一种隔离级别都不允许这种情况的发生
+> - 读写情况：会产生脏读、不可重复读、幻读的问题，通过事务隔离级别解决
+>
+> 各个数据库厂商对SQL标准的支持不一样，比如MYSQL在`REPEATABLE READ`隔离级别上就已经解决了`幻读`问题
+>
+> ----
+>
+> MYSQL并发问题的解决有两种思路：
+>
+> 1. 读操作利用`多版本并发控制MVCC`,写操作进行`加锁`
+>
+> - MVCC:就是生成一个`READVIEW`，通过READVIEW找到复合条件的记录版本（历史记录由`UNDO日志`构建）。查询语句只能读到READVIEW之前`已提交事务所做的更改`,在生成READVIEW之前未提交的事务过着之后才开启的事务所做的更改是看不到的。而写操作肯定针对的是最新版本的记录，读记录的历史版本和改动记录的最新版本身并不冲突，也就是采用MVCC时，读写操作并不冲突
+>
+> > 普通的SELECT语句在`READ COMMITED`和`REPEATABLE READ`隔离毕节下会使用到MVCC读取记录:
+> >
+> > - `READ COMMITED`级别下：一个事务在执行过程中每次执行SELECT操作都会生成一个READVIEW，READVIEW的存在本身就保证了不会出现脏读现象
+> > - `REPEATABLE READ`级别下：一个事务在执行过程中只有第一次执行SELECT操作才会生成一个READVIEW,之后的SELECT操作都是`复用`这个READVIEW,这样就避免了不可重复读和幻读的现象
+>
+> 2. 读写操作都加锁
+>
+> - 有些场景下，比如银行存款的事务中，读操作也需要加锁
+>
+> 一般情况下，我们愿意采用MVCC来解决读写问题，因为性能更高
+
+### 共享锁和排他锁（独占锁）
+
+> - 读锁可以是共享锁或排他锁
+>
+> - 写锁必须是排他锁
+
+```mysql
+begin;
+-- SELECT … LOCK IN SHARE MODE;-- 共享锁 MYSQL5.7写法
+select * from account for share;-- 共享锁 MYSQL8.0写法
+commit;
+
+```
+
+```mysql
+begin;
+select * from account for update;-- 共享锁 MYSQL8.0写法
+commit;
+```
+
+```mysql
+select * from account for update nowait;-- MYSQL8.0写法 获取不到锁，立即报错返回
+select * from account for update skip locked;-- MYSQL8.0写法 获取不到锁，返回没有被锁定的数据
+```
+
+### 表锁、页锁、行锁
+
+> - 表锁：开销最小，锁粒度大， 并发性差
+>   1. 表级别的S锁、X锁
+>   2. 意向锁（intention lock）：如果我们给某一行加上了排他锁，数据库会自动给更大一级的空间，比如数据页或数据表加上意向锁，告诉其他人这个数据页或者数据表已经有人加上排他行锁了，不能再加表级锁。理解为加锁标记。不需要我们手动设置
+>   3. 自增锁（AUTO-INC lock）：自增列的表自动加上自增锁
+>   4. 元数据锁（MDL lock）：当对一个表做增删改查操作是，加MDL读锁；当要对表做结构编程搞作是，加MDL写锁。不需要我们手动设置
+
+```mysql
+lock tables mylock read;-- 表级别读锁
+show open tables where in_use>0;
+unlock tables;
+lock tables mylock write;-- 表级别写锁
+show open tables where in_use>0;
+unlock tables;
+```
+
+![MYSQL表级别读锁和写锁](images/image-20221016194155300.png)
+
+![MYSQL意向锁](images/image-20221016195539761.png)
+
+![MYSQL意向锁和表级锁](images/image-20221016195809531.png)
+
+----
+
+> - 行锁：锁力度小，并发性好；锁开销大，加锁比较慢，容易出现死锁
+>   1. 记录锁（Record lock）
+>   2. 间隙锁（Gap lock）：MVCC方案在加锁时，事务在第一次执行读取操作时，那些幻影记录尚不存在，无法给幻影记录加上记录锁，就为区间内加上间隙锁；但是间隙锁可能会造成死锁
+>   3. 临键锁（Next key lock）:本质是记录锁和间隙锁的合体
+>   4. 插入意向锁（Insert intention lock）:InnoDB规定事务在等待的时候也需要一个内存结构，插入一条记录时要判断插入位置是不是被别的事务加了gap锁。插入意向锁也是一种间隙锁（Gap锁）
+
+![间隙锁](images/image-20221016204143386.png)
+
+![间隙锁-死锁](images/image-20221016205439642.png)
+
+![临键锁](images/image-20221016205707731.png)
+
+----
+
+> 页锁：介于行锁和表锁之间
+>
+> 锁空间的大小是优先的，当某个层级的锁数量超过了这个层级的阈值时，就会进行`锁升级`,比如InnoDB行锁升级为表锁
+
+### 乐观锁和悲观锁
+
+> - 悲观锁：比如行锁、表锁等，读锁、写锁等，都是在操作之前先上锁。java中`syschronized`和`ReentrantLock`等独占锁都是悲观锁思想的实现。长事务，这样的开销往往无法承受
+> - 乐观锁：不采用数据库自身的锁机制，而是通过程序来实现，在程序上，我们可以采用`版本号机制`和`CAS机制`实现。乐观锁适用于多读的应用类型，这样可以提高吞吐量，在`java中java.util.concurrent.atomic`包下的`原子变量`类就是使用了乐观锁的一种实现方式：CAS实现
+>   - 乐观锁的版本号机制或时间戳机制：
+>     - 在表中设计一个版本字段[CSDN-乐观锁-版本号机制](https://blog.csdn.net/weixin_43250623/article/details/96191901)
+>     - 类似GIT、SVN版本控制工具，当我们修改了代码进行提交是，首先会检查当前版本号与服务器上的版本号是否一致，如果一致就可以直接提交，如果不一致就需要更新服务器上最新代码，然后再进行提交
+>
+> 注意：`select ... for update`语句执行过程中所有扫描的行都会被锁上，因此MYSQL中用悲观锁必须确定使用了索引，而不是全表扫描，否则会把整个表锁住
+
+### 显式锁、隐式锁
+
+> 一般情况下，新插入一条记录的操作并不加锁，通过一种称为`隐式锁`的结构来保护这条新插入的记录在本事务提交前不被别的事务访问
+
+### 全局锁
+
+> 让整个数据库实例处于只读状态，场景是：全库逻辑备份
+
+```mysql
+flush tables with read lock
+```
+
+### 锁结构
+
+![InnoDB锁结构](images/image-20221016214812997.png)
+
+### 锁监控
+
+```mysqlc  
+show status like 'innodb_row_lock';
+```
+
+![其他锁监控方式](images/image-20221016215839379.png)
+
+## MVCC多版本并发控制【没听懂】
+
+> MVCC是通过数据行的多个版本管理来实现数据库的并发控制,更好的处理并发冲突
+>
+> MVCC的实现依赖于：隐藏字段、undo log、READVIEW
+
+## 其他数据库日志【暂时不用】
+
+## 数据备份与数据库迁移【暂时不用】
