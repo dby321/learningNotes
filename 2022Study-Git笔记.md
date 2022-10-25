@@ -55,3 +55,8 @@
 `git pull ori master`拉取ori远程库的master分支
 
 `git clone https://github.com/xxx.git`克隆代码：1.拉取代码 2.初始化本地仓库 3.创建远程库别名 
+
+### Git ssh免密登录
+
+> [简书-git ssh免密登录](https://www.jianshu.com/p/7164a52786f3)
+
