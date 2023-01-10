@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 不要纠结能否运行 ，复制出来执行，因为变量有冲突 -->
+    <script>
+        // # ES6新增 let const
+        // 使用var 声明变量
+        function getClothing(isCold) {
+            if (isCold) {
+                var freezing = 'Grab a jacket!';
+            } else {
+                var hot = 'Its a shorts kind of day.';
+                console.log(freezing);
+            }
+        }
+        getClothing(false); //undefined
+
+        // 使用let 声明变量
+        function getClothing2(isCold) {
+            if (isCold) {
+                let freezing = 'Grab a jacket!';
+            } else {
+                let hot = 'Its a shorts kind of day.';
+                console.log(freezing);
+            }
+        }
+        // getClothing2(false);// ReferenceError: freezing is not defined
+
+        // 使用const 声明常量
+        console.log("------------------------");
+
+
+
+
+        // # ES6新增 模板字符串
+        // ES6之前,将字符串连接到一起的方法是+或者concat()方法
+        const student = {
+            name: 'Richard Kalehoff',
+            guardian: 'Mr. Kalehoff'
+        };
+
+        const teacher = {
+            name: 'Mrs. Wilson',
+            room: 'N231'
+        };
+
+        let message = student.name + ' please see ' + teacher.name + ' in ' + teacher.room +
+            ' to pick up your report card.';
+
+
+        // ES6 模板字面量 用倒引号 ( `` )  ${expression} 表示的占位符
+        let message2 = `${student.name} please see ${teacher.name} in ${teacher.room} to pick up your report card.`;
+        console.log("-------------------------");
+
+
+
+        // # ES6新增 解构赋值(数组)
+        const point = [10, 25, -34];
+        const [x, y, z] = point;
+        console.log(x, y, z); // 10 25 -34
+        // []表示被解构的数组, x,y,z表示要将数组中的值存储在其中的变量
+        // 在解构数组中, 还可以忽略值, 例如const[x,,z]=point,忽略y坐标.
+
+        // ES6新增 解构赋值(对象)
+        const gemstone = {
+            type: 'quartz',
+            color: 'rose',
+            karat: 21.29
+        };
+        const {
+            type,
+            color,
+            karat
+        } = gemstone;
+        console.log(type, color, karat);
+        // 花括号 { } 表示被解构的对象，type、color 和 karat 表示要将对象中的属性存储到其中的变量
+        console.log("------------------------------");
+
+
+
+        // # ES6 对象字面量简写法
+        // ES6之前 对象属性名:赋值变量名
+        let type = 'quartz';
+        let color = 'rose';
+        let carat = 21.29;
+
+        const gemstone = {
+            type: type,
+            color: color,
+            carat: carat
+        };
+        console.log(gemstone);
+        // ES6 对象字面量可以简写
+        let type = 'quartz';
+        let color = 'rose';
+        let carat = 21.29;
+        const gemstone = {
+            type,
+            color,
+            carat
+        };
+        console.log(gemstone);
+        console.log("------------------------------");
+
+
+        // # ES6 方法的简写 
+        // ES6之前 对象中方法 xxxXxx:function(){...}
+        const gemstone = {
+            type,
+            color,
+            carat,
+            calculateWorth: function () {
+                // 将根据类型(type)，颜色(color)和克拉(carat)计算宝石(gemstone)的价值
+            }
+        };
+        // ES6 对象中方法 xxxXxx(){...}
+        let gemstone = {
+            type,
+            color,
+            carat,
+            calculateWorth() {}
+        };
+        console.log("------------------------------");
+
+
+
+        // # ES6新增 for...of循环
+
+        // ES6之前 普通for 
+        // for 循环的最大缺点是需要跟踪计数器和退出条件。
+        // 虽然 for 循环在循环数组时的确具有优势，但是某些数据结构不是数组，因此并非始终适合使用 loop 循环。
+
+        // ES6之前 for...in循环
+        // for...in 循环循环访问所有可枚举的属性，意味着如果向数组的原型中添加任何其他属性，这些属性也会出现在循环中 
+
+        // ES6之前 forEach()
+        // orEach() 实际上是数组方法，因此只能用在数组中。也无法停止或退出 forEach 循环。如果希望你的循环中出现这种行为，则需要使用基本的 for 循环
+
+        // ES6 for...of循环
+        // 不用担心向对象的原型prototype中添加新的属性 而导致循环出别的东西
+
+        // for（最原始的写法）、 forEach（ES5，但是它不支持使用break、continue和return语句）、for…of（ES6，循环数组的元素值）这三个是循环数组（对象数组）的；
+        // for…in循环数组索引、对象的属性，但使用 for…in 原型链上的所有属性都将被访问，用 hasOwnProperty() 方法解决。
+
+        const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+        for (const digit of digits) {
+            console.log(digit);
+        }
+        const object={"name":"dongbinyu","age":18};
+        // 用这个遍历对象
+        for(const key of Object.keys(object)){
+            console.log("key:"+key+",value:"+object[key]);
+        }
+        for(let value in object){
+            console.log(value);
+        }
+        console.log("------------------------------------");
+
+
+
+        // # ES6新增 展开运算符...
+        const books = ["Don Quixote", "The Hobbit", "Alice in Wonderland", "Tale of Two Cities"];
+        console.log(...books);
+
+        // 使用展开符来结合数组
+        const fruits = ["apples", "bananas", "pears"];
+        const vegetables = ["corn", "potatoes", "carrots"];
+        const produce = [...fruits, ...vegetables];
+        console.log(produce);
+
+        // 剩余参数(可变参数)
+        // 用途1: 将变量赋数组值时
+        const order = [20.17, 18.67, 1.50, "cheese", "eggs", "milk", "bread"];
+        const [total, subtotal, tax, ...items] = order;
+        console.log(total, subtotal, tax, items);
+
+        // 用途2: 可变参数函数
+        // ES6之前 对于参数不固定的函数,ES6之前是使用参数对象(arguments)处理:
+        function sum() {
+            let total = 0;
+            for (const argument of arguments) {
+                total += argument;
+            }
+            return total;
+        }
+        // ES6 剩余参数运算符...
+        function sum(...nums) {
+            let total = 0;
+            for (const num of nums) {
+                total += num;
+            }
+            return total;
+        }
+        console.log("-----------------------------");
+
+
+
+        // # ES6新增 箭头函数
+        // ()=>{}
+        console.log("-----------------------------");
+
+        // 关于this和箭头函数的细节 参考 https://www.jianshu.com/p/87008f4f8513
+        // 关于this和箭头函数的细节 参考 https://www.cnblogs.com/lfri/p/11872696.html
+
+
+        // # ES6新增 默认参数函数
+        // ES6之前 
+        function greet(name, greeting) {
+            name = (typeof name !== 'undefined') ? name : 'Student';
+            greeting = (typeof greeting !== 'undefined') ? greeting : 'Welcome';
+
+            return `${greeting} ${name}!`;
+        }
+
+        greet(); // Welcome Student!
+        greet('James'); // Welcome James!
+        greet('Richard', 'Howdy'); // Howdy Richard!
+
+        // ES6
+        function greet(name = 'Student', greeting = 'Welcome') {
+            return `${greeting} ${name}!`;
+        }
+
+        greet(); // Welcome Student!
+        greet('James'); // Welcome James!
+        greet('Richard', 'Howdy'); // Howdy Richard!
+        console.log("--------------------------------");
+        // # ES6新增 默认值与解构
+        // 1. 默认值与解构数组
+        // ES6之前
+        function createGrid([width = 5, height = 5]=) {
+            return `Generates a ${width} x ${height} grid`;
+        }
+
+        createGrid([]); // Generates a 5 x 5 grid
+        createGrid([2]); // Generates a 2 x 5 grid
+        createGrid([2, 3]); // Generates a 2 x 3 grid
+        createGrid([undefined, 3]); // Generates a 5 x 3 grid
+        // 不传数组会出现问题
+        createGrid(); // throws an error (Uncaught TypeError: Cannot read property 'Symbol(Symbol.iterator)' of undefined)
+
+        // ES6解决 throws an error (Uncaught TypeError: Cannot read property 'Symbol(Symbol.iterator)' of undefined)
+        function createGrid([width = 5, height = 5] = []){...}
+
+        // 2. 默认值与解构函数
+        function createSundae({scoops = 1, toppings = ['Hot Fudge']}={}){...}
+        // 如果想使用scoops的默认值，而改变toppings的值，可以这样调用:
+        createSundae({toppings: ['Hot Fudge', 'Sprinkles', 'Caramel']});
+
+        console.log("---------------------------");
+        // # ES6 JS类
+        class Plane {
+        //constructor方法虽然在类中,但不是原型上的方法,只是用来生成实例的.
+        constructor(numEngines) {
+            this.numEngines = numEngines;
+            this.enginesActive = false;
+        }
+        // 静态方法的声明
+        static badWeather(planes) {
+            for (plane of planes) {
+                plane.enginesActive = false;
+            }
+        }
+        //原型上的方法, 由所有实例对象共享.
+        startEngines() {
+            console.log('starting engines…');
+            this.enginesActive = true;
+            }
+        }
+
+        console.log(typeof Plane); //function
+        
+        console.log("-----------------------------");
+        class Tree {
+  constructor(size = '10', leaves = {spring: 'green', summer: 'green', fall: 'orange', winter: null}) {
+    this.size = size;
+    this.leaves = leaves;
+    this.leafColor = null;
+  }
+
+  changeSeason(season) {
+    this.leafColor = this.leaves[season];
+    if (season === 'spring') {
+      this.size += 1;
+    }
+  }
+}
+
+class Maple extends Tree {
+  constructor(syrupQty = 15, size, leaves) {
+    super(size, leaves); //super用作函数
+    this.syrupQty = syrupQty;
+  }
+
+  changeSeason(season) {
+    super.changeSeason(season);//super用作对象
+    if (season === 'spring') {
+      this.syrupQty += 1;
+    }
+  }
+
+  gatherSyrup() {
+    this.syrupQty -= 3;
+  }
+}
+// super 必须在 this 之前被调用
+    </script>
+</body>
+
+</html>

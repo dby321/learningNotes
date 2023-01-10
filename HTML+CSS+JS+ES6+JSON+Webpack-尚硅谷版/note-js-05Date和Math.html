@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 创建date对象
+        var date = new Date();// 封装 代码运行到这里的 时间
+        console.log(date);// Date Thu Aug 08 2019 17:29:00 GMT+0800 (中国标准时间)
+
+
+        // 创建一个指定的时间对象
+        // 传字符串的格式 月/日/年 时:分:秒
+        var date2=new Date("12/03/2016 11:10:30");
+        console.log(date2);// Date Sat Dec 03 2016 11:10:30 GMT+0800 (中国标准时间)
+
+        console.log(date2.getDate());// 日 3
+        console.log(date2.getMonth());// 月(一月~十二月 0~11)
+        console.log(date2.getFullYear());// 年 2016
+
+        console.log(date2.getDay());// 星期几(星期天~星期六 0~6 美国人认为星期天是一周的开始)
+
+        console.log(date2.getHours());// 时
+        console.log(date2.getMinutes());// 分
+        console.log(date2.getSeconds());// 秒
+
+
+        console.log(date2.getTime());// 时间戳(从格林威治标准时间的 1970年1月1日 00:00:00 至今的毫秒值)
+        var time=date2.getTime();
+        console.log(time/1000);// 时间戳 秒
+        var date3=new Date("1/1/1970 00:00:00");
+        console.log(date3.getTime());// -28800000
+        console.log(date3.getTime()/1000/60/60);// -8 东8区
+        // 当格林尼治标准时间为0:00时，东八区的标准时间为08:00
+
+        console.log(Date.now());//当前时间戳(可以用来测试代码所需时间) 1565259013051
+
+        console.log("-----------------------");
+
+        // Math是一个工具类 直接用
+        var num=100.1;
+        console.log(Math.E);// 2.718281828459045
+        console.log(Math.PI);//3.141592653589793
+        
+        console.log(Math.abs(num));// 绝对值
+        console.log(Math.ceil(num));// 向上取整 101
+        console.log(Math.floor(num));// 向下取整 100
+        console.log(Math.round(num));// 四舍五入
+
+        console.log(Math.random());// 生成0-1的随机数
+        console.log(Math.round(Math.random()*9)+1);// 1-10的随机数
+        // Math.round(Math.random()*(y-x))+x 生成x-y的随机数
+
+        console.log(Math.max(10,20,30));// 30
+        console.log(Math.min(10,20,30));// 10
+        
+        console.log(Math.pow(12,3));// 12的三次幂
+        console.log(Math.sqrt(90));// 90的开方
+        console.log("---------------------------");
+
+        
+
+    </script>
+</body>
+
+</html>

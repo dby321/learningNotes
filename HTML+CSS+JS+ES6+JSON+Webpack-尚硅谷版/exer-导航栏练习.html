@@ -1,0 +1,58 @@
+<!-- 导航条练习 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style type="text/css">
+    *{
+        margin:0;
+        padding:0;
+    }
+    .nav{
+        /* 去除无序列表前面的点 */
+        list-style: none;
+        background-color: #bfa;
+        width:1000px;
+        /* 设置居中 */
+        margin:50px auto;
+        /* 出现了高度塌陷问题 */
+        overflow:hidden;
+    }
+    .nav li{
+        /* 设置li向左浮动 */
+        float:left;
+        /* 每一个li的宽占ul的宽的25% */
+        width:25%;
+    }
+    .nav a{
+        /* 将a转变为块元素 */
+        display:block;
+        /* 每一个a的宽占li的宽的100% */
+        width:100%;
+        text-align:center;
+        /* 设置上下内边距 */
+        padding:5px 0;
+        /* 去除下划线 */
+        text-decoration:none;
+        color:white;
+        /* 设置加粗 */
+        font-weight:bold;
+        background-color: rgb(94, 149, 242);
+    }
+    .nav a:hover{
+        background-color: rgb(220, 20, 0);
+    }
+    </style>
+</head>
+<body>
+    <ul class="nav">
+        <li><a href="#">首页</a></li>
+        <li><a href="#">新闻</a></li>
+        <li><a href="#">联系</a></li>
+        <li><a href="#">关于</a></li>
+    </ul>
+</body>
+</html>
