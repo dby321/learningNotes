@@ -2,224 +2,508 @@
 
 ## 01. JVM与Java体系结构
 
-![1628584302265](.\images\1628584302265.png)
+### 2. 面向人群和参考书目
 
-Java虚拟机平台上运行非Java语言编写的程序
+> 《深入理解Java虚拟机-周志明-第三版》
+
+### 3. Java及JVM简介
+
+![JVM：跨语言的平台](.\images\1628584302265.png)
+
+> `Java虚拟机平台上可以运行非Java语言编写的程序`
+>
+> `Java不是最强大的语言，但JVM是最强大的虚拟机`
+>
+> `Java平台上的多语言混合秉承正成为主流，因为各种语言之间的交互不存在任何困难，就像使用自己语言的原生API一样方便，因为他们最终都运行在一个虚拟机上。`
+
+### 4. Java发展的重大事件
 
 ### 5. 虚拟机和Java虚拟机
 
-虚拟机可以分为系统虚拟机和程序虚拟机
+> 虚拟机的分类：
+>
+> - 虚拟机可以分为系统虚拟机和程序虚拟机
+>
+> - VMware就属于系统虚拟机，他们完全是对物理计算机的仿真
+>
+> - 程序虚拟机的典型代表就是Java虚拟机，它专门为执行单个计算机程序而设计
+>
+> Java虚拟机的作用：`Java虚拟机就是二进制字节码的运行环境`
+>
+> Java虚拟机的特点：`一次编译，到处运行`。`自动内存管理`。`自动垃圾回收功能`。
+>
+> `JVM是运行在操作系统之上的，它与硬件没有直接交互`
 
-- VMware就属于系统虚拟机，他们完全是对物理计算机的仿真
-
-- 程序虚拟机的典型代表就是Java虚拟机，它专门为执行单个计算机程序而设计
-
-Java虚拟机的作用：Java虚拟机就是二进制字节码的运行环境
-
-Java虚拟机的特点：一次编译，到处运行。自动内存管理。自动垃圾回收功能。
-
-![1628585789031](.\images\1628585789031.png)
+![JVM的位置](.\images\1628585789031.png)
 
 ### 6. JVM的整体结构
 
-![1628586039264](.\images\1628586039264.png)
+> 运行时数据区哪些是线程共享的，哪些是线程独占的？
+>
+> - 线程共享：方法区 堆，
+>
+> - 线程独占：Java栈、本地方法栈、程序计数器
+>
+> 执行引擎包含几个部分：
+>
+> - 解释器
+> - JIT(即时编译器/后端编译器)   ps:前端编译器是编译.java文件为.class文件的编译器
+> - 垃圾回收器
 
-多个线程共享方法区和堆，Java栈、本地方法栈、程序计数器是每个线程独有一份的
+![JVM简图](.\images\1628586039264.png)
+
+
 
 ### 7. Java代码执行流程
 
-![1628756709478](.\images\1628756709478.png)
+![宏观的Java代码执行流程](.\images\1628756709478.png)
 
 ### 8. JVM的架构模型
 
-Java编译器输入的指令流基本上是一种栈的指令集架构，另一种是寄存器的指令集架构
+> JVM的架构模型：
+>
+> - 基于`栈式架构`的特点
+>   - 设计和实现更简单，适用于资源受限的系统
+>   - 避开了寄存器的分配难题，使用零地址指令方式分配
+>   - 指令流中的指令大部分是零地址指令，其执行过程依赖于操作栈。指令集更小，编译器容易实现
+>   - 不需要硬件支持，可以执行更好，更好的跨平台
+> - 基于`寄存器架构`的特点
+>   - 典型的应用是x86的二进制指令集
+>   - 指令集架构则完全依赖硬件，可以执行差
+>   - 性能优秀和执行更高效
+>   - 花费更少的指令去完成一项操作
+>   - 大部分情况下，基于寄存器架构的指令集往往都以一地址指令，二地址指令和三地址指令为主
+>
+> - 总结：由于跨平台性的设计(不同平台的CPU架构是不同的，所以不能设计为基于寄存器的)，`Java的指令都是根据栈来设计的`
+> - ![基于栈的指令和基于寄存器的指令](./images/image-20230112194742853.png)
 
-- 基于栈式架构的特点
-  - 设计和实现更简单，适用于资源受限的系统
-  - 避开了寄存器的分配难题，使用零地址指令方式分配
-  - 指令流中的指令大部分是零地址指令，其执行过程依赖于操作栈。指令集更小，编译器容易实现
-  - 不需要硬件支持，可以执行更好，更好的跨平台
-- 基于寄存器的特点
-  - 典型的应用是x86的二进制指令集
-  - 指令集架构则完全依赖硬件，可以执行差
-  - 性能优秀和执行更高效
-  - 花费更少的指令去完成一项操作
-  - 大部分情况下，基于寄存器架构的指令集往往都以一地址指令，二地址指令和三地址指令为主
 
-总结：由于跨平台性的设计，Java的指令都是根据栈来设计的
+
+> `javap`的使用：解析字节码文件
+>
+> ```
+> dongbinyu@dongbinyudeMacBook-Pro binyu % javap -v StackStructTest.class
+> Classfile /Users/dongbinyu/IdeaProjects/JVM_Study/out/production/chapter01/com/binyu/StackStructTest.class
+>   Last modified 2023-1-12; size 474 bytes
+>   MD5 checksum c2762b1b18991f78848d098f0378b2cc
+>   Compiled from "StackStructTest.java"
+> public class com.binyu.StackStructTest
+>   minor version: 0
+>   major version: 52
+>   flags: ACC_PUBLIC, ACC_SUPER
+> Constant pool:
+>    #1 = Methodref          #3.#21         // java/lang/Object."<init>":()V
+>    #2 = Class              #22            // com/binyu/StackStructTest
+>    #3 = Class              #23            // java/lang/Object
+>    #4 = Utf8               <init>
+>    #5 = Utf8               ()V
+>    #6 = Utf8               Code
+>    #7 = Utf8               LineNumberTable
+>    #8 = Utf8               LocalVariableTable
+>    #9 = Utf8               this
+>   #10 = Utf8               Lcom/binyu/StackStructTest;
+>   #11 = Utf8               main
+>   #12 = Utf8               ([Ljava/lang/String;)V
+>   #13 = Utf8               args
+>   #14 = Utf8               [Ljava/lang/String;
+>   #15 = Utf8               i
+>   #16 = Utf8               I
+>   #17 = Utf8               j
+>   #18 = Utf8               k
+>   #19 = Utf8               SourceFile
+>   #20 = Utf8               StackStructTest.java
+>   #21 = NameAndType        #4:#5          // "<init>":()V
+>   #22 = Utf8               com/binyu/StackStructTest
+>   #23 = Utf8               java/lang/Object
+> {
+>   public com.binyu.StackStructTest();
+>     descriptor: ()V
+>     flags: ACC_PUBLIC
+>     Code:
+>       stack=1, locals=1, args_size=1
+>          0: aload_0
+>          1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+>          4: return
+>       LineNumberTable:
+>         line 3: 0
+>       LocalVariableTable:
+>         Start  Length  Slot  Name   Signature
+>             0       5     0  this   Lcom/binyu/StackStructTest;
+> 
+>   public static void main(java.lang.String[]);
+>     descriptor: ([Ljava/lang/String;)V
+>     flags: ACC_PUBLIC, ACC_STATIC
+>     Code:
+>       stack=2, locals=4, args_size=1
+>          0: iconst_2
+>          1: istore_1
+>          2: iconst_3
+>          3: istore_2
+>          4: iload_1
+>          5: iload_2
+>          6: iadd
+>          7: istore_3
+>          8: return
+>       LineNumberTable:
+>         line 5: 0
+>         line 6: 2
+>         line 7: 4
+>         line 8: 8
+>       LocalVariableTable:
+>         Start  Length  Slot  Name   Signature
+>             0       9     0  args   [Ljava/lang/String;
+>             2       7     1     i   I
+>             4       5     2     j   I
+>             8       1     3     k   I
+> }
+> SourceFile: "StackStructTest.java"
+> 
+> ```
+>
+> 
+
+
+
+
 
 ### 9. JVM的生命周期
 
-- 虚拟机的启动：是通过引导类加载器bootstrap class loader创建一个初始类来完成的，这个类是由虚拟机的具体实现指定的
-- 虚拟机的执行：
-  - 一个运行中的Java虚拟机有着一个清晰的任务：执行Java程序
-  - 程序开始执行他才运行，程序结束他就停止
-  - 执行一个所谓的Java程序的时候，真正执行的是一个叫做Java虚拟机的进程
-- 虚拟机的退出：
-  - 程序正常执行结束
-  - 程序在执行过程中遇到了异常或错误而异常终止
-  - 由于操作系统出现错误而导致Java虚拟机进程终止
-  - 某线程调用Runtime类或System类的exit方法，或Runtime类的halt方法，并且Java安全管理器也允许这次exit或halt操作
-  - JNI规范描述了用JNI Invocation API来加载或卸载Java虚拟机时，Java虚拟机退出情况
+> JVM的生命周期：
+>
+> - 虚拟机的启动：是通过引导类加载器bootstrap class loader创建一个初始类来完成的，这个类是由虚拟机的具体实现指定的
+> - 虚拟机的执行：
+>   - 一个运行中的Java虚拟机有着一个清晰的任务：执行Java程序
+>   - 程序开始执行他才运行，程序结束他就停止
+>   - 执行一个所谓的Java程序的时候，真正执行的是一个叫做Java虚拟机的进程
+> - 虚拟机的退出：
+>   - 程序正常执行结束
+>   - 程序在执行过程中遇到了异常或错误而异常终止
+>   - 由于操作系统出现错误而导致Java虚拟机进程终止
+>   - 某线程调用Runtime类或System类的exit方法，或Runtime类的halt方法，并且Java安全管理器也允许这次exit或halt操作
+>   - JNI规范描述了用JNI Invocation API来加载或卸载Java虚拟机时，Java虚拟机退出情况
+
+> `JPS`的使用：JPS是JDK提供的一个可以列出正在运行的Java虚拟机的进程信息的命令行工具
+>
+> ```
+> dongbinyu@dongbinyudeMacBook-Pro JVM_Study % jps
+> 2992 
+> 3251 Jps
+> 3245 Launcher
+> 3246 StackStructTest
+> ```
+>
+> 
+
+
+
+
 
 ### 10. JVM发展历程
 
-- Sun Classic VM
-- Exact VM
-- HotSpot VM：名称中的HotSpot指的是热点代码探测技术：通过计数器找到最具编译价值代码，触发即时编译或栈上替换；通过编译器与解释器协同工作，在最优化的程序响应时间与最佳执行性能中取得平衡
-- BEA的JRocket：专注于服务器端的应用
-- IBM的J9：号称世界上最快的虚拟机
-- KVM和CDC/CLDC HotSpot
-- Azul VM
-- Liquid VM
-- Apache Harmony
-- Microsoft JVM
-- Taobao JVM
-- Graal VM
+> ###### 历史上出现的JVM:
+>
+> - Sun Classic VM:`世界上第一款商用的java虚拟机`。虚拟机内部只提供了解释器，程序执行慢。如果外挂了JIT即时编译器，就不能使用解释器了。那么全部用JIT即时编译器好吗？不好，会导致程序运行暂停时间过长。解释器就像步行，JIT就像要等待的公交车，上了车自然是JIT快，但是两者搭配使用才最好。
+> - Exact VM
+> - HotSpot VM：名称中的HotSpot指的是`热点代码探测技术`：通过计数器找到最具编译价值代码，触发`即时编译`或`栈上替换`；通过`编译器与解释器协同工作`，在`最优化的程序响应时间与最佳执行性能中取得平衡`
+> - BEA的JRocket：专注于服务器端的应用
+> - IBM的J9：号称世界上最快的虚拟机，在IBM设备中运行快
+> - KVM和CDC/CLDC HotSpot 
+> - Azul VM
+> - Liquid VM
+> - Apache Harmony
+> - Microsoft JVM
+> - Taobao JVM
+> - Graal VM：Oracle未来的野心
 
 ## 02. 类加载子系统
 
-![1628838034799](.\images\1628838034799.png)
+### 2. 类加载器与类的加载过程
 
-类加载器子系统作用：
+![JVM详细图](.\images\1628838034799.png)
 
-- 类加载器子系统负责从文件系统或者网络中加载class文件，class文件在文件开头有特定的文件表示
-- ClassLoader只负责class文件的加载，至于它是否可以运行，则由ExecutionEngine决定
-- 加载的类信息存放与一块成为方法区的内存空间，除了类的信息外，方法区中还会存放运行时常量池的信息，可能还包括字符串字面量和数字常量
-
-
-
-----
-
-加载：
-
-1. 通过一个类全限定名获取定义此类的二进制字节流
-2. 将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构
-3. 在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的访问入口
-
-----
-
-![1630119311307](.\images\1630119311307.png)
-
-  ![1630120501529](.\images\1630120501529.png)
-
-类加载器的分类：
-
-![1630832390662](.\images\1630832390662.png)
-
-![1630832501482](.\images\1630832501482.png)
-
-![1630832606797](.\images\1630832606797.png)
-
-![1630832665919](.\images\1630832665919.png)
-
-```java
-import java.util.Arrays;
-import java.util.List;
-
-/**
- * 3种类加载器的加载目录
- * @ author:xxx
- * @ date:2020/8/2 00:05
- */
-public class TargetForClassLoader {
-
-    public static void main(String[] args) {
-        bootstrapClassLoader();
-//        extClassLoader();
-//        appClassLoader();
-    }·
-
-    /**
-     * 启动类加载器的职责
-     */
-    public static void bootstrapClassLoader() {
-        String property = System.getProperty("sun.boot.class.path");
-        List<String> list = Arrays.asList(property.split(";"));
-        list.forEach((t) -> {
-            System.out.println("启动类加载器目录:" + t);
-        });
-    }
+> ##### 类加载器的角色与作用：
+>
+> - 类加载器子系统负责从文件系统或者网络中`加载class文件`，class文件在文件开头有特定的文件标识cafebabe魔数
+> - ClassLoader`只负责class文件的加载`，至于它是否可以运行，则由ExecutionEngine决定
+> - `加载的类信息存放于一块称为方法区的内存空间`，除了类的信息外，方法区中还会存放运行时常量池的信息，可能还包括字符串字面量和数字常量
+> - ![类加载器ClassLoader的角色](./images/image-20230112224216744.png)
 
 
-    /**
-     * 扩展类加载器
-     */
-    public static void extClassLoader() {
-        String property = System.getProperty("java.ext.dirs");
-        List<String> list = Arrays.asList(property.split(";"));
-        list.forEach((t) -> {
-            System.out.println("扩展类加载器" + t);
-        });
-    }
 
-    /**
-     * app 类加载器
-     */
-    public static void appClassLoader() {
-        String property = System.getProperty("java.class.path");
-        List<String> list = Arrays.asList(property.split(";"));
-        list.forEach((t) -> {
-            System.out.println("应用类加载器" + t);
-        });
-    }
-}
-```
+> 类的加载过程：
+>
+> - **加载Loading->链接Linking(验证Verification->准备Preparation->解析Resolution)->初始化Initialization**
+>
+> - `加载Loading`：
+>
+>   1. 通过一个类全限定名获取定义此类的二进制字节流
+>   2. 将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构
+>   3. 在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的访问入口
+>
+> - `链接Linking`:
+>
+>   - `验证Verify`:
+>     - 目的在于确保class文件的字节流中包含信息符合当前虚拟机要求，保证被加载类的正确性，不会危害虚拟机自身安全。
+>     - 主要包括四种验证，文件格式验证，元数据验证，字节码验证，符号引用验证。
+>
+>   - `准备(Prepare)`:
+>     - 为类变量分配内存并且设置该类变量的默认初始值，即零值。
+>     - 这里不包含用final修饰的static,因为final在编译的时候就会分配了，准备阶段会显式初始化
+>     - 这里不会为实例变量分配初始化，类变量会分配在方法区中，而实例变量是会随着对象一起分配到Java堆中。
+>
+>   - `解析(Resolve)`:
+>     - 将常量池内的符号引用转换为直接引用的过程。
+>     - 事实上，解析操作往往会伴随着M在执行完初始化之后再执行。
+>     - 符号引用就是一组符号来描述所引用的目标。符号引用的字面量形式明确定义在《java虚拟机规范》的class文件格式中。直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。
+>     - 解析动作主要针对类或接口、字段、类方法、接口方法、方法类型等。对应常量池中的CONSTANT_Class_info,CONSTANT_Fieldref info,CONSTANT Methodref info
+>
+> - `初始化`：
+>   - 初始化阶段就是执行类构造器方法<c11n1t>()的过程。
+>   - 此方法不需定义，是javac编译器自动收集类中的所有类变量的赋值动作和静
+>     态代码块中的语句合并而来。
+>   - 构造器方法中指令按语句在源文件中出现的顺序执行。
+>   - <c1init>()不同于类的构造器。（关联：构造器是虚拟机视角下的<init>())
+>   - 若该类具有父类，JVM会保证子类的<clinit>()执行前，父类的<c1init>()
+>     已经执行完毕。
+>   - 虚拟机必须保证一个类的<c1init>()方法在多线程下被同步加锁。
+>
+> 
 
-![1630833293292](.\images\1630833293292.png)
 
-![1630833474775](.\images\1630833474775.png)
 
-![1630833613372](.\images\1630833613372.png)
+### 3. 类加载器分类
 
----
+> **JVM类加载器的分类：**
+>
+> - `引导类加载器`和`自定义类加载器`。JVM规范将所有派生于抽象类ClassLoader的类加载器都划分为`自定义类加载器`。也就是说BootstrapClassLoader自成一类，其余类加载器成另一类。
+>
+> 这里的四种类加载器之间的关系是包含关系。不是上层下层，也不是子父类的继承关系。
+>
+> `sun.misc.Launcher是java虚拟机的入口应用`
+>
+> - ![类加载器的分类](.\images\1630832390662.png)
+> - ![拓展类加载器和系统类加载器间接继承于ClassLoader](./images/image-20230113105131265.png)
 
-双亲委派机制：
 
-![1630833835800](.\images\1630833835800.png)
 
-![1630834168217](.\images\1630834168217.png)
+> **类加载器是怎么编写的？**
+>
+> - Bootstrap是用C/C++编写的。
+> - 其他的自定类加载器使用Java编写的。
+>
+> **虚拟机自带的加载器有哪些？**
+>
+> - 启动类加载器（`引导类加载器`，Bootstrap ClassLoader)
+>   - 这个类加载使用C/C++语言实现的，嵌套在JM内部。
+>   - 它用来加载Java的核心库(JAVA HOME/jre/Iib/rt.jar、re3 ource3.jar或sun.boot.class.path路径下的内容)，用于提供JVM自身需要的类
+>   - 并不继承自java.lang.ClassLoader,没有父加载器。
+>   - 加载扩展类和应用程序类加载器，并指定为他们的父类加载器。
+>   - 出于安全考虑，Bootstrap,启动类加载器只加载包名为java、javax、sun等开头的类
+>
+> - `扩展类加载器`(Extension ClassLoader)》
+>
+>   - Java言缄写，由sun.misc.Launcher$ExtclassLoader实现。
+>   - 派生于classLoader类
+>   - 父类加载器为启动类加载器
+>   - 从java.ext.dirs系统属性所指定的目录中加载类库，或从JDK的安
+>     装目录的jre/1ib/ext子目录（扩展目录）下加载类库。如果用户创
+>     建的JAR放在此目录下，也会自动由扩展类加载器加载。
+>
+> - 应用程序类加载器(`系统类加载器`，AppClassLoader)
+>   - java语言编写，由sun.misc.Launcher$AppClassLoader实现
+>   - 派生于classLoader类
+>   - 父类加载器为扩展类加载器
+>   - 它负责加载环境变量classpath.或系统属性java.class,path指
+>     定路径下的类库
+>   - 该类加载是程序中默认的类加载器，一般来说，Java应用的类都是由
+>     它来完成加载
+>   - 通过classLoader#getSystemclassLoader()方法可以获取到该
+>     类加载器
+>
+> - ```java
+>   public class ClassLoaderTest {
+>       public static void main(String[] args) {
+>           // 系统类加载器/应用类加载器
+>           ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+>           System.out.println(systemClassLoader);//sun.misc.Launcher$AppClassLoader@18b4aac2
+>           // 拓展类加载器
+>           ClassLoader extClassLoader = systemClassLoader.getParent();
+>           System.out.println(extClassLoader);//sun.misc.Launcher$ExtClassLoader@1540e19d
+>           // 引导类加载器
+>           ClassLoader bootstrapClassLoader = extClassLoader.getParent();
+>           System.out.println(bootstrapClassLoader);//null
+>           // 用户自定义类加载器,默认使用系统类加载器
+>           ClassLoader classLoader = ClassLoaderTest.class.getClassLoader();
+>           System.out.println(classLoader);//sun.misc.Launcher$AppClassLoader@18b4aac2
+>           //JDK系统核心类库是使用引导类加载器加载的
+>           ClassLoader classLoader1 = String.class.getClassLoader();
+>           System.out.println(classLoader1);//null
+>           bootstrapClassLoader();
+>           extClassLoader();
+>           appClassLoader();
+>       }
+>       /**
+>        * 启动类加载器的职责
+>        */
+>       public static void bootstrapClassLoader() {
+>           String property = System.getProperty("sun.boot.class.path");
+>           List<String> list = Arrays.asList(property.split(";"));
+>           list.forEach((t) -> {
+>               System.out.println("启动类加载器目录:" + t);
+>           });
+>       }
+>   
+>   
+>       /**
+>        * 扩展类加载器
+>        */
+>       public static void extClassLoader() {
+>           String property = System.getProperty("java.ext.dirs");
+>           List<String> list = Arrays.asList(property.split(";"));
+>           list.forEach((t) -> {
+>               System.out.println("扩展类加载器" + t);
+>           });
+>       }
+>                   
+>       /**
+>        * app 类加载器
+>        */
+>       public static void appClassLoader() {
+>           String property = System.getProperty("java.class.path");
+>           List<String> list = Arrays.asList(property.split(";"));
+>           list.forEach((t) -> {
+>               System.out.println("应用类加载器" + t);
+>           });
+>       }
+>   }
+>   
+>   ```
+>   
 
-![1630834485772](.\images\1630834485772.png)
 
-![1630834572871](.\images\1630834572871.png)
 
-双亲委派机制的优势：
+> **用户自定义类加载器：**
+>
+> - 在Java的口常应用程序开发中，类的加载几乎是由上述3种类加载器相互
+>   配合执行的，在必要时，我们还可以自定义类加载器，来定制类的加载方
+>   式。
+> - 为什么要自定义类加载器？
+>   - 隔离加载类
+>   - 修改类加载的方式
+>   - 扩展加载源
+>   - 防止源码泄漏
+>
+> **用户自定义类加载器实现步骤：**
+>
+> 1. 开发人员`可以通过继承抽象类java.lang.ClassLoader类`的方式，实现
+>    自己的类加载器，以满足一些特殊的需求
+> 2. 在JDK1.2之前，在自定义类加载器时，总会去继承ClassLoader类并重
+>    写loadclass()方法，从而实现自定义的类加载类，但是在JDK1.2之后
+>    已不再建议用户去覆盖loadclass()方法，而是建议把`自定义的类加载逻
+>    辑写在findClass()方法中`
+> 3. 在编写自定义类加载器时，`如果没有太过于复杂的需求，可以直接继承
+>    URLClassLoader类`，这样就可以避免自己去编写findclass()方法及
+>    其获取字节码流的方式，使自定义类加载器编写更加简洁。
 
-- 避免类的重复加载
-- 保护程序安全，防止核心API被篡改
 
-----
 
-![1630834794699](.\images\1630834794699.png)
+> **获取ClassLoader的方式：**
+>
+> - 方式一：获取当前类的classLoader
+>   clazz.getclassLoader()
+> - 方式二：获取当前线程上下文的classLoader
+>   Thread.currentThread().getContextclassLoader()
+> - 方式三：获取系统的classLoader
+>   ClassLoader.getsystemclassLoader()
+> - 方式四：获取调用者的classLoader
+>   DriverManager.getCallerclassLoader()
 
-----
+### 5. 双亲委派机制
 
-![1630834968574](.\images\1630834968574.png)
+> `Java虚拟机对class文件采用的是按需加载的方式`，也就是说当需要使用该类时才会将它的class文件加载到内存生成class对象。而且加载某个类的class文件时，Java虚拟机采用的是`双亲委派模式`，即`把请求交由父类处理`，它是一种任务委派模式。
+>
+> **双亲委派机制是什么？**
+>
+> 1. 如果一个类加载器收到了类加载请求，它并不会自己先去加载，而是把这个请求委托给父类的加载器去执行
+> 2. 如果父类加载器还存在其父类加载器，则进一步向上委托，依次递归，请求最终将到达顶层的启动类加载器：
+> 3. 如果父类加载器可以完成类加载任务，就成功返回，倘若父类加载器无法完成此加载任务，子加载器才会尝试自己去加载，这就是双亲委派模式。
+>
+> **双亲委派机制的优势：**
+>
+> - 避免类的重复加载
+> - 保护程序安全，防止核心API被篡改
+>
+> **沙箱安全机制：**
+>
+> - 自定义String类，但是在加载自定义String类的时候会率先使用引导类加载器加载，而引导类加载器在加载的过程中会先加载jdk自带的文件(rt.jar包java\lang\String.class),报错信息说没有main方法就是因为加载的是rt,jar包中的String类。这样可以保证对java核心源代码的保护，这就是沙箱安全机制。
 
-![1630835065970](.\images\1630835065970.png)
+![双亲委派机制](.\images\1630834168217.png)
 
-![1630835211616](.\images\1630835211616.png)
+![避免类的重复加载；保护程序安全，防止核心API被篡改](.\images\1630834485772.png)
+
+### 6. 其他
+
+> **在JVM中表示两个class对象是否为同一个类存在两个必要条件：**
+>
+> - 类的完整类名必须一致，包括包名。
+> - 加载这个类的c1 assLoader(指classLoader实例对象)必须相同。
+>
+> JVM必须知道一个类型是由启动加载器加载的还是由用户类加载器加载的。如果一个类型是由用户类加载器加载的，那么`JVM会将这个类加载器的一个引用作为类型信息的一部分保存在方法区中`。当解
+> 析一个类型到另一个类型的引用的时候，JVM需要保证这两个类型的类加载器是相同的。
+>
+> **Java程序对类的使用方式分为：主动使用和被动使用。**
+>
+> - 主动使用，又分为七种情况：
+>
+>   - 创建类的实例
+>
+>   - 访问某个类或接口的静态变量，或者对该静态变量赋值
+>
+>   - 调用类的静态方法
+>
+>   - 反射（比如：Class.forName("com.atguigu.Test"))
+>
+>   - 初始化一个类的子类
+>
+>   - Java虚拟机启动时被标明为启动类的类
+>
+>   - JDK7开始提供的动态语言支持：
+>     java.lang.invoke.MethodHandle实例的解析结果REF getstatic、REF putStatic、REF invokeStatic句柄对应的类没有初始化，则初始化
+>
+> - 除了以上七种情况，其他使用Java类的方式都被看作是对类的被动使用，
+>   都不会导致类的初始化。
 
 ## 03. 运行时数据区概述及线程
 
 ### 1. 概述
 
-![1630909871255](.\images\1630909871255.png)
+> 每个线程：程序计数器、虚拟机栈、本地方法栈
+>
+> 线程间共享：堆、堆外内存/非堆（永久代或元空间：是方法区落地的实现、JIT编译出的代码缓存）
+>
+> 一个JVM实例对应一个Runtime实例，Runtime对象相当于运行时数据区
 
-标红色的为多个线程共享的
+![HotspotJVM结构图1](.\images\1630909871255.png)
 
-标灰色的为一个线程私有的
+![HotspotJVM结构图2](./images/image-20230113151454639.png)
+
+![HotspotJVM结构图3](./images/image-20230113151950341.png)
 
 ### 2. 线程
 
-![1630910751062](.\images\1630910751062.png)
+> - 线程是一个程序里的运行单元。VM允许一个应用有多个线程并行的
+>   执行。
+> - 在Hotspot JVM.里，每个线程都与操作系统的本地线程直接映射。
+>   - 当一个Java线程准备好执行以后，此时一个操作系统的本地线程也同时创建。Java线程执行终止后，本地线程也会回收。
+> - 操作系统负责所有线程的安排调度到任何一个可用的CPU上。一旦本地线程初始化成功，它就会调用Java线程中的run()方法。
 
-![1630910813908](.\images\1630910813908.png)
+![JVM的守护线程【了解】](.\images\1630910813908.png)
 
-## 04. 程序计数器（PC寄存器）
+## 04. 程序计数器/PC寄存器
 
-### 1. PC Register介绍
+### 1. 介绍
+
+> **程序计数器：**用于存储下一条指令的地址。没有GC也没有OOM异常
 
 ![1630911159543](.\images\1630911159543.png)
 
@@ -233,67 +517,161 @@ public class TargetForClassLoader {
 
 ### 3. 两个常见的问题
 
-![1630912710827](.\images\1630912710827.png)
-
-![1630912890344](.\images\1630912890344.png)
+> 1. 使用PC寄存器存储字节码指令地址有什么用呢？为什么使用PC寄存器记录当前线程的执行地址呢?
+>    - 因为CPU需要不停的切换各个线程，这时候切换回来以后，就得知道接着从哪开始继续执行。JVM的字节码解释器就需要通过改变PC寄存器的值来明确下一条应该执行什么样的字节码指令。
+> 2. PC寄存器为什么会被设定为线程私有？
+>    - 我们都知道所谓的多线程在一个特定的时间段内只会执行其中某一个线程的方法，CPU会不停地做任务切换，这样必然导致经常中断或恢复，如何保证分毫无差呢？为了能够准确地记录各个线程正在执行的当前字节码指令地址，最好的办法自然是为每一个线程都分配一个PC寄存器，这样一来各个线程之间便可以进行独立计算，从而不会出现相互干扰的情况。由于CPU时间片轮限制，众多线程在并发执行过程中，任何一个确定的时刻，一个处理器或者多核处理器中的一个内核，只会执行某个线程中的一条指令。这样必然导致经常中断或恢复，如何保证分毫无差呢？每个线程在创建后，都会产生自己的程序计数器和栈帧，程序计数器在各个线程之间互不影响。
+>
+> 简单说就是Java是多线程的，线程并发时CPU会切换线程，就需要记录现场以便切换回来时继续运行。
 
 ## 05. 虚拟机栈
 
 ### 1. 虚拟机栈概述
 
-![1630913193831](.\images\1630913193831.png)
+> **Java虚拟机栈是什么？**
+>
+> - Java虚拟机栈(Java Virtual Machine Stack),早期也叫Java栈。每个线程在创建时都会创建一个虚拟机栈，其内部保存一个个的`栈帧`(Stack Frame),对应着一次次的Java方法调用。
+>
+> - 是线程私有的
+>
+> - 生命周期和线程一致。
+> - 主管Java程序的运行，它保存方法的局部变量、部分结果，并参与方法的调用和返回。堆管存储。
+>
+> **栈的特点（优点）:**
+>
+> - 栈是一种快速有效的分配存储方式，访问速度仅次于程序计数器。
+> - JVM直接对Java栈的操作只有两个：
+>   - 每个方法执行，伴随着进栈（入栈、压栈）
+>   - 执行结束后的出栈工作
+> - 对于栈来说不存在垃圾回收问题，存在OOM异常
+>
+> **虚拟机规范中的StackOverflowError和OutOfMemoryError:**
+>
+> - `当某次线程运行计算时，需要占用的 Java 虚拟机栈（Java Virtual Machine Stack）大小，也就是 Java 线程栈大小，**超过规定大小**时，抛出 StackOverflowError`
+> - `如果 Java 虚拟机栈大小可以动态扩容，发生扩容时发现内存不足，或者新建Java 虚拟机栈时发现内存不足，抛出 OutOfMemoryError`
+> - 当所需要的堆（heap）内存大小不足时，抛出 OutOfMemoryError
+> - 当方法区（Method Area）大小不够分配时，抛出 OutOfMemoryError
+> - 当创建一个类或者接口时，运行时常量区剩余大小不够时，抛出 OutOfMemoryError
+> - 本地方法栈（Native Method Stack）大小不足时，抛出 StackOverflowError
+> - 本地方法栈（Native Method Stack）扩容时发现内存不足，或者新建本地方法栈发现内存不足，抛出 OutOfMemoryError
+>
+> **演示一下StackOverflowError：**
+>
+> ```java
+> public class StackErrorTest {
+>     public static void main(String[] args) {
+>         main(args);
+>     }
+> }
+> ```
+>
+> ```
+> Exception in thread "main" java.lang.StackOverflowError
+> 	at com.binyu.StackErrorTest.main(StackErrorTest.java:5)
+> 	at com.binyu.StackErrorTest.main(StackErrorTest.java:5)
+> 	at com.binyu.StackErrorTest.main(StackErrorTest.java:5)
+> 	at com.binyu.StackErrorTest.main(StackErrorTest.java:5)
+> ```
+>  
 
-![1630913253381](.\images\1630913253381.png)
 
-![1630913847996](.\images\1630913847996.png)
 
-![1630914030825](.\images\1630914030825.png)
 
-![1630914412324](.\images\1630914412324.png)
+
+> -Xss*size*
+>
+> Sets the thread stack size (in bytes). Append the letter `k` or `K` to indicate KB, `m` or `M` to indicate MB, `g` or `G` to indicate GB. The default value depends on the platform:
+>
+> - Linux/ARM (32-bit): 320 KB
+> - Linux/i386 (32-bit): 320 KB
+> - Linux/x64 (64-bit): 1024 KB
+> - OS X (64-bit): 1024 KB
+> - Oracle Solaris/i386 (32-bit): 320 KB
+> - Oracle Solaris/x64 (64-bit): 1024 KB
+>
+> The following examples set the thread stack size to 1024 KB in different units:
+>
+> ```
+> -Xss1m
+> -Xss1024k
+> -Xss1048576
+> ```
+>
+> This option is equivalent to `-XX:ThreadStackSize`.
 
 ### 2. 栈的存储单位
 
-![1631001757360](.\images\1631001757360.png)
+>在一条活动线程中，一个时间点上，只会有一个活动的栈帧。即只有当前正在执行的方法的栈帧（栈顶栈帧）是有效的，这个栈帧被称为`当前栈帧`(Current Frame),与当前栈帧相对应的方法就是`当前方法`(Current Method),定义这个方法的类就是`当前类`(Current Class)
+>
+>`不同线程中所包含的栈帧是不允许存在相互引用的`，即不可能在一个栈帧之中引用另外一个线程的栈帧。
+>
+>Java方法有两种返回函数的方式，一种是正常的函数返回，使用return指令；另外一种是抛出异常。`不管使用哪种方式，都会导致栈帧被弹出`。
 
-![1631001857707](.\images\1631001857707.png)
-
- ![1631002726963](.\images\1631002726963.png)
-
-
-
-
+![虚拟机栈的结构](.\images\1631003382715.png)
 
 ### 3. 局部变量表
 
-![1631003382715](.\images\1631003382715.png)
+> **局部变量表：**
+>
+> - `定义为一个数字数组`，主要用于存储方法参数和定义在方法体内的局部变量这些数据类型包括各类基本数据类型、对象引用(reference),以及returnAddress类型。
+> - 由于局部变量表是建立在线程的栈上，是线程的私有数据，因此`不存在线程安全问题`
+> - `局部变量表所需的容量大小是在编译期确定下来的`，并保存在方法的Code属性的maximum local variables数据项中。在方法运行期间是不会改变局部变量表的大小的。
+> - 局部变量表最基本的存储单元是`Slot（变量槽）`
+>   - `32位以内的类型只占用一个slot（包括returnAddress类型、引用类型），64位的类型（long和double）占用两个slot`
+>   - JVM会为局部变量表中的`每一个Slot都分配一个访问素引`，通过这个素引即可成功访
+>     问到局部变量表中指定的局部变量值
+>   - 当一个实例方法被调用的时候，它的方法参数和方法体内部定义的局部变量将会`按顺
+>     序被复制`到局部变量表中的每一个S1ot上
+>   - `如果需要访问局部变量表中一个64b1t的局部变量值时，只需要使用前一个素引即可`。（比
+>     如：访问long或double类型变量)
+>   - 如果当前帧是由构造方法或者实例方法创建的那么`该对象引用this将会存放在index为0的slot处`，其余的参数按照参数表顺序继续排列。
+>   - `栈帧中的局部变量表中的槽位是可以重用的`，如果一个局部变量过了其作用域
+>     那么在其作用域之后申明的新的局部变量就很有可能会复用过期局部变量的槽位，从而达到`节省资源`的目的。
 
-![1631003933848](.\images\1631003933848.png)
 
-![1631003950064](.\images\1631003950064.png)
 
-![1631004664484](.\images\1631004664484.png)
+> **静态变量与局部变量的对比：**
+>
+> - 类变量有两次初始化
+>   - 链接Linking中的准备Prepare阶段：执行默认初始化，设置为零值
+>   - 初始化Initialization阶段：代码定义的初始化
+> - 局部变量必须要手动初始化
+> 
 
-![1631005901203](.\images\1631005901203.png)
 
-![1631006129852](.\images\1631006129852.png)
 
-![1631006526113](.\images\1631006526113.png)
 
-![1631007069013](.\images\1631007069013.png)
+> 补充说明：
+>
+> - 在栈帧中，与性能调优关系最为密切的部分就是前面提到的局部变量表。
+>   在方法执行时，虚拟机使用局部变量表完成方法的传递。
+> - 局部变量表中的变量也是重要的垃圾回收根节点，只要被局部变量表中直
+>   接或间接引用的对象都不会被回收。
 
-![1631007185241](.\images\1631007185241.png)
+### 4. 操作数栈Operand Stack
 
-### 4. 操作数栈
-
-![1631007450202](.\images\1631007450202.png)
-
-![1631007842174](.\images\1631007842174.png)
-
-![1631007902822](.\images\1631007902822.png)
+> **操作数栈：**
+>
+> - `方法执行过程中，根据字节码指令，进行入栈或出栈`
+>   - 某些字节码指令将值压入操作数栈，其余的字节码指令将操作数取出栈。使用它们后再把结果压入栈。
+>   - 比如：执行复制、交换、求和等操作
+> - 操作数栈主要`用于保存计算过程的中间结果，同时作为计算过程中变量临时存储空间`
+> - 操作数栈就是JVM执行引擎的一个工作区，当一个方法刚开始执行的时候，一个新的栈帧也会随之被创建出来，这个方法的操作数栈是空的。
+> - 每一个操作数栈都会拥有一个明确的`栈深度`用于存储数值，其所需的`最大深度在编译期就定义好了`，保存在方法的code属性中，为max stack的值。
+> - 栈中的任何一个元素都是可以任意的Java数据类型。
+>   - 32bit的类型占用一个栈单位深度
+>   - 64bit的类型占用两个栈单位深度
+> - 操作数栈并非采用访问索引的方式来进行数据访问的，而是只能通过标准的`入栈(push)和出栈(pop)`操作来完成一次数据访问。
+> - `如果被调用的方法带有返回值的话，其返回值将会被压入当前栈帧的操作数栈中`，并更新PC寄存器中下一条需要执行的字节码指令。
+> - 操作数栈中元素的数据类型必须与字节码指令的序列严格匹配，这由编译器在编译器期间进行验证，同时在类加载过程中的类检验阶段的数据流分析阶段要再次验证。
+> - 另外，我们说Java虚拟机的`解释引擎是基于栈的执行引擎，其中的栈指的
+>   就是操作数栈`。
 
 ### 5. 代码追踪
 
-略
+> byte、short、char、boolean都以int型来保存
+>
+> bipush是指byte的int的push 
 
 ### 6. 栈顶缓存技术
 
@@ -303,39 +681,86 @@ public class TargetForClassLoader {
 
 ### 7. 动态链接
 
-![1631084225955](.\images\1631084225955.png)
+> **动态链接：指向运行时常量池的方法引用**
+>
+> - 每一个栈帧内部都包含一个指向运行时常量池中该栈帧所属方法的引用。包含这个引用的目的就是为了支持当前方法的代码能够实现`动态链接`(Dynamic Linking)。比如：invokedynamic指令
+>
+> - 在Java源文件被编译到字节码文件中时，所有的变量和方法引用都作为符号引用(Symbolic Reference)保存在class文件的常量池里。比如：描述一个方法调用了另外的其他方法时，就是通过常量池中指向方法的符号引用来表示的，那么`动态链接的作用就是为了将这些符号引用转换为调用方法的直接引用`。
+> - ![动态链接](./images/image-20230113212519376.png)
 
-![1631084663908](.\images\1631084663908.png)
+### 8. 方法的调用：解析与分派【听不懂】
 
-![1631084740376](.\images\1631084740376.png)
+> 在JVM中，将符号引用转换为调用方法的直接引用与方法的绑定机制相关。
+>
+> - 静态链接：
+>   当一个字节码文件被装载进JM内部时，如果`被调用的目标方法在编译期可知`，且运行期保持不变时。这种情况下将调用方法的符号引用转换为直接引用的过程称之为静态链接。
+> - 动态链接：
+>   如果`被调用的方法在编译期无法被确定下来`，也就是说，只能够在程序运行期将调用方法的符号引用转换为直接引用，由于这种引用转换过程具备动态性，因此也就被称之为动态链接。
+>
+> 对应的方法的绑定机制为：早期绑定(Early Binding)和晚期绑定(Late Binding)。`绑定是一个字段、方法或者类在符号引用被替换为直接引用的过程`，这仅仅发生一次。
+>
+> - 早期绑定：
+>   早期绑定就是指`被调用的目标方法如果在编译期可知`，且运行期保持不变时，即可将这个方法与所属的类型进行绑定，这样一来，由于明确了被调用的目标方法究竟是哪一个，因此也就可以使用静态链接的方式将符号引用转换为直接引用。
+> - 晚期绑定：
+>   如果`被调用的方法在编译期无法被确定下来`，只能够在程序运行期根据实际的类型绑定相关的方法，这种绑定方式也就被称之为晚期绑定。
+>
+> Java既有早期绑定又有晚期绑定
+>
+> Java中任何一个普通的方法其实都具备虚函数的特征，它们相当于c++语言中的虚函数(c++中则需要使用关键字virtual来显式定义)。如果在Java程序中不希望某个方法拥有虚函数的特征时，则可以使用关键字final来标记这个方法。
+>
+> `非虚方法`：
+>
+> - 如果方法在编译期就确定了具体的调用版本，这个版本在运行时是不可变的。这样的方法称为非虚方法。
+>
+> - `静态方法、私有方法、final方法、实例构造器、父类方法都是非虚方法`。他们有一个特点：都不能实现多态
+>
+> - 其他方法称为虚方法。
+>
+>   
+>
+> `子类对象的多态性的使用前提：①类的继承关系②方法的重写`
+>
+> **虚拟机中提供了以下几条方法调用指令：**
+>
+> - 普通调用指令：
+>   1. invokestatic:调用静态方法，解析阶段确定唯一方法版本
+>   2. invokespecial:调用<init>方法、私有及父类方法，解析阶段确定唯一方法版本
+>   3. invokevirtual:调用所有虚方法
+>   4. invokeinterface:调用接口方法
+> - 动态调用指令：
+>   1. invokedynamic:动态解析出需要调用的方法，
+>
+> 然后执行前四条指令固化在虚拟机内部，方法的调用执行不可人为千预，而invokedynamic指令则支持由用户确定方法版本。其中`invokestatic指令和invokespecial指令调用的方法称为非虚方法，其余的(final修饰的除外)称为虚方法`。
+>
+> **虚方法表：**在类的方法区
+>
+> - 在面向对象的编程中，会很频繁的使用到动态分派(invokedynamic)，如果在每次动态分派的过程中都要重新在类的方法元数据中搜索合适的目标的话就可能影响到执行效率。因此，为了提高性能，`JVM采用在类的方法区建立一个虚方法表`(virtual method table)(非虚方法不会出现在表中)来实现。`使用索引表来代替查找`。
+>
+> - `每个类中都有一个虚方法表，表中存放着各个方法的实际入口`。
+> - 那么虚方法表什么时候被创建？
+>   - `虚方法表会在类加载的链接阶段被创建并开始初始化`，类的变量初始值准备完
+>     成之后，JVM会把该类的虚方法表也初始化完毕。
+> - ![虚方法表](./images/image-20230113222731346.png)
 
-### 8. 方法的调用：解析与分派
 
-![1631084967032](.\images\1631084967032.png)
 
-![1631085036385](.\images\1631085036385.png)
-
-![1631085571848](.\images\1631085571848.png)
-
-![1631086276722](.\images\1631086276722.png)
-
-![1631086513625](.\images\1631086513625.png)
-
-![1631087371871](.\images\1631087371871.png)
-
-![1631087500336](.\images\1631087500336.png)
-
-![1631088238459](.\images\1631088238459.png)
+> **动态类型语言和静态类型语言：**
+>
+> - `对类型的检查是在编译期还是在运行期，如果是编译期就是静态类型语言，如果是运行期就是动态类型语言。`
+> - `静态类型语言是判断变量自身的类型信息；动态类型是判断变量值的类型信息，变量没有类型信息，变量值才有类型信息`
 
 ### 9. 方法返回地址
 
-![1631089083890](.\images\1631089083890.png)
-
-![1631089098440](.\images\1631089098440.png)
-
-![1631089201627](.\images\1631089201627.png)
-
-![1631089326328](.\images\1631089326328.png)
+> **方法返回地址：**
+>
+> - `存放调用该方法的pc寄存器的值`。
+>
+> - 一个方法的结束，有两种方式：
+>   - 1.正常执行完成,既正常完成出口
+>     - 字节码指令有：ireturn、lreturn、freturn、dreturn 、areturn、return
+>   - 2.出现未处理的异常，非正常退出
+>   - 无论通过哪种方式退出，在方法退出后都返回到该方法被调用的位置。方法正常退出时，`调用者的PC寄存器的值作为返回地址`，即调用该方法的指令的下一条指令的地址。而`通过异常退出的，返回地址是要通过异常表来确定`，栈帧中一般不会保存这部分信息。
+>   - 正常完成出口和异常完成出口的区别在于：`通过异常完成出口退出的不会给他的上层调用者产生任何的返回值`。
 
 ### 10. 一些附加信息
 
@@ -343,29 +768,38 @@ public class TargetForClassLoader {
 
 ### 11. 栈的相关面试题
 
-内部产生，内部消亡就是线程安全的
+> - 虚拟机栈会产生StackOverflowError，不会产生GC
+> - 分配的栈空间不是越大越好，因为内存资源是有限的，会限制线程数 
+> - 内部产生，内部消亡的局部变量就是线程安全的；否则线程不安全，发生逃逸。
+> - ![线程安全&线程不安全举例](.\images\1631332566895.png)
 
- ![1631332566895](.\images\1631332566895.png)
+ 
 
 ## 06. 本地方法接口
 
-![1631332840932](.\images\1631332840932.png)
-
-![1631333116017](.\images\1631333116017.png)
-
-![1631333433507](.\images\1631333433507.png)
+> 本地方法：
+>
+> - native method,即java调用非java代码（C/C++）
+> - 为什么要使用native method
+>   - 与java环境外交互
+>   - 与操作系统交互
+>   - JVM是C写的
 
 ## 07. 本地方法栈
 
-![1631344036174](.\images\1631344036174.png)
-
-![1631343919671](.\images\1631343919671.png)
+> **本地方法栈：**
+>
+> - 用于管理本地方法的调用
 
 ## 08. 堆
 
 ### 1. 堆的核心概述
 
-![](.\images\1631345402738.png)
+> 堆：
+>
+> - 在启动时被创建，空间大小也就确定了
+> - 物理上可以不连续，逻辑上被视为连续的
+> - 所有线程共享java堆，在这里还可以划分线程私有的缓冲区（TLAB）
 
 ![1631346150396](.\images\1631346150396.png)
 

@@ -363,7 +363,7 @@ class Data3{
 > 并发修改异常ConcurrentModificationException
 
 ```java
-@ThreadUnsafe
+// ThreadUnsafe
 public class UnsafeListTest {
     public static void main(String[] args) {
         ArrayList<String> list=new ArrayList<> ();
@@ -410,12 +410,12 @@ public class UnsafeListTest {
 
 找一个类，既和Runnable有关系，也和Callable有关系
 
-- Runnable接口有实现类FutureTask
+- Runnable接口有子接口RunnableFuture,RunnableFuture有实现类FutureTask
 - FutureTask构造可以传递Callable
 
 ## 8. 常用的辅助类
 
-E:\idea_workspace\2021Study-JUC\src\main\java\com\binyu\fuzhu
+com.binyu.$concurrenttool.CountDownLatchTest
 
 ### 8.1 CountDownLatch
 
@@ -472,10 +472,10 @@ release():释放1个资源，唤醒等待的线程
 
 读写锁的缺点：
 
-1. 造成锁饥饿，一直读，没有写
+1. 会造成锁饥饿，一直读，没有写
 2. 读时候不能写，只有读完成了才可以写，而写的时候可以读
 
-> 锁降级【还是不知道锁降级有什么用】
+> 锁降级
 
 将写入锁降级为读锁 
 

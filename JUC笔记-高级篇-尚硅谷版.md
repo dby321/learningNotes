@@ -20,7 +20,7 @@ openjdk的写JNI一般是一一对应的，Thread.java对应的就是Thread.c
 
 start0其实就是JVM_StartThread。此处查看源代码可以看到在jvm.h中找到了声明，jvm.cpp中有实现
 
-是JVM配合操作系统底层分配了一个基础线程
+是**JVM配合操作系统底层分配了一个基础线程**
 
 ![start0()底层图1](./images/image-20221226172533664.png)
 
@@ -35,6 +35,40 @@ start0其实就是JVM_StartThread。此处查看源代码可以看到在jvm.h中
 `Thread.currentThread().isDaemon()`判断是否是守护线程
 
 `Thread.currentThread().setDaemon(true)`设置线程为守护线程，注意这个设置要在start()前做，否则会报异常
+
+### 多线程的出现是要解决什么问题的?
+
+众所周知，CPU、内存、I/O 设备的速度是有极大差异的，为了合理利用 CPU 的高性能，平衡这三者的速度差异，计算机体系结构、操作系统、编译程序都做出了贡献，主要体现为:
+
+- CPU 增加了缓存，以均衡与内存的速度差异；// 导致 `可见性`问题
+- 操作系统增加了进程、线程，以分时复用 CPU，进而均衡 CPU 与 I/O 设备的速度差异；// 导致 `原子性`问题
+- 编译程序优化指令执行次序，使得缓存能够得到更加合理地利用。// 导致 `有序性`问题
+
+### 并发出现问题的根源：并发三要素
+
+可见性：一个线程对共享变量的修改，另外一个线程能够立刻看到。
+
+原子性：即一个操作或者多个操作 要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。
+
+有序性：即程序执行的顺序按照代码的先后顺序执行。
+
+### Java是怎么解决并发问题的：JMM
+
+JMM本质上可以理解为，Java 内存模型规范了 JVM 如何提供按需禁用缓存和编译优化的方法。具体来说，这些方法包括：
+
+- volatile、synchronized 和 final 三个关键字
+- Happens-Before 规则
+
+### 如何保证线程安全
+
+1. 阻塞同步
+   1. ReentrantLock
+   2. Synchronized
+2. 非阻塞同步
+   1. AtomicXxx类
+3. 无同步方案
+   1. 栈封闭
+   2. ThreadLocal
 
 ## CompletableFuture
 
@@ -211,7 +245,7 @@ class NetMall {
   - get(long timeout,TimeUnit unit) 会抛出检查型异常 过时不候
   - join() 不会抛出检查型异常 不见不散
   - getNow(T valueIfAbsent)如果计算完成，返回值；如果没有计算完成，返回valueIfAbsent 
-  - complete(T value) 如果计算完成，返回false;如果没有计算完成，返回true，并将任务结果设置为value
+  - complete(T value) 如果没有完成，设置get()的返回值为该方法的value
 
 - 对计算结果进行处理
   - thenApply(Function<? super T,? extends U> fn)计算结果存在依赖关系，将前后两个线程串行化，由于存在依赖关系，当前步错，不走下一步，直接报错。
@@ -292,8 +326,8 @@ ObjectMonitor.java-->ObjectMonitor.cpp-->objectMonitor.hpp
 
 > 为什么默认是非公平锁？
 
-1. 恢复挂起的线程到真正所的获取还是有时间差的，从开发人员看这个时间微乎其微，但是从CPU角度来看，这个时间差存在还是很明显的，所以非公平锁能更充分的利用CPU的时间片，尽量减少CPU空闲状态时间。
-2. 使用多线程很重要的靠两点是线程切换的开销，当采用非公平锁时，当一个线程请求所获取同步状态，然后释放同步状态，此时刚释放锁的线程在此刻再去获取同步状态的概率变得非常大，所以减少了线程的切换开销
+1. 恢复挂起的线程到真正锁的获取还是有时间差的，从开发人员看这个时间微乎其微，但是从CPU角度来看，这个时间差存在还是很明显的，所以非公平锁能更充分的利用CPU的时间片，尽量减少CPU空闲状态时间。
+2. 使用多线程很重要的靠两点是线程切换的开销，当采用非公平锁时，当一个线程请求锁获取同步状态，然后释放同步状态，此时刚释放锁的线程在此刻再去获取同步状态的概率变得非常大，所以减少了线程的切换开销
 
 
 
@@ -490,6 +524,50 @@ public class InterruptDemo3 {
 
 - unpark解除阻塞线程,给指定线程发放唯一通行证，与Semaphore的区别是LockSupport.unpark()发放的许可证最多只有一个
 
+### Executor 的中断操作
+
+调用 Executor 的 shutdown() 方法会等待线程都执行完毕之后再关闭，但是如果调用的是 shutdownNow() 方法，则相当于调用每个线程的 interrupt() 方法。
+
+以下使用 Lambda 创建线程，相当于创建了一个匿名内部线程。
+
+```java
+public static void main(String[] args) {
+    ExecutorService executorService = Executors.newCachedThreadPool();
+    executorService.execute(() -> {
+        try {
+            Thread.sleep(2000);
+            System.out.println("Thread run");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    });
+    executorService.shutdownNow();
+    System.out.println("Main run");
+}
+```
+
+```html
+Main run
+java.lang.InterruptedException: sleep interrupted
+    at java.lang.Thread.sleep(Native Method)
+    at ExecutorInterruptExample.lambda$main$0(ExecutorInterruptExample.java:9)
+    at ExecutorInterruptExample$$Lambda$1/1160460865.run(Unknown Source)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+    at java.lang.Thread.run(Thread.java:745)
+```
+
+如果只想中断 Executor 中的一个线程，可以通过使用 submit() 方法来提交一个线程，它会返回一个 Future<?> 对象，通过调用该对象的 cancel(true) 方法就可以中断线程。
+
+```java
+Future<?> future = executorService.submit(() -> {
+    // ..
+});
+future.cancel(true);
+```
+
+
+
 ## Java内存模型JMM
 
 ### JMM介绍
@@ -551,11 +629,17 @@ volatile凭借什么保证可见性和有序性？靠内存屏障
 3. 开销较低的读写锁策略
 4. 单例模式双重检查懒汉式
 
+
+
+共享的long和double变量的为什么要用volatile?
+
+因为long和double两种数据类型的操作可分为高32位和低32位两部分，因此普通的long或double类型读/写可能不是原子的。因此，鼓励大家将共享的long和double变量设置为volatile类型，这样能保证任何情况下对long和double的单次读/写操作都具有原子性。
+
 ### 内存屏障
 
-内存屏障：读屏障和写屏障，细分四种，happens-before原则落地靠内存屏障
+内存屏障：读屏障和写屏障，细分四种，happens-before原则落地靠内存屏障，volatile也靠内存屏障，它是CPU指令
 
-内存屏障之前的所有写操作都要写回主内存；内存屏障之后的所有读操作都能活的内存屏障之前所有写操作的最新结果
+内存屏障之前的所有写操作都要写回主内存；内存屏障之后的所有读操作都能获得内存屏障之前所有写操作的最新结果
 
 内存屏障能禁止指令重排
 
@@ -591,7 +675,7 @@ volatile凭借什么保证可见性和有序性？靠内存屏障
 >
 > CAS缺点：
 >
-> 1. 循环时间开销很大
+> 1. 循环时间CPU资源可能浪费
 > 2. ABA问题 用AtomicStampedReference解决![ABA问题](./images/image-20221230114839421.png)
 
 ### Unsafe
@@ -1325,7 +1409,7 @@ Space losses: 0 bytes internal + 0 bytes external = 0 bytes total
 
 ### 偏向锁
 
-> 偏向锁会偏向第一个访问锁的线程，如果在接下来的运行过程中，该锁没有被其他线程访问，则持有偏向锁的线程永远不需要触发同步。也即偏向锁在资源没有竞争情况下消除了同步语句，懒得连CAS操作都不做了，直接提交程序性能。
+> 偏向锁会偏向第一个访问锁的线程，如果在接下来的运行过程中，该锁没有被其他线程访问，则持有偏向锁的线程永远不需要触发同步。也即偏向锁在资源没有竞争情况下消除了同步语句，懒得连CAS操作都不做了，直接提高程序性能。
 >
 > 实际运行中，锁总是由一个线程持有，很少发生竞争。所以诞生了偏向锁。
 >
@@ -1379,7 +1463,7 @@ Space losses: 0 bytes internal + 4 bytes external = 4 bytes total
 >
 > 需要等到全局安全点上没有字节码正在执行，同时还会检查持有偏向锁的线程是否还在执行
 >
-> 1. 第一个线程正在执行synchronized方法（处于同步块），它还没有执行完，其他线程来抢夺，该偏向锁会被取消并出现锁升级。此时轻量级锁由原持有偏向锁的线程持有，继续执行同步代码，而正在竞争的线程会进入自旋等待活的轻量级锁
+> 1. 第一个线程正在执行synchronized方法（处于同步块），它还没有执行完，其他线程来抢夺，该偏向锁会被取消并出现锁升级。此时轻量级锁由原持有偏向锁的线程持有，继续执行同步代码，而正在竞争的线程会进入自旋等待获得轻量级锁
 > 2. 第一个线程执行完成sychronized方法（退出同步块），则将对象头设置成无锁状态并撤销偏向锁，重新偏向。
 
 ### 轻量级锁
@@ -1452,7 +1536,7 @@ public class LockBigDemo {
 
 > AQS是什么：
 >
-> - 是用来实现所或者其他同步器组件的公共基础部分的抽象实现，使整个JUC的基石，解决锁分配给谁的问题。
+> - 是用来实现锁或者其他同步器组件的公共基础部分的抽象实现，使整个JUC的基石，解决锁分配给谁的问题。
 >
 > - 整体就是抽象一个FIFO队列来完成资源获取线程的排队工作，并通过一个int类变量表示持有锁的状态。
 >
@@ -1487,7 +1571,7 @@ public class LockBigDemo {
 >
 > - 所有获取锁的方法，都返回一个邮戳(stamp),stamp为零表示获取失败，其余表示获取成功
 > - 所有释放锁的方法，都需要一个邮戳stamp，这个stamp必须是和成功获取锁时得到的stamp一致。
-> - StampedLock是不可重入的，危险（如果一个线程已经持有写锁，再去获得写锁的话就会造成死锁
+> - StampedLock是不可重入的，危险（如果一个线程已经持有写锁，再去获得写锁的话就会造成死锁）
 > - StampedLock有三种访问模式：
 >   - 悲观读模式：类似ReentrantReadWriteLock的读锁
 >   - 写模式：类似ReentrantReadWriteLock的写锁
