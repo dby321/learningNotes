@@ -1915,6 +1915,8 @@ Process finished with exit code 0
 
 ###10. 垃圾回收器的新发展
 
+> ZGC
+
 ![1632558859735](.\images\1632558859735.png)
 
 ![1632558921703](.\images\1632558921703.png)
