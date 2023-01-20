@@ -366,7 +366,7 @@
 >               System.out.println("扩展类加载器" + t);
 >           });
 >       }
->                                                           
+>                                                                       
 >       /**
 >        * app 类加载器
 >        */
@@ -2020,7 +2020,7 @@ Process finished with exit code 0
 
 ### 4. 使用指令解析Class文件
 
-> [javac](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCBDCJI) java -g XXX.java
+> [javac](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCBDCJI) java -g XXX.java 生成带局部变量表的字节码文件
 >
 > [javap](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javap.html#BEHHDJGA) javap -v -p XXX.class
 
@@ -2236,6 +2236,8 @@ Process finished with exit code 0
 
 [Java性能优化-JVM调优](https://cloud.tencent.com/developer/article/1812722)
 
+> 性能调优是艺术，有点玄乎
+
 ## 01. 概述篇
 
 ### 1. 大厂面试题
@@ -2268,9 +2270,742 @@ Process finished with exit code 0
 
 [CSDN-JVM监控及诊断工具（一）](https://blog.csdn.net/m0_45031497/article/details/114859568)
 
-### 1. 概述
+### JPS
 
-![1633582018533](.\images\1633582018533.png)
+> `jps` Java Progress Status
+>
+> ```java
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jps
+> 4434 // IDEA-IDE进程
+> 6434 // WebStorm-IDE进程
+> 14983 Launcher// JVM进程
+> 14984 Test // 用户进程
+> 14987 Jps // 该命令进程
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jps -l
+> 4434 
+> 6434 
+> 15011 sun.tools.jps.Jps
+> 14983 org.jetbrains.jps.cmdline.Launcher
+> 14984 com.programmercarl.$01_AlgorithmPerformanceAnalysis.Test
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jps -m
+> 4434 
+> 6434 
+> 15013 Jps -m
+> 14983 Launcher /Applications/IntelliJ IDEA.app/Contents/plugins/java/lib/jps-builders.jar:/Applications/IntelliJ IDEA.app/Contents/plugins/java/lib/jps-builders-6.jar:/Applications/IntelliJ IDEA.app/Contents/plugins/java/lib/jps-javac-extension.jar:/Applications/IntelliJ IDEA.app/Contents/lib/util.jar:/Applications/IntelliJ IDEA.app/Contents/lib/util_rt.jar:/Applications/IntelliJ IDEA.app/Contents/lib/annotations.jar:/Applications/IntelliJ IDEA.app/Contents/lib/3rd-party-rt.jar:/Applications/IntelliJ IDEA.app/Contents/lib/jna.jar:/Applications/IntelliJ IDEA.app/Contents/lib/lz4-java.jar:/Applications/IntelliJ IDEA.app/Contents/lib/protobuf.jar:/Applications/IntelliJ IDEA.app/Contents/lib/jps-model.jar:/Applications/IntelliJ IDEA.app/Contents/plugins/java/lib/javac2.jar:/Applications/IntelliJ IDEA.app/Contents/lib/forms_rt.jar:/Applications/IntelliJ IDEA.app/Contents/plugins/java/lib/aether-dependency-resolver.jar:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar:/Applications/Intell
+> 14984 Test
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jps -v
+> 4434  -Xms128m -Xmx1024m -XX:ReservedCodeCacheSize=512m -XX:+IgnoreUnrecognizedVMOptions -XX:+UseG1GC -XX:SoftRefLRUPolicyMSPerMB=50 -XX:CICompilerCount=2 -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -ea -Dsun.io.useCanonCaches=false -Djdk.http.auth.tunneling.disabledSchemes="" -Djdk.attach.allowAttachSelf=true -Djdk.module.illegalAccess.silent=true -Dkotlinx.coroutines.debug=off -XX:ErrorFile=/Users/dongbinyu/java_error_in_idea_%p.log -XX:HeapDumpPath=/Users/dongbinyu/java_error_in_idea.hprof --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED -javaagent:/Users/dongbinyu/Library/jihuo-tool-2022.2.3/jetbra/ja-netfilter.jar=jetbrains -Djb.vmOptionsFile=/Users/dongbinyu/Library/jihuo-tool-2022.2.3/jetbra/vmoptions/idea.vmoptions --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens
+> 15026 Jps -Dapplication.home=/Library/Java/JavaVirtualMachines/jdk1.8.0_351.jdk/Contents/Home -Xms8m
+> 6434  -Xms128m -Xmx1024m -XX:ReservedCodeCacheSize=512m -XX:+IgnoreUnrecognizedVMOptions -XX:+UseG1GC -XX:SoftRefLRUPolicyMSPerMB=50 -XX:CICompilerCount=2 -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -ea -Dsun.io.useCanonCaches=false -Djdk.http.auth.tunneling.disabledSchemes="" -Djdk.attach.allowAttachSelf=true -Djdk.module.illegalAccess.silent=true -Dkotlinx.coroutines.debug=off -XX:ErrorFile=/Users/dongbinyu/java_error_in_idea_%p.log -XX:HeapDumpPath=/Users/dongbinyu/java_error_in_idea.hprof --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED -javaagent:/Users/dongbinyu/Library/jihuo-tool-2022.2.3/jetbra/ja-netfilter.jar=jetbrains -Djb.vmOptionsFile=/Users/dongbinyu/Library/jihuo-tool-2022.2.3/jetbra/vmoptions/webstorm.vmoptions --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-o
+> 14983 Launcher -Xmx700m -Djava.awt.headless=true -Djava.endorsed.dirs="" -Dpreload.project.path=/Users/dongbinyu/IdeaProjects/Algorithm_Study -Dpreload.config.path=/Users/dongbinyu/Library/Application Support/JetBrains/IntelliJIdea2022.2/options -Dcompile.parallel=false -Drebuild.on.dependency.change=true -Didea.IntToIntBtree.page.size=32768 -Djdt.compiler.useSingleThread=true -Daether.connector.resumeDownloads=false -Dio.netty.initialSeedUniquifier=-3196311779432366663 -Dfile.encoding=UTF-8 -Duser.language=zh -Duser.country=CN -Didea.paths.selector=IntelliJIdea2022.2 -Didea.home.path=/Applications/IntelliJ IDEA.app/Contents -Didea.config.path=/Users/dongbinyu/Library/Application Support/JetBrains/IntelliJIdea2022.2 -Didea.plugins.path=/Users/dongbinyu/Library/Application Support/JetBrains/IntelliJIdea2022.2/plugins -Djps.log.dir=/Users/dongbinyu/Library/Logs/JetBrains/IntelliJIdea2022.2/build-log -Djps.fallback.jdk.home=/Applications/IntelliJ IDEA.app/Contents/jbr/Contents/Home -Djps.fallback.jdk.version=17.0.4.1 -Dio.nett
+> 14984 Test -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:55907,suspend=y,server=n -Dvisualvm.id=58501545763708 -javaagent:/Users/dongbinyu/Library/Caches/JetBrains/IntelliJIdea2022.2/captureAgent/debugger-agent.jar -Dfile.encoding=UTF-8
+> ```
+>
+> 
+
+### JSTAT
+
+> 在没有GUI的服务器环境，他是定位虚拟机性能问题的首选工具
+>
+> ```java
+> //--------------------先打印进程情况-------------------
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jps
+> 4434 
+> 6434 
+> 15059 Jps
+> 14983 Launcher
+> 14984 Test
+> //--------------------类加载情况----------------------------
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -class 14984// jstat -class 进程号
+> // 加载类个数 加载的类占用字节数 卸载的类个数 卸载的类占用字节数 花费的总体时间
+> Loaded  Bytes  Unloaded  Bytes     Time   
+>    477   977.7        0     0.0       0.07
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -class 15151 1000 10// jstat -class 进程号 毫秒数 打印次数
+> Loaded  Bytes  Unloaded  Bytes     Time   
+>    540  1087.2        0     0.0       0.07
+>    540  1087.2        0     0.0       0.07
+>    540  1087.2        0     0.0       0.07
+>    540  1087.2        0     0.0       0.07
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -class -t 15151
+> // 程序执行的总秒数
+> Timestamp       Loaded  Bytes  Unloaded  Bytes     Time   
+>           143.7    540  1087.2        0     0.0       0.07
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -class -t -h3 15151 1000 // -h3 每隔三行显示表头
+> Timestamp       Loaded  Bytes  Unloaded  Bytes     Time   
+>           291.3    540  1087.2        0     0.0       0.07
+>           292.3    540  1087.2        0     0.0       0.07
+>           293.3    540  1087.2        0     0.0       0.07
+> Timestamp       Loaded  Bytes  Unloaded  Bytes     Time   
+>           294.3    540  1087.2        0     0.0       0.07
+>           295.3    540  1087.2        0     0.0       0.07
+>           296.3    540  1087.2        0     0.0       0.07
+> Timestamp       Loaded  Bytes  Unloaded  Bytes     Time   
+>           297.3    540  1087.2        0     0.0       0.07
+>           298.4    540  1087.2        0     0.0       0.07
+>           299.3    540  1087.2        0     0.0       0.07
+> //-------------------JIT编译情况--------------------------
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -compiler 15151// 打印JIT编译期编译过的方法、耗时等信息
+> Compiled Failed Invalid   Time   FailedType FailedMethod
+>       25      0       0     0.01          0   
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -printcompilation 15151 // 打印已经被JIT编译的方法
+> Compiled  Size  Type Method
+>       25     83    1 java/lang/String <init>
+> //---------------------GC情况----------------------
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -gc 15151
+>  S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT   
+> 10752.0 10752.0  0.0    0.0   65536.0   3932.2   175104.0     0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -gc 15307 1000 10
+>  S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT   
+> 2048.0 2048.0  0.0    0.0   16384.0   8610.1   40960.0      0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> 2048.0 2048.0  0.0    0.0   16384.0   9110.2   40960.0      0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> 2048.0 2048.0  0.0    0.0   16384.0   9610.2   40960.0      0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> 2048.0 2048.0  0.0    0.0   16384.0  10110.3   40960.0      0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> 2048.0 2048.0  0.0    0.0   16384.0  10610.4   40960.0      0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> 2048.0 2048.0  0.0    0.0   16384.0  11110.5   40960.0      0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> 2048.0 2048.0  0.0    0.0   16384.0  11610.6   40960.0      0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> 2048.0 2048.0  0.0    0.0   16384.0  12110.6   40960.0      0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> 2048.0 2048.0  0.0    0.0   16384.0  12610.7   40960.0      0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> 2048.0 2048.0  0.0    0.0   16384.0  13110.8   40960.0      0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -gc 15307 1000 10
+>  S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT   
+> 2048.0 2048.0  0.0    0.0   16384.0  15811.2   40960.0      0.0     4480.0 779.8  384.0   76.0       0    0.000   0      0.000    0.000
+> 2048.0 2048.0  0.0    0.0   16384.0  16311.3   40960.0      0.0     4480.0 779.8  384.0   76.0       1    0.000   0      0.000    0.000
+> 2048.0 2048.0  0.0   2016.2 16384.0   514.4    40960.0    12722.0   4864.0 3295.7 512.0  364.3       1    0.028   0      0.000    0.028
+> 2048.0 2048.0  0.0   2016.2 16384.0   1014.5   40960.0    12722.0   4864.0 3295.7 512.0  364.3       1    0.028   0      0.000    0.028
+> 2048.0 2048.0  0.0   2016.2 16384.0   1514.6   40960.0    12722.0   4864.0 3295.7 512.0  364.3       1    0.028   0      0.000    0.028
+> 2048.0 2048.0  0.0   2016.2 16384.0   2014.7   40960.0    12722.0   4864.0 3295.7 512.0  364.3       1    0.028   0      0.000    0.028
+> 2048.0 2048.0  0.0   2016.2 16384.0   2514.8   40960.0    12722.0   4864.0 3295.7 512.0  364.3       1    0.028   0      0.000    0.028
+> 2048.0 2048.0  0.0   2016.2 16384.0   3014.8   40960.0    12722.0   4864.0 3295.7 512.0  364.3       1    0.028   0      0.000    0.028
+> 2048.0 2048.0  0.0   2016.2 16384.0   3514.9   40960.0    12722.0   4864.0 3295.7 512.0  364.3       1    0.028   0      0.000    0.028
+> 2048.0 2048.0  0.0   2016.2 16384.0   4015.0   40960.0    12722.0   4864.0 3295.7 512.0  364.3       1    0.028   0      0.000    0.028
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -gcutil 15324 1000 10// 打印各个区占用空间比率
+>   S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   
+>   0.00   0.00  76.97   0.00  17.41  19.80      0    0.000     0    0.000    0.000
+>   0.00   0.00  80.02   0.00  17.41  19.80      0    0.000     0    0.000    0.000
+>   0.00   0.00  83.07   0.00  17.41  19.80      0    0.000     0    0.000    0.000
+>   0.00   0.00  86.13   0.00  17.41  19.80      0    0.000     0    0.000    0.000
+>   0.00   0.00  89.18   0.00  17.41  19.80      0    0.000     0    0.000    0.000
+>   0.00   0.00  92.23   0.00  17.41  19.80      0    0.000     0    0.000    0.000
+>   0.00   0.00  95.28   0.00  17.41  19.80      0    0.000     0    0.000    0.000
+>   0.00   0.00  98.34   0.00  17.41  19.80      0    0.000     0    0.000    0.000
+>   0.00  98.84   3.14  31.00  67.76  71.15      1    0.024     0    0.000    0.024
+>   0.00  98.84   4.97  31.00  67.76  71.15      1    0.024     0    0.000    0.024
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -gccause 15348 1000 10
+>   S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT    LGCC                 GCC                 
+>   0.00  98.84  15.96  31.25  67.76  71.15      1    0.024     0    0.000    0.024 Allocation Failure   No GC               
+>   0.00  98.84  19.01  31.25  67.76  71.15      1    0.024     0    0.000    0.024 Allocation Failure   No GC               
+>   0.00  98.84  22.06  31.25  67.76  71.15      1    0.024     0    0.000    0.024 Allocation Failure   No GC               
+>   0.00  98.84  25.12  31.25  67.76  71.15      1    0.024     0    0.000    0.024 Allocation Failure   No GC               
+>   0.00  98.84  28.17  31.25  67.76  71.15      1    0.024     0    0.000    0.024 Allocation Failure   No GC               
+>   0.00  98.84  31.22  31.25  67.76  71.15      1    0.024     0    0.000    0.024 Allocation Failure   No GC               
+>   0.00  98.84  34.27  31.25  67.76  71.15      1    0.024     0    0.000    0.024 Allocation Failure   No GC               
+>   0.00  98.84  37.32  31.25  67.76  71.15      1    0.024     0    0.000    0.024 Allocation Failure   No GC               
+>   0.00  98.84  40.38  31.25  67.76  71.15      1    0.024     0    0.000    0.024 Allocation Failure   No GC               
+>   0.00  98.84  43.43  31.25  67.76  71.15      1    0.024     0    0.000    0.024 Allocation Failure   No GC 
+> dongbinyu@dongbinyudeMacBook-Pro ~ % jstat -gccause -t 15371 1000   
+> Timestamp         S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT    LGCC                 GCC                 
+>            50.3   0.00  98.06  64.18  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            51.3   0.00  98.06  67.24  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            52.3   0.00  98.06  70.29  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            53.4   0.00  98.06  73.34  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            54.4   0.00  98.06  76.39  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            55.4   0.00  98.06  79.45  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            56.4   0.00  98.06  81.89  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            57.4   0.00  98.06  84.94  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            58.4   0.00  98.06  87.99  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            59.4   0.00  98.06  91.04  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            60.4   0.00  98.06  94.10  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            61.4   0.00  98.06  97.15  31.25  67.76  71.15      1    0.021     0    0.000    0.021 Allocation Failure   No GC               
+>            62.4   0.00   0.00   2.61  75.38  67.77  71.15      2    0.050     1    0.006    0.056 Allocation Failure   No GC               
+>            63.5   0.00   0.00   5.77  75.38  67.77  71.15      2    0.050     1    0.006    0.056 Allocation Failure   No GC               
+>            64.4   0.00   0.00   8.83  75.38  67.77  71.15      2    0.050     1    0.006    0.056 Allocation Failure   No GC               
+>            65.4   0.00   0.00  11.88  75.38  67.77  71.15      2    0.050     1    0.006    0.056 Allocation Failure   No GC               
+>            66.5   0.00   0.00  14.93  75.38  67.77  71.15      2    0.050     1    0.006    0.056 Allocation Failure   No GC               
+>            67.5   0.00   0.00  17.98  75.38  67.77  71.15      2    0.050     1    0.006    0.056 Allocation Failure   No GC               
+>            68.5   0.00   0.00  21.04  75.38  67.77  71.15      2    0.050     1    0.006    0.056 Allocation Failure   No GC               
+>            69.5   0.00   0.00  24.09  75.38  67.77  71.15      2    0.050     1    0.006    0.056 Allocation Failure   No GC 
+> ```
+>
+> 
+
+### JINFO
+
+> 查看虚拟机参数,MAC不允许查看,好吧要我升级JDK9我很无语.只好用在线编程练习
+>
+> ```java
+> Attaching to process ID 7243, please wait...
+> Error attaching to process: sun.jvm.hotspot.debugger.DebuggerException: Can't attach symbolicator to the process
+> sun.jvm.hotspot.debugger.DebuggerException: sun.jvm.hotspot.debugger.DebuggerException: Can't attach symbolicator to the process
+> 	at sun.jvm.hotspot.debugger.bsd.BsdDebuggerLocal$BsdDebuggerLocalWorkerThread.execute(BsdDebuggerLocal.java:169)
+> 	at sun.jvm.hotspot.debugger.bsd.BsdDebuggerLocal.attach(BsdDebuggerLocal.java:287)
+> 	at sun.jvm.hotspot.HotSpotAgent.attachDebugger(HotSpotAgent.java:671)
+> 	at sun.jvm.hotspot.HotSpotAgent.setupDebuggerDarwin(HotSpotAgent.java:659)
+> 	at sun.jvm.hotspot.HotSpotAgent.setupDebugger(HotSpotAgent.java:341)
+> 	at sun.jvm.hotspot.HotSpotAgent.go(HotSpotAgent.java:304)
+> 	at sun.jvm.hotspot.HotSpotAgent.attach(HotSpotAgent.java:140)
+> 	at sun.jvm.hotspot.tools.Tool.start(Tool.java:185)
+> 	at sun.jvm.hotspot.tools.Tool.execute(Tool.java:118)
+> 	at sun.jvm.hotspot.tools.PMap.main(PMap.java:72)
+> 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+> 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+> 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+> 	at java.lang.reflect.Method.invoke(Method.java:498)
+> 	at sun.tools.jmap.JMap.runTool(JMap.java:201)
+> 	at sun.tools.jmap.JMap.main(JMap.java:130)
+> Caused by: sun.jvm.hotspot.debugger.DebuggerException: Can't attach symbolicator to the process
+> 	at sun.jvm.hotspot.debugger.bsd.BsdDebuggerLocal.attach0(Native Method)
+> 	at sun.jvm.hotspot.debugger.bsd.BsdDebuggerLocal.access$100(BsdDebuggerLocal.java:65)
+> 	at sun.jvm.hotspot.debugger.bsd.BsdDebuggerLocal$1AttachTask.doit(BsdDebuggerLocal.java:278)
+> 	at sun.jvm.hotspot.debugger.bsd.BsdDebuggerLocal$BsdDebuggerLocalWorkerThread.run(BsdDebuggerLocal.java:144)
+> ```
+>
+> ```java
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# jinfo -flag UseG1GC 793
+> -XX:+UseG1GC
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# jinfo -flags 793
+> Attaching to process ID 793, please wait...
+> Debugger attached successfully.
+> Server compiler detected.
+> JVM version is 25.332-b09
+> Non-default VM flags: -XX:CICompilerCount=2 -XX:ConcGCThreads=1 -XX:G1HeapRegionSize=1048576 -XX:InitialHeapSize=33554432 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=536870912 -XX:MaxNewSize=321912832 -XX:MinHeapDeltaBytes=1048576 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseG1GC 
+> Command line:  -XX:+UseG1GC
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# jinfo -flag PrintGCDetails 793
+> -XX:-PrintGCDetails
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# jinfo -flag +PrintGCDetails 793
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# jinfo -flag PrintGCDetails 793
+> -XX:+PrintGCDetails
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# java -XX:+PrintFlagsFinal > PrintFlagsFinal.txt  
+> ```
+
+### JMAP
+
+> 用于导出堆转储快照dump文件，二进制文件。
+>
+> 加live只保存了存活的对象的信息，文件小
+>
+> ```java
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# jmap -dump:live,format=b,file=1.hprof 1835
+> Dumping heap to /workspace/TestLightly/1.hprof ...
+> Heap dump file created
+> ```
+>
+> `-XX:+HeapDumpOnOutOfMemoryError`内存溢出时生成dump文件
+>
+> `-XX:HeapDumpPath=<filename.hprof>`生成dump文件的名
+>
+> ```java
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# jmap -heap 90 > a.txt
+> ```
+>
+> ```java
+> Attaching to process ID 90, please wait...
+> Debugger attached successfully.
+> Server compiler detected.
+> JVM version is 25.332-b09
+> 
+> using thread-local object allocation.
+> Mark Sweep Compact GC
+> 
+> Heap Configuration:
+>    MinHeapFreeRatio         = 40
+>    MaxHeapFreeRatio         = 70
+>    MaxHeapSize              = 62914560 (60.0MB)
+>    NewSize                  = 11141120 (10.625MB)
+>    MaxNewSize               = 20971520 (20.0MB)
+>    OldSize                  = 22413312 (21.375MB)
+>    NewRatio                 = 2
+>    SurvivorRatio            = 8
+>    MetaspaceSize            = 21807104 (20.796875MB)
+>    CompressedClassSpaceSize = 1073741824 (1024.0MB)
+>    MaxMetaspaceSize         = 17592186044415 MB
+>    G1HeapRegionSize         = 0 (0.0MB)
+> 
+> Heap Usage:
+> New Generation (Eden + 1 Survivor Space):
+>    capacity = 10027008 (9.5625MB)
+>    used     = 2212296 (2.1098098754882812MB)
+>    free     = 7814712 (7.452690124511719MB)
+>    22.063371246936274% used
+> Eden Space:
+>    capacity = 8912896 (8.5MB)
+>    used     = 1098192 (1.0473175048828125MB)
+>    free     = 7814704 (7.4526824951171875MB)
+>    12.321382410386029% used
+> From Space:
+>    capacity = 1114112 (1.0625MB)
+>    used     = 1114104 (1.0624923706054688MB)
+>    free     = 8 (7.62939453125E-6MB)
+>    99.99928193933823% used
+> To Space:
+>    capacity = 1114112 (1.0625MB)
+>    used     = 0 (0.0MB)
+>    free     = 1114112 (1.0625MB)
+>    0.0% used
+> tenured generation:
+>    capacity = 22413312 (21.375MB)
+>    used     = 7545968 (7.1963958740234375MB)
+>    free     = 14867344 (14.178604125976562MB)
+>    33.667349118238306% used
+> 
+> 710 interned Strings occupying 47296 bytes.
+> 
+> ```
+>
+> ```java
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# jmap -histo 300 > b.txt
+> ```
+>
+> ```java
+> 
+>  num     #instances         #bytes  class name
+> ----------------------------------------------
+>    1:           110       10164256  [B
+>    2:           949          81264  [C
+>    3:            91          75280  [I
+>    4:           470          54096  java.lang.Class
+>    5:           513          26232  [Ljava.lang.Object;
+>    6:           936          22464  java.lang.String
+>    7:            75           5400  java.lang.reflect.Field
+>    8:           256           4096  java.lang.Integer
+>    9:            91           3640  java.lang.ref.SoftReference
+>   10:           109           3488  java.util.Hashtable$Entry
+>   11:             6           2256  java.lang.Thread
+>   12:            58           2032  [Ljava.lang.String;
+>   13:            38           1824  sun.util.locale.LocaleObjectCache$CacheEntry
+>   14:            55           1760  java.util.concurrent.ConcurrentHashMap$Node
+>   15:            19           1216  java.net.URL
+>   16:             2           1064  [Ljava.lang.invoke.MethodHandle;
+>   17:             1           1040  [Ljava.lang.Integer;
+>   18:            26           1040  java.io.ObjectStreamField
+>   19:             6            992  [Ljava.util.Hashtable$Entry;
+>   20:            10            864  [Ljava.util.HashMap$Node;
+>   21:            27            864  java.util.HashMap$Node
+>   22:            19            760  sun.util.locale.BaseLocale$Key
+>   23:            12            672  java.lang.Class$ReflectionData
+>   24:             8            640  [S
+>   25:             8            640  java.lang.reflect.Constructor
+>   26:            16            640  java.util.LinkedHashMap$Entry
+>   27:            38            608  java.lang.Object
+>   28:            19            608  java.util.Locale
+>   29:            19            608  sun.util.locale.BaseLocale
+>   30:            12            576  java.util.HashMap
+>   31:             5            528  [Ljava.util.concurrent.ConcurrentHashMap$Node;
+>   32:             9            504  sun.misc.URLClassPath$JarLoader
+>   33:            19            456  java.util.Locale$LocaleKey
+>   34:             7            424  [Ljava.lang.reflect.Field;
+>   35:            10            400  java.security.AccessControlContext
+>   36:            16            384  java.io.ExpiringCache$Entry
+>   37:             1            384  java.lang.ref.Finalizer$FinalizerThread
+>   38:             6            384  java.nio.DirectByteBuffer
+>   39:             6            384  java.util.concurrent.ConcurrentHashMap
+>   40:             1            376  java.lang.ref.Reference$ReferenceHandler
+>   41:             6            336  java.nio.DirectLongBufferU
+>   42:            10            320  java.io.File
+>   43:            10            320  java.lang.OutOfMemoryError
+>   44:            10            288  [Ljava.io.ObjectStreamField;
+>   45:             7            280  java.lang.ref.Finalizer
+>   46:             3            240  [Ljava.util.WeakHashMap$Entry;
+>   47:             7            224  java.lang.ref.ReferenceQueue
+>   48:             4            224  sun.nio.cs.UTF_8$Encoder
+>   49:             9            216  sun.misc.MetaIndex
+>   50:             5            200  java.util.WeakHashMap$Entry
+>   51:             4            192  java.util.Hashtable
+>   52:             6            192  java.util.Vector
+>   53:             7            168  java.util.ArrayList
+>   54:             5            160  java.io.FileDescriptor
+>   55:             9            144  java.lang.ref.ReferenceQueue$Lock
+>   56:             3            144  java.util.WeakHashMap
+>   57:             6            144  sun.misc.PerfCounter
+>   58:             2            128  java.io.ExpiringCache$1
+>   59:             3            120  java.security.ProtectionDomain
+>   60:             6            104  [Ljava.lang.Class;
+>   61:             4             96  [Ljava.lang.reflect.Constructor;
+>   62:             3             96  java.io.FileInputStream
+>   63:             2             96  java.lang.ThreadGroup
+>   64:             3             96  java.lang.ThreadLocal$ThreadLocalMap$Entry
+>   65:             2             96  java.nio.HeapByteBuffer
+>   66:             3             96  java.security.CodeSource
+>   67:             2             96  java.util.Properties
+>   68:             3             96  java.util.Stack
+>   69:             1             96  sun.misc.Launcher$AppClassLoader
+>   70:             2             96  sun.misc.URLClassPath
+>   71:             2             96  sun.nio.cs.StreamEncoder
+>   72:             4             96  sun.reflect.NativeConstructorAccessorImpl
+>   73:             1             88  java.lang.reflect.Method
+>   74:             1             88  sun.misc.Launcher$ExtClassLoader
+>   75:             1             80  [Ljava.lang.ThreadLocal$ThreadLocalMap$Entry;
+>   76:             2             80  java.io.BufferedWriter
+>   77:             2             80  java.io.ExpiringCache
+>   78:             2             80  java.lang.ClassLoader$NativeLibrary
+>   79:             3             72  java.lang.RuntimePermission
+>   80:             3             72  java.util.concurrent.atomic.AtomicLong
+>   81:             3             72  sun.misc.Signal
+>   82:             2             64  [Ljava.lang.Thread;
+>   83:             2             64  java.io.FileOutputStream
+>   84:             2             64  java.io.PrintStream
+>   85:             2             64  java.lang.ClassValue$Entry
+>   86:             4             64  java.lang.ThreadLocal
+>   87:             2             64  java.lang.VirtualMachineError
+>   88:             2             64  java.lang.ref.ReferenceQueue$Null
+>   89:             4             64  sun.reflect.DelegatingConstructorAccessorImpl
+>   90:             1             48  [J
+>   91:             3             48  [Ljava.security.Principal;
+>   92:             2             48  java.io.BufferedOutputStream
+>   93:             2             48  java.io.File$PathStatus
+>   94:             2             48  java.io.OutputStreamWriter
+>   95:             2             48  java.nio.charset.CoderResult
+>   96:             3             48  java.nio.charset.CodingErrorAction
+>   97:             3             48  java.security.ProtectionDomain$Key
+>   98:             2             48  sun.misc.NativeSignalHandler
+>   99:             1             40  java.io.BufferedInputStream
+>  100:             1             40  sun.nio.cs.StandardCharsets$Aliases
+>  101:             1             40  sun.nio.cs.StandardCharsets$Cache
+>  102:             1             40  sun.nio.cs.StandardCharsets$Classes
+>  103:             1             40  sun.nio.cs.UTF_8$Decoder
+>  104:             1             32  [Ljava.lang.OutOfMemoryError;
+>  105:             2             32  [Ljava.lang.StackTraceElement;
+>  106:             1             32  [Ljava.lang.ThreadGroup;
+>  107:             1             32  java.io.FilePermission
+>  108:             1             32  java.io.UnixFileSystem
+>  109:             1             32  java.lang.ArithmeticException
+>  110:             2             32  java.lang.Boolean
+>  111:             1             32  java.lang.NullPointerException
+>  112:             1             32  java.lang.StringCoding$StringDecoder
+>  113:             1             32  java.lang.StringCoding$StringEncoder
+>  114:             2             32  java.nio.ByteOrder
+>  115:             1             32  java.security.BasicPermissionCollection
+>  116:             1             32  java.security.Permissions
+>  117:             2             32  java.util.concurrent.atomic.AtomicInteger
+>  118:             1             32  java.util.concurrent.atomic.AtomicReferenceFieldUpdater$AtomicReferenceFieldUpdaterImpl
+>  119:             2             32  sun.net.www.protocol.jar.Handler
+>  120:             1             32  sun.nio.cs.StandardCharsets
+>  121:             1             32  sun.nio.fs.LinuxFileSystem
+>  122:             1             32  sun.nio.fs.UnixPath
+>  123:             1             24  [Ljava.io.File$PathStatus;
+>  124:             1             24  [Ljava.lang.ClassValue$Entry;
+>  125:             1             24  [Ljava.lang.reflect.Method;
+>  126:             1             24  [Lsun.launcher.LauncherHelper;
+>  127:             1             24  java.io.FilePermissionCollection
+>  128:             1             24  java.lang.ClassValue$Version
+>  129:             1             24  java.lang.StringBuilder
+>  130:             1             24  java.lang.ThreadLocal$ThreadLocalMap
+>  131:             1             24  java.lang.invoke.MethodHandleImpl$4
+>  132:             1             24  java.lang.reflect.ReflectPermission
+>  133:             1             24  java.util.BitSet
+>  134:             1             24  java.util.Collections$EmptyMap
+>  135:             1             24  java.util.Collections$SetFromMap
+>  136:             1             24  java.util.Collections$SynchronizedSet
+>  137:             1             24  java.util.Collections$UnmodifiableRandomAccessList
+>  138:             1             24  java.util.Locale$Cache
+>  139:             1             24  sun.launcher.LauncherHelper
+>  140:             1             24  sun.misc.URLClassPath$FileLoader
+>  141:             1             24  sun.nio.cs.UTF_8
+>  142:             1             24  sun.util.locale.BaseLocale$Cache
+>  143:             1             16  [Ljava.lang.Throwable;
+>  144:             1             16  [Ljava.security.cert.Certificate;
+>  145:             1             16  java.io.FileDescriptor$1
+>  146:             1             16  java.lang.CharacterDataLatin1
+>  147:             1             16  java.lang.ClassValue$Identity
+>  148:             1             16  java.lang.Runtime
+>  149:             1             16  java.lang.String$CaseInsensitiveComparator
+>  150:             1             16  java.lang.System$2
+>  151:             1             16  java.lang.Terminator$1
+>  152:             1             16  java.lang.invoke.MemberName$Factory
+>  153:             1             16  java.lang.invoke.MethodHandleImpl$2
+>  154:             1             16  java.lang.invoke.MethodHandleImpl$3
+>  155:             1             16  java.lang.ref.Reference$1
+>  156:             1             16  java.lang.ref.Reference$Lock
+>  157:             1             16  java.lang.reflect.ReflectAccess
+>  158:             1             16  java.net.URLClassLoader$7
+>  159:             1             16  java.nio.Bits$1
+>  160:             1             16  java.nio.charset.CoderResult$1
+>  161:             1             16  java.nio.charset.CoderResult$2
+>  162:             1             16  java.security.ProtectionDomain$2
+>  163:             1             16  java.security.ProtectionDomain$JavaSecurityAccessImpl
+>  164:             1             16  java.util.Collections$EmptyList
+>  165:             1             16  java.util.Collections$EmptySet
+>  166:             1             16  java.util.Hashtable$EntrySet
+>  167:             1             16  java.util.WeakHashMap$KeySet
+>  168:             1             16  java.util.zip.ZipFile$1
+>  169:             1             16  sun.misc.Launcher
+>  170:             1             16  sun.misc.Launcher$Factory
+>  171:             1             16  sun.misc.Perf
+>  172:             1             16  sun.misc.Unsafe
+>  173:             1             16  sun.net.www.protocol.file.Handler
+>  174:             1             16  sun.nio.fs.LinuxFileSystemProvider
+>  175:             1             16  sun.reflect.ReflectionFactory
+> Total          4372       10473912
+> 
+> ```
+>
+> 
+
+### JHAT
+
+> 用于分析hprof文件，JDK9之后不能用了，可以网页端查看
+
+### JSTACK
+
+> 打印线程快照，用于判断死锁、阻塞、等待的情况
+>
+> 用java代码启动一个线程也能监视线程信息，只不过属于侵入性，开发应该不会用 
+
+### JCMD
+
+> 监控中的瑞士军刀。
+>
+> [jcmd 工具实例](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/tooldescr006.html)
+>
+> ```java
+> //-----------打印进程信息-----------------------
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# jcmd
+> 771 Main 
+> 45 /root/.lightly/java8_ls/plugins/org.eclipse.equinox.launcher_1.5.700.v20200207-2156.jar -configuration /root/.lightly/java8_ls/config_linux -data /root/.lightly --add-modules=ALL-SYSTEM --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED
+> 783 sun.tools.jcmd.JCmd
+> //-----------打印线程快照-----------------------
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# jcmd 681 Thread.print
+> 681:
+> 2023-01-20 02:59:17
+> Full thread dump OpenJDK 64-Bit Server VM (25.332-b09 mixed mode):
+> 
+> "Attach Listener" #8 daemon prio=9 os_prio=0 tid=0x00007f12a8001000 nid=0x2ea waiting on condition [0x0000000000000000]
+>    java.lang.Thread.State: RUNNABLE
+> 
+> "Service Thread" #7 daemon prio=9 os_prio=0 tid=0x00007f12cc0bd000 nid=0x2b1 runnable [0x0000000000000000]
+>    java.lang.Thread.State: RUNNABLE
+> 
+> "C1 CompilerThread1" #6 daemon prio=9 os_prio=0 tid=0x00007f12cc0b7800 nid=0x2b0 waiting on condition [0x0000000000000000]
+>    java.lang.Thread.State: RUNNABLE
+> 
+> "C2 CompilerThread0" #5 daemon prio=9 os_prio=0 tid=0x00007f12cc0b6000 nid=0x2af waiting on condition [0x0000000000000000]
+>    java.lang.Thread.State: RUNNABLE
+> 
+> "Signal Dispatcher" #4 daemon prio=9 os_prio=0 tid=0x00007f12cc0a2000 nid=0x2ae runnable [0x0000000000000000]
+>    java.lang.Thread.State: RUNNABLE
+> 
+> "Finalizer" #3 daemon prio=8 os_prio=0 tid=0x00007f12cc07c800 nid=0x2ad in Object.wait() [0x00007f12d278a000]
+>    java.lang.Thread.State: WAITING (on object monitor)
+>         at java.lang.Object.wait(Native Method)
+>         - waiting on <0x00000000fc408ee8> (a java.lang.ref.ReferenceQueue$Lock)
+>         at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:144)
+>         - locked <0x00000000fc408ee8> (a java.lang.ref.ReferenceQueue$Lock)
+>         at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:165)
+>         at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:216)
+> 
+> "Reference Handler" #2 daemon prio=10 os_prio=0 tid=0x00007f12cc078000 nid=0x2ac in Object.wait() [0x00007f12d288b000]
+>    java.lang.Thread.State: WAITING (on object monitor)
+>         at java.lang.Object.wait(Native Method)
+>         - waiting on <0x00000000fc406c00> (a java.lang.ref.Reference$Lock)
+>         at java.lang.Object.wait(Object.java:502)
+>         at java.lang.ref.Reference.tryHandlePending(Reference.java:191)
+>         - locked <0x00000000fc406c00> (a java.lang.ref.Reference$Lock)
+>         at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:153)
+> 
+> "main" #1 prio=5 os_prio=0 tid=0x00007f12cc00a800 nid=0x2aa waiting on condition [0x00007f12d4016000]
+>    java.lang.Thread.State: TIMED_WAITING (sleeping)
+>         at java.lang.Thread.sleep(Native Method)
+>         at Main.main(Main.java:10)
+> 
+> "VM Thread" os_prio=0 tid=0x00007f12cc06e800 nid=0x2ab runnable 
+> 
+> "VM Periodic Task Thread" os_prio=0 tid=0x00007f12cc0bf800 nid=0x2b2 waiting on condition 
+> 
+> JNI global references: 5
+> //----------------生成堆快照--------------------
+> root@dcs-f64a0bc7-0:/workspace/TestLightly# jcmd 981 GC.heap_dump 3.hprof
+> 981:
+> Heap dump file created
+> //----------------打印类直方图---------------------------
+>   root@dcs-f64a0bc7-0:/workspace/TestLightly# jcmd 1080 GC.class_histogram
+> 1080:
+> 
+>  num     #instances         #bytes  class name
+> ----------------------------------------------
+>    1:           260       25526656  [B
+>    2:           932          80376  [C
+>    3:           470          54096  java.lang.Class
+>    4:           513          27256  [Ljava.lang.Object;
+>    5:           919          22056  java.lang.String
+>    6:            75           5400  java.lang.reflect.Field
+>    7:           121           4472  [I
+>    8:           256           4096  java.lang.Integer
+>    9:            91           3640  java.lang.ref.SoftReference
+>   10:           109           3488  java.util.Hashtable$Entry
+>   11:             6           2256  java.lang.Thread
+>   12:            58           2032  [Ljava.lang.String;
+>   13:            38           1824  sun.util.locale.LocaleObjectCache$CacheEntry
+>   14:            55           1760  java.util.concurrent.ConcurrentHashMap$Node
+>   15:            19           1216  java.net.URL
+>   16:             2           1064  [Ljava.lang.invoke.MethodHandle;
+>   17:             1           1040  [Ljava.lang.Integer;
+>   18:            26           1040  java.io.ObjectStreamField
+>   19:             6            992  [Ljava.util.Hashtable$Entry;
+>   20:            10            864  [Ljava.util.HashMap$Node;
+>   21:            27            864  java.util.HashMap$Node
+>   22:            19            760  sun.util.locale.BaseLocale$Key
+>   23:            12            672  java.lang.Class$ReflectionData
+>   24:             8            640  [S
+>   25:             8            640  java.lang.reflect.Constructor
+>   26:            16            640  java.util.LinkedHashMap$Entry
+>   27:            19            608  java.util.Locale
+>   28:            19            608  sun.util.locale.BaseLocale
+>   29:            36            576  java.lang.Object
+>   30:            12            576  java.util.HashMap
+>   31:             5            528  [Ljava.util.concurrent.ConcurrentHashMap$Node;
+>   32:             9            504  sun.misc.URLClassPath$JarLoader
+>   33:            19            456  java.util.Locale$LocaleKey
+>   34:             7            424  [Ljava.lang.reflect.Field;
+>   35:            10            400  java.security.AccessControlContext
+>   36:            16            384  java.io.ExpiringCache$Entry
+>   37:             1            384  java.lang.ref.Finalizer$FinalizerThread
+>   38:             6            384  java.nio.DirectByteBuffer
+>   39:             6            384  java.util.concurrent.ConcurrentHashMap
+>   40:             1            376  java.lang.ref.Reference$ReferenceHandler
+>   41:             6            336  java.nio.DirectLongBufferU
+>   42:            10            320  java.io.File
+>   43:            10            320  java.lang.OutOfMemoryError
+>   44:            10            288  [Ljava.io.ObjectStreamField;
+>   45:             3            240  [Ljava.util.WeakHashMap$Entry;
+>   46:             7            224  java.lang.ref.ReferenceQueue
+>   47:             4            224  sun.nio.cs.UTF_8$Encoder
+>   48:             9            216  sun.misc.MetaIndex
+>   49:             5            200  java.lang.ref.Finalizer
+>   50:             5            200  java.util.WeakHashMap$Entry
+>   51:             4            192  java.util.Hashtable
+>   52:             6            192  java.util.Vector
+>   53:             7            168  java.util.ArrayList
+>   54:             9            144  java.lang.ref.ReferenceQueue$Lock
+>   55:             3            144  java.util.WeakHashMap
+>   56:             6            144  sun.misc.PerfCounter
+>   57:             2            128  java.io.ExpiringCache$1
+>   58:             3            120  java.security.ProtectionDomain
+>   59:             6            104  [Ljava.lang.Class;
+>   60:             4             96  [Ljava.lang.reflect.Constructor;
+>   61:             3             96  java.io.FileDescriptor
+>   62:             2             96  java.lang.ThreadGroup
+>   63:             3             96  java.lang.ThreadLocal$ThreadLocalMap$Entry
+>   64:             2             96  java.nio.HeapByteBuffer
+>   65:             3             96  java.security.CodeSource
+>   66:             2             96  java.util.Properties
+>   67:             3             96  java.util.Stack
+>   68:             1             96  sun.misc.Launcher$AppClassLoader
+>   69:             2             96  sun.misc.URLClassPath
+>   70:             2             96  sun.nio.cs.StreamEncoder
+>   71:             4             96  sun.reflect.NativeConstructorAccessorImpl
+>   72:             1             88  java.lang.reflect.Method
+>   73:             1             88  sun.misc.Launcher$ExtClassLoader
+>   74:             1             80  [Ljava.lang.ThreadLocal$ThreadLocalMap$Entry;
+>   75:             2             80  java.io.BufferedWriter
+>   76:             2             80  java.io.ExpiringCache
+>   77:             2             80  java.lang.ClassLoader$NativeLibrary
+>   78:             3             72  java.lang.RuntimePermission
+>   79:             3             72  java.util.concurrent.atomic.AtomicLong
+>   80:             3             72  sun.misc.Signal
+>   81:             2             64  [Ljava.lang.Thread;
+>   82:             2             64  java.io.FileOutputStream
+>   83:             2             64  java.io.PrintStream
+>   84:             2             64  java.lang.ClassValue$Entry
+>   85:             4             64  java.lang.ThreadLocal
+>   86:             2             64  java.lang.VirtualMachineError
+>   87:             2             64  java.lang.ref.ReferenceQueue$Null
+>   88:             4             64  sun.reflect.DelegatingConstructorAccessorImpl
+>   89:             1             48  [J
+>   90:             3             48  [Ljava.security.Principal;
+>   91:             2             48  java.io.BufferedOutputStream
+>   92:             2             48  java.io.File$PathStatus
+>   93:             2             48  java.io.OutputStreamWriter
+>   94:             2             48  java.nio.charset.CoderResult
+>   95:             3             48  java.nio.charset.CodingErrorAction
+>   96:             3             48  java.security.ProtectionDomain$Key
+>   97:             2             48  sun.misc.NativeSignalHandler
+>   98:             1             40  java.io.BufferedInputStream
+>   99:             1             40  sun.nio.cs.StandardCharsets$Aliases
+>  100:             1             40  sun.nio.cs.StandardCharsets$Cache
+>  101:             1             40  sun.nio.cs.StandardCharsets$Classes
+>  102:             1             40  sun.nio.cs.UTF_8$Decoder
+>  103:             1             32  [Ljava.lang.OutOfMemoryError;
+>  104:             2             32  [Ljava.lang.StackTraceElement;
+>  105:             1             32  [Ljava.lang.ThreadGroup;
+>  106:             1             32  java.io.FileInputStream
+>  107:             1             32  java.io.FilePermission
+>  108:             1             32  java.io.UnixFileSystem
+>  109:             1             32  java.lang.ArithmeticException
+>  110:             2             32  java.lang.Boolean
+>  111:             1             32  java.lang.NullPointerException
+>  112:             1             32  java.lang.StringCoding$StringDecoder
+>  113:             1             32  java.lang.StringCoding$StringEncoder
+>  114:             2             32  java.nio.ByteOrder
+>  115:             1             32  java.security.BasicPermissionCollection
+>  116:             1             32  java.security.Permissions
+>  117:             2             32  java.util.concurrent.atomic.AtomicInteger
+>  118:             1             32  java.util.concurrent.atomic.AtomicReferenceFieldUpdater$AtomicReferenceFieldUpdaterImpl
+>  119:             2             32  sun.net.www.protocol.jar.Handler
+>  120:             1             32  sun.nio.cs.StandardCharsets
+>  121:             1             32  sun.nio.fs.LinuxFileSystem
+>  122:             1             32  sun.nio.fs.UnixPath
+>  123:             1             24  [Ljava.io.File$PathStatus;
+>  124:             1             24  [Ljava.lang.ClassValue$Entry;
+>  125:             1             24  [Ljava.lang.reflect.Method;
+>  126:             1             24  [Lsun.launcher.LauncherHelper;
+>  127:             1             24  java.io.FilePermissionCollection
+>  128:             1             24  java.lang.ClassValue$Version
+>  129:             1             24  java.lang.StringBuilder
+>  130:             1             24  java.lang.ThreadLocal$ThreadLocalMap
+>  131:             1             24  java.lang.invoke.MethodHandleImpl$4
+>  132:             1             24  java.lang.reflect.ReflectPermission
+>  133:             1             24  java.util.BitSet
+>  134:             1             24  java.util.Collections$EmptyMap
+>  135:             1             24  java.util.Collections$SetFromMap
+>  136:             1             24  java.util.Collections$SynchronizedSet
+>  137:             1             24  java.util.Collections$UnmodifiableRandomAccessList
+>  138:             1             24  java.util.Locale$Cache
+>  139:             1             24  sun.launcher.LauncherHelper
+>  140:             1             24  sun.misc.URLClassPath$FileLoader
+>  141:             1             24  sun.nio.cs.UTF_8
+>  142:             1             24  sun.util.locale.BaseLocale$Cache
+>  143:             1             16  [Ljava.lang.Throwable;
+>  144:             1             16  [Ljava.security.cert.Certificate;
+>  145:             1             16  java.io.FileDescriptor$1
+>  146:             1             16  java.lang.CharacterDataLatin1
+>  147:             1             16  java.lang.ClassValue$Identity
+>  148:             1             16  java.lang.Runtime
+>  149:             1             16  java.lang.String$CaseInsensitiveComparator
+>  150:             1             16  java.lang.System$2
+>  151:             1             16  java.lang.Terminator$1
+>  152:             1             16  java.lang.invoke.MemberName$Factory
+>  153:             1             16  java.lang.invoke.MethodHandleImpl$2
+>  154:             1             16  java.lang.invoke.MethodHandleImpl$3
+>  155:             1             16  java.lang.ref.Reference$1
+>  156:             1             16  java.lang.ref.Reference$Lock
+>  157:             1             16  java.lang.reflect.ReflectAccess
+>  158:             1             16  java.net.URLClassLoader$7
+>  159:             1             16  java.nio.Bits$1
+>  160:             1             16  java.nio.charset.CoderResult$1
+>  161:             1             16  java.nio.charset.CoderResult$2
+>  162:             1             16  java.security.ProtectionDomain$2
+>  163:             1             16  java.security.ProtectionDomain$JavaSecurityAccessImpl
+>  164:             1             16  java.util.Collections$EmptyList
+>  165:             1             16  java.util.Collections$EmptySet
+>  166:             1             16  java.util.Hashtable$EntrySet
+>  167:             1             16  java.util.WeakHashMap$KeySet
+>  168:             1             16  java.util.zip.ZipFile$1
+>  169:             1             16  sun.misc.Launcher
+>  170:             1             16  sun.misc.Launcher$Factory
+>  171:             1             16  sun.misc.Perf
+>  172:             1             16  sun.misc.Unsafe
+>  173:             1             16  sun.net.www.protocol.file.Handler
+>  174:             1             16  sun.nio.fs.LinuxFileSystemProvider
+>  175:             1             16  sun.reflect.ReflectionFactory
+> Total          4510       25764992                                
+> ```
+>
+> 
+
+### JSTAD
+
+> 远程连接
+
+
 
 ## 03. JVM监控及诊断工具-GUI篇
 
@@ -2278,8 +3013,52 @@ Process finished with exit code 0
 
 [CSDN-jvisualvm安装插件](https://blog.csdn.net/shuai825644975/article/details/78970371)
 
- 
+> 命令行工具有以下局限：
+>
+> 1. 无法获取方法级别的分析数据
+> 2. 要求用户登录到目标Java应用的宿主机上，使用不方便
+> 3. 命令行不直观
 
-### 04. JVM运行时参数
+### 获取dump文件
 
-[CSDN-JVM运行时参数](https://blog.csdn.net/qq_42185762/article/details/115548574?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522163368196116780274143332%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=163368196116780274143332&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-115548574.first_rank_v2_pc_rank_v29&utm_term=jvm%E8%BF%90%E8%A1%8C%E6%97%B6%E5%8F%82%E6%95%B0&spm=1018.2226.3001.4187)
+> 1. jmap
+>
+> 2. 配置JVM参数
+>
+>    ![image-20230120121009434](./images/image-20230120121009434.png)
+>
+> 3. 各种工具可以导出
+
+### Jconsole
+
+> JDK5开始，JDK自带的java监控和管理控制台
+
+### VisualVM
+
+> 免费能用，重点掌握
+
+### MAT
+
+> 免费能用，主要分析DUMP文件，核心优势是可以分析内存泄露,但是大家都不用eclipse了，这个基本也就没人用了
+
+### 深堆和浅堆
+
+> 类似深拷贝和浅拷贝，区别在于深堆大小和对象大小并不一样，深堆是回收该对象能回收的内存大小
+
+### 内存泄漏【重点】
+
+> 还需要加强
+
+### OQL
+
+> 还需要加强
+>
+> [OQL-OpenJDK官网文档](http://cr.openjdk.java.net/~sundar/8022483/webrev.01/raw_files/new/src/share/classes/com/sun/tools/hat/resources/oqlhelp.html)
+
+### JProfiler
+
+> 要收费，烦死了
+
+### Arthas
+
+> 开源免费，我的最爱
