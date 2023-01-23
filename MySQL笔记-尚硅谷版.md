@@ -357,7 +357,7 @@ END $
 
 
 
-# 2021Study-MySQL高级【需要复习】
+# 2021Study-MySQL高级
 
 ## mysql的架构介绍
 
@@ -1815,3 +1815,325 @@ show status like 'innodb_row_lock';
 ## 其他数据库日志【暂时不用】
 
 ## 数据备份与数据库迁移【暂时不用】
+
+# 2023Study-MySQL笔记
+## 第1章 数据库概述
+
+### 1. 为什么要使用数据库
+
+> 为什么要使用数据库
+>
+> - 为了持久化
+> - 大量的数据存在文件中不方便打开和查找
+
+### 2. 数据库与数据库管理系统
+
+> [DbEngine-数据库排名](https://db-engines.com/en/rank)
+>
+> **数据库相关概念：**
+>
+> - DB:数据库
+>
+> - DBMS:数据库管理系统
+>
+> - SQL：结构化查询语言
+>
+> **常见数据库介绍：**
+>
+> - Oracle:Oracle的商用数据库，适合大型跨国公司，要重点掌握
+> - SQL Server:微软的商用数据库，适合于微软全家桶
+> - DB2:IBM的商用数据库，适合于银行系统
+> - PostgreSQL:开源免费，以后肯定要学
+> - SyBase:SAP的商用数据库，没人用了
+> - SQLite:开源免费，适合于嵌入式系统如手机
+
+### 3. MySQL介绍
+
+> **MySQL介绍：**
+>
+> - 开源GPL的关系型数据库
+> - MariaDB是为了避免MySQL闭源而产生的
+> - 支持海量存储，高性能
+
+### 4. 非关系型数据库
+
+> **关系型数据库：**
+>
+> - 数据是二元关系
+> - 以行列形式存储
+> - 优势：
+>   - 便于复杂查询
+>   - 支持事务
+>
+> **非关系型数据库：**
+>
+> - key-value型数据库：Redis
+> - document型数据库：MongoDB,CouchDB
+> - 搜索引擎数据库：ElasticSearch，Slor
+> - 列式数据库：HBase
+> - 图形数据库：Neo4J,InfoGrid
+
+### 5. 关系数据库设计规则
+
+> **关系型数据库的设计规则：**
+>
+> - E-R模型设计：表、记录、字段
+> - 表的关联关系：一对一、一对多、多对多、自我引用
+
+## 第2章 MYSQL的下载、安装、配置
+
+### 1. 安装MYSQL
+
+> **安装MYSQL:**
+>
+> 1. https://dev.mysql.com/downloads/mysql/下载对应的MYSQL版本
+> 2. 按步骤安装，设置MYSQL账号：`root` 密码：`ROOT1234`
+> 3. 找到Oracle官网的MYSQL用户手册中如何安装MYSQL这一章，由于我是Mac系统，我进入https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/macos-installation-notes.html按照官网的说明敲出以下命令
+>
+> ```java
+> dongbinyu@dongbinyudeMacBook-Pro ~ % alias mysql=/usr/local/mysql/bin/mysql
+> dongbinyu@dongbinyudeMacBook-Pro ~ % mysql
+> ERROR 1045 (28000): Access denied for user 'dongbinyu'@'localhost' (using password: NO)
+> dongbinyu@dongbinyudeMacBook-Pro ~ % mysql --version
+> /usr/local/mysql/bin/mysql  Ver 8.0.32 for macos13 on arm64 (MySQL Community Server - GPL)
+>   dongbinyu@dongbinyudeMacBook-Pro ~ % alias mysqladmin=/usr/local/mysql/bin/mysqladmin
+> dongbinyu@dongbinyudeMacBook-Pro ~ % mysql -uroot -pROOT1234
+> mysql: [Warning] Using a password on the command line interface can be insecure.
+> Welcome to the MySQL monitor.  Commands end with ; or \g.
+> Your MySQL connection id is 9
+> Server version: 8.0.32 MySQL Community Server - GPL
+> 
+> Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+> 
+> Oracle is a registered trademark of Oracle Corporation and/or its
+> affiliates. Other names may be trademarks of their respective
+> owners.
+> 
+> Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+> 
+> mysql> 
+> 
+> ```
+>
+> 4. 那么就恭喜你，进入MYSQL成功了！
+>
+> 5. `注意：MySQL5.7默认字符集是Latin，需要设置默认字符集为UTF-8,`
+>
+>    ![image-20230121132500328](./images/image-20230121132500328.png)
+
+### 5. MYSQL图形化管理工具
+
+> **MYSQL图形化管理工具:**
+>
+> - workbench
+> - navicat
+> - sqlyog
+> - dbeaver
+
+## 第3章 基本的SELECT语句
+
+### 1. SQL概述
+
+> **SQL规范：**
+>
+> - 以`SQL92`和`SQL99`标准为准
+> - `Oracle`和`MySQL`有`SQL方言`
+>
+> **SQL分类：**
+>
+> - `DDL`数据定义语言。如：CREATE\ALTER\DROP\RENAME\TRUNCATE
+> - `DML`数据操作语言。如：INSERT\DELETE\UPDATE\SELECT
+> - `DCL`数据控制语言。如：COMMIT\ROLLBACK\SAVEPOINT\GRANT\REVOKE
+
+### 2. SQL语言的规则与规范
+
+> **SQL大小写规范（建议遵守）**
+>
+> - **MYSQL在windows环境下是大小写不敏感的**
+> - **MYSQL在Linux环境下是大小写敏感的**
+>   - 数据库名、表名、表的别名、变量名是严格区分大小写的
+>   - 关键字、函数名、列名（或字段名）、列的别名（字段的别名）是忽略大小写的。
+> - **推荐采用统一的书写规范：**
+>   - 数据库名、表名、表别名、字段名、字段别名等都小写
+>   - SQL关键宇、函数名、绑定变量等都大写
+>
+> **SQL注释：**
+>
+> - `#`
+> - `/*  */`
+> - `--`
+
+### 3. 基本的SELECT语句
+
+```mysql
+-- dual是伪表
+select 1+1,3*2 from dual;
+select * from my_test_table mtt ;
+-- 列别名要用""   
+-- 字符串用''
+select mt.country as "国家" from mytable2 mt 
+-- 去重 distinct
+select distinct mt.country  "一个中国" from mytable2 mt ;
+-- 着重号 ``
+select distinct mt.country as "一个中国" from `mytable2` mt ;
+-- 显示表结构
+describe mytable2 ;
+desc mytable2 ;
+```
+
+## 第4章 运算符
+
+```mysql
+select 100+'1';-- 101
+select 100+"1";-- 101
+select 100+"a";-- 100
+select 100+null;-- NULL
+select 100*1,100/2.0,100 div 0;-- 100 50 NULL
+select 100%3;-- 1
+select 100 mod -3;-- 1
+```
+
+-----
+
+```mysql
+select 1=1;-- 1
+select 1!=1;-- 0
+select 1='1';-- 1
+select 1='a';-- 0
+select 0='a';-- 1
+select 'a'='a';-- 1
+select 'a'='A';-- 1
+select 1=NULL ;-- NULL
+select NULL=NULL ;-- NULL
+-- <=>安全等于：用于处理null,等同于is null
+select NULL<=>NULL ;-- 1
+select 3<>2;-- 1
+-- 转义字符`\`的使用
+select * from myTable2 mt  where mt.phone like '_\_%';
+-- 正则的使用
+select 'shkstart' REGEXP '^shk','shkstart' REGEXP 't$','shkstart' REGEXP 'hk';-- 1 1 1
+```
+
+## 第5章 排序与分页
+
+```mysql
+-- 列的别名只能在order by中使用，不能再where中使用
+-- 排序
+select * from myTable2 mt order by name asc,address asc;
+-- 分页
+-- limit 条目数
+select * from myTable2 mt order by name asc,address asc LIMIT 10;
+-- limit 开始位置 条目数
+select * from myTable2 mt order by name asc,address asc LIMIT 20,10;
+-- MySQL8.0新特性 offset 开始位置 limit 条目数
+select * from myTable2 mt order by name asc,address asc offset 20 LIMIT 10;
+-- limit 可以使用在MYSQL、PGSQL、MariaDB、SQLite等
+-- limit 不能使用在SQL Server、DB2、Oracle
+```
+
+> Oracle中分页，见Oracle教程
+
+```oracle
+select rownum,pro.* from AV."PRODUCT_DIM" pro where rownum<=5;
+```
+
+
+
+## 第6章 多表查询
+
+[菜鸟教程-一张图看懂 SQL 的各种 JOIN 用法](https://www.runoob.com/w3cnote/sql-join-image-explain.html)
+
+### cross join笛卡尔积
+
+> 需要where限制，不然多表会出现错误
+
+### 等值连接和非等值连接
+
+> 限制条件是等于号就是等值连接
+
+### 自连接和非自连接
+
+> 一个表连接自己，就是自连接
+
+### 内连接和外连接
+
+![image-20230123162027709](./images/image-20230123162027709.png)
+
+```mysql
+## 中图 内连接
+SELECT employee_id,department_name
+FROM employees e JOIN departments d
+ON e.department_id = d.department_id
+
+## 左上图 左外连接
+SELECT employee_id,department_name
+FROM employees e LEFT JOIN departments d
+ON e.department_id = d.department_id
+
+# 右上图 右外连接
+SELECT employee_id,department_name
+FROM employees e RIGHT JOIN departments d
+ON e.department_id = d.department_id
+
+## 左中图 
+SELECT employee_id,department_name
+FROM employees e LEFT JOIN departments d
+ON e.department_id = d.department_id
+WHERE d.department_id IS NULL
+
+## 右中图
+SELECT employee_id,department_name
+FROM employees e RIGHT JOIN departments d
+ON e.department_id = d.department_id
+WHERE e.department_id IS NULL
+
+## 左下图: 满外连接
+# 方式1: 左上图 UNION ALL 右中图
+SELECT employee_id,department_name
+FROM employees e LEFT JOIN departments d
+ON e.department_id = d.department_id
+UNION ALL
+SELECT employee_id,department_name
+FROM employees e RIGHT JOIN departments d
+ON e.department_id = d.department_id
+WHERE e.department_id IS NULL
+
+# 方式2: 左中图 UNION ALL 右上图
+SELECT employee_id,department_name
+FROM employees e LEFT JOIN departments d
+ON e.department_id = d.department_id
+WHERE d.department_id IS NULL
+UNION ALL
+SELECT employee_id,department_name
+FROM employees e RIGHT JOIN departments d
+ON e.department_id = d.department_id
+
+# 方式3 左上图 UNION 右上图 （不推荐使用 UNION，效率低）
+SELECT employee_id,department_name
+FROM employees e LEFT JOIN departments d
+ON e.department_id = d.department_id
+UNION
+SELECT employee_id,department_name
+FROM employees e RIGHT JOIN departments d
+ON e.department_id = d.department_id
+
+## 右下图 左中图 UNION ALL 右中图
+SELECT employee_id,department_name
+FROM employees e LEFT JOIN departments d
+ON e.department_id = d.department_id
+WHERE d.department_id IS NULL
+UNION ALL
+SELECT employee_id,department_name
+FROM employees e RIGHT JOIN departments d
+ON e.department_id = d.department_id
+WHERE e.department_id IS NULL
+```
+
+
+
+### UNION和UNION ALL
+
+> UNION 效率低，会去重
+>
+> UNION ALL 效率高，不会去重
+
