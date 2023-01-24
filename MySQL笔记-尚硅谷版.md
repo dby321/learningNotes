@@ -1383,50 +1383,47 @@ DELIMITER ;
 
 
 
-## MYSQL触发器Trigger
-
-> 触发器可以保证数据的完整性
+## MYSQL触发器Triggers
 
 ```mysql
-CREATE <触发器名> < BEFORE | AFTER >
-<INSERT | UPDATE | DELETE >
-ON <表名> FOR EACH Row<触发器主体>
+DELIMITER //
+
+CREATE TRIGGER contacts_before_insert
+BEFORE INSERT
+   ON contacts FOR EACH ROW
+
+BEGIN
+
+   DECLARE vUser varchar(50);
+
+   -- Find username of person performing INSERT into table
+   SELECT USER() INTO vUser;
+
+   -- Update create_date field to current system date
+   SET NEW.created_date = SYSDATE();
+
+   -- Update created_by field to the username of the person performing the INSERT
+   SET NEW.created_by = vUser;
+
+END; //
+
+DELIMITER ;
 ```
 
-```mysql
-delimiter $
-create trigger after_insert_test_tri
-after insert on test_trigger
-for each row
-begin
-	insert into test_trigger_log(t_log)
-	values('after insert...');
-end $
-delimiter ;
-```
 
-> 下面触发器声明过程中NEW关键字代表insert添加语句的新纪录
 
-```mysql
-delimiter $
-create trigger salary_check_trigger
-before insert on employees for each row
-begin 
-	declare mgrsalary double;
-	select salary into mgrsalary from employees where employee_id=NEW.manager_id;
-	if NEW.salary > mgrsalary then
-		signal sqlstate 'HY000' set message_text='薪资高于领导薪资错误';
-	end if
-end $
-delimiter ;
-```
+## MYSQL8.0新特性
 
-## MYSQL8新特性
+[MySQL官网-MYSQL8.0新特性](https://dev.mysql.com/doc/refman/8.0/en/mysql-nutshell.html)
 
-> 还没普及
+> 可能需要专门新看视频
 
-## 字符集的相关操作
 
+
+## 字符集、归类、Unicode
+
+> [MYSQL8.0参考手册-字符集、归类、Unicode](https://dev.mysql.com/doc/refman/8.0/en/charset.html)
+>
 > 在MYSQL8.0之前，默认字符集为latin1，utf8字符集指向的时utfmb3.
 >
 > 从MYSQL8.0开始，数据库的默认编码将改为utf8mb4,从而解决中文乱码问题
@@ -1439,31 +1436,40 @@ delimiter ;
 > - 数据库级别
 > - 表级别
 > - 列级别
+>
+> **字符集与比较规则：**
+>
+> `UTF8mb4`是`UTF8mb3`的超集，用于存储`emoji`
 
 ```mysql
-show variables like '%character%';-- 查看字符集
+show variables like '%character%';-- 查看字符集变量
+show charset;-- 显示所有字符集
 ```
 
 
 
 ## SQL大小写规范和SQL_MODE
 
-> MYSQL在Linux下数据库名、表名、列名、别名大小写规则是这样的：
+> [MYSQL8.0参考手册-标识符区分大小写](https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html)
 >
-> 1. 数据库名、表名、表的别名、变量名是严格区分大小写的
-> 2. 关键字、函数名称在sql中不区分大小写
-> 3. 列名（或字段名）与列的别名在所有的情况下均是忽略大小写的
+> [MYSQL8.0参考手册-服务器 SQL 模式](https://dev.mysql.com/doc/refman/8.0/en/sql-mode.html)
 >
-> MYSQL在windows的环境下全部不区分大小写
+> [MYSQL8.0参考手册-sql_mode](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_sql_mode)
+>
+> **SQL编写建议：**
+>
+> 1. 关键字和函数名称全部大写
+> 2. 数据库名、表名、表别名、字段名、字段别名等全部小写
+>
+> ```mysql
+> select @@sql_mode;-- 查询全局sql_mode
+> ```
 
 
 
-> SQL_MODE：
->
-> - 宽松模式
-> - 严格模式
->
 ## MYSQL数据目录
+
+[MYSQL8.0参考手册-MySQL 数据目录](https://dev.mysql.com/doc/refman/8.0/en/data-directory.html)
 
 ![image-20221004153519723](images/image-20221004153519723.png)
 
