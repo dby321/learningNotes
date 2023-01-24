@@ -609,7 +609,136 @@ explain包含信息：
 
 ![image-20220923211535157](images/image-20220923211535157.png)
 
-## MYSQL运算符
+## TechNet速查
+
+### MySQL Functions
+
+| [Functions - Alphabetical](https://www.techonthenet.com/mysql/functions/index_alpha.php) | MySQL Functions listed alphabetically |
+| ------------------------------------------------------------ | ------------------------------------- |
+| [Functions - Category](https://www.techonthenet.com/mysql/functions/index.php) | MySQL Functions listed by category    |
+
+### MySQL Keys, Constraints and Indexes
+
+| [Primary Keys](https://www.techonthenet.com/mysql/primary_keys.php) | Create, alter, and drop primary keys                 |
+| ------------------------------------------------------------ | ---------------------------------------------------- |
+| [Unique Constraints](https://www.techonthenet.com/mysql/unique.php) | Create, add, and drop unique constraints             |
+| [Indexes](https://www.techonthenet.com/mysql/indexes.php)    | Create, drop and rename indexes (performance tuning) |
+
+### MySQL Privileges and Passwords
+
+| [Grant/Revoke Privileges](https://www.techonthenet.com/mysql/grant_revoke.php) | Grant or revoke privileges |
+| ------------------------------------------------------------ | -------------------------- |
+| [Change Password](https://www.techonthenet.com/mysql/change_password.php) | Change a user's password   |
+
+### MySQL Database Administration
+
+| [Users](https://www.techonthenet.com/mysql/users/index.php) | Database accounts |
+| ----------------------------------------------------------- | ----------------- |
+|                                                             |                   |
+
+### MySQL Programming
+
+| [Functions](https://www.techonthenet.com/mysql/functions.php) | Create and drop functions                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [Procedures](https://www.techonthenet.com/mysql/procedures.php) | Create and drop procedures                                   |
+| [Triggers](https://www.techonthenet.com/mysql/triggers/index.php) | Create and drop triggers                                     |
+| [Cursors](https://www.techonthenet.com/mysql/cursors/index.php) | Create cursors within stored programs                        |
+| [Literals (Constants)](https://www.techonthenet.com/mysql/literals.php) | String, number, date, time, boolean literals                 |
+| [Declaring Variables](https://www.techonthenet.com/mysql/declare_vars.php) | Declare variables within stored programs                     |
+| [Loops and Conditional Statements](https://www.techonthenet.com/mysql/loops/index.php) | LOOP statement, IF-THEN-ELSE and others                      |
+| [AUTO_INCREMENT (Sequences)](https://www.techonthenet.com/mysql/auto_increment.php) | Create a sequence of numbers using the AUTO_INCREMENT attribute |
+| [Comments within SQL](https://www.techonthenet.com/mysql/comments.php) | How to create comments within your SQL statement             |
+
+### MySQL Comparison Operators
+
+| [Comparison Operators](https://www.techonthenet.com/mysql/comparison_operators.php) | Operators such as =, <>, !=, >, <, and so on |
+| ------------------------------------------------------------ | -------------------------------------------- |
+|                                                              |                                              |
+
+### MySQL Query Types
+
+| [SELECT Statement](https://www.techonthenet.com/mysql/select.php) | Retrieve records from a table                   |
+| ------------------------------------------------------------ | ----------------------------------------------- |
+| [SELECT LIMIT Statement](https://www.techonthenet.com/mysql/select_limit.php) | Retrieve records from a table and limit results |
+| [INSERT Statement](https://www.techonthenet.com/mysql/insert.php) | Insert records into a table                     |
+| [UPDATE Statement](https://www.techonthenet.com/mysql/update.php) | Update records in a table                       |
+| [DELETE Statement](https://www.techonthenet.com/mysql/delete.php) | Delete records from a table                     |
+| [DELETE LIMIT Statement](https://www.techonthenet.com/mysql/delete_limit.php) | Delete records and limit number of deletions    |
+| [TRUNCATE TABLE Statement](https://www.techonthenet.com/mysql/truncate.php) | Delete all records from a table (no rollback)   |
+| [UNION Operator](https://www.techonthenet.com/mysql/union.php) | Combine 2 result sets (removes duplicates)      |
+| [UNION ALL Operator](https://www.techonthenet.com/mysql/union_all.php) | Combine 2 result sets (includes duplicates)     |
+| [INTERSECT Operator](https://www.techonthenet.com/mysql/intersect.php) | Intersection of 2 result sets                   |
+| [Subqueries](https://www.techonthenet.com/mysql/subqueries.php) | A query within a query                          |
+
+### MySQL Joins
+
+| [JOIN Tables](https://www.techonthenet.com/mysql/joins.php) | Inner and Outer joins |
+| ----------------------------------------------------------- | --------------------- |
+|                                                             |                       |
+
+### MySQL Aliases
+
+| [ALIASES](https://www.techonthenet.com/mysql/alias.php) | Create a temporary name for a column or table |
+| ------------------------------------------------------- | --------------------------------------------- |
+|                                                         |                                               |
+
+### MySQL Clauses
+
+| [DISTINCT Clause](https://www.techonthenet.com/mysql/distinct.php) | Retrieve unique records              |
+| ------------------------------------------------------------ | ------------------------------------ |
+| [FROM Clause](https://www.techonthenet.com/mysql/from.php)   | List tables and join information     |
+| [WHERE Clause](https://www.techonthenet.com/mysql/where.php) | Filter results                       |
+| [ORDER BY Clause](https://www.techonthenet.com/mysql/order_by.php) | Sort query results                   |
+| [GROUP BY Clause](https://www.techonthenet.com/mysql/group_by.php) | Group by one or more columns         |
+| [HAVING Clause](https://www.techonthenet.com/mysql/having.php) | Restrict the groups of returned rows |
+
+#### MySQL SQL Functions
+
+| [COUNT Function](https://www.techonthenet.com/mysql/functions/count.php) | Return the count of an expression   |
+| ------------------------------------------------------------ | ----------------------------------- |
+| [SUM Function](https://www.techonthenet.com/mysql/functions/sum.php) | Return the sum of an expression     |
+| [MIN Function](https://www.techonthenet.com/mysql/functions/min.php) | Return the min of an expression     |
+| [MAX Function](https://www.techonthenet.com/mysql/functions/max.php) | Return the max of an expression     |
+| [AVG Function](https://www.techonthenet.com/mysql/functions/avg.php) | Return the average of an expression |
+
+### MySQL Conditions
+
+| [AND Condition](https://www.techonthenet.com/mysql/and.php)  | 2 or more conditions to be met                        |
+| ------------------------------------------------------------ | ----------------------------------------------------- |
+| [OR Condition](https://www.techonthenet.com/mysql/or.php)    | Any one of the conditions are met                     |
+| [AND and OR](https://www.techonthenet.com/mysql/and_or.php)  | Combine AND and OR conditions                         |
+| [LIKE Condition](https://www.techonthenet.com/mysql/like.php) | Use wildcards in a WHERE clause                       |
+| [IN Condition](https://www.techonthenet.com/mysql/in.php)    | Alternative to multiple OR conditions                 |
+| [NOT Condition](https://www.techonthenet.com/mysql/not.php)  | Negate a condition                                    |
+| [IS NULL Condition](https://www.techonthenet.com/mysql/is_null.php) | Test for a NULL value                                 |
+| [IS NOT NULL Condition](https://www.techonthenet.com/mysql/is_not_null.php) | Test for a NOT NULL value                             |
+| [BETWEEN Condition](https://www.techonthenet.com/mysql/between.php) | Retrieve within a range (inclusive)                   |
+| [EXISTS Condition](https://www.techonthenet.com/mysql/exists.php) | Condition is met if subquery returns at least one row |
+
+### MySQL Tables and Views
+
+| [CREATE TABLE](https://www.techonthenet.com/mysql/tables/create_table.php) | Create a table                                          |
+| ------------------------------------------------------------ | ------------------------------------------------------- |
+| [CREATE TABLE AS](https://www.techonthenet.com/mysql/tables/create_table_as.php) | Create a table from another table's definition and data |
+| [ALTER TABLE](https://www.techonthenet.com/mysql/tables/alter_table.php) | Add, modify, delete columns in a table; rename a table  |
+| [DROP TABLE](https://www.techonthenet.com/mysql/tables/drop_table.php) | Delete a table                                          |
+| [VIEW](https://www.techonthenet.com/mysql/views.php)         | Virtual tables (views of other tables)                  |
+
+### MySQL Data Types
+
+| [Data Types](https://www.techonthenet.com/mysql/datatypes.php) | Data Types in MySQL |
+| ------------------------------------------------------------ | ------------------- |
+|                                                              |                     |
+
+### MySQL Question and Answer
+
+| [Question & Answer](https://www.techonthenet.com/mysql/questions/index.php) | Various questions and answers |
+| ------------------------------------------------------------ | ----------------------------- |
+|                                                              |                               |
+
+
+
+## MYSQL运算符Comparison Operators
 
 ### MYSQL:NULL
 
@@ -699,7 +828,7 @@ mysql> SELECT name FROM person_tbl WHERE name REGEXP '^[aeiou]|ok$';
 
 
 
-## 多表连接
+## 多表连接Joins
 
 [菜鸟教程-一张图看懂 SQL 的各种 JOIN 用法](https://www.runoob.com/w3cnote/sql-join-image-explain.html)
 
@@ -731,7 +860,11 @@ mysql> SELECT name FROM person_tbl WHERE name REGEXP '^[aeiou]|ok$';
 >
 > UNION ALL 效率高，不会去重
 
-## MYSQL函数
+## MYSQL函数Functions
+
+| [Functions - Alphabetical](https://www.techonthenet.com/mysql/functions/index_alpha.php) | MySQL Functions listed alphabetically |
+| ------------------------------------------------------------ | ------------------------------------- |
+| [Functions - Category](https://www.techonthenet.com/mysql/functions/index.php) | MySQL Functions listed by category    |
 
 > 分为内置函数和自定义函数
 >
@@ -815,7 +948,7 @@ c int GENERATED ALWAYS AS (a+b) VIRTUAL); # 字段c即为计算列
 
 
 
-## MYSQL数据类型
+## MYSQL数据类型Data type
 
 ### 整数类型
 
@@ -858,7 +991,7 @@ f3 int(5) ZEROFILL)# 1.显示宽度为5，当insert值不足5位时，用0填充
 
 ### JSON类型【了解】
 
-## MYSQL约束
+## MYSQL约束Conditions
 
 > 为什么需要约束？ 为了保证数据的完整性
 >
@@ -922,7 +1055,7 @@ drop index last_name;
 
 > 对于外键约束，最好采用下面的方式：
 >
-> on update cascade on delete set null（更新主表数据时从表数据级联更新，删除主表数据时从表数据设为null）
+> `on update cascade on delete set null`（更新主表数据时从表数据级联更新，删除主表数据时从表数据设为null）
 
 ```mysql
 -- 主表
@@ -959,7 +1092,7 @@ drop index fk_empl_dept_id;
 
 > 检查约束在mysql5.7不支持
 
-## MYSQL视图
+## MYSQL视图View
 
 > [数据库](https://www.huaweicloud.com/product/dbs.html)对象包括：用户（对数据库有权限访问的人）、视图（显示用户需要的数据项）、索引（给用户提供快速访问数据的途径）、触发器（用户定义的SQL事务命令集合）、序列（提供了唯一数值的顺序表）、图表（数据库表之间的一种关系示意图）。
 
@@ -971,7 +1104,7 @@ create view 视图名称
 as 查询语句
 ```
 
-## MYSQL存储过程
+## MYSQL存储过程Procedures
 
 [菜鸟教程-MySQL 存储过程](runoob.com/w3cnote/mysql-stored-procedure.html)
 
@@ -1010,7 +1143,7 @@ delimiter ;
 call show_min_salary(@ms);
 ```
 
-## MYSQL存储函数
+## MYSQL存储函数Functions
 
 ```mysql
 -- 创建存储函数
@@ -1049,9 +1182,9 @@ set @emp_id=102;
 select email_by_name(@emp_id);
 ```
 
-## 变量、流程控制和游标
+## MYSQL变量、流程控制和游标
 
-### 变量
+### 变量Declaring Variables
 
 > 变量：
 >
@@ -1085,7 +1218,7 @@ set global max_connections=161;
 ```mysql
 -- set @用户变量:=表达式
 set @m1=1;
-select @count:=count(*) from employees;
+select @count:=count(*) from employees;-- 不能省略冒号
 select avg(salary) into @avg_sal from employees;
 ```
 
@@ -1120,71 +1253,137 @@ declare Field_Not_Be_Null condition for 1048;-- `MySQL_error_code`
 declare Field_Not_Be_Null condition for sqlstate '23000';-- `sqlstate_value`
 ```
 
-```mysql
--- 定义处理程序
--- declare 处理方式 handler for 错误类型 处理语句
-```
-
 MySQL 中可以使用 **DECLARE** 关键字来定义处理程序。其基本语法如下：
 
 ```mysql
+-- 定义处理程序
+-- declare 处理方式 handler for 错误类型 处理语句
 DECLARE handler_type HANDLER FOR condition_value[...] sp_statement
-handler_type:
-CONTINUE | EXIT | UNDO
-condition_value:
-SQLSTATE [VALUE] sqlstate_value | condition_name | SQLWARNING | NOT FOUND | SQLEXCEPTION | mysql_error_code
 ```
 
-其中，handler_type 参数指明错误的处理方式，该参数有 3 个取值。这 3 个取值分别是 CONTINUE、EXIT 和 UNDO。
+其中，`handler_type` 参数指明错误的处理方式，该参数有 3 个取值。这 3 个取值分别是 CONTINUE、EXIT 和 UNDO。
 
-- CONTINUE 表示遇到错误不进行处理，继续向下执行；
-- EXIT 表示遇到错误后马上退出；
-- UNDO 表示遇到错误后撤回之前的操作，MySQL 中暂时还不支持这种处理方式。
+- `CONTINUE` 表示遇到错误不进行处理，继续向下执行；
+- `EXIT`表示遇到错误后马上退出；
+- `UNDO` 表示遇到错误后撤回之前的操作，MySQL 中暂时还不支持这种处理方式。
 
 
 注意：通常情况下，执行过程中遇到错误应该立刻停止执行下面的语句，并且撤回前面的操作。但是，MySQL 中现在还不能支持 UNDO 操作。因此，遇到错误时最好执行 EXIT 操作。如果事先能够预测错误类型，并且进行相应的处理，那么可以执行 CONTINUE 操作。
 
-参数指明错误类型，该参数有 6 个取值：
+`condition_value`参数指明错误类型，该参数有 6 个取值：
 
-- sqlstate_value：包含 5 个字符的字符串错误值；
-- condition_name：表示 DECLARE 定义的错误条件名称；
-- SQLWARNING：匹配所有以 01 开头的 sqlstate_value 值；
-- NOT FOUND：匹配所有以 02 开头的 sqlstate_value 值；
-- SQLEXCEPTION：匹配所有没有被 SQLWARNING 或 NOT FOUND 捕获的 sqlstate_value 值；
-- mysql_error_code：匹配数值类型错误代码。
+- `SQLSTATE sqlstate_value`：包含 5 个字符的字符串错误值；
+- `condition_name`：表示 DECLARE 定义的错误条件名称；
+- `SQLWARNING`：匹配所有以 01 开头的 sqlstate_value 值；
+- `NOT FOUND`：匹配所有以 02 开头的 sqlstate_value 值；
+- `SQLEXCEPTION`：匹配所有没有被 SQLWARNING 或 NOT FOUND 捕获的 sqlstate_value 值；
+- `MySQL_error_code`：匹配数值类型错误代码。
 
 下面是定义处理程序的几种方式，代码如下：
 
 ```mysql
-//方法一：捕获 sqlstate_value
+-- 方法一：捕获 sqlstate_value
 DECLARE CONTINUE HANDLER FOR SQLSTATE '42S02' SET @info='CAN NOT FIND';
 
-//方法二：捕获 mysql_error_code
+-- 方法二：捕获 mysql_error_code
 DECLARE CONTINUE HANDLER FOR 1146 SET @info='CAN NOT FIND';
 
-//方法三：先定义条件，然后调用
+-- 方法三：先定义条件，然后调用
 DECLARE can_not_find CONDITION FOR 1146;
 DECLARE CONTINUE HANDLER FOR can_not_find SET @info='CAN NOT FIND';
 
-//方法四：使用 SQLWARNING
+-- 方法四：使用 SQLWARNING
 DECLARE EXIT HANDLER FOR SQLWARNING SET @info='ERROR';
 
-//方法五：使用 NOT FOUND
+-- 方法五：使用 NOT FOUND
 DECLARE EXIT HANDLER FOR NOT FOUND SET @info='CAN NOT FIND';
 
-//方法六：使用 SQLEXCEPTION
+-- 方法六：使用 SQLEXCEPTION
 DECLARE EXIT HANDLER FOR SQLEXCEPTION SET @info='ERROR';
 ```
 
-### 流程控制
+### 流程控制Loops and Conditional Statements
 
 > 流程控制只能在存储过程和存储函数中执行
 
 [C语言中文网-MySQL流程控制语句详解](http://c.biancheng.net/view/7853.html)
 
-### 游标【不用】
+### 游标cursor
 
-## Trigger触发器
+> 游标在存储过程和存储函数中的使用步骤：
+>
+> 1. declare游标
+> 2. open游标
+> 3. fetch游标
+>
+> 4. close游标
+
+```mysql
+DELIMITER //
+
+CREATE FUNCTION FindSiteID ( name_in VARCHAR(50) )
+RETURNS INT
+
+BEGIN
+
+   DECLARE done INT DEFAULT FALSE;
+   DECLARE siteID INT DEFAULT 0;
+
+   DECLARE c1 CURSOR FOR
+     SELECT site_id
+     FROM sites
+     WHERE site_name = name_in;
+
+   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+   OPEN c1;
+   FETCH c1 INTO siteID;
+
+   CLOSE c1;
+
+   RETURN siteID;
+
+END; //
+
+DELIMITER ;
+```
+
+```mysql
+DELIMITER //
+
+CREATE PROCEDURE get_count_by_limit_total_salary(IN limit_total_salary DOUBLE,OUT total_count INT)
+
+BEGIN
+	DECLARE sum_salary DOUBLE DEFAULT 0;  #记录累加的总工资
+	DECLARE cursor_salary DOUBLE DEFAULT 0; #记录某一个工资值
+	DECLARE emp_count INT DEFAULT 0; #记录循环个数
+	#定义游标
+	DECLARE emp_cursor CURSOR FOR SELECT salary FROM employees ORDER BY salary DESC;
+	#打开游标
+	OPEN emp_cursor;
+	
+	REPEAT
+		#使用游标（从游标中获取数据）
+		FETCH emp_cursor INTO cursor_salary;
+		
+		SET sum_salary = sum_salary + cursor_salary;
+		SET emp_count = emp_count + 1;
+		
+		UNTIL sum_salary >= limit_total_salary
+	END REPEAT;
+	
+	SET total_count = emp_count;
+	#关闭游标
+	CLOSE emp_cursor;
+	
+END //
+
+DELIMITER ;
+```
+
+
+
+## MYSQL触发器Trigger
 
 > 触发器可以保证数据的完整性
 
@@ -1817,362 +2016,7 @@ show status like 'innodb_row_lock';
 
 ## 数据备份与数据库迁移【暂时不用】
 
-# 2023Study-MySQL笔记
-## 第1章 数据库概述
-
-### 1. 为什么要使用数据库
-
-> 为什么要使用数据库
->
-> - 为了持久化
-> - 大量的数据存在文件中不方便打开和查找
-
-### 2. 数据库与数据库管理系统
-
-> [DbEngine-数据库排名](https://db-engines.com/en/rank)
->
-> **数据库相关概念：**
->
-> - DB:数据库
->
-> - DBMS:数据库管理系统
->
-> - SQL：结构化查询语言
->
-> **常见数据库介绍：**
->
-> - Oracle:Oracle的商用数据库，适合大型跨国公司，要重点掌握
-> - SQL Server:微软的商用数据库，适合于微软全家桶
-> - DB2:IBM的商用数据库，适合于银行系统
-> - PostgreSQL:开源免费，以后肯定要学
-> - SyBase:SAP的商用数据库，没人用了
-> - SQLite:开源免费，适合于嵌入式系统如手机
-
-### 3. MySQL介绍
-
-> **MySQL介绍：**
->
-> - 开源GPL的关系型数据库
-> - MariaDB是为了避免MySQL闭源而产生的
-> - 支持海量存储，高性能
-
-### 4. 非关系型数据库
-
-> **关系型数据库：**
->
-> - 数据是二元关系
-> - 以行列形式存储
-> - 优势：
->   - 便于复杂查询
->   - 支持事务
->
-> **非关系型数据库：**
->
-> - key-value型数据库：Redis
-> - document型数据库：MongoDB,CouchDB
-> - 搜索引擎数据库：ElasticSearch，Slor
-> - 列式数据库：HBase
-> - 图形数据库：Neo4J,InfoGrid
-
-### 5. 关系数据库设计规则
-
-> **关系型数据库的设计规则：**
->
-> - E-R模型设计：表、记录、字段
-> - 表的关联关系：一对一、一对多、多对多、自我引用
-
-## 第2章 MYSQL的下载、安装、配置
-
-### 1. 安装MYSQL
-
-> **安装MYSQL:**
->
-> 1. https://dev.mysql.com/downloads/mysql/下载对应的MYSQL版本
-> 2. 按步骤安装，设置MYSQL账号：`root` 密码：`ROOT1234`
-> 3. 找到Oracle官网的MYSQL用户手册中如何安装MYSQL这一章，由于我是Mac系统，我进入https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/macos-installation-notes.html按照官网的说明敲出以下命令
->
-> ```java
-> dongbinyu@dongbinyudeMacBook-Pro ~ % alias mysql=/usr/local/mysql/bin/mysql
-> dongbinyu@dongbinyudeMacBook-Pro ~ % mysql
-> ERROR 1045 (28000): Access denied for user 'dongbinyu'@'localhost' (using password: NO)
-> dongbinyu@dongbinyudeMacBook-Pro ~ % mysql --version
-> /usr/local/mysql/bin/mysql  Ver 8.0.32 for macos13 on arm64 (MySQL Community Server - GPL)
->   dongbinyu@dongbinyudeMacBook-Pro ~ % alias mysqladmin=/usr/local/mysql/bin/mysqladmin
-> dongbinyu@dongbinyudeMacBook-Pro ~ % mysql -uroot -pROOT1234
-> mysql: [Warning] Using a password on the command line interface can be insecure.
-> Welcome to the MySQL monitor.  Commands end with ; or \g.
-> Your MySQL connection id is 9
-> Server version: 8.0.32 MySQL Community Server - GPL
-> 
-> Copyright (c) 2000, 2023, Oracle and/or its affiliates.
-> 
-> Oracle is a registered trademark of Oracle Corporation and/or its
-> affiliates. Other names may be trademarks of their respective
-> owners.
-> 
-> Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-> 
-> mysql> 
-> 
-> ```
->
-> 4. 那么就恭喜你，进入MYSQL成功了！
->
-> 5. `注意：MySQL5.7默认字符集是Latin，需要设置默认字符集为UTF-8,`
->
->    ![image-20230121132500328](./images/image-20230121132500328.png)
-
-### 5. MYSQL图形化管理工具
-
-> **MYSQL图形化管理工具:**
->
-> - workbench
-> - navicat
-> - sqlyog
-> - dbeaver
-
-## 第3章 基本的SELECT语句
-
-### 1. SQL概述
-
-> **SQL规范：**
->
-> - 以`SQL92`和`SQL99`标准为准
-> - `Oracle`和`MySQL`有`SQL方言`
->
-> **SQL分类：**
->
-> - `DDL`数据定义语言。如：CREATE\ALTER\DROP\RENAME\TRUNCATE
-> - `DML`数据操作语言。如：INSERT\DELETE\UPDATE\SELECT
-> - `DCL`数据控制语言。如：COMMIT\ROLLBACK\SAVEPOINT\GRANT\REVOKE
-
-### 2. SQL语言的规则与规范
-
-> **SQL大小写规范（建议遵守）**
->
-> - **MYSQL在windows环境下是大小写不敏感的**
-> - **MYSQL在Linux环境下是大小写敏感的**
->   - 数据库名、表名、表的别名、变量名是严格区分大小写的
->   - 关键字、函数名、列名（或字段名）、列的别名（字段的别名）是忽略大小写的。
-> - **推荐采用统一的书写规范：**
->   - 数据库名、表名、表别名、字段名、字段别名等都小写
->   - SQL关键宇、函数名、绑定变量等都大写
->
-> **SQL注释：**
->
-> - `#`
-> - `/*  */`
-> - `--`
-
-### 3. 基本的SELECT语句
-
-```mysql
--- dual是伪表
-select 1+1,3*2 from dual;
-select * from my_test_table mtt ;
--- 列别名要用""   
--- 字符串用''
-select mt.country as "国家" from mytable2 mt 
--- 去重 distinct
-select distinct mt.country  "一个中国" from mytable2 mt ;
--- 着重号 ``
-select distinct mt.country as "一个中国" from `mytable2` mt ;
--- 显示表结构
-describe mytable2 ;
-desc mytable2 ;
-```
-
-## 第4章 运算符
-
-```mysql
-select 100+'1';-- 101
-select 100+"1";-- 101
-select 100+"a";-- 100
-select 100+null;-- NULL
-select 100*1,100/2.0,100 div 0;-- 100 50 NULL
-select 100%3;-- 1
-select 100 mod -3;-- 1
-```
-
------
-
-```mysql
-select 1=1;-- 1
-select 1!=1;-- 0
-select 1='1';-- 1
-select 1='a';-- 0
-select 0='a';-- 1
-select 'a'='a';-- 1
-select 'a'='A';-- 1
-select 1=NULL ;-- NULL
-select NULL=NULL ;-- NULL
--- <=>安全等于：用于处理null,等同于is null
-select NULL<=>NULL ;-- 1
-select 3<>2;-- 1
--- 转义字符`\`的使用
-select * from myTable2 mt  where mt.phone like '_\_%';
--- 正则的使用
-select 'shkstart' REGEXP '^shk','shkstart' REGEXP 't$','shkstart' REGEXP 'hk';-- 1 1 1
-```
-
-## 第5章 排序与分页
-
-```mysql
--- 列的别名只能在order by中使用，不能再where中使用
--- 排序
-select * from myTable2 mt order by name asc,address asc;
--- 分页
--- limit 条目数
-select * from myTable2 mt order by name asc,address asc LIMIT 10;
--- limit 开始位置 条目数
-select * from myTable2 mt order by name asc,address asc LIMIT 20,10;
--- MySQL8.0新特性 offset 开始位置 limit 条目数
-select * from myTable2 mt order by name asc,address asc offset 20 LIMIT 10;
--- limit 可以使用在MYSQL、PGSQL、MariaDB、SQLite等
--- limit 不能使用在SQL Server、DB2、Oracle
-```
-
-> Oracle中分页，见Oracle教程
-
-```oracle
-select rownum,pro.* from AV."PRODUCT_DIM" pro where rownum<=5;
-```
 
 
 
-## 第6章 多表查询
-
-[菜鸟教程-一张图看懂 SQL 的各种 JOIN 用法](https://www.runoob.com/w3cnote/sql-join-image-explain.html)
-
-> cross join笛卡尔积：需要where限制，不然多表会出现错误
->
-> 等值连接和非等值连接：限制条件是等于号就是等值连接
->
-> 自连接和非自连接：一个表连接自己，就是自连接
->
-> UNION：UNION 效率低，会去重，UNION ALL 效率高，不会去重
->
-> 内连接和外连接：Oracle支持的写法![image-20230123162027709](./images/image-20230123162027709.png)
-
-```mysql
-## 中图 内连接
-SELECT employee_id,department_name
-FROM employees e JOIN departments d
-ON e.department_id = d.department_id
-
-## 左上图 左外连接
-SELECT employee_id,department_name
-FROM employees e LEFT JOIN departments d
-ON e.department_id = d.department_id
-
-# 右上图 右外连接
-SELECT employee_id,department_name
-FROM employees e RIGHT JOIN departments d
-ON e.department_id = d.department_id
-
-## 左中图 
-SELECT employee_id,department_name
-FROM employees e LEFT JOIN departments d
-ON e.department_id = d.department_id
-WHERE d.department_id IS NULL
-
-## 右中图
-SELECT employee_id,department_name
-FROM employees e RIGHT JOIN departments d
-ON e.department_id = d.department_id
-WHERE e.department_id IS NULL
-
-## 左下图: 满外连接
-# 方式1: 左上图 UNION ALL 右中图
-SELECT employee_id,department_name
-FROM employees e LEFT JOIN departments d
-ON e.department_id = d.department_id
-UNION ALL
-SELECT employee_id,department_name
-FROM employees e RIGHT JOIN departments d
-ON e.department_id = d.department_id
-WHERE e.department_id IS NULL
-
-# 方式2: 左中图 UNION ALL 右上图
-SELECT employee_id,department_name
-FROM employees e LEFT JOIN departments d
-ON e.department_id = d.department_id
-WHERE d.department_id IS NULL
-UNION ALL
-SELECT employee_id,department_name
-FROM employees e RIGHT JOIN departments d
-ON e.department_id = d.department_id
-
-# 方式3 左上图 UNION 右上图 （不推荐使用 UNION，效率低）
-SELECT employee_id,department_name
-FROM employees e LEFT JOIN departments d
-ON e.department_id = d.department_id
-UNION
-SELECT employee_id,department_name
-FROM employees e RIGHT JOIN departments d
-ON e.department_id = d.department_id
-
-## 右下图 左中图 UNION ALL 右中图
-SELECT employee_id,department_name
-FROM employees e LEFT JOIN departments d
-ON e.department_id = d.department_id
-WHERE d.department_id IS NULL
-UNION ALL
-SELECT employee_id,department_name
-FROM employees e RIGHT JOIN departments d
-ON e.department_id = d.department_id
-WHERE e.department_id IS NULL
-```
-
-## 第7章 单行函数
-
-```mysql
--- 五大聚合函数 AVG和SUM只能处理数值类型
-SELECT AVG(salary) from employees;
-SELECT SUM(salary) from employees;
-SELECT MAX(salary) from employees;
-SELECT MIN(salary) from employees;
--- 计算指定字段出现的个数时，是不包含null值的
-SELECT COUNT(salary) from employees;
--- 比较特殊，返回表有多少行
-SELECT COUNT(1) FROM employees;
-SELECT COUNT(2) FROM employees;
-SELECT COUNT(*) FROM employees;
--- GROUP BY
-SELECT department_id,job_id,AVG(salary) from employees GROUP BY department_id,job_id;
--- GROUP BY中使用WITH ROLLUP 除了基本查到的数据，还包括不带GROUP BY的AVG(salary)
--- 使用WITH ROLLUP时，不能使用ORDER BY
-SELECT department_id,job_id,AVG(salary) from employees GROUP BY department_id,job_id with rollup;
--- HAVING
-select department_id,Max(salary) from employees group by department_id having Max(salary)>10000;
--- 当WHERE和HAVING都行时，用WHERE，因为执行效率高:先筛选，后连接
-select department_id,Max(salary) from employees where department_id in (10,20,30,40) group by department_id having Max(salary)>10000;
-```
-
-### SQL的执行顺序，WHERE和HAVING效率对比
-
-> FROM …,….->ON->(LEFT/RIGHT JOIN)->WHERE->GROUP BY->HAVING->SELECT->DICTINCT->ORDER BY->LIMIT
->
-> 在SELECT渔具执行这些步骤时，每个步骤会生成虚拟表，然后将这个虚拟表传入下一个步骤作为输入。这些隐含在SQL执行过程中，对于我们是不可见的
-
-## 第8章 子查询
-
-### 多行子查询
-
-```MYSQL
-SELECT employee_id,last_name,job_id,salary FROM employees WHERE job_id<>'IT_PROG' AND salary < ANY (SELECT salary FROM employees WHERE job_id='IT_PROG');
-SELECT employee_id,last_name,job_id,salary FROM employees WHERE job_id<>'IT_PROG' AND salary < SOME (SELECT salary FROM employees WHERE job_id='IT_PROG');
-SELECT employee_id,last_name,job_id,salary FROM employees WHERE job_id<>'IT_PROG' AND salary < ALL (SELECT salary FROM employees WHERE job_id='IT_PROG');
-
-SELECT MIN(avg_sal) FROM (SELECT AVG(salary) avg_sal FROM employees GROUP BY department_id) t_dept_avg_sal;
-```
-
-### 空值问题
-
-```mysql
--- not in(NULL) 会查不到数据
-select last_name from employees where employee_id not in (select manager_id from employees where manager_id );
--- 正确写法
-select last_name from employees where employee_id not in (select manager_id from employees where manager_id is not null)
-```
 
