@@ -5,6 +5,8 @@
 ### 2. 面向人群和参考书目
 
 > 《深入理解Java虚拟机-周志明-第三版》【还是得看一遍书，我觉得宋红康老师虽然通俗易懂，但是后面有念PPT的嫌疑】
+>
+> https://openjdk.org/groups/hotspot/docs/RuntimeOverview.html
 
 ### 3. Java及JVM简介
 
@@ -366,7 +368,7 @@
 >               System.out.println("扩展类加载器" + t);
 >           });
 >       }
->                                                                       
+>                                                                               
 >       /**
 >        * app 类加载器
 >        */
@@ -3039,13 +3041,13 @@ Process finished with exit code 0
 
 ### MAT
 
-> 免费能用，主要分析DUMP文件，核心优势是可以分析内存泄露,但是大家都不用eclipse了，这个基本也就没人用了
+> 免费能用，主要分析DUMP文件，核心优势是可以分析内存泄露
 
 ### 深堆和浅堆
 
 > 类似深拷贝和浅拷贝，区别在于深堆大小和对象大小并不一样，深堆是回收该对象能回收的内存大小
 
-### 内存泄漏【重点】
+### 内存泄漏
 
 > 还需要加强
 
@@ -3057,7 +3059,13 @@ Process finished with exit code 0
 
 ### JProfiler
 
-> 要收费，烦死了
+> 下载9.2.1版本，如果包损坏执行这个命令
+
+```bash
+dongbinyu@dongbinyudeMacBook-Pro ~ % sudo xattr -d com.apple.quarantine /Applications/JProfiler.app
+```
+
+
 
 ### Arthas
 

@@ -1,10 +1,8 @@
 # 2021Study-Redis
 
-[王义凯 的博客](https://blog.csdn.net/wsdc0521)https://blog.csdn.net/wsdc
-
-![1636459627412](images/1636459627412.png)
-
 ## 1. NoSql数据库简介
+
+![NoSQL的引入](./images/image-20230201204107949.png)
 
 ![1636270428992](images/1636270428992.png)
 
@@ -14,239 +12,31 @@
 
 ## 2. Redis的安装和概述
 
-### 安装
+[Redis参考手册-About](https://redis.io/docs/about/)
 
-安装：
+[Redis参考手册-Install](https://redis.io/docs/getting-started/installation/)
 
-1. 下载Reids.rar
-2. 安装gcc环境`yum install gcc`
-3. 解压并进入redis目录，使用`make`进行编译
-4. 执行`make install`
-5. 在`cd /usr/local/bin`看到安装的redis
-
-启动：
-
-​	前台启动：`redis-server`
-
-​	后台启动：
-
-1. 复制redis.conf`cp redis.conf /etc/redis.conf`
-2. 修改etc/redis.conf， `daemonize yes`
-3. **启动**`redis-server /etc/redis.conf`
-4. 连接redis`redis-cli`
-
-关闭
-
-单实例关闭：`redis-cli shutdown`
-
-进入终端关闭:`shutdown`
-
-### 概述
-
-![1636275262778](images/1636275262778.png)
+[Redis参考手册-图形化工具Tools](https://redis.io/resources/tools/)
 
 ## 3. Redis常用五种数据类型
 
-### 键（key）
+[Redis参考手册-Data types](https://redis.io/docs/data-types/)
 
-`keys *`查看当前库所有key
+[菜鸟教程-Redis 键(key)](https://www.runoob.com/redis/redis-keys.html)
 
-![1636275661569](images/1636275661569.png)
+[菜鸟教程-Redis 字符串(String)](https://www.runoob.com/redis/redis-strings.html)
 
-`exists key`判断某个key是否存在
+[菜鸟教程-Redis 哈希(Hash)](https://www.runoob.com/redis/redis-hashes.html)
 
-`type key`查看你的key是什么类型
+[菜鸟教程-Redis 列表(List)](https://www.runoob.com/redis/redis-lists.html)
 
-`del key`删除指定的key数据
+[菜鸟教程-Redis 集合(Set)](https://www.runoob.com/redis/redis-sets.html)
 
-![1636275792001](images/1636275792001.png)
+[菜鸟教程-Redis 有序集合(sorted set)](https://www.runoob.com/redis/redis-sorted-sets.html)
 
-`unlink key`根据value选择非阻塞删除，仅将keys从keyspace元数据中删除，真正的删除会在后续异步操作
-
-`expire key 10`设置10秒钟的过期时间
-
-`ttl key`查看key还有多少秒过期，-1表示永不过期，-2表示已过期
-
-`select database`切换数据库`select 1`
-
-`dbsize`查看当前数据库的key的数量
-
-`flushdb`清空数据库
-
-`flushall`通杀全部库
-
-### 字符串（String）
-
-String是二进制安全的，value最大512MB
-
-`set key value`添加键值对
-
-`get key`根据键得到值
-
-`append key value`给键追加值
-
-`strlen key`得到值的长度
-
-`setnx key value`添加键值对。只有键不存在时，才能设置
-
-`incr key`键的数字值+1
-
-`decr key`键的数字值-1
-
-`incrby/decr key 步长`键的数字值+/- 步长
-
-在单线程中，能够在单条指令中完成的操作都可以认为是**原子操作**
-
-java中的i++是不是原子操作？**不是**
-
-`mset key1 value1 key2 value2 key3 value3`设置多个键值对
-
-`mget key1 key2 key3`通过多个键获取多个值
-
-`msetnx  key1 value1 key2 value2 key3 value3`设置多个键值对。当且仅当所有给定的键都不存在
-
-`getrange key 起始位置 结束位置`获得值的范围，类似于java中的substring，但是是**前包后包**
-
-`setrange key 起始位置 value `覆写键所储存的字符串值
-
-`setex key 过期时间 value`添加键值对的同时，设置过期时间
-
-`getset key value`以新换旧，设置了新值同时获取旧值
-
----
-
-
-
-**字符串的数据结构**：
-
-String的数据结构为简单动态字符串。
-
-当字符串长度小于1M时，扩容是加倍现有空间；如果超过1M，扩容时一次只会多扩1M的空间。
-
-最大字符串长度为512M
-
-### 列表（List）
-
-`lpush/rpush key element`向左边/右边插入多个值
-
-`lrange key start stop`按照索引下标获取数据，start 0 stop -1 获取所有数据
-
-`rpoplpush key1 key2`从key1右边弹出一个值插入到key2左边
-
-`lpop/rpop key`从左边弹出一个值
-
-`lindex key index`按照索引下标获取元素
-
-`llen key`获取列表长度
-
-`linsert key before/after value newvalue`在指定value前面/后面插入新的值
-
-`lrem key n value`从左边删除n个value值 `lrem k2 2 new11 `
-
-`lset key index value`将key的index位置的值换为value
-
-![1636279946157](images/1636279946157.png)
-
----
-
-**列表的数据结构**：
-
-底层是quickList快速链表，
-
-首先在列表数据较少时会使用一块连续的内存存储，这个结构是zipList压缩列表
-
-数据量比较多时才用多个ziplist相连接，改成quickList快速链表
-
-既满足了快速插入删除性能，又不会出现太大的空间冗余
-
-### 集合（Set）
-
-`sadd key value1 value2`将多个值添加到集合key中
-
-`smembers key`取出该集合所有值
-
-`sismember key value` 判断集合key中是否含有value值
-
-`scard key`返回集合中元素个数
-
-`srem key value1 value2`删除集合中多个值
-
-`spop key`随机从集合中吐出一个值
-
-`srandmember key n`所及从集合中取出n个值，不会从集合删除
-
-`smove source destination value`把集合中一个值移动到另一个集合
-
-`sinter key1 key2`取两个集合的交集
-
-`sunion key1 key2`取两个集合的幷集
-
-`sdiff key1 key2`取两个集合的差集（key1中有的，key2没有的）
-
----
-
-**集合的数据结构**：
-
-数据结构是dict字典，字典是用哈希表实现的
-
-java中HashSet内部实现使用的是HashMap，只不过所有的value都指向同一个对象
-
-Redis的set结构也是一样，它的内部也使用hash结构，所以的value都指向同一个内部值
-
-### 哈希（Hash）
-
-`hset key field value`给key集合中field赋值value
-
-`hget key field`获取key集合中field的值
-
-`hmset key1 field1 value1 field2 value2`批量设置hash的值
-
-`hexist key1 field`key集合中是否存在field
-
-`hkeys key`列出该hash集合所有field
-
-`hvals key`列出该hash集合所有value
-
-`hincrby key field increment`为hash集合key的field加上特定值
-
-`hsetnx key field value`将hash集合key的field设置为value，当且仅当field不存在
-
----
-
-**哈希的数据结构**：
-
-数据结构是两种，ziplist，hashtable，
-
-当field-value长度短且个数少时，使用ziplist，否则使用hashtable
-
-### 有序集合Zset
-
-`zadd key score1 value1 score2 value2`添加多个member元素及其score值到有序集key中
-
-`zrange key start stop [withscores]`列出有序集下标在start-stop之间的元素
-
-`zrangebyscore key minmax score1 score2 [withscores]`列出有序集所有score在score1-score2的元素，score从小到大
-
-`zrevrangebyscore key minmax score1 score2 [withscores]`列出有序集所有score在score1-score2的元素，score从大到小
-
-`zincrby key increment value`value的score增加特定值
-
-`zrem key  value`删除指定值
-
-`zcount key min max`统计该集合分数区间的值的个数
-
-`zrank key value`排名
-
----
-
-**有序集合的数据结构**：
-
-一方面它等价于java中的数据结构Map<String,Double>，另一方面它又类似TreeSet内部元素会按照权重score进行排序
-
-Zset底层使用了两个数据结构：
-
-1. hash，hash的作用是关联元素value和权重score，保障元素value的唯一性
-2. 跳跃表，跳跃表的目的在于给元素value排序
+> Redis `List`底层是一个quick list，数据量少时是一个数组，数据量达到一定量级成为多个数组用链表指针连接
+>
+> Redis `Set`底层是一个value为null的HashMap
 
 ## 4. Redis配置文件
 

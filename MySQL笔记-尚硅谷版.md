@@ -603,138 +603,34 @@ explain包含信息：
 
 # 2022Study-MySQL笔记
 
+## 前言与参考书目网站
+
+> MYSQL官方参考手册
+>
+> 《高性能MYSQL第4版》
+>
+> TechNet
+>
+> 菜鸟教程-MYSQL
+>
+> InfoQ文章
+>
+> C语言中文网
+>
+> docs4dev
+>
+> [数据库排名](https://db-engines.com/en/ranking)
+>
+> ![image-20220923211535157](images/image-20220923211535157.png)
+
+```bash
+# 设置可以在终端使用mysql
+sudo source .bash_profile
+# 访问本不能访问的文件夹
+sudo chmod -R a+rwx /usr/local/mysql/data 
+```
 
 
-[数据库排名](https://db-engines.com/en/ranking)
-
-![image-20220923211535157](images/image-20220923211535157.png)
-
-## TechNet速查
-
-### MySQL Functions
-
-| [Functions - Alphabetical](https://www.techonthenet.com/mysql/functions/index_alpha.php) | MySQL Functions listed alphabetically |
-| ------------------------------------------------------------ | ------------------------------------- |
-| [Functions - Category](https://www.techonthenet.com/mysql/functions/index.php) | MySQL Functions listed by category    |
-
-### MySQL Keys, Constraints and Indexes
-
-| [Primary Keys](https://www.techonthenet.com/mysql/primary_keys.php) | Create, alter, and drop primary keys                 |
-| ------------------------------------------------------------ | ---------------------------------------------------- |
-| [Unique Constraints](https://www.techonthenet.com/mysql/unique.php) | Create, add, and drop unique constraints             |
-| [Indexes](https://www.techonthenet.com/mysql/indexes.php)    | Create, drop and rename indexes (performance tuning) |
-
-### MySQL Privileges and Passwords
-
-| [Grant/Revoke Privileges](https://www.techonthenet.com/mysql/grant_revoke.php) | Grant or revoke privileges |
-| ------------------------------------------------------------ | -------------------------- |
-| [Change Password](https://www.techonthenet.com/mysql/change_password.php) | Change a user's password   |
-
-### MySQL Database Administration
-
-| [Users](https://www.techonthenet.com/mysql/users/index.php) | Database accounts |
-| ----------------------------------------------------------- | ----------------- |
-|                                                             |                   |
-
-### MySQL Programming
-
-| [Functions](https://www.techonthenet.com/mysql/functions.php) | Create and drop functions                                    |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [Procedures](https://www.techonthenet.com/mysql/procedures.php) | Create and drop procedures                                   |
-| [Triggers](https://www.techonthenet.com/mysql/triggers/index.php) | Create and drop triggers                                     |
-| [Cursors](https://www.techonthenet.com/mysql/cursors/index.php) | Create cursors within stored programs                        |
-| [Literals (Constants)](https://www.techonthenet.com/mysql/literals.php) | String, number, date, time, boolean literals                 |
-| [Declaring Variables](https://www.techonthenet.com/mysql/declare_vars.php) | Declare variables within stored programs                     |
-| [Loops and Conditional Statements](https://www.techonthenet.com/mysql/loops/index.php) | LOOP statement, IF-THEN-ELSE and others                      |
-| [AUTO_INCREMENT (Sequences)](https://www.techonthenet.com/mysql/auto_increment.php) | Create a sequence of numbers using the AUTO_INCREMENT attribute |
-| [Comments within SQL](https://www.techonthenet.com/mysql/comments.php) | How to create comments within your SQL statement             |
-
-### MySQL Comparison Operators
-
-| [Comparison Operators](https://www.techonthenet.com/mysql/comparison_operators.php) | Operators such as =, <>, !=, >, <, and so on |
-| ------------------------------------------------------------ | -------------------------------------------- |
-|                                                              |                                              |
-
-### MySQL Query Types
-
-| [SELECT Statement](https://www.techonthenet.com/mysql/select.php) | Retrieve records from a table                   |
-| ------------------------------------------------------------ | ----------------------------------------------- |
-| [SELECT LIMIT Statement](https://www.techonthenet.com/mysql/select_limit.php) | Retrieve records from a table and limit results |
-| [INSERT Statement](https://www.techonthenet.com/mysql/insert.php) | Insert records into a table                     |
-| [UPDATE Statement](https://www.techonthenet.com/mysql/update.php) | Update records in a table                       |
-| [DELETE Statement](https://www.techonthenet.com/mysql/delete.php) | Delete records from a table                     |
-| [DELETE LIMIT Statement](https://www.techonthenet.com/mysql/delete_limit.php) | Delete records and limit number of deletions    |
-| [TRUNCATE TABLE Statement](https://www.techonthenet.com/mysql/truncate.php) | Delete all records from a table (no rollback)   |
-| [UNION Operator](https://www.techonthenet.com/mysql/union.php) | Combine 2 result sets (removes duplicates)      |
-| [UNION ALL Operator](https://www.techonthenet.com/mysql/union_all.php) | Combine 2 result sets (includes duplicates)     |
-| [INTERSECT Operator](https://www.techonthenet.com/mysql/intersect.php) | Intersection of 2 result sets                   |
-| [Subqueries](https://www.techonthenet.com/mysql/subqueries.php) | A query within a query                          |
-
-### MySQL Joins
-
-| [JOIN Tables](https://www.techonthenet.com/mysql/joins.php) | Inner and Outer joins |
-| ----------------------------------------------------------- | --------------------- |
-|                                                             |                       |
-
-### MySQL Aliases
-
-| [ALIASES](https://www.techonthenet.com/mysql/alias.php) | Create a temporary name for a column or table |
-| ------------------------------------------------------- | --------------------------------------------- |
-|                                                         |                                               |
-
-### MySQL Clauses
-
-| [DISTINCT Clause](https://www.techonthenet.com/mysql/distinct.php) | Retrieve unique records              |
-| ------------------------------------------------------------ | ------------------------------------ |
-| [FROM Clause](https://www.techonthenet.com/mysql/from.php)   | List tables and join information     |
-| [WHERE Clause](https://www.techonthenet.com/mysql/where.php) | Filter results                       |
-| [ORDER BY Clause](https://www.techonthenet.com/mysql/order_by.php) | Sort query results                   |
-| [GROUP BY Clause](https://www.techonthenet.com/mysql/group_by.php) | Group by one or more columns         |
-| [HAVING Clause](https://www.techonthenet.com/mysql/having.php) | Restrict the groups of returned rows |
-
-#### MySQL SQL Functions
-
-| [COUNT Function](https://www.techonthenet.com/mysql/functions/count.php) | Return the count of an expression   |
-| ------------------------------------------------------------ | ----------------------------------- |
-| [SUM Function](https://www.techonthenet.com/mysql/functions/sum.php) | Return the sum of an expression     |
-| [MIN Function](https://www.techonthenet.com/mysql/functions/min.php) | Return the min of an expression     |
-| [MAX Function](https://www.techonthenet.com/mysql/functions/max.php) | Return the max of an expression     |
-| [AVG Function](https://www.techonthenet.com/mysql/functions/avg.php) | Return the average of an expression |
-
-### MySQL Conditions
-
-| [AND Condition](https://www.techonthenet.com/mysql/and.php)  | 2 or more conditions to be met                        |
-| ------------------------------------------------------------ | ----------------------------------------------------- |
-| [OR Condition](https://www.techonthenet.com/mysql/or.php)    | Any one of the conditions are met                     |
-| [AND and OR](https://www.techonthenet.com/mysql/and_or.php)  | Combine AND and OR conditions                         |
-| [LIKE Condition](https://www.techonthenet.com/mysql/like.php) | Use wildcards in a WHERE clause                       |
-| [IN Condition](https://www.techonthenet.com/mysql/in.php)    | Alternative to multiple OR conditions                 |
-| [NOT Condition](https://www.techonthenet.com/mysql/not.php)  | Negate a condition                                    |
-| [IS NULL Condition](https://www.techonthenet.com/mysql/is_null.php) | Test for a NULL value                                 |
-| [IS NOT NULL Condition](https://www.techonthenet.com/mysql/is_not_null.php) | Test for a NOT NULL value                             |
-| [BETWEEN Condition](https://www.techonthenet.com/mysql/between.php) | Retrieve within a range (inclusive)                   |
-| [EXISTS Condition](https://www.techonthenet.com/mysql/exists.php) | Condition is met if subquery returns at least one row |
-
-### MySQL Tables and Views
-
-| [CREATE TABLE](https://www.techonthenet.com/mysql/tables/create_table.php) | Create a table                                          |
-| ------------------------------------------------------------ | ------------------------------------------------------- |
-| [CREATE TABLE AS](https://www.techonthenet.com/mysql/tables/create_table_as.php) | Create a table from another table's definition and data |
-| [ALTER TABLE](https://www.techonthenet.com/mysql/tables/alter_table.php) | Add, modify, delete columns in a table; rename a table  |
-| [DROP TABLE](https://www.techonthenet.com/mysql/tables/drop_table.php) | Delete a table                                          |
-| [VIEW](https://www.techonthenet.com/mysql/views.php)         | Virtual tables (views of other tables)                  |
-
-### MySQL Data Types
-
-| [Data Types](https://www.techonthenet.com/mysql/datatypes.php) | Data Types in MySQL |
-| ------------------------------------------------------------ | ------------------- |
-|                                                              |                     |
-
-### MySQL Question and Answer
-
-| [Question & Answer](https://www.techonthenet.com/mysql/questions/index.php) | Various questions and answers |
-| ------------------------------------------------------------ | ----------------------------- |
-|                                                              |                               |
 
 
 
@@ -1471,17 +1367,45 @@ show charset;-- 显示所有字符集
 
 [MYSQL8.0参考手册-MySQL 数据目录](https://dev.mysql.com/doc/refman/8.0/en/data-directory.html)
 
-![image-20221004153519723](images/image-20221004153519723.png)
+```mysql 
+show variables like 'datadir';-- 查看mysql数据库和表存放位置
+```
 
-![image-20221004153532701](images/image-20221004153532701.png)
+### InnoDB的磁盘结构
 
-## MYSQL用户管理
+#### 表空间
 
-[C语言中文网-MYSQL用户管理](http://c.biancheng.net/mysql/100/)
+> [MYSQL8.0参考手册-系统表空间](https://dev.mysql.com/doc/refman/8.0/en/innodb-system-tablespace.html)
+>
+> The system tablespace can have one or more data files. By default, a single system tablespace data file, named `ibdata1`, is created in the data directory. The size and number of system tablespace data files is defined by the [`innodb_data_file_path`](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_data_file_path) startup option. For configuration information, see [System Tablespace Data File Configuration](https://dev.mysql.com/doc/refman/8.0/en/innodb-init-startup-configuration.html#innodb-startup-data-file-configuration).
+
+> [MYSQL8.0参考手册-File-Per-Table 表空间](https://dev.mysql.com/doc/refman/8.0/en/innodb-file-per-table-tablespaces.html)
+>
+> `InnoDB` creates tables in file-per-table tablespaces by default. This behavior is controlled by the [`innodb_file_per_table`](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_file_per_table) variable. Disabling [`innodb_file_per_table`](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_file_per_table) causes `InnoDB` to create tables in the system tablespace.
+>
+> A file-per-table tablespace is created in an `.ibd` data file in a schema directory under the MySQL data directory. The `.ibd` file is named for the table (`*`table_name`*.ibd`). For example, the data file for table `test.t1` is created in the `test` directory under the MySQL data directory:
+>
+> 索引和数据在一起存储
 
 
 
+### MyISAM的磁盘结构
 
+#### 表空间
+
+> [MYSQL8.0参考手册-MyISAM 存储引擎](https://dev.mysql.com/doc/refman/8.0/en/myisam-storage-engine.html)
+>
+> Each `MyISAM` table is stored on disk in two files. The files have names that begin with the table name and have an extension to indicate the file type. The data file has an `.MYD` (`MYData`) extension. The index file has an `.MYI` (`MYIndex`) extension. The table definition is stored in the MySQL data dictionary.
+>
+> 索引和数据分开存储
+
+## MYSQL用户与权限管理
+
+[MYSQL8.0参考手册-数据库管理语句](https://dev.mysql.com/doc/refman/8.0/en/sql-server-administration-statements.html)
+
+### 配置文件
+
+[MYSQL8.0参考手册-MySQL服务器](https://dev.mysql.com/doc/refman/8.0/en/mysqld-server.html)
 
 ## MYSQL逻辑架构
 
@@ -1490,49 +1414,59 @@ show charset;-- 显示所有字符集
 [51CTO-一篇带给你MySQL逻辑架构](https://www.51cto.com/article/649711.html)
 
 > MYSQL是典型的C/S架构，服务端程序使用的时`mysqld`
+>
+> ![image-20221003172902388](images/image-20221003172902388.png)
+>
+> ![image-20230126114829590](./images/image-20230126114829590.png)
+>
+> ![MySQL architecture diagram showing connectors, interfaces, pluggable storage engines, the file system with files and logs.](./images/mysql-architecture.png)
 
-![image-20221003172902388](images/image-20221003172902388.png)
+
 
 
 
 ## MYSQL执行流程
 
 > SQL执行流程：SQL语句->查询缓存->解析器->优化器->执行引擎
+>
+> ![image-20221008195528028](images/image-20221008195528028.png)
 
-
-
-```mysql
-select @@session.profiling;-- 0 默认执行过程是关闭的
-set profiling=1;-- 开启执行细节
-
-
-show profiles;-- 查询最近执行的SQL语句
-show profile;-- 查看最近一次SQL执行细节
-show profile  for query 7;-- 查询某个SQL语句的执行细节
-show profile cpu,block io for query 7;-- 查看包括cpu、IO阻塞等参数的SQL执行细节
-```
-
-![image-20221008195528028](images/image-20221008195528028.png)
+> [MYSQL8.0用户手册-SHOW PROFILE Statement](https://dev.mysql.com/doc/refman/8.0/en/show-profile.html)
+>
+> [MYSQL8.0用户手册-SHOW PROFILES Statement](https://dev.mysql.com/doc/refman/8.0/en/show-profiles.html)
+>
+> ```mysql
+> select @@session.profiling;-- 0 默认执行过程是关闭的
+> set profiling=1;-- 开启执行细节
+> 
+> 
+> show profiles;-- 查询最近执行的SQL语句
+> show profile;-- 查看最近一次SQL执行细节
+> show profile  for query 7;-- 查询某个SQL语句的执行细节
+> show profile cpu,block io for query 7;-- 查看包括cpu、IO阻塞等参数的SQL执行细节
+> ```
+>
+> 
 
 > 查询缓存往往弊大于利，所以在MYSQL8.0中去掉了，而在MYSQL5.7中，可以编辑`my.cnf`开启查询缓存
+>
+> ```ini
+> # query_cache_type有三个值（0代表关闭查询缓存OFF,1代表开启ON，2代表DEMAND（当sql语句中有SQL_CACHE关键词才缓存））
+> query_cache_type=2
+> ```
+>
+> ```MYSQL
+> select SQL_CACHE * from test where ID=5;-- 要去查询缓存确认
+> select SQL_NO_CACHE * from test where ID=5;-- 不去查询缓存确认
+> ```
+>
+> ```mysql
+> show status like '%Qcache%';-- 显示 查询缓存 相关情况
+> ```
+>
+> 
 
-```properties
-# query_cache_type有三个值（0代表关闭查询缓存OFF,1代表开启ON，2代表DEMAND（当sql语句中有SQL_CACHE关键词才缓存））
-query_cache_type=2
-```
-
-```MYSQL
-select SQL_CACHE * from test where ID=5;
-select SQL_NO_CACHE * from test where ID=5;
-```
-
-```mysql
-show status like '%Qcache%';-- 查询缓存相关情况
-```
-
-
-
-## BufferPool数据库缓冲池
+## 数据库缓冲池BufferPool
 
 > BufferPool就是存储引擎向操作系统申请一段连续的内存空间，是为了减少与磁盘进行IO的时间，缓存的是热点数据。
 >
@@ -1563,9 +1497,9 @@ innodb_buffer_pool_instances=2
 
 
 
-## Engine存储引擎
+## 存储引擎Engine
 
-> 存储引擎（也叫表处理器）决定表和数据在底层的存储方式
+> `存储引擎（也叫表处理器）决定表和数据在底层的存储方式`
 
 ```mysql
 show engines;-- 查看数据库支持的存储引擎
@@ -1584,13 +1518,47 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 >
 > 1. 外键
 > 2. 事务
-> 3. 需要更新、删除操作，用InnoDB
 > 4. 行级锁
->
-> 缺点：
->
-> 1. 处理效率差一些，会占用更多磁盘空间以保存数据和索引
+> 
+>缺点：
+> 
+>1. 处理效率差一些，会占用更多磁盘空间以保存数据和索引
 > 2. 对内存要求高一些
+
+> [MYSQL8.0参考手册-Introduction to InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html)
+>
+> InnoDB的核心优点：
+>
+> - DML操作遵循ACID模型，即带有`事务`特征的提交、回滚和崩溃恢复能力来保护用户数据
+>
+> - `行级别锁定`和Oracle风格的一致性读增加了多用户的并发性和性能表现。
+>
+> - InnoDB表在磁盘上组织你的数据来基于主键优化查询。每个InnoDB表都有一个主键索引，它被称之为`聚集索引`，该索引组织你的数据来最小化主键查找的IO。
+>
+> - 为了保持数据完整性，InnoDB支持`外键约束`。有了外键，插入、更新、删除会被检查来保证这些操作不会导致夸关联表的不一致性。
+>
+> - | Feature                                                      | Support                                                      |
+>   | :----------------------------------------------------------- | :----------------------------------------------------------- |
+>   | **B-tree indexes**                                           | Yes                                                          |
+>   | **Backup/point-in-time recovery** (Implemented in the server, rather than in the storage engine.) | Yes                                                          |
+>   | **Cluster database support**                                 | No                                                           |
+>   | **Clustered indexes**                                        | Yes                                                          |
+>   | **Compressed data**                                          | Yes                                                          |
+>   | **Data caches**                                              | Yes                                                          |
+>   | **Encrypted data**                                           | Yes (Implemented in the server via encryption functions; In MySQL 5.7 and later, data-at-rest encryption is supported.) |
+>   | **Foreign key support**                                      | Yes                                                          |
+>   | **Full-text search indexes**                                 | Yes (Support for FULLTEXT indexes is available in MySQL 5.6 and later.) |
+>   | **Geospatial data type support**                             | Yes                                                          |
+>   | **Geospatial indexing support**                              | Yes (Support for geospatial indexing is available in MySQL 5.7 and later.) |
+>   | **Hash indexes**                                             | No (InnoDB utilizes hash indexes internally for its Adaptive Hash Index feature.) |
+>   | **Index caches**                                             | Yes                                                          |
+>   | **Locking granularity**                                      | Row                                                          |
+>   | **MVCC**                                                     | Yes                                                          |
+>   | **Replication support** (Implemented in the server, rather than in the storage engine.) | Yes                                                          |
+>   | **Storage limits**                                           | 64TB                                                         |
+>   | **T-tree indexes**                                           | No                                                           |
+>   | **Transactions**                                             | Yes                                                          |
+>   | **Update statistics for data dictionary**                    | Yes                                                          |
 
 ### MyISAM：主要的非事务处理存储引擎
 
@@ -1617,7 +1585,7 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 >
 > 1. 响应速度快，比MyISAM快一个数量级
 
-## Index索引【重点】
+## 索引Index
 
 > 索引是帮助MYSQL高效获取数据的数据结构，好比书的目录
 >
@@ -1628,14 +1596,14 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 ### InnoDB的索引方案
 
 
-> InnoDB索引底层是B+树
+> `InnoDB索引底层是B+树`
 >
 > 索引按照物理实现方式：
 >
 > - 聚簇索引：并不是一种单独的索引类型，而是一种数据存储方式（所有的用户记录都存储在了叶子节点），也就是索引即数据，数据即索引。不需要显式用Index语句创建，InnoDB存储引擎会自动为我们创建聚簇索引
 >   - 优点：
 >     - `数据访问更快`，聚簇索引将索引和数据保存在同一个B+树中，因此比非聚簇索引快
->     - 对于`主键的排序查找范围查找速度非常快`
+>     - 对于`主键的排序查找和范围查找速度非常快`
 >     - 查询显示一定范围数据时，由于数据时紧密相连的，数据库不用从多个数据块中提取数据，所以`节省了大量IO操作`
 >   - 缺点：
 >     - `插入速度严重依赖于插入顺序`，按照主键的顺序插入是最快的方式，否则将会出现页分裂，严重影响性能。因此对于InnoDB表，一般会定义一个**自增的ID列为主键**
@@ -1646,11 +1614,12 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 >     - 由于数据物理存储排序方式只能有一种，所以每个MYSQL表`只能有一个聚簇索引`。一般情况下就是该表的主键
 >     - 如果没有定义主键，InnoDB会选择非空的唯一索引代替。如果没有这样的索引，InnoDB会隐式的定义一个主键来作为聚簇索引
 >     - 为了充分利用聚簇索引的聚簇的特性，InnoDB表的主键列尽量`选用有序的顺序ID`，而不建议用无序的ID，比如UUID、MD5、HASH、字符串列作为主键无法保证数据的顺序增长
-> - 非聚簇索引(也叫二级索引、辅助索引)
+> - 二级索引
+> - 联合索引
 > - 联合索引（可以理解为联合主键聚簇索引）
 > - 回表的概念：
->   - 我们根据这个以c2列大小排序的B+树只能确定我们要查找的记录的主键值，索引我们想根据c2列的值找到到完整的用户记录的话，任然需要到聚簇索引中再查一遍，这个过程称为`回表`。也就是根据c2列的值查询一条完整的用户记录需要用到2棵B+树
->   - 直接把完整用户记录放在非聚簇索引的叶子节点是不靠谱的，因为这会造成巨大的空间冗余
+>   - 我们根据这个以c2列大小排序的B+树只能确定我们要查找的记录的主键值，索引我们想根据c2列的值找到到完整的用户记录的话，仍然需要到聚簇索引中再查一遍，这个过程称为`回表`。也就是根据c2列的值查询一条完整的用户记录`需要用到2棵B+树`
+>   - `直接把完整用户记录放在非聚簇索引的叶子节点是不靠谱的，因为这会造成巨大的空间冗余`
 
 ![聚簇索引](images/image-20221004204211112.png)
 
@@ -1660,45 +1629,49 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 
 > InnoDB的B+树索引的注意事项：
 >
-> 1. 根页面的位置万年不动
-> 2. 非聚簇索引的目录页节点记录要唯一，若不唯一，添加主键来保持唯一
-> 3. 一个页面最少要存储两条数据
+> 1. `根页面的位置万年不动`
+> 2. `非聚簇索引的目录页节点记录要唯一，若不唯一，添加主键来保持唯一`
+> 3. `一个页面最少要存储两条数据`
 
 ### MyISAM的索引方案
 
-> InnoDB、MyISAM、Memory都支持B+树索引
+> `InnoDB、MyISAM、Memory都支持B+树索引`
 >
-> MyISAM使用B+树作为索引结构，叶子节点的data域存放的是数据记录的地址
+> `MyISAM使用B+树作为索引结构，叶子节点的data域存放的是数据记录的地址,所以MyISAM索引和数据是分开的`
 >
-> MyISAM中只有非聚簇索引
+> `MyISAM中只有非聚簇索引,因为数据和索引是分离的`
 
 ### MyISAM和InnoDB的对比
 
 > 1. MyISAM中的索引方式都是非聚簇的，InnoDB中必然包含一个聚簇索引
-> 2. 在InnoDB中，只需要根据主键值进行一次查询就能找到对应的记录，因为InnoDB中索引即数据，而在MyISAM中却需要进行一次回表操作，意味着MyISAM中建立的索引全部都是二级索引
+> 2. 在InnoDB中，只需要根据主键值进行一次查询就能找到对应的记录，因为InnoDB中索引即数据，而在MyISAM中却需要进行一次回表操作(通过B+数中地址去取数据)，意味着MyISAM中建立的索引全部都是二级索引
 > 3. MyISAM中索引和数据是分离的，InnoDB中索引即数据
 > 4. InnoDB的非聚簇索引data域存储的是主键的值，而MyISAM索引data域记录的是回表的地址
 > 5. MyISAM回表是十分快速的，因为拿着地址偏移量直接到文件中取数据；InnoDB是通过获取主键之后再去聚簇索引中招记录。
 > 6. InnoDB必须有主键，如果没有显式指定，MYSQL会自动选择一个可以非空且唯一标识的数据记录的列作为主键，如果不存在这种咧，MYSQL会为InnoDB表生成一个隐含字段作为主键；MyISAM不一定有主键，但推荐加主键
 
+### 索引的代价
 
+> 就如同字典的目录的代价，每添加或删除一个字都需要目录页发生变化，在索引中就是页分裂。然后空间上就是目录本身也占用字典空间嘛，虽然占用不多。
 
 ### MYSQL数据结构选择的合理性
 
 > Hash结构效率高，为什么索引结构要设计成树型？
 >
-> - Hash索引仅能满足（=）（<>）和IN查询。如果进行范围查询，哈希型的索引，时间复杂度会退化成O（n）;而属性的有序特性，依然能够保持O（log2N）的高效率
-> - Hash索引数据的存储是没有顺序的，在order by的情况下，使用Hash索引还需要对数据进行重新排序
+> - Hash索引仅能满足（=）（<>）和IN查询。如果进行范围查询，哈希型的索引，时间复杂度会退化成O（n）;而树形的有序特性，依然能够保持O（log2N）的高效率。`即范围查找时树形更有优势`
+> - `Hash索引数据的存储是没有顺序的`，在order by的情况下，使用Hash索引还需要对数据进行重新排序。
 > - 对于联合索引，Hash值是将联合索引键合并后一起来计算的，无法对单独的一个键或者几个索引键进行查询
 > - 对于等值查询，通常Hash索引的效率更高，不过如果索引列的重复值很多，效率就会降低
 >
-> Redis存储到核心就是Hash表
+> `Redis存储到核心就是Hash表`
 >
-> Memory的默认索引是Hash索引
+> `Memory的默认索引是Hash索引`
 >
 > InnoDB本身不支持Hash索引，但是提供`自适应Hash索引`，会将热点数据的数据页地址存放到Hash表中。这样让B+树也具备了Hash索引的优点
 >
 > 因为同样的磁盘页大小，B+树可以存储更多的节点关键字，所以B+树通常比B树更加矮胖，查询所需要的磁盘IO会更少
+>
+> R树是高维空间的B树，用于存储地理空间数据
 
 ![B树](images/image-20221005103857698.png)
 
@@ -1707,6 +1680,8 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 ![思考题：B+树的存储能力如何？为何说一般查找行记录，最多秩序1~3次磁盘IO](images/image-20221005104624110.png)
 
 ### InnoDB数据存储结构
+
+[InfoQ-【Mysql-InnoDB 系列】InnoDB 架构](https://xie.infoq.cn/article/48544a3041634ca9ce62eaff4)
 
 > InnoDB页的默认大小是16KB,不同的DBMS的数据页大小不同
 >
@@ -1719,26 +1694,38 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 > - 区：在InnoDB中，一个区会分配64各连续的页
 > - 段：是数据库中分配的单位，不同类型的数据库对象以不同的段形式存在,常见的段有`数据段`、`索引段`、`回滚段`
 > - 表空间：是一个逻辑容器，分为系统表空间、用户表空间、撤销表空间、临时表空间等，数据库由一个或多个表空间组成
+> - ![页的上层结构](images/image-20221005110235024.png)
 >
 > 页的内部结构：
 >
 > - 页如果按类型划分的话，常见的有`数据页`、`系统页`、`Undo页`和`事务数据页`等 
+> - ![页的结构](images/image-20221005110805786.png)
 >
 > InnoDB行格式row_format：
 >
-> - Compact
-> - Dynamic
-> - Compressed
-> - Redundant
+> - `Compact`
+> - `Dynamic`
+> - `Compressed`
+> - `Redundant`
 >
 > 碎片区：有些页能用于段A，有些页能用于段B，碎片去直属于表空间
+>
+> 
 
-![页的上层结构](images/image-20221005110235024.png)
 
-![页的结构](images/image-20221005110805786.png)                
+
+​                
 
 ### 索引的创建与设计原则
 
+> [TechNet-MySQL-Indexes](https://www.techonthenet.com/mysql/indexes.php)
+>
+> [MYSQL8.0参考手册-创建索引语句](https://dev.mysql.com/doc/refman/8.0/en/create-index.html)
+>
+> [数据库学习摘记-mysql的索引设计原则以及常见索引的区别](https://www.kancloud.cn/hx78/sql/333932)
+>
+> [MYSQL8.0参考手册-fulltext全文搜索](https://dev.mysql.com/doc/refman/8.0/en/fulltext-natural-language.html)
+>
 > 索引的分类：
 >
 > - 从功能逻辑上分
@@ -1746,62 +1733,175 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 >   - 唯一索引
 >   - 主键索引
 >   - 全文索引
-> - 从物理实现方式分
+> - 从物理实现方式分（一般说这个）
 >   - 聚簇索引
 >   - 非聚簇索引
 > - 从作用字段个数分
 >   - 单列索引
->   - 联合索引
-
-![存储引擎对索引的支持](images/image-20221005161851378.png)
-
-> 创建索引的方式
+>   - 联合索引 `最左前缀原则`
+> - 从创建方式分
+>   - 隐式创建索引：在声明有主键约束、唯一性约束、外键约束的字段上，会自动添加相关索引
+>   - 显式创建索引
 >
-> - 隐式创建索引：在声明有主键约束、唯一性约束、外键约束的字段上，会自动添加相关索引
->
-> - 显式创建索引
-
-[C语言中文网-MySQL创建索引（CREATE INDEX）](http://c.biancheng.net/view/2605.html)
-
-[数据库学习摘记-mysql的索引设计原则以及常见索引的区别](https://www.kancloud.cn/hx78/sql/333932)
+> ![存储引擎对索引的支持](images/image-20221005161851378.png)
 
 ```mysql
--- 查看索引
+-- 通过命令查看索引
 show create table book;
-select index from book;
+show index from book;
 ```
+
+#### MYSQL8.0新特性：降序索引和隐形索引
+
+[MYSQL8.0参考手册-隐形索引](https://dev.mysql.com/doc/refman/8.0/en/invisible-indexes.html)
+
+[MYSQL8.0参考手册-隐形索引](https://dev.mysql.com/doc/refman/8.0/en/invisible-indexes.html)
+
+## MYSQL性能优化
+
+### MYSQL性能优化步骤
+
+![MYSQL优化步骤](./images/image-20230129214149625.png)
 
 ### 性能分析工具的使用
 
+[MYSQL8.0参考手册-EXPLAIN/DESCRIBE Statement](https://dev.mysql.com/doc/refman/8.0/en/explain.html)
+
+[MYSQL8.0参考手册-EXPLAIN Output Format](https://dev.mysql.com/doc/refman/8.0/en/explain-output.html)
+
+[MYSQL8.0参考手册-SHOW STATUS Statement](https://dev.mysql.com/doc/refman/8.0/en/show-status.html)
+
+[MYSQL8.0参考手册-mysqldumpslow — Summarize Slow Query Log Files](https://dev.mysql.com/doc/refman/8.0/en/mysqldumpslow.html)
+
+[MySQL 性能优化神器 Explain 使用分析](https://segmentfault.com/a/1190000008131735)
+
+[MYSQL8.0参考手册-SHOW WARNINGS Statement](https://dev.mysql.com/doc/refman/8.0/en/show-warnings.html)
+
+[MYSQL8.0源码手册-The Optimizer Trace](https://dev.mysql.com/doc/dev/mysql-server/latest/PAGE_OPT_TRACE.html)
+
+[The Unofficial MySQL 8.0 Optimizer Guide](http://www.unofficialmysqlguide.com/index.html)
+
+[InfoQ-sys库常用命令，用于汇总performanceschema](https://xie.infoq.cn/article/ad4e74338b5272fae90d867c5)
+
 ```mysql
-show status like 'slow_queries';
+mysql> SHOW STATUS;
++--------------------------+------------+
+| Variable_name            | Value      |
++--------------------------+------------+
+| Aborted_clients          | 0          |
+| Aborted_connects         | 0          |
+| Bytes_received           | 155372598  |
+| Bytes_sent               | 1176560426 |
+| Connections              | 30023      |
+| Created_tmp_disk_tables  | 0          |
+| Created_tmp_tables       | 8340       |
+| Created_tmp_files        | 60         |
+...
+| Open_tables              | 1          |
+| Open_files               | 2          |
+| Open_streams             | 0          |
+| Opened_tables            | 44600      |
+| Questions                | 2026873    |
+...
+| Table_locks_immediate    | 1920382    |
+| Table_locks_waited       | 0          |
+| Threads_cached           | 0          |
+| Threads_created          | 30022      |
+| Threads_connected        | 1          |
+| Threads_running          | 1          |
+| Uptime                   | 80380      |
++--------------------------+------------+
+-- 比较不同查询开销的依据
+mysql> SHOW STATUS like 'last_query_cost';
+-- 记录为慢查询SQL最短时间
+mysql> SHOW variables like 'long_query_time';
+Variable_name  |Value    |
+---------------+---------+
+long_query_time|10.000000|
+mysql> SHOW variables like 'slow_query_log';
+Variable_name |Value|
+--------------+-----+
+slow_query_log|OFF  |
+-- 开启慢查询日志
+mysql> set global slow_query_log='ON';
+-- 设置慢查询SQL最短时间
+mysql> set global long_query_time=1;
+mysql> set long_query_time=1;
+mysql> SHOW variables like 'slow_query_log_file';
+Variable_name      |Value                                                |
+-------------------+-----------------------------------------------------+
+slow_query_log_file|/usr/local/mysql/data/dongbinyudeMacBook-Pro-slow.log|
+mysql> SHOW global status like '%slow_queries%';
+Variable_name|Value|
+-------------+-----+
+Slow_queries |0    |
+-- 可以查看并打开执行成本分析
+mysql> SHOW variables like 'profiling';
+mysql> set profiling='ON';
+-- 打开后可以查看最近的查询执行成本
+mysql> show profiles;
+mysql> show profile;
+mysql> show profile for query query_id;
+```
+
+----
+
+```mysql
+-- 查询冗余索引
+select * from sys.schema_redundant_indexes;
+-- 查询未使用过的索引
+select * from sys.schema_unused_indexes;
 ```
 
 
 
-[yangh124博客-MySQL性能分析工具的使用](https://yh124.space/2022/06/06/MySQL%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/index.html)
+## 索引优化与查询优化
 
-### 索引优化与查询优化
+> 都有哪些维度可以进行数据库调优？简言之：
+>
+> - 索引失效、没有充分利用到索引一一索引建立
+> - 关联查询太多JOIN(设计缺陷或不得已的需求)一一SQL优化
+> - 服务器调优及各个参数设置（缓冲、线程数等）--调整my.cnf
+> - 数据过多一一分库分表
+>
+> 关于数据库调优的知识点非常分散。不同的DBMS,不同的公司，不同的职位，不同的项目遇到的问题都不尽相同。这里我们分为三个章节进行细致讲解。
+> 虽然SQL查询优化的技术有很多，但是大方向上完全可以分成`物理查询优化`和`逻辑查询优化`两大块。
+>
+> - 物理查询优化是通过`索引`和`表连接方式`等技术来进行优化，这里重点需要掌握索引的使用。
+> - 逻辑查询优化就是通过`SQL等价变换`提升查询效率，直白一点就是说，换一种查询写法执行效率可能更高。
 
-> Or并不是必然索引失效，前后都有索引时，不会失效
+### 索引失效案例
 
-[51CTO-索引失效](https://www.51cto.com/article/702691.html)
+> - 全值匹配我最爱,即等值匹配我最爱
+> - 最佳左前缀法则
+> - 主键插入顺序依次递增，可以减少性能损耗（页分裂）
+> - 计算、函数、类型转换（自动或手动）会导致索引失效
+> - 范围条件右侧的列失效（> < between）
+> - 不等于(!=或<>)索引失效
+> - is null可以使用索引，is not null不能使用索引。最好在设计数据表时将字段设置为NOT NULL约束，比如可以将int默认值设置为0，字符串默认值设置为""
+> - like以通配符%开头失效。页面搜索严禁左模糊或者全模糊，如果需要请走搜索引擎来解决
+> - OR前后存在非索引的列，索引失效
+> - 数据库和表的字符集必须统一
 
 ### 内连接和外连接的查询优化
 
-> 对于内连接来说，查询优化器可以决定谁作为驱动表，谁做为被驱动表；
+> `对于内连接来说，查询优化器可以决定谁作为驱动表，谁做为被驱动表`；
 >
-> 对于内连接来说，如果表的连接条件中只能有一个字段有索引，则有索引的字段所在的表会被作为被驱动表；
+> `对于内连接来说，如果表的连接条件中只能有一个字段有索引，则有索引的字段所在的表会被作为被驱动表`；
 >
-> 对于内连接来说，在两个表的连接条件都存在索引的情况下，会选择小表作为驱动表，即小表驱动大表（准确说是小结果集驱动大结果集）
+> `对于内连接来说，在两个表的连接条件都存在索引的情况下，会选择小表作为驱动表，即小表驱动大表(准确说是小结果集驱动大结果集,join buffer每一次放的内容越多越好)`
 >
-> 对左外连接来说，前面的表不一定是驱动表，因为查询优化器可能会将左外连接转换成内连接
+> `对左外连接来说，前面的表不一定是驱动表，因为查询优化器可能会将左外连接转换成内连接`
+>
+> MYSQL5.7还用的是BNLJ算法，MYSQL8.0换为了HashJoin
 
-[博客园-MySQL-join的实现原理、优化及NLJ算法](https://www.cnblogs.com/JohnABC/p/7150921.html)
+[博客园-MySQL-join的实现原理、优化及NLJ和BLJ算法](https://www.cnblogs.com/JohnABC/p/7150921.html)
+
+[ServerFault-join_buffer_size >= 4 M is not advised?](https://serverfault.com/questions/399518/join-buffer-size-4-m-is-not-advised)
 
 ### 子查询优化
 
-> 可以使用JOIN查询来替代子查询，连接查询不需要建立临时表，速度快
+> `可以使用JOIN查询来替代子查询，连接查询不需要建立临时表，速度快`
 >
 > 尽量不要使用NOT IN或者NOT EXISTS,改造如下图所示
 
@@ -1809,40 +1909,52 @@ show status like 'slow_queries';
 
 ### 排序优化
 
-> ORDER BY字段上加索引的话，可以避免FileSort排序，效率更高
+> `ORDER BY字段上加索引的话，可以避免FileSort排序，效率更高`
 >
 > MySQL支持两种排序方式：
 >
-> - Index排序，索引可以保证数据的有序性，不需要再进行排序，效率更高
+> - `Index排序`,索引可以保证数据的有序性，不需要再进行排序，效率更高
 >
-> - FileSort排序则一般在内存中进行排序，占用CPU较多，如果待排结果较大，会产生临时文件IO到磁盘进行排序，效率低
+> - `FileSort排序`,则一般在内存中进行排序，占用CPU较多，如果待排结果较大，会产生临时文件IO到磁盘进行排序，效率低
+>   - 使用的算法是`单路排序`，比双路排序快,也占用更多的内存
+>
 
 [阿里云社区-MySQL如何对order by优化？](https://developer.aliyun.com/article/760998)
+
+[掘金-ＭySQL 中 Using filesort 问题的优化方法](https://juejin.cn/post/6844903439760097294)
+
+### GROUP BY优化
+
+> 使用索引的原则和Order by一致
+
+### 分页查询优化
+
+[腾讯云社区-分页查询优化](https://cloud.tencent.com/developer/article/1639177)
 
 ### 覆盖索引
 
 > 一个索引包含了满足查询结果的数据就叫做覆盖索引
 >
 > 简单来说，在查`索引列+主键`以内的字段时，会用到覆盖索引
+>
+> ![覆盖索引](images/image-20221012220703730.png)
 
-![image-20221012220703730](images/image-20221012220703730.png)
-
-###  索引下推（ICP）
+###  索引条件下推（ICP）
 
 > 索引下推是查询优化器的策略，回表前过滤，可以减少回表次数
+>
+> ![索引条件下推](images/image-20221013210239520.png)
 
 ```mysql
 # 关闭索引下推
 set optimizer_switch='index_condition_pushdown=off'
 ```
 
-
-
-![image-20221013210239520](images/image-20221013210239520.png)
-
 ### 其他查询优化策略
 
 #### Exists和In的区分
+
+> A表小就用EXISTS,B表小就用IN
 
 ```mysql
 # B表是小表选Exists
@@ -1851,11 +1963,24 @@ select * from A where cc in (select cc from B);
 select * from A where exists (select cc from B where B.cc=A.cc);
 ```
 
+#### Count(*)和Count(1)和Count(具体字段)效率
+
+> - Count(*)和Count(1)可以看成效率是相等的
+>
+> - MyISAM的Count是O(1)复杂度
+> - Count(具体字段)，要尽量采用二级索引，因为聚簇索引信息多，性能就差些；如果有多个二级索引，会使用key_len小的二级索引扫描；当没有二级索引时，才会采用主键索引来进行统计
+
+#### 关于Select(*)
+
+> - MySQL在解析过程中，会通过查询数据字段将*按序转换成所有列明，这会大大耗费资源和时间
+>
+> - 无法使用到覆盖索引
+
  #### limit 1对优化的影响
 
-> 如果可以确定结果集只有一条，那么加上limit 1时，找到一条结果就不会继续扫描了，会加快查询速度
+> - 如果可以确定结果集只有一条，那么加上limit 1时，找到一条结果就不会继续扫描了，会加快查询速度
 >
-> 如果数据表已经对字段建立了唯一索引，就不需要加上limit 1 了
+> - 如果数据表已经对字段建立了唯一索引，就不需要加上limit 1 了
 
 #### 多使用commit
 
@@ -1866,14 +1991,95 @@ select * from A where exists (select cc from B where B.cc=A.cc);
 > - redo/undo log buffer中的空间
 > - 管理上述3种资源中的内部花费
 
+### 淘宝数据库主键如何设计的
+
+> 使用有序UUID
+>
+> - 全局唯一
+> - 尽量有序
+
+## 数据库设计规范
+
+### 键的相关概念
+
+
+
+> 键的相关概念：
+>
+> 学生信息（学号 身份证号 性别 年龄 身高 体重 宿舍号）和 宿舍信息（宿舍号 楼号）
+>
+> - `超键`：只要含有“学号”或者“身份证号”两个属性的集合就叫超键，例如R1（学号 性别）、R2（身份证号 身高）、R3（学号 身份证号）等等都可以称为超键！
+>
+> - `候选键`：不含有多余的属性的超键，比如（学号）、（身份证号）都是候选键，又比如R1中学号这一个属性就可以唯一标识元组了，而有没有性别这一属性对是否唯一标识元组没有任何的影响！
+>
+> - `主键`：就是用户从很多候选键选出来的一个键就是主键，比如你要求学号是主键，那么身份证号就不可以是主键了！
+>
+> - `外键`：宿舍号就是学生信息表的外键
+
+### 范式
+
+> 范式：
+>
+> - 第一范式：字段不可再分
+> - 第二范式：满足数据表里的每一条数据记录都是可唯一标识的，而且所有非主键字段，都必须完全依赖主键，不能只依赖主键的一部分（一个表一个对象）
+> - 第三范式：要求数据表中的所有非主键字段不能依赖于其他非主键字段
+>
+> 可以适当反范式化
+
+### E-R模型
+
+> [DBeaver Documention-ER Diagrams](https://dbeaver.com/docs/wiki/ER-Diagrams/#:~:text=Entity%20Relation%20Diagrams%20(ERD)%20are,custom%20diagrams%2C%20see%20Custom%20Diagrams.)
+
+### 阿里巴巴数据库规范
+
+> [阿里云社区-阿里巴巴数据库规范](https://developer.aliyun.com/article/709387)
+
+### PowerDesigner
+
+> mac没有这个软件耶,算了反正工作用不到
+
+## 数据库结构优化
+
+> [MYSQL8.0参考手册-Optimizing Database Structure](https://dev.mysql.com/doc/refman/8.0/en/optimizing-database-structure.html)
+
+
+
+## MYSQL事务基础
+
+> [MYSQL8.0参考手册-事务四大原则ACID](https://dev.mysql.com/doc/refman/8.0/en/glossary.html#glos_acid)
+>
+> [MYSQL8.0参考手册-事务隔离级别Transaction Isolation Levels](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
+>
+> [MYSQL8.0参考手册-事务START TRANSACTION, COMMIT, and ROLLBACK Statements](https://dev.mysql.com/doc/refman/8.0/en/commit.html)
+>
+> [MYSQL8.0参考手册-保存点SAVEPOINT, ROLLBACK TO SAVEPOINT, and RELEASE SAVEPOINT Statements](https://dev.mysql.com/doc/refman/8.0/en/savepoint.html)
+>
+> [MYSQL8.0参考手册-隐式提交Statements That Cause an Implicit Commit](https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html)
+>
+> [MYSQL8.0参考手册-设置事务隔离级别SET TRANSACTION Statement](https://dev.mysql.com/doc/refman/8.0/en/set-transaction.html)
+
+
+
 ## MYSQL事务日志
 
+> [MYSQL8.0参考手册-Redo Log](https://dev.mysql.com/doc/refman/8.0/en/innodb-redo-log.html)
+>
+> [MYSQL8.0参考手册-Undo Logs](https://dev.mysql.com/doc/refman/8.0/en/innodb-undo-logs.html)
+>
+> [MYSQL8.0参考手册-`innodb_flush_log_at_trx_commit`](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_flush_log_at_trx_commit)
+>
+> [MYSQL8.0参考手册-数据备份InnoDB Backup](https://dev.mysql.com/doc/refman/8.0/en/innodb-backup.html)
+>
+> [MYSQL8.0参考手册-崩溃恢复InnoDB Recovery](https://dev.mysql.com/doc/refman/8.0/en/innodb-recovery.html)
+>
+> 
+>
 > 事务的合理性由锁机制实现
 >
 > 而事务的原子性、一致性和持久性由REDO日志和UNDO日志来保证：
 >
-> - `REDO LOG` 称为 重做日志，记录的是物理级别上页修改操作，比如页号xxx、偏移量yyy写入了zzz数据。用于保证事务的持久性
-> - `UNDO LOG` 称为 回滚日志，记录的是逻辑操作日志，比如对某一行数据进行了insert语句，UNDO LOG就记录一条预支相反的DELETE操作。用于回滚行记录到特定版本，用来保证事务的原子性、一致性
+> - `REDO LOG` 称为 重做日志，`记录的是物理级别上页修改操作`，比如页号xxx、偏移量yyy写入了zzz数据。`用于保证事务的持久性`
+> - `UNDO LOG` 称为 回滚日志，记录的是逻辑操作日志，比如对某一行数据进行了insert语句，`UNDO LOG就记录一条预支相反的DELETE操作`。用于回滚行记录到特定版本，`用来保证事务的原子性、一致性`
 >
 > REDO和UNDO都可以视为一种`恢复操作`
 
@@ -1897,9 +2103,9 @@ select * from A where exists (select cc from B where B.cc=A.cc);
 >
 > 1. 读操作利用`多版本并发控制MVCC`,写操作进行`加锁`
 >
-> - MVCC:就是生成一个`READVIEW`，通过READVIEW找到复合条件的记录版本（历史记录由`UNDO日志`构建）。查询语句只能读到READVIEW之前`已提交事务所做的更改`,在生成READVIEW之前未提交的事务过着之后才开启的事务所做的更改是看不到的。而写操作肯定针对的是最新版本的记录，读记录的历史版本和改动记录的最新版本身并不冲突，也就是采用MVCC时，读写操作并不冲突
+> - MVCC:就是生成一个`READVIEW`，通过READVIEW找到符合条件的记录版本（历史记录由`UNDO日志`构建）。查询语句只能读到READVIEW之前`已提交事务所做的更改`,在生成READVIEW之前未提交的事务过着之后才开启的事务所做的更改是看不到的。而写操作肯定针对的是最新版本的记录，读记录的历史版本和改动记录的最新版本身并不冲突，也就是采用MVCC时，读写操作并不冲突
 >
-> > 普通的SELECT语句在`READ COMMITED`和`REPEATABLE READ`隔离毕节下会使用到MVCC读取记录:
+> > 普通的SELECT语句在`READ COMMITED`和`REPEATABLE READ`隔离级别下会使用到MVCC读取记录:
 > >
 > > - `READ COMMITED`级别下：一个事务在执行过程中每次执行SELECT操作都会生成一个READVIEW，READVIEW的存在本身就保证了不会出现脏读现象
 > > - `REPEATABLE READ`级别下：一个事务在执行过程中只有第一次执行SELECT操作才会生成一个READVIEW,之后的SELECT操作都是`复用`这个READVIEW,这样就避免了不可重复读和幻读的现象
@@ -1908,48 +2114,44 @@ select * from A where exists (select cc from B where B.cc=A.cc);
 >
 > - 有些场景下，比如银行存款的事务中，读操作也需要加锁
 >
-> 一般情况下，我们愿意采用MVCC来解决读写问题，因为性能更高
+> 一般情况下，我们愿意`采用MVCC来解决读写问题，因为性能更高`
 
 ### 共享锁和排他锁（独占锁）
 
 > - 读锁可以是共享锁或排他锁
 >
 > - 写锁必须是排他锁
+>
+> [MYSQL5.7参考手册-InnoDB Locking](https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html)
 
 ```mysql
-begin;
--- SELECT … LOCK IN SHARE MODE;-- 共享锁 MYSQL5.7写法
-select * from account for share;-- 共享锁 MYSQL8.0写法
-commit;
-
+SELECT ... LOCK IN SHARE MODE;-- 共享锁 MYSQL5.7写法
+select ... for share;-- 共享锁 MYSQL8.0写法
+select ... for update;-- 独占锁 MYSQL5.7和8.0写法
+select ... for update nowait;-- MYSQL8.0写法 获取不到锁，立即报错返回
+select ... for update skip locked;-- MYSQL8.0写法 获取不到锁，返回没有被锁定的数据
 ```
 
-```mysql
-begin;
-select * from account for update;-- 共享锁 MYSQL8.0写法
-commit;
-```
 
-```mysql
-select * from account for update nowait;-- MYSQL8.0写法 获取不到锁，立即报错返回
-select * from account for update skip locked;-- MYSQL8.0写法 获取不到锁，返回没有被锁定的数据
-```
 
 ### 表锁、页锁、行锁
 
 > - 表锁：开销最小，锁粒度大， 并发性差
->   1. 表级别的S锁、X锁
->   2. 意向锁（intention lock）：如果我们给某一行加上了排他锁，数据库会自动给更大一级的空间，比如数据页或数据表加上意向锁，告诉其他人这个数据页或者数据表已经有人加上排他行锁了，不能再加表级锁。理解为加锁标记。不需要我们手动设置
->   3. 自增锁（AUTO-INC lock）：自增列的表自动加上自增锁
->   4. 元数据锁（MDL lock）：当对一个表做增删改查操作是，加MDL读锁；当要对表做结构编程搞作是，加MDL写锁。不需要我们手动设置
+>   1. 表级别的S锁、X锁：InnoDB一般不用表锁，而用粒度更小的行锁
+>   2. `意向锁`（intention lock）：如果我们给某一行加上了排他锁，数据库会自动给更大一级的空间，比如数据页或数据表加上意向锁，告诉其他人这个数据页或者数据表已经有人加上排他行锁了，不能再加表级锁。理解为加锁标记。不需要我们手动设置
+>   3. `自增锁`（AUTO-INC lock）：自增列的表自动加上自增锁
+>   4. `元数据锁`（MDL lock）：当对一个表做增删改查操作时，加MDL读锁；当要对表做结构变更操作时，加MDL写锁。不需要我们手动设置
 
 ```mysql
 lock tables mylock read;-- 表级别读锁
-show open tables where in_use>0;
+show open tables where in_use>0;-- 查看有哪些表被加锁了
 unlock tables;
 lock tables mylock write;-- 表级别写锁
 show open tables where in_use>0;
 unlock tables;
+
+
+SHOW [FULL] PROCESSLIST;-- MySQL 进程列表指示当前由服务器内执行的一组线程执行的操作
 ```
 
 ![MYSQL表级别读锁和写锁](images/image-20221016194155300.png)
@@ -1961,14 +2163,14 @@ unlock tables;
 ----
 
 > - 行锁：锁力度小，并发性好；锁开销大，加锁比较慢，容易出现死锁
->   1. 记录锁（Record lock）
->   2. 间隙锁（Gap lock）：MVCC方案在加锁时，事务在第一次执行读取操作时，那些幻影记录尚不存在，无法给幻影记录加上记录锁，就为区间内加上间隙锁；但是间隙锁可能会造成死锁
->   3. 临键锁（Next key lock）:本质是记录锁和间隙锁的合体
->   4. 插入意向锁（Insert intention lock）:InnoDB规定事务在等待的时候也需要一个内存结构，插入一条记录时要判断插入位置是不是被别的事务加了gap锁。插入意向锁也是一种间隙锁（Gap锁）
+>   1. `记录锁`（Record lock）:分记录S锁和记录X锁
+>   2. `间隙锁`（Gap lock）：MVCC方案在加锁时，事务在第一次执行读取操作时，那些幻影记录尚不存在，无法给幻影记录加上记录锁，就为区间内加上间隙锁；但是间隙锁可能会造成死锁
+>   3. `临键锁`（Next key lock）:本质是`记录锁和间隙锁的合体`
+>   4. `插入意向锁`（Insert intention lock）:InnoDB规定事务在等待的时候也需要一个内存结构，插入一条记录时要判断插入位置是不是被别的事务加了gap锁。`插入意向锁也是一种间隙锁（Gap锁）`，插入意向锁之间不会有冲突
 
 ![间隙锁](images/image-20221016204143386.png)
 
-![间隙锁-死锁](images/image-20221016205439642.png)
+![间隙锁-死锁产生-mysql使用回滚处理](images/image-20221016205439642.png)
 
 ![临键锁](images/image-20221016205707731.png)
 
@@ -1986,7 +2188,7 @@ unlock tables;
 >     - 在表中设计一个版本字段[CSDN-乐观锁-版本号机制](https://blog.csdn.net/weixin_43250623/article/details/96191901)
 >     - 类似GIT、SVN版本控制工具，当我们修改了代码进行提交是，首先会检查当前版本号与服务器上的版本号是否一致，如果一致就可以直接提交，如果不一致就需要更新服务器上最新代码，然后再进行提交
 >
-> 注意：`select ... for update`语句执行过程中所有扫描的行都会被锁上，因此MYSQL中用悲观锁必须确定使用了索引，而不是全表扫描，否则会把整个表锁住
+> **注意**：`select ... for update`语句执行过程中所有扫描的行都会被锁上，因此`MYSQL中用悲观锁必须确定使用了索引，而不是全表扫描，否则会把整个表锁住`
 
 ### 显式锁、隐式锁
 
@@ -2000,29 +2202,37 @@ unlock tables;
 flush tables with read lock
 ```
 
+### 死锁【要复习】
+
+> 死锁的四种条件？
+>
+> 如何避免死锁？
+
 ### 锁结构
 
 ![InnoDB锁结构](images/image-20221016214812997.png)
 
 ### 锁监控
 
-```mysqlc  
+```mysql
 show status like 'innodb_row_lock';
 ```
 
 ![其他锁监控方式](images/image-20221016215839379.png)
 
-## MVCC多版本并发控制【没听懂】
+## MVCC多版本并发控制【要复习】
 
 > MVCC是通过数据行的多个版本管理来实现数据库的并发控制,更好的处理并发冲突
 >
 > MVCC的实现依赖于：隐藏字段、undo log、READVIEW
 
-## 其他数据库日志【暂时不用】
+## 其他数据库日志
 
-## 数据备份与数据库迁移【暂时不用】
+[MYSQL8.0参考手册-MySQL Server Logs](https://dev.mysql.com/doc/refman/8.0/en/server-logs.html)
 
+## 数据备份与数据库迁移
 
+[MYSQL8.0参考手册-Backup and Recovery](https://dev.mysql.com/doc/refman/8.0/en/backup-and-recovery.html)
 
 
 
