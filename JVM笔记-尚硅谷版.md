@@ -239,39 +239,38 @@
 > - **加载Loading->链接Linking(验证Verification->准备Preparation->解析Resolution)->初始化Initialization**
 >
 > - `加载Loading`：
->
->   1. 通过一个类全限定名获取定义此类的二进制字节流
+>  1. 通过一个类全限定名获取定义此类的二进制字节流
 >   2. 将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构
 >   3. 在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的访问入口
->
-> - `链接Linking`:
->
->   - `验证Verify`:
+>   
+>- `链接Linking`:
+> 
+>  - `验证Verify`:
 >     - 目的在于确保class文件的字节流中包含信息符合当前虚拟机要求，保证被加载类的正确性，不会危害虚拟机自身安全。
 >     - 主要包括四种验证，文件格式验证，元数据验证，字节码验证，符号引用验证。
->
->   - `准备(Prepare)`:
+> 
+>  - `准备(Prepare)`:
 >     - 为类变量分配内存并且设置该类变量的默认初始值，即零值。
 >     - 这里不包含用final修饰的static,因为final在编译的时候就会分配了，准备阶段会显式初始化
 >     - 这里不会为实例变量分配初始化，类变量会分配在方法区中，而实例变量是会随着对象一起分配到Java堆中。
->
->   - `解析(Resolve)`:
+> 
+>  - `解析(Resolve)`:
 >     - 将常量池内的符号引用转换为直接引用的过程。
->     - 事实上，解析操作往往会伴随着M在执行完初始化之后再执行。
+>     - 事实上，解析操作往往会伴随着在执行完初始化之后再执行。
 >     - 符号引用就是一组符号来描述所引用的目标。符号引用的字面量形式明确定义在《java虚拟机规范》的class文件格式中。直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。
 >     - 解析动作主要针对类或接口、字段、类方法、接口方法、方法类型等。对应常量池中的CONSTANT_Class_info,CONSTANT_Fieldref info,CONSTANT Methodref info
->
-> - `初始化`：
->   - 初始化阶段就是执行类构造器方法<c11n1t>()的过程。
+> 
+>- `初始化`：
+>   - 初始化阶段就是执行类构造器方法<clinit>()的过程。
 >   - 此方法不需定义，是javac编译器自动收集类中的所有类变量的赋值动作和静
 >     态代码块中的语句合并而来。
 >   - 构造器方法中指令按语句在源文件中出现的顺序执行。
->   - <c1init>()不同于类的构造器。（关联：构造器是虚拟机视角下的<init>())
+>   - <clinit>()不同于类的构造器。（关联：构造器是虚拟机视角下的<init>())
 >   - 若该类具有父类，JVM会保证子类的<clinit>()执行前，父类的<c1init>()
 >     已经执行完毕。
->   - 虚拟机必须保证一个类的<c1init>()方法在多线程下被同步加锁。
->
+>   - 虚拟机必须保证一个类的<clinit>()方法在多线程下被同步加锁。
 > 
+>
 
 
 
@@ -358,30 +357,30 @@
 >       }
 >   
 >   
->       /**
->        * 扩展类加载器
->        */
->       public static void extClassLoader() {
->           String property = System.getProperty("java.ext.dirs");
->           List<String> list = Arrays.asList(property.split(";"));
->           list.forEach((t) -> {
->               System.out.println("扩展类加载器" + t);
->           });
->       }
->                                                                               
->       /**
->        * app 类加载器
->        */
->       public static void appClassLoader() {
->           String property = System.getProperty("java.class.path");
->           List<String> list = Arrays.asList(property.split(";"));
->           list.forEach((t) -> {
->               System.out.println("应用类加载器" + t);
->           });
->       }
+> ```java
+>   /**
+>    * 扩展类加载器
+>    */
+>   public static void extClassLoader() {
+>       String property = System.getProperty("java.ext.dirs");
+>       List<String> list = Arrays.asList(property.split(";"));
+>       list.forEach((t) -> {
+>           System.out.println("扩展类加载器" + t);
+>       });
+>                                                                                 }
+> 
+>   /**
+>    * app 类加载器
+>    */
+>   public static void appClassLoader() {
+>       String property = System.getProperty("java.class.path");
+>       List<String> list = Arrays.asList(property.split(";"));
+>       list.forEach((t) -> {
+>           System.out.println("应用类加载器" + t);
+>       });
 >   }
->   
 >   ```
+> 
 >   
 
 
@@ -1600,7 +1599,7 @@ Process finished with exit code 0
 >
 > - Java语言提供了对象终止(finalization)机制来允许开发人员提供对象被销毁之前的自定义处理逻辑。
 > - 当垃圾回收器发现没有引用指向一个对象，即：垃圾回收此对象之前，总会先调用这个对象的finalize()方法。
-> - fina1ize()方法允许在子类中被重写，用于在对象被回收时进行资源释放通常在这个方法中进行一些资源释放和清理的工作，比如关闭文件、套接字和数据库连接等。
+> - finalize()方法允许在子类中被重写，用于在对象被回收时进行资源释放通常在这个方法中进行一些资源释放和清理的工作，比如关闭文件、套接字和数据库连接等。
 > - 永远不要主动调用某个对象的finalize()
 >   - 可能导致对象复活
 >   - 执行时间没有保障
