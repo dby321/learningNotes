@@ -364,3 +364,6 @@ channel.queueDeclare("MyQueue", false, false, false, arguments);
 ## Shovel Plugin
 
 > 将消息单向从源端启动到目的端
+
+[RabbitMQ官网-Shovel](https://www.rabbitmq.com/shovel.html)
+

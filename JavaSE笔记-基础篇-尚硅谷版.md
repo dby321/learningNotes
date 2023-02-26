@@ -234,13 +234,13 @@ CPU速度>>内存速度>>硬盘速度
 
 Java代码场景举例：
 
-<img src=".\images\image-20210207152636576.png" alt="image-20210207152636576" style="zoom:50%;" />
+<img src=".\images\image-20210207152636576.png" alt="image-20210207152636576"  />
 
-<img src=".\images\image-20210207152714896.png" alt="image-20210207152714896" style="zoom:50%;" />
+<img src=".\images\image-20210207152714896.png" alt="image-20210207152714896"  />
 
 
 
-<img src=".\images\image-20210207152818512.png" alt="image-20210207152818512" style="zoom:50%;" />
+<img src=".\images\image-20210207152818512.png" alt="image-20210207152818512"  />
 
 
 
@@ -248,7 +248,7 @@ Java代码场景举例：
 
 
 
-<img src=".\images\image-20210207153304364.png" alt="image-20210207153304364" style="zoom:50%;" />
+<img src=".\images\image-20210207153304364.png" alt="image-20210207153304364"  />
 
 
 

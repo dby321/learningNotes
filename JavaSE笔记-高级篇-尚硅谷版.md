@@ -1,13 +1,3 @@
-# IDE
-
-## 插件
-
-### 主题插件
-
-[CSDN-Material Theme UI详解](https://blog.csdn.net/zyx1260168395/article/details/102928172)
-
-
-
 
 
 # JavaSE高级
@@ -22,11 +12,7 @@
 > 1. 实现的方式没有的类的单继承性的局限
 > 2. 实现的方式更适合来处理多个线程有共享数据的情况
 
-[线程创建-继承Thread类](E:\idea_workspace\2020Study-JavaSE\01.Thread\src\com\demo1)
 
-[线程创建-实现Runnable接口](E:\idea_workspace\2020Study-JavaSE\01.Thread\src\com\demo5)
-
-[线程创建-实现Callable接口](E:\idea_workspace\2020Study-JavaSE\01.Thread\src\com\demo9)
 
 [线程创建-使用线程池](E:\idea_workspace\2020Study-JavaSE\01.Thread\src\com\demo10)
 
