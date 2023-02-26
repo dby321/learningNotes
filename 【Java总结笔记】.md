@@ -1,4 +1,4 @@
-# Java笔记
+# 【Java总结笔记】
 
 ## 0 学习技巧
 
@@ -538,12 +538,185 @@ B的构造函数
 >
 > 
 
-### 1.32 最常见的设计模式（带扩充）
+### 1.32 最常见的设计模式
 
-> - 单例模式
-> - 工厂模式
-> - 模版模式
-> - 代理模式
+#### 单例模式
+
+#### 工厂模式
+
+#### 模版模式
+
+#### 代理模式
+
+##### 静态代理
+
+> 通过在代理类中组合要被代理增强的类，达到静态代理的效果。
+>
+> 缺点：被代理增强的类要实现接口
+
+```java
+public interface SmsService {
+    String send(String message);
+}
+public class SmsServiceImpl implements SmsService {
+    public String send(String message) {
+        System.out.println("send message:" + message);
+        return message;
+    }
+}
+public class SmsProxy implements SmsService {
+
+    private final SmsService smsService;
+
+    public SmsProxy(SmsService smsService) {
+        this.smsService = smsService;
+    }
+
+    @Override
+    public String send(String message) {
+        //调用方法之前，我们可以添加自己的操作
+        System.out.println("before method send()");
+        smsService.send(message);
+        //调用方法之后，我们同样可以添加自己的操作
+        System.out.println("after method send()");
+        return null;
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        SmsService smsService = new SmsServiceImpl();
+        SmsProxy smsProxy = new SmsProxy(smsService);
+        smsProxy.send("java");
+    }
+}
+```
+
+##### JDK动态代理
+
+/Users/dongbinyu/IdeaProjects/2021Study-Java/2020Study-JavaSE/09.DongTaiDaiLi/src/main/java/com/demo2
+
+> **从JVM角度来说，动态代理是在运行时动态生成类字节码，并加载到 JVM 中的。**
+
+```java
+public interface SmsService {
+    String send(String message);
+}
+public class SmsServiceImpl implements SmsService {
+    public String send(String message) {
+        System.out.println("send message:" + message);
+        return message;
+    }
+}
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+/**
+ * @author shuang.kou
+ * @createTime 2020年05月11日 11:23:00
+ */
+public class DebugInvocationHandler implements InvocationHandler {
+    /**
+     * 代理类中的真实对象
+     */
+    private final Object target;
+
+    public DebugInvocationHandler(Object target) {
+        this.target = target;
+    }
+
+
+    public Object invoke(Object proxy, Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
+        //调用方法之前，我们可以添加自己的操作
+        System.out.println("before method " + method.getName());
+        Object result = method.invoke(target, args);
+        //调用方法之后，我们同样可以添加自己的操作
+        System.out.println("after method " + method.getName());
+        return result;
+    }
+}
+
+import java.lang.reflect.Proxy;
+public class JdkProxyFactory {
+    public static Object getProxy(Object target) {
+        return Proxy.newProxyInstance(
+                target.getClass().getClassLoader(), // 目标类的类加载
+                target.getClass().getInterfaces(),  // 代理需要实现的接口，可指定多个
+                new DebugInvocationHandler(target)   // 代理对象对应的自定义 InvocationHandler
+        );
+    }
+}
+
+public class JdkProxyTest{
+		public static void main(String[] args){
+      	SmsService smsService = (SmsService) JdkProxyFactory.getProxy(new SmsServiceImpl());
+				smsService.send("java");
+    }
+}
+```
+
+#####CGLIB动态代理
+
+```java
+<dependency>
+  <groupId>cglib</groupId>
+  <artifactId>cglib</artifactId>
+  <version>3.3.0</version>
+</dependency>
+```
+
+```java
+class AmsService {
+    public String sendMessage(String msg){
+        System.out.println (msg);
+        return msg;
+    }
+}
+
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+import java.lang.reflect.Method;
+class MyMethodInterceptor implements MethodInterceptor {
+
+    @Override
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+        System.out.println ("before" +method.getName ());
+        Object o1 = methodProxy.invokeSuper ( o, objects );
+        System.out.println ("after" +method.getName ());
+        return o1;
+    }
+}
+
+import net.sf.cglib.proxy.Enhancer;
+class CglibProxyFactory{
+    public static Object getProxy(Class<?> clazz){
+        Enhancer enhancer=new Enhancer ();
+        enhancer.setClassLoader ( clazz.getClassLoader () );
+        enhancer.setSuperclass ( clazz );
+        enhancer.setCallback (  new MyMethodInterceptor ());
+        return enhancer.create ();
+    }
+}
+
+
+public class CglibTest{
+    public static void main(String[] args) {
+        AmsService proxy = (AmsService) CglibProxyFactory.getProxy ( AmsService.class );
+        proxy.sendMessage ( "xiaoxi" );
+    }
+}
+```
+
+ #### JDK动态代理和CGLIB动态代理对比
+
+> **JDK 动态代理只能代理实现了接口的类或者直接代理接口，而 CGLIB 可以代理未实现任何接口的类。** 另外， CGLIB 动态代理是通过生成一个被代理类的子类来拦截被代理类的方法调用，因此不能代理声明为 final 类型的类和方法。
+>
+> 就二者的效率来说，大部分情况都是 JDK 动态代理更优秀，随着 JDK 版本的升级，这个优势更加明显。
+
+#### 静态代理和动态代理的对比
+
+> 1. **灵活性** ：动态代理更加灵活，不需要必须实现接口，可以直接代理实现类，并且可以不需要针对每个目标类都创建一个代理类。另外，静态代理中，接口一旦新增加方法，目标对象和代理对象都要进行修改，这是非常麻烦的！
+> 2. **JVM 层面** ：静态代理在编译时就将接口、实现类、代理类这些都变成了一个个实际的 class 文件。而动态代理是在运行时动态生成类字节码，并加载到 JVM 中的。
 
 ### 1.33 ClassName.this的使用
 
@@ -878,7 +1051,74 @@ System.out.println(e2.get(2)); // 2
 > 
 > ```
 >
-> 
+> **浮点数之间的等值判断，基本数据类型不能用 == 来比较，包装数据类型不能用 equals 来判断。**
+
+#### BigDecimal的创建
+
+推荐使用它的`BigDecimal(String val)`构造方法或者`BigDecimal.valueOf(double val)` 静态方法来创建对象。
+
+#### BigDecimal的加减乘除
+
+`add` 方法用于将两个 `BigDecimal` 对象相加，`subtract` 方法用于将两个 `BigDecimal` 对象相减。`multiply` 方法用于将两个 `BigDecimal` 对象相乘，`divide` 方法用于将两个 `BigDecimal` 对象相除。
+
+```java
+BigDecimal a = new BigDecimal("1.0");
+BigDecimal b = new BigDecimal("0.9");
+System.out.println(a.add(b));// 1.9
+System.out.println(a.subtract(b));// 0.1
+System.out.println(a.multiply(b));// 0.90
+System.out.println(a.divide(b));// 无法除尽，抛出 ArithmeticException 异常
+System.out.println(a.divide(b, 2, RoundingMode.HALF_UP));// 1.11
+```
+
+这里需要注意的是，在我们使用 `divide` 方法的时候尽量使用 3 个参数版本，并且`RoundingMode` 不要选择 `UNNECESSARY`，否则很可能会遇到 `ArithmeticException`（无法除尽出现无限循环小数的时候），其中 `scale` 表示要保留几位小数，`roundingMode` 代表保留规则。
+
+```java
+public BigDecimal divide(BigDecimal divisor, int scale, RoundingMode roundingMode) {
+    return divide(divisor, scale, roundingMode.oldMode);
+}
+```
+
+保留规则非常多，这里列举几种:
+
+```java
+public enum RoundingMode {
+   // 2.5 -> 3 , 1.6 -> 2
+   // -1.6 -> -2 , -2.5 -> -3
+			 UP(BigDecimal.ROUND_UP),
+   // 2.5 -> 2 , 1.6 -> 1
+   // -1.6 -> -1 , -2.5 -> -2
+			 DOWN(BigDecimal.ROUND_DOWN),
+			 // 2.5 -> 3 , 1.6 -> 2
+   // -1.6 -> -1 , -2.5 -> -2
+			 CEILING(BigDecimal.ROUND_CEILING),
+			 // 2.5 -> 2 , 1.6 -> 1
+   // -1.6 -> -2 , -2.5 -> -3
+			 FLOOR(BigDecimal.ROUND_FLOOR),
+   	// 2.5 -> 3 , 1.6 -> 2
+   // -1.6 -> -2 , -2.5 -> -3
+			 HALF_UP(BigDecimal.ROUND_HALF_UP),
+   //......
+}
+```
+
+#### BigDecimal等值比较的问题
+
+`BigDecimal` 使用 `equals()` 方法进行等值比较出现问题的代码示例：
+
+```java
+BigDecimal a = new BigDecimal("1");
+BigDecimal b = new BigDecimal("1.0");
+System.out.println(a.equals(b));//false
+```
+
+这是因为 `equals()` 方法不仅仅会比较值的大小（value）还会比较精度（scale），而 `compareTo()` 方法比较的时候会忽略精度。
+
+1.0 的 scale 是 1，1 的 scale 是 0，因此 `a.equals(b)` 的结果是 false。
+
+#### [org.apache.commons.lang3.math.NumberUtils](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/math/NumberUtils.html)
+
+
 
 ### 1.49 finally语句块
 
@@ -922,13 +1162,11 @@ try {
 
 ```
 
-
-
 ## 2 JavaSE高级
 
-#### 2.1 多线程的实现
+### 2.1 多线程的实现
 
-##### 线程创建-继承Thread类
+#### 线程创建-继承Thread类
 
 ```java
 public class MyThread extends Thread {
@@ -987,7 +1225,7 @@ public class ThreadTest {
 }
 ```
 
-##### 线程创建-实现Runnable接口
+#### 线程创建-实现Runnable接口
 
 ```java
 public class PrimeRun implements Runnable {
@@ -1007,7 +1245,7 @@ public class ThreadTest {
 }
 ```
 
-##### 线程创建-实现Callable接口
+#### 线程创建-实现Callable接口
 
 ```java
 class NumThread implements Callable<Integer> {
@@ -1048,9 +1286,9 @@ public class ThreadNew {
 
 
 
-#### 2.2 yield()和join()
+### 2.2 yield()和join()
 
-#### 2.3 synchronized使用：卖票案例
+### 2.3 synchronized使用：卖票案例
 
 > 用synchronized保证不错票和重票
 
@@ -1102,7 +1340,7 @@ public class WindowTest {
 
 
 
-#### 2.4 双重检查的懒汉式
+### 2.4 双重检查的懒汉式
 
 ```java
 public class Bank {
@@ -1131,11 +1369,11 @@ public class Bank {
 }
 ```
 
-#### 2.5 Executors的几个静态方法
+### 2.5 Executors的几个静态方法
 
 > 待整理
 
-#### 2.6 多线程的生命周期
+### 2.6 多线程的生命周期
 
 > - NEW：一个尚未启动的线程的状态。也称之为初始状态、开始状态。
 > - RUNNABLE：一个可以运行的线程的状态，可以运行是指这个线程已经在JVM中运行了，但是有可能正在等待其他的系统资源。也称之为就绪状态、可运行状态。
@@ -1144,11 +1382,11 @@ public class Bank {
 > - TIMED_WAITING：一个在限定时间内等待的线程的状态。也称之为限时等待状态。造成线程限时等待状态的原因有五种，分别是：Thread.sleep(long)、Object.wait(long)、join(long)、LockSupport.parkNanos(obj,long)和LockSupport.parkUntil(obj,long)。
 >   TERMINATED：一个完全运行完成的线程的状态。也称之为终止状态、结束状态。
 
-#### 2.7 死锁的检测和处理
+### 2.7 死锁的检测和处理
 
 > 待整理
 
-#### 2.8 线程的通信:消费者和生产者案例
+### 2.8 线程的通信:消费者和生产者案例
 
 ```java
 class Clerk{
@@ -1231,11 +1469,11 @@ public class ProductTest {
 }
 ```
 
-#### 2.9 Date、SimpleDateFormat、Calendar、LocalTime、java.sql.Date的使用
+### 2.9 Date、SimpleDateFormat、Calendar、LocalTime、java.sql.Date的使用
 
 > 待补充
 
-#### 2.10 注解
+### 2.10 注解
 
 > ```java
 > package java.lang.annotation;
@@ -1300,79 +1538,309 @@ public class ProductTest {
 >
 > 定义 Annotation 时，@Retention 可有可无。若没有 @Retention，则默认是 RetentionPolicy.CLASS。
 
-#### 2.11 Collection接口实现类大总结
+### 2.11 Collection接口实现类大总结
 
-##### ArrayList
+#### ArrayList
 
-##### LinkedList
+#### LinkedList
 
-##### Vector
+#### Vector
 
-##### CopyOnWriteArrayList
+#### CopyOnWriteArrayList
 
-##### HashSet
+#### HashSet
 
-##### LinkedHashSet
+#### LinkedHashSet
 
-##### ConcurrentHashSet
+#### ConcurrentHashSet
 
-#####TreeSet
+####TreeSet
 
-##### PriorityQueue
+#### PriorityQueue
 
-##### ConcurrentLinkedQueue
+#### ConcurrentLinkedQueue
 
-##### ArrayBlockingQueue
+#### ArrayBlockingQueue
 
-##### LinkedBlockingQueue
+#### LinkedBlockingQueue
 
-####2.12 Map接口实现类大总结
+###2.12 Map接口实现类大总结
 
-##### HashMap
+#### HashMap
 
-##### LinkedHashMap
+#### LinkedHashMap
 
-##### TreeMap
+#### TreeMap
 
-##### ConcurrentHashMap
+#### ConcurrentHashMap
 
-#### 2.13 Collections工具类的使用
+### 2.13 使用异常要注意哪些地方
 
-> 待补充
+> - 不要把异常定义为静态变量，因为这样会导致异常栈信息错乱。每次手动抛出异常，我们都需要手动 new 一个异常对象抛出。
+> - 抛出的异常信息一定要有意义。
+> - 建议抛出更加具体的异常比如字符串转换为数字格式错误的时候应该抛出`NumberFormatException`而不是其父类`IllegalArgumentException`。
+> - 使用日志打印异常之后就不要再抛出异常了（两者不要同时存在一段代码逻辑中）。
+
+### 2.14 泛型的作用
+
+> 1. 编译期对加入的元素类型进行检查
+> 2. 避免了强制类型转换
+
+### 2.15 静态泛型方法
+
+> 注意: `public static < E > void printArray( E[] inputArray )` 一般被称为静态泛型方法;在 java 中泛型只是一个占位符，必须在传递类型后才能使用。类在实例化时才能真正的传递类型参数，由于静态方法的加载先于类的实例化，也就是说类中的泛型还没有传递真正的类型参数，静态的方法的加载就已经完成了，所以静态泛型方法是没有办法使用类上声明的泛型的。只能使用自己声明的 `<E>`
+
+```java
+public class StaticGeneric {
+    public static <E> void printArray(E[] inputArray){
+        for ( E element : inputArray ){
+            System.out.printf( "%s ", element );
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Integer[] intArray = { 1, 2, 3 };
+        String[] stringArray = { "Hello", "World" };
+        printArray( intArray  );
+        printArray( stringArray  );
+    }
+}
+```
+
+### 2.16 项目中哪里用到了泛型？
+
+> - 自定义接口通用返回结果 `CommonResult<T>` 通过参数 `T` 可根据具体的返回类型动态指定结果的数据类型
+> - 定义 `Excel` 处理类 `ExcelUtil<T>` 用于动态指定 `Excel` 导出的数据类型
+> - 构建集合工具类（参考 `Collections` 中的 `sort`, `binarySearch` 方法）。
+
+### 2.17 什么是反射？反射有什么优缺点？
+
+> 优点：反射之所以被称为框架的灵魂，主要是因为它赋予了我们在运行时分析类以及执行类中方法的能力。通过反射你可以获取任意一个类的所有属性和方法，你还可以调用这些方法和属性。注解的实现也用到了反射。
+>
+> 缺点：增加了安全问题，比如可以无视泛型参数的安全检查（泛型参数的安全检查发生在编译时）。另外，反射的性能也要稍差点，不过，对于框架来说实际是影响不大的。
+
+### 2.18 注解的解析方法有哪几种？
+
+> - **编译期直接扫描** ：编译器在编译 Java 代码的时候扫描对应的注解并处理，比如某个方法使用`@Override` 注解，编译器在编译的时候就会检测当前的方法是否重写了父类对应的方法。
+> - **运行期通过反射处理** ：像框架中自带的注解(比如 Spring 框架的 `@Value` 、`@Component`)都是通过反射来进行处理的。
+
+### 2.19 什么是SPI？SPI的优缺点？
+
+> SPI 即 Service Provider Interface ，字面意思就是：“服务提供者的接口”，我的理解是：专门提供给服务提供者或者扩展框架功能的开发者去使用的一个接口。
+>
+> SPI 将服务接口和具体的服务实现分离开来，将服务调用方和服务实现者解耦，能够提升程序的扩展性、可维护性。修改或者替换服务实现并不需要修改调用方。
+>
+> 很多框架都使用了 Java 的 SPI 机制，比如：Spring 框架、数据库加载驱动、日志接口、以及 Dubbo 的扩展实现等等。
+>
+> 通过 SPI 机制能够大大地提高接口设计的灵活性，但是 SPI 机制也存在一些缺点，比如：
+>
+> - 需要遍历加载所有的实现类，不能做到按需加载，这样效率还是相对较低的。
+> - 当多个 `ServiceLoader` 同时 `load` 时，会有并发问题。
+
+### 2.20 序列化和反序列化？
+
+> - **序列化**： 将数据结构或对象转换成二进制字节流的过程
+> - **反序列化**：将在序列化过程中所生成的二进制字节流转换成数据结构或者对象的过程
+>
+> 下面是序列化和反序列化常见应用场景：
+>
+> - 对象在进行网络传输（比如远程方法调用 RPC 的时候）之前需要先被序列化，接收到序列化的对象之后需要再进行反序列化；
+> - 将对象存储到文件之前需要进行序列化，将对象从文件中读取出来需要进行反序列化；
+> - 将对象存储到数据库（如 Redis）之前需要用到序列化，将对象从缓存数据库中读取出来需要反序列化；
+> - 将对象存储到内存之前需要进行序列化，从内存中读取出来之后需要进行反序列化。
+> - ![img](./images/a478c74d-2c48-40ae-9374-87aacf05188c.png)
+>
+> 常见的序列化协议：JDK 自带的序列化方式一般不会用 ，因为序列化效率低并且存在安全问题。比较常用的序列化协议有 Hessian、Kryo、Protobuf、ProtoStuff，这些都是基于二进制的序列化协议。
+>
+> 像 JSON 和 XML 这种属于文本类序列化方式。虽然可读性比较好，但是性能较差，一般不会选择。
+
+#### 如何使用序列化协议
+
+##### Kyro
+
+> Github 地址：[https://github.com/EsotericSoftware/kryoopen in new window](https://github.com/EsotericSoftware/kryo) 
+
+```java
+/**
+ * Kryo serialization class, Kryo serialization efficiency is very high, but only compatible with Java language
+ *
+ * @author shuang.kou
+ * @createTime 2020年05月13日 19:29:00
+ */
+@Slf4j
+public class KryoSerializer implements Serializer {
+
+    /**
+     * Because Kryo is not thread safe. So, use ThreadLocal to store Kryo objects
+     */
+    private final ThreadLocal<Kryo> kryoThreadLocal = ThreadLocal.withInitial(() -> {
+        Kryo kryo = new Kryo();
+        kryo.register(RpcResponse.class);
+        kryo.register(RpcRequest.class);
+        return kryo;
+    });
+
+    @Override
+    public byte[] serialize(Object obj) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+             Output output = new Output(byteArrayOutputStream)) {
+            Kryo kryo = kryoThreadLocal.get();
+            // Object->byte:将对象序列化为byte数组
+            kryo.writeObject(output, obj);
+            kryoThreadLocal.remove();
+            return output.toBytes();
+        } catch (Exception e) {
+            throw new SerializeException("Serialization failed");
+        }
+    }
+
+    @Override
+    public <T> T deserialize(byte[] bytes, Class<T> clazz) {
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+             Input input = new Input(byteArrayInputStream)) {
+            Kryo kryo = kryoThreadLocal.get();
+            // byte->Object:从byte数组中反序列化出对象
+            Object o = kryo.readObject(input, clazz);
+            kryoThreadLocal.remove();
+            return clazz.cast(o);
+        } catch (Exception e) {
+            throw new SerializeException("Deserialization failed");
+        }
+    }
+
+}
+```
+
+##### ProtoStuff
+
+> Github 地址：[https://github.com/protostuff/protostuffopen in new window](https://github.com/protostuff/protostuff)。
+
+##### Hessian
+
+##### 具体怎么选序列化协议
+
+> Kryo 是专门针对 Java 语言序列化方式并且性能非常好，如果你的应用是专门针对 Java 语言的话可以考虑使用，并且 Dubbo 官网的一篇文章中提到说推荐使用 Kryo 作为生产环境的序列化方式。(文章地址：[https://dubbo.apache.org/zh/docs/v2.7/user/references/protocol/rest/open in new window](https://dubbo.apache.org/zh/docs/v2.7/user/references/protocol/rest/))
+>
+> ![img](./images/569e541a-22b2-4846-aa07-0ad479f07440.png)
+>
+> 像 Protobuf、 ProtoStuff、hessian 这类都是跨语言的序列化方式，如果有跨语言需求的话可以考虑使用。
+>
+> 除了我上面介绍到的序列化方式的话，还有像 Thrift，Avro 这些。
+
+#### 为什么JDK自带的序列化我们不用
+
+#### **serialVersionUID 不是被 static 变量修饰了吗？为什么还会被“序列化”？**
+
+### 2.21 如果某些字段不想序列化？
+
+> 对于不想进行序列化的变量，使用 `transient` 关键字修饰。
+>
+> `transient` 关键字的作用是：阻止实例中那些用此关键字修饰的的变量序列化；当对象被反序列化时，被 `transient` 修饰的变量值不会被持久化和恢复。
+>
+> 关于 `transient` 还有几点注意：
+>
+> - `transient` 只能修饰变量，不能修饰类和方法。
+> - `transient` 修饰的变量，在反序列化后变量值将会被置成类型的默认值。例如，如果是修饰 `int` 类型，那么反序列后结果就是 `0`。
+> - `static` 变量因为不属于任何对象(Object)，所以无论有没有 `transient` 关键字修饰，均不会被序列化。
+
+### 2.22 IO流为什么要分为字节流和字符流呢？
+
+> - 字符流是由 Java 虚拟机将字节转换得到的，这个过程还算是比较耗时；
+> - 如果我们不知道编码类型的话，使用字节流的过程中很容易出现乱码问题。
+
+#### 为什么不全用字节流？
+
+### 2.23 获取Class对象的四种方式
+
+> **1. 知道具体类的情况下可以使用：**
+>
+> ```java
+> Class alunbarClass = TargetObject.class;
+> ```
+>
+> 但是我们一般是不知道具体类的，基本都是通过遍历包下面的类来获取 Class 对象，通过此方式获取 Class 对象不会进行初始化
+>
+> **2. 通过 `Class.forName()`传入类的全路径获取：**
+>
+> ```java
+> Class alunbarClass1 = Class.forName("cn.javaguide.TargetObject");
+> ```
+>
+> **3. 通过对象实例`instance.getClass()`获取：**
+>
+> ```java
+> TargetObject o = new TargetObject();
+> Class alunbarClass2 = o.getClass();
+> ```
+>
+> **4. 通过类加载器`xxxClassLoader.loadClass()`传入类路径获取:**
+>
+> ```java
+> ClassLoader.getSystemClassLoader().loadClass("cn.javaguide.TargetObject");
+> ```
+>
+> 通过类加载器获取 Class 对象不会进行初始化，意味着不进行包括初始化等一系列步骤，静态代码块和静态对象不会得到执行
+
+### 2.24 反射的案例
+
+> 上面代码运行如果抛出 `ClassNotFoundException` 异常,具体原因是你没有下面把这段代码的包名替换成自己创建的 `TargetObject` 所在的包 。
+
+```java
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+public class Main {
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchFieldException {
+        /**
+         * 获取 TargetObject 类的 Class 对象并且创建 TargetObject 类实例
+         */
+        Class<?> targetClass = Class.forName("cn.javaguide.TargetObject");
+        TargetObject targetObject = (TargetObject) targetClass.newInstance();
+        /**
+         * 获取 TargetObject 类中定义的所有方法
+         */
+        Method[] methods = targetClass.getDeclaredMethods();
+        for (Method method : methods) {
+            System.out.println(method.getName());
+        }
+
+        /**
+         * 获取指定方法并调用
+         */
+        Method publicMethod = targetClass.getDeclaredMethod("publicMethod",
+                String.class);
+
+        publicMethod.invoke(targetObject, "JavaGuide");
+
+        /**
+         * 获取指定参数并对参数进行修改
+         */
+        Field field = targetClass.getDeclaredField("value");
+        //为了对类中的参数进行修改我们取消安全检查
+        field.setAccessible(true);
+        field.set(targetObject, "JavaGuide");
+
+        /**
+         * 调用 private 方法
+         */
+        Method privateMethod = targetClass.getDeclaredMethod("privateMethod");
+        //为了调用private方法我们取消安全检查
+        privateMethod.setAccessible(true);
+        privateMethod.invoke(targetObject);
+    }
+}
+
+```
 
 
-
-#### 2.14 泛型
-
-> 待补充
-
-#### 2.15 IO
-
-> 待补充
-
-#### 2.16 网络编程
-
-> 待补充
-
-#### 2.17 反射
-
-> 待补充
-
-#### 2.18 代理模式、动态代理、静态代理
-
-> 待补充
-
-#### 2.19 Java8的新特性
-
-> 待补充
-
-#### 2.20 正则表达式
-
-> 待补充
-
-#### 2.21 SPI机制
-
-> 待补充
 
 ## 3 JavaWeb
+
+## 4 设计模式
+
+## 5 计算机网络
+
+
 
