@@ -136,6 +136,42 @@ public class Test {
 | 2    | **public static boolean equals(long[] a, long[] a2)** 如果两个指定的 long 型数组彼此*相等*，则返回 true。如果两个数组包含相同数量的元素，并且两个数组中的所有相应元素对都是相等的，则认为这两个数组是相等的。换句话说，如果两个数组以相同顺序包含相同的元素，则两个数组是相等的。同样的方法适用于所有的其他基本数据类型（Byte，short，Int等）。 |
 | 3    | **public static void fill(int[] a, int val)** 将指定的 int 值分配给指定 int 型数组指定范围中的每个元素。同样的方法适用于所有的其他基本数据类型（Byte，short，Int等）。 |
 | 4    | **public static void sort(Object[] a)** 对指定对象数组根据其元素的自然顺序进行升序排列。同样的方法适用于所有的其他基本数据类型（Byte，short，Int等）。 |
+| 5    | public static String toString(Object[] a)将数组转换成String格式 |
+
+```java
+import java.util.Arrays;
+
+public class ArraysTest {
+    static class Person{
+        String name;
+
+        @Override
+        public String toString() {
+            return "Person{" +
+                    "name='" + name + '\'' +
+                    '}';
+        }
+    }
+    public static void main(String[] args) {
+        String[] strs=new String[10];
+        for(int i=0;i<strs.length;i++){
+            strs[i]=i+"";
+        }
+        System.out.println(Arrays.toString(strs));
+        Person[] pers=new Person[10];
+        for(int i=0;i< pers.length;i++){
+            pers[i]=new Person();
+            pers[i].name=i+"";
+        }
+        System.out.println(Arrays.toString(pers));
+    }
+}
+//console
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[Person{name='0'}, Person{name='1'}, Person{name='2'}, Person{name='3'}, Person{name='4'}, Person{name='5'}, Person{name='6'}, Person{name='7'}, Person{name='8'}, Person{name='9'}]
+```
+
+
 
 ### 1.14 面向过程和面向对象
 
@@ -435,7 +471,7 @@ public class HelloA {
         HelloA b=new HelloA();
     }
 }
-// console输出
+// console
 A的静态代码块
 A的构造代码块
 A的构造函数
@@ -469,7 +505,7 @@ public class HelloB extends HelloA{
         HelloB b=new HelloB();        
     }
 }
-// console输出
+// console
 A的静态代码块
 B的静态代码块
 A的构造代码块
@@ -538,17 +574,9 @@ B的构造函数
 >
 > 
 
-### 1.32 最常见的设计模式
+### 1.32 代理模式和动态代理
 
-#### 单例模式
-
-#### 工厂模式
-
-#### 模版模式
-
-#### 代理模式
-
-##### 静态代理
+#### 静态代理
 
 > 通过在代理类中组合要被代理增强的类，达到静态代理的效果。
 >
@@ -591,7 +619,7 @@ public class Main {
 }
 ```
 
-##### JDK动态代理
+#### JDK动态代理
 
 /Users/dongbinyu/IdeaProjects/2021Study-Java/2020Study-JavaSE/09.DongTaiDaiLi/src/main/java/com/demo2
 
@@ -655,7 +683,7 @@ public class JdkProxyTest{
 }
 ```
 
-#####CGLIB动态代理
+####CGLIB动态代理
 
 ```java
 <dependency>
@@ -1162,6 +1190,271 @@ try {
 
 ```
 
+### 1.50 Unsafe类[有点难哦]
+
+- [Java魔法类：Unsafe 应用解析 - 美团技术团队 -2019open in new window](https://tech.meituan.com/2019/02/14/talk-about-java-magic-class-unsafe.html)
+- [Java 双刃剑之 Unsafe 类详解 - 码农参上 - 2021](https://xie.infoq.cn/article/8b6ed4195e475bfb32dacc5cb)
+
+> 赋予了java类似C语言操作内存空间的能力，如图都是native方法。
+>
+> 对于同一native方法，不同的操作系统可能会有不同的实现，但是对于使用者是透明的。
+>
+> ![img](./images/image-20220717115231125.png)
+
+#### 内存操作
+
+> 使用堆外内存的原因：
+>
+> - 对垃圾回收停顿的改善。由于堆外内存是直接受操作系统管理而不是JVM，所以当我们使用堆外内存时，即可保持较小的堆内内存规模。从而在GC时减少回收停顿对于应用的影响。
+> - 提升程序I/O操作的性能。通常在I/O通信过程中，会存在堆内内存到堆外内存的数据拷贝操作，对于需要频繁进行内存间数据拷贝且生命周期较短的暂存数据，都建议存储到堆外内存。
+>
+> 典型应用：
+>
+> DirectByteBuffer是Java用于实现堆外内存的一个重要类，通常用在通信过程中做缓冲池，如在Netty、MINA等NIO框架中应用广泛。DirectByteBuffer对于堆外内存的创建、使用、销毁等逻辑均由Unsafe提供的堆外内存API来实现。
+>
+> ![img](./images/5eb082d2e4baf2d993ce75747fc35de6486751.png)
+
+```java
+//分配内存, 相当于C++的malloc函数
+public native long allocateMemory(long bytes);
+//扩充内存
+public native long reallocateMemory(long address, long bytes);
+//释放内存
+public native void freeMemory(long address);
+//在给定的内存块中设置值
+public native void setMemory(Object o, long offset, long bytes, byte value);
+//内存拷贝
+public native void copyMemory(Object srcBase, long srcOffset, Object destBase, long destOffset, long bytes);
+//获取给定地址值，忽略修饰限定符的访问限制。与此类似操作还有: getInt，getDouble，getLong，getChar等
+public native Object getObject(Object o, long offset);
+//为给定地址设置值，忽略修饰限定符的访问限制，与此类似操作还有: putInt,putDouble，putLong，putChar等
+public native void putObject(Object o, long offset, Object x);
+//获取给定地址的byte类型的值（当且仅当该内存地址为allocateMemory分配时，此方法结果为确定的）
+public native byte getByte(long address);
+//为给定地址设置byte类型的值（当且仅当该内存地址为allocateMemory分配时，此方法结果才是确定的）
+public native void putByte(long address, byte x);
+```
+
+#### CAS
+
+> CAS: 即比较并替换，实现并发算法时常用到的一种技术。CAS操作包含三个操作数——内存位置、预期原值及新值。执行CAS操作的时候，将内存位置的值与预期原值比较，如果相匹配，那么处理器会自动将该位置值更新为新值，否则，处理器不做任何操作。我们都知道，CAS是一条CPU的原子指令（cmpxchg指令），不会造成所谓的数据不一致问题，Unsafe提供的CAS方法（如compareAndSwapXXX）底层实现即为CPU指令cmpxchg。
+>
+> 典型应用：CAS在java.util.concurrent.atomic相关类、Java AQS、CurrentHashMap等实现上有非常广泛的应用。如下图所示，AtomicInteger的实现中，静态字段valueOffset即为字段value的内存偏移地址，valueOffset的值在AtomicInteger初始化时，在静态代码块中通过Unsafe的objectFieldOffset方法获取。在AtomicInteger中提供的线程安全方法中，通过字段valueOffset的值可以定位到AtomicInteger对象中value的内存地址，从而可以根据CAS实现对value字段的原子操作。
+>
+> ![img](./images/3bacb938ca6e63d6c79c2bb48d3f608f189412.png)
+
+```java
+/**
+	*  CAS
+  * @param o         包含要修改field的对象
+  * @param offset    对象中某field的偏移量
+  * @param expected  期望值
+  * @param update    更新值
+  * @return          true | false
+  */
+public final native boolean compareAndSwapObject(Object o, long offset,  Object expected, Object update);
+
+public final native boolean compareAndSwapInt(Object o, long offset, int expected,int update);
+  
+public final native boolean compareAndSwapLong(Object o, long offset, long expected, long update);
+```
+
+#### 线程调度
+
+> 方法park、unpark即可实现线程的挂起与恢复，将一个线程进行挂起是通过park方法实现的，调用park方法后，线程将一直阻塞直到超时或者中断等条件出现；unpark可以终止一个挂起的线程，使其恢复正常。
+>
+> 典型应用：Java锁和同步器框架的核心类AbstractQueuedSynchronizer，就是通过调用`LockSupport.park()`和`LockSupport.unpark()`实现线程的阻塞和唤醒的，而LockSupport的park、unpark方法实际是调用Unsafe的park、unpark方式来实现。
+
+```java
+//取消阻塞线程
+public native void unpark(Object thread);
+//阻塞线程
+public native void park(boolean isAbsolute, long time);
+//获得对象锁（可重入锁）
+@Deprecated
+public native void monitorEnter(Object o);
+//释放对象锁
+@Deprecated
+public native void monitorExit(Object o);
+//尝试获取对象锁
+@Deprecated
+public native boolean tryMonitorEnter(Object o);
+```
+
+#### Class相关
+
+> 此部分主要提供Class和它的静态字段的操作相关方法，包含静态字段内存定位、定义类、定义匿名类、检验&确保初始化等。
+>
+> 典型应用：没看懂？？？
+
+```java
+//获取给定静态字段的内存地址偏移量，这个值对于给定的字段是唯一且固定不变的
+public native long staticFieldOffset(Field f);
+//获取一个静态类中给定字段的对象指针
+public native Object staticFieldBase(Field f);
+//判断是否需要初始化一个类，通常在获取一个类的静态属性的时候（因为一个类如果没初始化，它的静态属性也不会初始化）使用。 当且仅当ensureClassInitialized方法不生效时返回false。
+public native boolean shouldBeInitialized(Class<?> c);
+//检测给定的类是否已经初始化。通常在获取一个类的静态属性的时候（因为一个类如果没初始化，它的静态属性也不会初始化）使用。
+public native void ensureClassInitialized(Class<?> c);
+//定义一个类，此方法会跳过JVM的所有安全检查，默认情况下，ClassLoader（类加载器）和ProtectionDomain（保护域）实例来源于调用者
+public native Class<?> defineClass(String name, byte[] b, int off, int len, ClassLoader loader, ProtectionDomain protectionDomain);
+//定义一个匿名类
+public native Class<?> defineAnonymousClass(Class<?> hostClass, byte[] data, Object[] cpPatches);
+```
+
+#### 对象操作
+
+> 此部分主要包含对象成员属性相关操作及非常规的对象实例化方式等相关方法。
+>
+> 典型应用：**非常规的实例化方式**：而Unsafe中提供allocateInstance方法，仅通过Class对象就可以创建此类的实例对象
+
+```java
+//返回对象成员属性在内存地址相对于此对象的内存地址的偏移量
+public native long objectFieldOffset(Field f);
+//获得给定对象的指定地址偏移量的值，与此类似操作还有：getInt，getDouble，getLong，getChar等
+public native Object getObject(Object o, long offset);
+//给定对象的指定地址偏移量设值，与此类似操作还有：putInt，putDouble，putLong，putChar等
+public native void putObject(Object o, long offset, Object x);
+//从对象的指定偏移量处获取变量的引用，使用volatile的加载语义
+public native Object getObjectVolatile(Object o, long offset);
+//存储变量的引用到对象的指定的偏移量处，使用volatile的存储语义
+public native void putObjectVolatile(Object o, long offset, Object x);
+//有序、延迟版本的putObjectVolatile方法，不保证值的改变被其他线程立即看到。只有在field被volatile修饰符修饰时有效
+public native void putOrderedObject(Object o, long offset, Object x);
+//绕过构造方法、初始化代码来创建对象
+public native Object allocateInstance(Class<?> cls) throws InstantiationException;
+```
+
+#### 数组相关
+
+> 这部分主要介绍与数据操作相关的arrayBaseOffset与arrayIndexScale这两个方法，两者配合起来使用，即可定位数组中每个元素在内存中的位置。
+
+```java
+//返回数组中第一个元素的偏移地址
+public native int arrayBaseOffset(Class<?> arrayClass);
+//返回数组中一个元素占用的大小
+public native int arrayIndexScale(Class<?> arrayClass);
+```
+
+#### 内存屏障
+
+> 在Java 8中引入，用于定义内存屏障（也称内存栅栏，内存栅障，屏障指令等，是一类同步屏障指令，是CPU或编译器在对内存随机访问的操作中的一个**同步点**，使得此点之前的所有读写操作都执行后才可以开始执行此点之后的操作），避免代码重排序。
+
+```java
+//内存屏障，禁止load操作重排序。屏障前的load操作不能被重排序到屏障后，屏障后的load操作不能被重排序到屏障前
+public native void loadFence();
+//内存屏障，禁止store操作重排序。屏障前的store操作不能被重排序到屏障后，屏障后的store操作不能被重排序到屏障前
+public native void storeFence();
+//内存屏障，禁止load、store操作重排序
+public native void fullFence();
+```
+
+#### 系统相关
+
+```java
+//返回系统指针的大小。返回值为4（32位系统）或 8（64位系统）。
+public native int addressSize();  
+//内存页的大小，此值为2的幂次方。
+public native int pageSize();
+```
+
+
+
+### 1.51 SPI机制
+
+> JDK内置的一种服务提供发现机制,在META-INF/services下新建一个要实现的接口名的文件，然后在里面写上实现类的类路径。通过ServiceLoader迭代器迭代该文件的内容，然后利用反射实例化对象并缓存到providers这个LinkedHashMap中
+>
+> 不足：
+>
+> 1.不能按需加载，需要遍历所有的实现，并实例化，然后在循环中才能找到我们需要的实现。如果不想用某些实现类，或者某些类实例化很耗时，它也被载入并实例化了，这就造成了浪费。
+>
+> 2.获取某个实现类的方式不够灵活，只能通过 Iterator 形式获取，不能根据某个参数来获取对应的实现类。
+>
+> 3.多个并发多线程使用 ServiceLoader 类的实例是不安全的。
+
+```java
+package demo1;
+
+public interface HelloSPI {
+    void sayHello();
+}
+package demo1;
+
+public class ImageHello implements HelloSPI {
+    public void sayHello() {
+        System.out.println("Image Hello");
+    }
+}
+package demo1;
+
+public class TextHello implements HelloSPI {
+    public void sayHello() {
+        System.out.println("Text Hello");
+    }
+}
+package demo1;
+
+import java.util.ServiceLoader;
+
+public class SPIDemo {
+    public static void main(String[] args) {
+        ServiceLoader<HelloSPI> serviceLoader=ServiceLoader.load(HelloSPI.class);
+        for(HelloSPI helloSPI:serviceLoader){
+            helloSPI.sayHello();
+        }
+    }
+}
+```
+
+```
+### META-INF/services/demo1.HelloSPI ###
+demo1.ImageHello
+demo1.TextHello
+```
+
+### 1.52 码点和代码单元
+
+> Length()得到的是代码单元数，一个char是一个代码单元
+>
+> codePointCount()得到的是码点数，在UTF-16下，一个码点等于一或两个代码单元
+
+```java
+public class Madian {
+    public static void main(String[] args) {
+        String str="😊123";
+        System.out.println(str.length());
+        System.out.println(str.codePointCount(0, str.length() ));
+        for(char c:str.toCharArray()){
+            System.out.print(c+" ");
+        }
+        System.out.println();
+        int i=0;
+        for (int i1 : str.codePoints().toArray()) {
+            System.out.print(String.valueOf(Character.toChars(i1)));
+        }
+
+    }
+}
+//console
+5
+4
+? ? 1 2 3 
+😊123
+```
+
+#### 1.53 数组拷贝
+
+```java
+public class ArrayCopyTest {
+    public static void main(String[] args) {
+        int[] arr=new int[]{1,2,3};
+        int[] newArr = Arrays.copyOf(arr, arr.length);
+    }
+}
+```
+
+
+
 ## 2 JavaSE高级
 
 ### 2.1 多线程的实现
@@ -1284,10 +1577,6 @@ public class ThreadNew {
 }
 ```
 
-
-
-### 2.2 yield()和join()
-
 ### 2.3 synchronized使用：卖票案例
 
 > 用synchronized保证不错票和重票
@@ -1369,9 +1658,7 @@ public class Bank {
 }
 ```
 
-### 2.5 Executors的几个静态方法
 
-> 待整理
 
 ### 2.6 多线程的生命周期
 
@@ -1469,9 +1756,11 @@ public class ProductTest {
 }
 ```
 
-### 2.9 Date、SimpleDateFormat、Calendar、LocalTime、java.sql.Date的使用
+### 2.9 Date、Calendar、LocalTime
 
-> 待补充
+> Date是用来表示时间点的,尽量不要用date
+>
+> LocalDate是用来表示日历的,是JDK8的新特性
 
 ### 2.10 注解
 
@@ -1538,41 +1827,7 @@ public class ProductTest {
 >
 > 定义 Annotation 时，@Retention 可有可无。若没有 @Retention，则默认是 RetentionPolicy.CLASS。
 
-### 2.11 Collection接口实现类大总结
 
-#### ArrayList
-
-#### LinkedList
-
-#### Vector
-
-#### CopyOnWriteArrayList
-
-#### HashSet
-
-#### LinkedHashSet
-
-#### ConcurrentHashSet
-
-####TreeSet
-
-#### PriorityQueue
-
-#### ConcurrentLinkedQueue
-
-#### ArrayBlockingQueue
-
-#### LinkedBlockingQueue
-
-###2.12 Map接口实现类大总结
-
-#### HashMap
-
-#### LinkedHashMap
-
-#### TreeMap
-
-#### ConcurrentHashMap
 
 ### 2.13 使用异常要注意哪些地方
 
@@ -1749,7 +2004,7 @@ public class KryoSerializer implements Serializer {
 > - 字符流是由 Java 虚拟机将字节转换得到的，这个过程还算是比较耗时；
 > - 如果我们不知道编码类型的话，使用字节流的过程中很容易出现乱码问题。
 
-#### 为什么不全用字节流？
+
 
 ### 2.23 获取Class对象的四种方式
 
@@ -1834,13 +2089,17 @@ public class Main {
 
 ```
 
+### 2.25 泛型擦除
+
+> 编译器会在编译时擦除泛型类型，如果没有<T extends xxx>或<T super xxx>的限定，会将泛型类型擦除成Object类型；如果有，就擦除成为第一个接口类型。所以通过反射获取运行时类可以向ArrayList里插入不符合泛型约束的值。
+
+### 2.26 ConcurrentHashMap
+
+> Java7 中 `ConcurrentHashMap` 使用的分段锁，也就是每一个 Segment 上同时只有一个线程可以操作，每一个 `Segment` 都是一个类似 `HashMap` 数组的结构，它可以扩容，它的冲突会转化为链表。但是 `Segment` 的个数一但初始化就不能改变。
+>
+> Java8 中的 `ConcurrentHashMap` 使用的 `Synchronized` 锁加 CAS 的机制。结构也由 Java7 中的 **`Segment` 数组 + `HashEntry` 数组 + 链表** 进化成了 **Node 数组 + 链表 / 红黑树**，Node 是类似于一个 HashEntry 的结构。它的冲突再达到一定大小时会转化成红黑树，在冲突小于一定数量时又退回链表。
 
 
-## 3 JavaWeb
-
-## 4 设计模式
-
-## 5 计算机网络
 
 
 
