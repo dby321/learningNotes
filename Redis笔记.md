@@ -1,4 +1,4 @@
-# 2021Study-Redis
+# 2021Study-Redis-尚硅谷版
 
 ## 1. NoSql数据库简介
 
@@ -317,6 +317,28 @@ slots插槽类似于hashcode的作用
 ## 15. Redis应用问题解决
 
 [小林coding-什么是缓存雪崩、击穿、穿透？](https://xiaolincoding.com/redis/cluster/cache_problem.html#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9)
+
+
+
+
+
+# 2023Study-Redis-黑马版
+
+[CSDN-Redis 笔记（黑马点评 —— 基础篇 + 实战篇）](https://blog.csdn.net/weixin_45033015/article/details/127545710)
+
+
+
+## SpringDataRedis的序列化方式
+
+> 默认是JDK序列化，需要修改redisTemplate的序列化方式为Key为*StringRedisSerializer*，value为jsonRedisSerializer。但是使用jsonRedisSerializer会在每次存数据时多存一个数据类型从而占用空间，为了节省空间占用，我们使用StringRedisTemplate。当然这两种方式都可以的。
+
+> 序列化可以使用springMVC提供的ObjectMapper来操作，也可以用Gson或FastJson
+
+## 为什么选择黑马点评
+
+> 社交应用对redis的应用很丰富
+
+## 短信登录
 
 
 

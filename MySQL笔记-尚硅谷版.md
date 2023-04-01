@@ -16,7 +16,7 @@
 
 `select version();`查看MySQL版本
 
-三种注释：
+三种注释： 
 
 `#注释`
 

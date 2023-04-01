@@ -1,6 +1,6 @@
 
 
-# Python
+# Python笔记-廖雪峰版
 
 > 参考 [廖雪峰Python教程](https://www.liaoxuefeng.com/wiki/1016959663602400)
 
@@ -3840,3 +3840,4 @@ Mac:myproject michael$
 > virtualenv为应用提供了隔离的Python运行环境，解决了不同应用间多版本的冲突问题。
 
 ## 图形界面
+
