@@ -326,21 +326,37 @@ slots插槽类似于hashcode的作用
 
 [CSDN-Redis 笔记（黑马点评 —— 基础篇 + 实战篇）](https://blog.csdn.net/weixin_45033015/article/details/127545710)
 
+## 基础篇-CRUD
+
+### 初识Redis
+
+#### SQL和NoSQL
+
+> SQL是表结构化的，数据可以通过外键进行关联，语法是标准SQL,有完整的事务支持
+>
+> NoSQL是基于图、基于键值对、基于JSON字符串的非结构化的，数据是无关联的，语法是不固定的，只有基本的事务支持。
+
+![SQL和NoSQL](./images/image-20230613200030370.png)
+
+![SQL和NoSQL](./images/image-20230613200317756.png)
+
+#### Redis的特点
+
+![认识Redis](./images/image-20230613201012288.png)
 
 
-## SpringDataRedis的序列化方式
 
-> 默认是JDK序列化，需要修改redisTemplate的序列化方式为Key为*StringRedisSerializer*，value为jsonRedisSerializer。但是使用jsonRedisSerializer会在每次存数据时多存一个数据类型从而占用空间，为了节省空间占用，我们使用StringRedisTemplate。当然这两种方式都可以的。
+### Redis数据结构
 
-> 序列化可以使用springMVC提供的ObjectMapper来操作，也可以用Gson或FastJson
-
-## 为什么选择黑马点评
-
-> 社交应用对redis的应用很丰富
-
-## 短信登录
+![Redis数据类型](./images/image-20230614112127550.png)
 
 
 
+### Redis的java客户端
 
+![Java客户端](./images/image-20230614140528857.png)
+
+
+
+## 实战篇-黑马点评
 
