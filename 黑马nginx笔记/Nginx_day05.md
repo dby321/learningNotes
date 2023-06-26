@@ -277,7 +277,7 @@ upstream webservice{
 
 ![1604495824757](assets/1604495824757.png)
 
-VRRP（Virtual Route Redundancy Protocol）协议，翻译过来为虚拟路由冗余协议。VRRP协议将两台或多台路由器设备虚拟成一个设备，对外提供虚拟路由器IP,而在路由器组内部，如果实际拥有这个对外IP的路由器如果工作正常的话就是MASTER,MASTER实现针对虚拟路由器IP的各种网络功能。其他设备不拥有该虚拟IP，状态为BACKUP,处了接收MASTER的VRRP状态通告信息以外，不执行对外的网络功能。当主机失效时，BACKUP将接管原先MASTER的网络功能。
+**VRRP（Virtual Route Redundancy Protocol）协议**，翻译过来为**虚拟路由冗余协议**。VRRP协议将两台或多台路由器设备虚拟成一个设备，对外提供虚拟路由器IP,而在路由器组内部，如果实际拥有这个对外IP的路由器如果工作正常的话就是MASTER,MASTER实现针对虚拟路由器IP的各种网络功能。其他设备不拥有该虚拟IP，状态为BACKUP,处了接收MASTER的VRRP状态通告信息以外，不执行对外的网络功能。当主机失效时，BACKUP将接管原先MASTER的网络功能。
 
 从上面的介绍信息获取到的内容就是VRRP是一种协议，那这个协议是用来干什么的？
 
@@ -615,7 +615,7 @@ nginx编译的时候会自动加载该模块，但是该模块默认是关闭的
 | 默认值 | autoindex off;         |
 | 位置   | http、server、location |
 
-（2）autoindex_exact_size:对应HTLM格式，指定是否在目录列表展示文件的详细大小
+（2）autoindex_exact_size:对应HTML格式，指定是否在目录列表展示文件的详细大小
 
 默认为on，显示出文件的确切大小，单位是bytes。
 改为off后，显示出文件的大概大小，单位是kB或者MB或者GB
@@ -659,9 +659,9 @@ location /download{
 
 XML/JSON格式[一般不用这两种方式]
 
-![1583828317365](../../%E4%B8%8A%E8%AF%BE%E5%86%85%E5%AE%B9/doc/Nginx/Nginx/assets/1583828317365.png)
+![1583828317365](./assets/1583828317365.png)
 
-![1583828335279](../../%E4%B8%8A%E8%AF%BE%E5%86%85%E5%AE%B9/doc/Nginx/Nginx/assets/1583828335279.png)
+![1583828335279](./assets/1583828335279.png)
 
 
 
@@ -720,7 +720,7 @@ htpasswd -D /usr/local/nginx/conf/htpasswd username //从指定文件删除一�
 htpasswd -v /usr/local/nginx/conf/htpasswd username //验证用户名和密码是否正确
 ```
 
-![1583850151467](../../%E4%B8%8A%E8%AF%BE%E5%86%85%E5%AE%B9/doc/Nginx/Nginx/assets/1583850151467.png)
+![1583850151467](./assets/1583850151467.png)
 
 上述方式虽然能实现用户名和密码的验证，但是大家也看到了，所有的用户名和密码信息都记录在文件里面，如果用户量过大的话，这种方式就显得有点麻烦了，这时候我们就得通过后台业务代码来进行用户权限的校验了。
 

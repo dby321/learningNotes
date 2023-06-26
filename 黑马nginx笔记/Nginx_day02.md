@@ -1624,6 +1624,10 @@ replacement:匹配成功后，用于替换URI中被截取内容的字符串。�
 
 flag:用来设置rewrite对URI的处理行为，可选值有如下：
 
+https://www.bilibili.com/video/BV1ov41187bq?p=72&spm_id_from=pageDriver&vd_source=f58f2e2144be4e99a8cf800afeecbbcb
+
+[StackExchange-last和break的异同](https://serverfault.com/questions/131474/nginx-url-rewriting-difference-between-break-and-last)
+
 - last:
 - break
 - redirect
