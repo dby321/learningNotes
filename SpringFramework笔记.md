@@ -2455,7 +2455,40 @@ public class DefaultFooService implements FooService {
 
 
 
-# 
+#2023Study-Spring框架-黑马 
+
+## ApplicationContext和BeanFactory的关系
+
+![ApplicationContext和BeanFactory的关系](./images/image-20230628150318683.png)
+
+## Bean实例化的基本流程
+
+![Bean实例化的基本流程](./images/image-20230628160556392.png)
+
+## Spring的后处理器
 
 
 
+![Spring的后处理器](./images/image-20230628160741984.png)
+
+![Spring的后处理器](./images/image-20230628161657081.png)
+
+![image-20230628161846023](./images/image-20230628161846023.png)
+
+![BeanPostProcessor bean执行顺序](./images/image-20230628162626768.png)
+
+![动态代理](./images/image-20230628162948351.png)
+
+## Spring Bean的生命周期
+
+![Spring Bean的生命周期](./images/image-20230628163128399.png)
+
+![Spring Bean的生命周期](./images/image-20230628163327906.png)
+
+## Spring循环依赖
+
+![三级缓存存储不同阶段的Bean](./images/image-20230628164522881.png)
+
+## Spring Bean流程
+
+![image-20230628165616751](./images/image-20230628165616751.png)
