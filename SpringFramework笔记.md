@@ -2455,7 +2455,7 @@ public class DefaultFooService implements FooService {
 
 
 
-#2023Study-Spring框架-黑马 
+#2023Study-Spring框架
 
 ## ApplicationContext和BeanFactory的关系
 
@@ -2475,15 +2475,19 @@ public class DefaultFooService implements FooService {
 
 ![image-20230628161846023](./images/image-20230628161846023.png)
 
-![BeanPostProcessor bean执行顺序](./images/image-20230628162626768.png)
+
 
 ![动态代理](./images/image-20230628162948351.png)
 
 ## Spring Bean的生命周期
 
+![BeanPostProcessor bean执行顺序](./images/image-20230628162626768.png)
+
 ![Spring Bean的生命周期](./images/image-20230628163128399.png)
 
 ![Spring Bean的生命周期](./images/image-20230628163327906.png)
+
+![Spring bean生命周期总图](./images/image-20230630133054476.png)
 
 ## Spring循环依赖
 
@@ -2492,3 +2496,59 @@ public class DefaultFooService implements FooService {
 ## Spring Bean流程
 
 ![image-20230628165616751](./images/image-20230628165616751.png)
+
+## SpringMvc执行流程
+
+![image-20230629115231962](./images/image-20230629115231962.png)
+
+## SpringBoot自动配置原理
+
+![image-20230629115329389](./images/image-20230629115329389.png)
+
+![image-20230629115700517](./images/image-20230629115700517.png)
+
+## Spring、SpringMVC、SpringBoot常见的注解
+
+![image-20230629120018479](./images/image-20230629120018479.png)
+
+![image-20230629120113049](./images/image-20230629120113049.png)
+
+![image-20230629120121984](./images/image-20230629120121984.png)
+
+## SpringMVC执行流程
+
+![image-20230630195637156](./images/image-20230630195637156.png)
+
+## Filter和Interceptor的区别
+
+![image-20230701133645430](./images/image-20230701133645430.png)
+
+![image-20230701134002706](./images/image-20230701134002706.png)
+
+![image-20230701134652283](./images/image-20230701134652283.png)
+
+## Mybatis执行流程
+
+![image-20230629120624488](./images/image-20230629120624488.png)
+
+## Mybatis延迟加载
+
+![对特定sql配置延迟加载](./images/image-20230629121341666.png)
+
+![全局配置延迟加载](./images/image-20230629121422187.png)
+
+![延迟加载的底层原理](./images/image-20230629121602692.png)
+
+## Mybatis的一级二级缓存
+
+![image-20230629121802959](./images/image-20230629121802959.png)
+
+![image-20230629122008644](./images/image-20230629122008644.png)
+
+![image-20230629122100840](./images/image-20230629122100840.png)
+
+## Maven依赖管理
+
+![image-20230701200649679](./images/image-20230701200649679.png)
+
+![image-20230701200911883](./images/image-20230701200911883.png)
