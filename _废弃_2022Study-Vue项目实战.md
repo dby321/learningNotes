@@ -1,6 +1,6 @@
 # 2022Study-Vue项目实战
 
-> webpack,node.js都需要学
+
 
 ## 002 用Vue-cli初始化项目
 
@@ -148,16 +148,12 @@ goSearch(){
 }
 ```
 
-> 模板字符串写法，更爽~
-
 ```js
 goSearch(){
     //1.编程式路由导航 拼接字符串 此时 query:{k:this.keyword}
 	this.$router.push(`/foo?k=${this.keyword}`);
 }
 ```
-
-> 对象写法，最常用的，注意，==对象写法不能使用path==
 
 ```js
 goSearch(){
