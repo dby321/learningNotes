@@ -1,5 +1,9 @@
 # RabbitMQ
 
+https://github.com/rabbitmq/rabbitmq-tutorials
+
+https://www.rabbitmq.com/documentation.html
+
 ## MQ的相关概念
 
 ### 什么是MQ
@@ -243,12 +247,18 @@ int prefetchCount = 1;
 channel.basicQos(prefetchCount);
 ```
 
-#### 预取值
-
-```java
-int prefetchCount = 2;
-channel.basicQos(prefetchCount);
-```
+````java
+/**
+     * Request a specific prefetchCount "quality of service" settings
+     * for this channel.
+     *
+     * @see #basicQos(int, int, boolean)
+     * @param prefetchCount maximum number of messages that the server
+     * will deliver, 0 if unlimited
+     * @throws java.io.IOException if an error is encountered
+     */
+    void basicQos(int prefetchCount) throws IOException;
+````
 
 ### 发布订阅
 
@@ -267,7 +277,7 @@ channel.basicQos(prefetchCount);
 
 ![发布订阅](./images/image-20230211180600627.png)
 
-##### 无名交换机
+#####   无名交换机  
 
 AMQP-default
 

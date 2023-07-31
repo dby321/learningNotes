@@ -2,8 +2,6 @@
 
 ## 线程基础知识复习
 
-> java底层native对应c++代码
-
 ### 多线程的弊端
 
 1. 线程安全问题
@@ -104,19 +102,19 @@ class MyThread implements Callable<String>{
 
 ### Future的优缺点分析-->CompletableFuture
 
-优点： future+线程池异步多线程任务配合，能显著提高程序的执行效率
+优点： future+线程池**异步**多线程任务配合，能显著提高程序的执行效率
 
-缺点：get()是阻塞的，一直等到有结果返回，与异步编程的设计理念相违背；isDone()会不断轮询，并且不能及时获取,耗费无谓的CPU资源
+缺点：**get()是阻塞的，一直等到有结果返回**，与异步编程的设计理念相违背；isDone()会不断轮询，并且不能及时获取,耗费无谓的CPU资源
 
 ![isDone()不断轮询](./images/image-20221226191907512.png)
 
 ### CompletableFuture
 
-CompletionStage代表异步的某个阶段
+**CompletionStage代表异步的某个阶段**
 
-不推荐使用构造器，因为构造器没有指定线程池。默认是ForkJoinPool.commonPool(),它是守护线程。
+**不推荐使用构造器，因为构造器没有指定线程池。默认是ForkJoinPool.commonPool(),它是守护线程。**
 
-join()和get()的区别是join()不抛出检查型异常
+**join()和get()的区别是join()不抛出检查型异常**
 
 ![CompletionStage接口](./images/image-20221226192714073.png)
 
@@ -160,7 +158,7 @@ public class CompletableFutureTest2 {
 }
 ```
 
-### 链式调用
+### 链式调用@Accessor
 
  在实体类上加`@Accessor(chain=true)`
 
@@ -185,6 +183,8 @@ class Student{
 
 
 ### CompletableFuture多线程实战案例
+
+> 异步
 
 ```java
 public class CompletableFutureTest3 {
@@ -238,7 +238,9 @@ class NetMall {
 
 ```
 
-### CompletableFuture的API总结
+### CompletableFuture的API总结【重点】
+
+![部分API](./images/image-20230727154940821.png)
 
 - 获取结果和主动触发计算
   - get() 会抛出检查型异常 不见不散
@@ -254,19 +256,21 @@ class NetMall {
 - 对计算结果进行消费
   - thenAccept(Consumer<? super T> action)
 
--   不对计算结果进行处理
-  
+- 不对计算结果进行处理
+
   - thenRun(Runnable runnable)
+
+    
+
   
-  ![thenRun](./images/image-20221227164715600.png)
-  
+
 - 对计算速度进行选用
   - applyToEither(CompletionStage<? extends T> other, Function<? super T,U> fn)
 
 - 对计算结果进合并
   - thenCombine(CompletionStage<? extends U> other, BiFunction<? super T,? super U,? extends V> fn)
 
-  
+  ![image-20230727155358639](./images/image-20230727155358639.png)
 
   ![CompletableFuture API图解](./images/image-20221227163345585.png)
 
@@ -350,13 +354,13 @@ ObjectMonitor.java-->ObjectMonitor.cpp-->objectMonitor.hpp
 
   1. `jconsole`
 
-### 自旋锁和适应性自旋锁
+### 自旋锁和适应性自旋锁【重点】
 
 > 自旋可以减少CPU切换以及恢复现场导致的消耗，但是自旋本身也有缺点，如果自旋多次还得不到锁，自旋会占用处理器资源。所以一般自旋是有限定次数的，超过限定次数没有成功获取锁，就应当挂起线程。
 
 ## 线程中断
 
-### 什么是中断机制与中断方法
+### 什么是中断机制与中断方法【重点】
 
 首先，一个线程不应该由其他线程来强制中断或停止，而是应该由线程自己自行停止。所以`Thread.stop`、`Thread.suspend`、`Thread.resume`已被弃用
 
@@ -366,9 +370,9 @@ ObjectMonitor.java-->ObjectMonitor.cpp-->objectMonitor.hpp
 
 **interrupted()**返回当前线程的中断状态，测试当前线程是否已被中断；将当前线程会给你的中断状态清零并重新设置为false。
 
-**isinterrupted()**返回当前线程的中断状态
+**isinterrupted()**返回当前线程的中断状态,现成结束后会把中断标志清为false
 
-> 线程中断的几种方式
+> 线程中断的三种方式【重要】
 
 ```java
 public class InterruptDemo {
@@ -456,7 +460,7 @@ public class InterruptDemo {
 
 
 
-> 线程中断陷入死循环案例
+> 线程中断陷入死循环案例【重要】
 
 ```java
 public class InterruptDemo2 {
@@ -493,7 +497,7 @@ public class InterruptDemo2 {
 
 ```
 
-> Interrupted()测试
+> Interrupted()测试【重要】
 
 ```java
 public class InterruptDemo3 {
@@ -509,7 +513,7 @@ public class InterruptDemo3 {
 
 
 
-### LockSupport
+### LockSupport【重点】
 
 > wait和notify需要在同步代码块中成对使用，要先wait再notify，不能换位置。
 >
@@ -522,7 +526,7 @@ public class InterruptDemo3 {
 
 - park阻塞线程
 
-- unpark解除阻塞线程,给指定线程发放唯一通行证，与Semaphore的区别是LockSupport.unpark()发放的许可证最多只有一个
+- unpark解除阻塞线程,给指定线程发放唯一通行证，**与Semaphore的区别是LockSupport.unpark()发放的许可证最多只有一个**
 
 ### Executor 的中断操作
 

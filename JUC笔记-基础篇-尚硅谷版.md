@@ -1,5 +1,9 @@
 # 2021Study-JUC
 
+https://github.com/Ezrabin/juc_atguigu/tree/main
+
+在github搜索juc_atguigu就能找到
+
 ## 1. 什么是JUC
 
 ![1635043688257](images/1635043688257.png)
@@ -134,6 +138,10 @@ public enum State {
 
 ![用户线程和守护线程](./images/image-20221224174959156.png)
 
+
+
+
+
 ## 3. Lock锁
 
 ---
@@ -158,19 +166,206 @@ public enum State {
 6. synchronized适合锁少量的代码同步问题，Lock适合锁大量的同步代码（性能上，当竞争资源非常激烈时，Lock的性能要远远优于synchronized）
 7. synchronized没有Condition，Lock可以有Condition`newCondition()`
 
-----
+### 虚假唤醒
 
-> 虚假唤醒
+> 解决方法:将if换为while
+>
+> wait()需要在循环中使用，否则会出现跳过if导致虚假唤醒。
+>
+> wait从哪里等待就从哪里唤醒
 
-wait()需要在循环中使用，否则会出现跳过if导致虚假唤醒。
+#### synchronized解决虚假唤醒
 
-wait从哪里等待就从哪里唤醒
+```java
+package com.atguigu.sync;
+
+//第一步 创建资源类，定义属性和操作方法
+class Share {
+    //初始值
+    private int number = 0;
+    //+1的方法
+    public synchronized void incr() throws InterruptedException {
+        //第二步 判断 干活 通知
+        while(number != 0) { //判断number值是否是0，如果不是0，等待
+            this.wait(); //在哪里睡，就在哪里醒
+        }
+        //如果number值是0，就+1操作
+        number++;
+        System.out.println(Thread.currentThread().getName()+" :: "+number);
+        //通知其他线程
+        this.notifyAll();
+    }
+
+    //-1的方法
+    public synchronized void decr() throws InterruptedException {
+        //判断
+        while(number != 1) {
+            this.wait();
+        }
+        //干活
+        number--;
+        System.out.println(Thread.currentThread().getName()+" :: "+number);
+        //通知其他线程
+        this.notifyAll();
+    }
+}
+
+public class ThreadDemo1 {
+    //第三步 创建多个线程，调用资源类的操作方法
+    public static void main(String[] args) {
+        Share share = new Share();
+        //创建线程
+        new Thread(()->{
+            for (int i = 1; i <=10; i++) {
+                try {
+                    share.incr(); //+1
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        },"AA").start();
+
+        new Thread(()->{
+            for (int i = 1; i <=10; i++) {
+                try {
+                    share.decr(); //-1
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        },"BB").start();
+
+        new Thread(()->{
+            for (int i = 1; i <=10; i++) {
+                try {
+                    share.incr(); //+1
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        },"CC").start();
+
+        new Thread(()->{
+            for (int i = 1; i <=10; i++) {
+                try {
+                    share.decr(); //-1
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        },"DD").start();
+    }
+}
+```
+
+
+
+#### lock锁下解决虚假唤醒
+
+```java
+package com.atguigu.lock;
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+//第一步 创建资源类，定义属性和操作方法
+class Share {
+    private int number = 0;
+
+    //创建Lock
+    private Lock lock = new ReentrantLock();
+    private Condition condition = lock.newCondition();
+
+    //+1
+    public void incr() throws InterruptedException {
+        //上锁
+        lock.lock();
+        try {
+            //判断
+            while (number != 0) {
+                condition.await();
+            }
+            //干活
+            number++;
+            System.out.println(Thread.currentThread().getName()+" :: "+number);
+            //通知
+            condition.signalAll();
+        }finally {
+            //解锁
+            lock.unlock();
+        }
+    }
+
+    //-1
+    public void decr() throws InterruptedException {
+        lock.lock();
+        try {
+            while(number != 1) {
+                condition.await();
+            }
+            number--;
+            System.out.println(Thread.currentThread().getName()+" :: "+number);
+            condition.signalAll();
+        }finally {
+            lock.unlock();
+        }
+    }
+}
+
+public class ThreadDemo2 {
+
+    public static void main(String[] args) {
+        Share share = new Share();
+        new Thread(()->{
+            for (int i = 1; i <=10; i++) {
+                try {
+                    share.incr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        },"AA").start();
+        new Thread(()->{
+            for (int i = 1; i <=10; i++) {
+                try {
+                    share.decr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        },"BB").start();
+
+        new Thread(()->{
+            for (int i = 1; i <=10; i++) {
+                try {
+                    share.incr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        },"CC").start();
+        new Thread(()->{
+            for (int i = 1; i <=10; i++) {
+                try {
+                    share.decr();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        },"DD").start();
+    }
+
+}
+```
+
+
 
 > 可重入锁 （又称递归锁）
 
 进入第一道大门之后，房间内的门就不用重新打开了
 
-> 死锁
+### 死锁
 
 什么是死锁：
 
@@ -182,78 +377,60 @@ wait从哪里等待就从哪里唤醒
 2. 进程运行推进顺序不合适
 3. 资源分配不当
 
-验证是否死锁
+> 验证是否死锁
 
 1. `jps -l`查看运行中的java进程
 2. `jstack 进程号`通过jvm自带堆栈跟踪工具查看是否死锁
 
-## 4. **生产者和消费者问题**
-
-E:\idea_workspace\2021Study-JUC\src\main\java\com\binyu\pc
-
-面试：单例模式、排序算法、生产者消费者问题、死锁问题
-
-> 生产者消费者问题 synchronized
-
 ```java
-public class A {
+package com.atguigu.sync;
+
+import java.util.concurrent.TimeUnit;
+
+/**
+ * 演示死锁
+ */
+public class DeadLock {
+
+    //创建两个对象
+    static Object a = new Object();
+    static Object b = new Object();
+
     public static void main(String[] args) {
-        Data data=new Data ();
         new Thread(()->{
-            for(int i=0;i<10;i++) {
+            synchronized (a) {
+                System.out.println(Thread.currentThread().getName()+" 持有锁a，试图获取锁b");
                 try {
-                    data.increment ();
+                    TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
-                    e.printStackTrace ();
+                    e.printStackTrace();
                 }
-            } },"A").start ();
+                synchronized (b) {
+                    System.out.println(Thread.currentThread().getName()+" 获取锁b");
+                }
+            }
+        },"A").start();
+
         new Thread(()->{
-            for(int i=0;i<10;i++) {
+            synchronized (b) {
+                System.out.println(Thread.currentThread().getName()+" 持有锁b，试图获取锁a");
                 try {
-                    data.decrement ();
+                    TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
-                    e.printStackTrace ();
+                    e.printStackTrace();
                 }
-            } },"B").start ();
-    }
-}
-// 判断等待，业务，通知
-class Data{
-    private int num=0;
-    public synchronized void increment() throws InterruptedException {
-        if(num!=0){
-            // 等待
-            this.wait ();
-        }
-        num++;
-        System.out.println (Thread.currentThread ().getName ()+"=>"+num);
-        // 通知其他线程，我+1完毕了
-        this.notifyAll ();
-    }
-    public synchronized void decrement() throws InterruptedException {
-        if(num==0){
-            //等待
-        this.wait ();
-        }
-        num--;
-        System.out.println (Thread.currentThread ().getName ()+"=>"+num);
-        // 通知其他线程，我-1完毕了
-        this.notifyAll ();
+                synchronized (a) {
+                    System.out.println(Thread.currentThread().getName()+" 获取锁a");
+                }
+            }
+        },"B").start();
     }
 }
 ```
 
-> 问题存在，ABCD四个线程，会出现虚假唤醒
 
-![1635049733531](images/1635049733531.png)
 
----
-
-> JUC版生产者消费者问题，Condition精准唤醒线程
-
-![1635050096271](images/1635050096271.png)
-
-> 生产线问题，即线程间定制化通信
+## 4. 线程间定制化通信
 
 ```java
 public class C {
@@ -352,26 +529,164 @@ class Data3{
 
 
 
-## 5. 锁的8种情况
+## 5. 锁对象
 
-如何判断锁是谁！永远知道什么锁，锁的是谁！
-
-普通synchronized锁的是调用者对象；静态synchronized锁的是Class 类模板；既有普通synchronized又有静态synchronized锁的不同
-
-## 6. 集合类不安全
-
-> 并发修改异常ConcurrentModificationException
+> 普通synchronized锁的是调用者对象；
+>
+> 静态synchronized锁的是Class 类；
+>
+> 同步代码块锁的是synchronized括号内的对象
 
 ```java
-// ThreadUnsafe
-public class UnsafeListTest {
+package com.atguigu.sync;
+
+import java.util.concurrent.TimeUnit;
+
+class Phone {
+
+    public static synchronized void sendSMS() throws Exception {
+        //停留4秒
+        TimeUnit.SECONDS.sleep(4);
+
+        System.out.println("------sendSMS");
+    }
+
+    public synchronized void sendEmail() throws Exception {
+        System.out.println("------sendEmail");
+    }
+
+    public void getHello() {
+        System.out.println("------getHello");
+    }
+}
+
+/**
+ * @Description: 8锁
+ *
+1 标准访问，先打印短信还是邮件
+------sendSMS
+------sendEmail
+
+2 停4秒在短信方法内，先打印短信还是邮件
+------sendSMS
+------sendEmail
+
+3 新增普通的hello方法，是先打短信还是hello
+------getHello
+------sendSMS
+
+4 现在有两部手机，先打印短信还是邮件
+------sendEmail
+------sendSMS
+
+5 两个静态同步方法，1部手机，先打印短信还是邮件
+------sendSMS
+------sendEmail
+
+6 两个静态同步方法，2部手机，先打印短信还是邮件
+------sendSMS
+------sendEmail
+
+7 1个静态同步方法,1个普通同步方法，1部手机，先打印短信还是邮件
+------sendEmail
+------sendSMS
+
+8 1个静态同步方法,1个普通同步方法，2部手机，先打印短信还是邮件
+------sendEmail
+------sendSMS
+
+ */
+
+public class Lock_8 {
+    public static void main(String[] args) throws Exception {
+
+        Phone phone = new Phone();
+        Phone phone2 = new Phone();
+
+        new Thread(() -> {
+            try {
+                phone.sendSMS();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "AA").start();
+
+        Thread.sleep(100);
+
+        new Thread(() -> {
+            try {
+                phone.sendEmail();
+               // phone.getHello();
+                //phone2.sendEmail();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "BB").start();
+    }
+}
+```
+
+
+
+## 6. 线程安全集合类
+
+```java
+package com.atguigu.lock;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+/**
+ * list集合线程不安全
+ */
+public class ThreadDemo4 {
     public static void main(String[] args) {
-        ArrayList<String> list=new ArrayList<> ();
-        for(int i=0;i<30;i++){
+        //创建ArrayList集合
+//        List<String> list = new ArrayList<>();
+        // Vector解决
+//        List<String> list = new Vector<>();
+
+        //Collections解决
+//        List<String> list = Collections.synchronizedList(new ArrayList<>());
+
+        // CopyOnWriteArrayList解决
+//        List<String> list = new CopyOnWriteArrayList<>();
+//        for (int i = 0; i <30; i++) {
+//            new Thread(()->{
+//                //向集合添加内容
+//                list.add(UUID.randomUUID().toString().substring(0,8));
+//                //从集合获取内容
+//                System.out.println(list);
+//            },String.valueOf(i)).start();
+//        }
+
+        //演示Hashset
+//        Set<String> set = new HashSet<>();
+
+//        Set<String> set = new CopyOnWriteArraySet<>();
+//        for (int i = 0; i <30; i++) {
+//            new Thread(()->{
+//                //向集合添加内容
+//                set.add(UUID.randomUUID().toString().substring(0,8));
+//                //从集合获取内容
+//                System.out.println(set);
+//            },String.valueOf(i)).start();
+//        }
+
+        //演示HashMap
+//        Map<String,String> map = new HashMap<>();
+
+        Map<String,String> map = new ConcurrentHashMap<>();
+        for (int i = 0; i <30; i++) {
+            String key = String.valueOf(i);
             new Thread(()->{
-              list.add( UUID.randomUUID ().toString ().substring ( 0,8 ));
-              System.out.println ( list );
-            },String.valueOf(i)).start ();
+                //向集合添加内容
+                map.put(key,UUID.randomUUID().toString().substring(0,8));
+                //从集合获取内容
+                System.out.println(map);
+            },String.valueOf(i)).start();
         }
     }
 }
@@ -379,43 +694,102 @@ public class UnsafeListTest {
 
 
 
-> List不安全
-
-并发下ArrayList不安全
-
-- 解决方案1：Vector
-- 解决方案2：Collections.synchronizedList()
-- 解决方案3：JUC CopyOnWriteArrayList 写入时复制 没有用synchronized，效率更高
-
-> Set不安全
-
-- 解决方案：JUC CopyOnWriteArraySet
-
-> Map不安全
-
-- 解决方案：JUC ConcurrentHashMap
-
 ## 7. Callable
 
-1. 可以有返回值
-2. 可以抛出异常
-3. 方法不同，call()
+> 1. 可以有返回值
+> 2. 可以抛出异常
+> 3. 方法不同，call()
+>
+> 细节：
+>
+> 1. 有缓存
+> 2. 结果可能需要等待，会阻塞  
+>
+> ---
+>
+> 找一个类，既和Runnable有关系，也和Callable有关系
+>
+> - Runnable接口有子接口RunnableFuture,RunnableFuture有实现类FutureTask
+> - FutureTask构造可以传递Callable
 
-细节：
+```java
+package com.atguigu.callable;
 
-1. 有缓存
-2. 结果可能需要等待，会阻塞  
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
----
+//比较两个接口
+//实现Runnable接口
+class MyThread1 implements Runnable {
+    @Override
+    public void run() {
 
-找一个类，既和Runnable有关系，也和Callable有关系
+    }
+}
 
-- Runnable接口有子接口RunnableFuture,RunnableFuture有实现类FutureTask
-- FutureTask构造可以传递Callable
+//实现Callable接口
+class MyThread2 implements Callable {
 
-## 8. 常用的辅助类
+    @Override
+    public Integer call() throws Exception {
+        System.out.println(Thread.currentThread().getName()+" come in callable");
+        return 200;
+    }
+}
 
-com.binyu.$concurrenttool.CountDownLatchTest
+public class Demo1 {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        //Runnable接口创建线程
+        new Thread(new MyThread1(),"AA").start();
+
+        //Callable接口,报错
+       // new Thread(new MyThread2(),"BB").start();
+
+        //FutureTask
+        FutureTask<Integer> futureTask1 = new FutureTask<>(new MyThread2());
+
+        //lam表达式
+        FutureTask<Integer> futureTask2 = new FutureTask<>(()->{
+            System.out.println(Thread.currentThread().getName()+" come in callable");
+            return 1024;
+        });
+
+        //创建一个线程
+        new Thread(futureTask2,"lucy").start();
+        new Thread(futureTask1,"mary").start();
+
+//        while(!futureTask2.isDone()) {
+//            System.out.println("wait.....");
+//        }
+        //调用FutureTask的get方法
+        System.out.println(futureTask2.get());
+
+        System.out.println(futureTask1.get());
+
+        System.out.println(Thread.currentThread().getName()+" come over");
+        //FutureTask原理  未来任务
+        /**
+         * 1、老师上课，口渴了，去买票不合适，讲课线程继续。
+         *   单开启线程找班上班长帮我买水，把水买回来，需要时候直接get
+         *
+         * 2、4个同学， 1同学 1+2...5   ，  2同学 10+11+12....50， 3同学 60+61+62，  4同学 100+200
+         *      第2个同学计算量比较大，
+         *     FutureTask单开启线程给2同学计算，先汇总 1 3 4 ，最后等2同学计算位完成，统一汇总
+         *
+         * 3、考试，做会做的题目，最后看不会做的题目
+         *
+         * 汇总一次
+         *
+         */
+
+    }
+}
+```
+
+
+
+## 8. JUC常用辅助类
 
 ### 8.1 CountDownLatch
 
@@ -427,6 +801,40 @@ await():等待计数器归零后执行
 
 countDown():计数器数量-1
 
+```java
+package com.atguigu.juc;
+
+import java.util.concurrent.CountDownLatch;
+
+//演示 CountDownLatch
+public class CountDownLatchDemo {
+    //6个同学陆续离开教室之后，班长锁门
+    public static void main(String[] args) throws InterruptedException {
+
+        //创建CountDownLatch对象，设置初始值
+        CountDownLatch countDownLatch = new CountDownLatch(6);
+
+        //6个同学陆续离开教室之后
+        for (int i = 1; i <=6; i++) {
+            new Thread(()->{
+                System.out.println(Thread.currentThread().getName()+" 号同学离开了教室");
+
+                //计数  -1
+                countDownLatch.countDown();
+
+            },String.valueOf(i)).start();
+        }
+
+        //等待
+        countDownLatch.await();
+
+        System.out.println(Thread.currentThread().getName()+" 班长锁门走人了");
+    }
+}
+```
+
+
+
 ### 8.2 CyclicBarrier
 
 加法计数器
@@ -435,9 +843,42 @@ countDown():计数器数量-1
 
 ![1635132415426](images/1635132415426.png)
 
-await():等待直至barrier中所有线程执行了await()
+```java
+package com.atguigu.juc;
 
->CountDownLatch主要用来解决一个线程等待多个线程的场景，可以类比旅游团团长要等待所有的游客到齐才能去下一个景点；而CyclicBarrier是一组线程之间互相等待 ，更像 是几个驴友之间不离不弃。除此之外CountDownLatch的计数器是不能循环利用的，也就是说一旦计数器减到0，再有线程调用await()，该线程会直接通过。但CyclicBarrier的计数器是可以循环利用的，而且具备自动重置的功能，一旦计数器减到0会自动重置到你设置的初始值。除此之外，CyclicBarrier还可以设置回调函数。
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+
+//集齐7颗龙珠就可以召唤神龙
+public class CyclicBarrierDemo {
+
+    //创建固定值
+    private static final int NUMBER = 7;
+
+    public static void main(String[] args) {
+        //创建CyclicBarrier
+        CyclicBarrier cyclicBarrier =
+                new CyclicBarrier(NUMBER,()->{
+                    System.out.println("*****集齐7颗龙珠就可以召唤神龙");
+                });
+
+        //集齐七颗龙珠过程
+        for (int i = 1; i <=7; i++) {
+            new Thread(()->{
+                try {
+                    System.out.println(Thread.currentThread().getName()+" 星龙被收集到了");
+                    //等待
+                    cyclicBarrier.await();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            },String.valueOf(i)).start();
+        }
+    }
+}
+```
+
+
 
 
 ### 8.3 Semaphore
@@ -452,110 +893,331 @@ release():释放1个资源，唤醒等待的线程
 
 作用：多个共享资源互斥使用，并发限流，控制最大的线程数
 
-![1650769419793](images/1650769419793.png)
+```java
+package com.atguigu.juc;
+
+import java.util.Random;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+//6辆汽车，停3个车位
+public class SemaphoreDemo {
+    public static void main(String[] args) {
+        //创建Semaphore，设置许可数量
+        Semaphore semaphore = new Semaphore(3);
+
+        //模拟6辆汽车
+        for (int i = 1; i <=6; i++) {
+            new Thread(()->{
+                try {
+                    //抢占
+                    semaphore.acquire();
+
+                    System.out.println(Thread.currentThread().getName()+" 抢到了车位");
+
+                    //设置随机停车时间
+                    TimeUnit.SECONDS.sleep(new Random().nextInt(5));
+
+                    System.out.println(Thread.currentThread().getName()+" ------离开了车位");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    //释放
+                    semaphore.release();
+                }
+            },String.valueOf(i)).start();
+        }
+    }
+}
+```
+
+
 
 ## 9. 读写锁ReadWriteLock
 
-读写锁:读可以多线程读，写只能一个线程写
+> 读写锁特点:
+>
+> 读-读 可以共存
+>
+> 读-写 不可共存
+>
+> 写-写 不可共存
+>
+> 读写锁的缺点：
+>
+> 1. 会造成锁饥饿，一直读，没有写
+> 2. 读时候不能写，只有读完成了才可以写，而写的时候可以读
 
-` ReadWriteLock rwlock=new ReentrantReadWriteLock()`
+```java
+package com.atguigu.readwrite;
 
-独占锁（写锁）`rwlock.writeLock()`，可能发生死锁
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-共享锁（读锁）`rwlock.readLock()`，可能发生死锁
+//资源类
+class MyCache {
+    //创建map集合
+    private volatile Map<String,Object> map = new HashMap<>();
 
-读-读 可以共存
+    //创建读写锁对象
+    private ReadWriteLock rwLock = new ReentrantReadWriteLock();
 
-读-写 不可共存,写的时候可以读（写锁降级为读锁），读的时候不可以写
+    //放数据
+    public void put(String key,Object value) {
+        //添加写锁
+        rwLock.writeLock().lock();
 
-写-写 不可共存
+        try {
+            System.out.println(Thread.currentThread().getName()+" 正在写操作"+key);
+            //暂停一会
+            TimeUnit.MICROSECONDS.sleep(300);
+            //放数据
+            map.put(key,value);
+            System.out.println(Thread.currentThread().getName()+" 写完了"+key);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            //释放写锁
+            rwLock.writeLock().unlock();
+        }
+    }
 
-读写锁的缺点：
+    //取数据
+    public Object get(String key) {
+        //添加读锁
+        rwLock.readLock().lock();
+        Object result = null;
+        try {
+            System.out.println(Thread.currentThread().getName()+" 正在读取操作"+key);
+            //暂停一会
+            TimeUnit.MICROSECONDS.sleep(300);
+            result = map.get(key);
+            System.out.println(Thread.currentThread().getName()+" 取完了"+key);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            //释放读锁
+            rwLock.readLock().unlock();
+        }
+        return result;
+    }
+}
 
-1. 会造成锁饥饿，一直读，没有写
-2. 读时候不能写，只有读完成了才可以写，而写的时候可以读
+public class ReadWriteLockDemo {
+    public static void main(String[] args) throws InterruptedException {
+        MyCache myCache = new MyCache();
+        //创建线程放数据
+        for (int i = 1; i <=5; i++) {
+            final int num = i;
+            new Thread(()->{
+                myCache.put(num+"",num+"");
+            },String.valueOf(i)).start();
+        }
 
-> 锁降级
+        TimeUnit.MICROSECONDS.sleep(300);
 
-将写入锁降级为读锁 
+        //创建线程取数据
+        for (int i = 1; i <=5; i++) {
+            final int num = i;
+            new Thread(()->{
+                myCache.get(num+"");
+            },String.valueOf(i)).start();
+        }
+    }
+}
+```
+
+### 写锁降级为读锁
+
+```java
+package com.atguigu.readwrite;
+
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+//演示读写锁降级
+public class Demo1 {
+
+    public static void main(String[] args) {
+        //可重入读写锁对象
+        ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.ReadLock readLock = rwLock.readLock();//读锁
+        ReentrantReadWriteLock.WriteLock writeLock = rwLock.writeLock();//写锁
+
+        //锁降级
+        //2 获取读锁
+        readLock.lock();
+        System.out.println("---read");
+
+        //1 获取写锁
+        writeLock.lock();
+        System.out.println("atguigu");
+
+        //3 释放写锁
+        //writeLock.unlock();
+
+        //4 释放读锁
+        //readLock.unlock();
+    }
+}
+```
+
+
 
 ## 10. 阻塞队列
 
-![1635159711313](images/1635159711313.png)
+![阻塞队列API查看](./images/image-20230727144211371.png)
 
-![1635159802960](images/1635159802960.png)
 
-![1635160835132](images/1635160835132.png)
-
-学会使用队列：添加、移除
-
-四组API：
-
-1. 抛出异常
-2. 不会抛出异常
-3. 阻塞等待
-4. 超时等待
 
 | 方式       | 抛出异常  | 有返回值 | 阻塞等待 | 超时等待  |
 | ---------- | --------- | -------- | -------- | --------- |
 | 添加       | add()     | offer()  | put()    | offer(,,) |
 | 移除       | remove()  | poll()   | take()   | poll(,,)  |
-| 检测队列首 | element() | peek()   |          |           |
-
-----
-
-> SychronousQueue同步队列
-
-没有容量，进去一个元素，必须等它出来才能再进去
-
-## 11. 线程池（重点）
-
-线程池：三大方法、7大参数、4种拒绝策略
-
-> 池化技术
-
-程序的运行本质：占用系统资源，为了优化资源的使用=>池化技术
-
-线程池，连接池，内存池，对象池
-
-池化技术：事先准备好一些资源，有人要用，就找我这里拿，用完之后还给我
-
-
-
-线程池的好处：
-
-1. 降低资源的消耗
-2. 提高响应的速度
-3. 方便管理
-
-**线程复用、可以控制最大并发数、管理线程**
-
-![1635162492969](images/1635162492969.png)
+| 检测队列首 | element() | peek()   | 不可用   | 不可用    |
 
 ```java
-public class Demo1 {
-    public static void main(String[] args) {
-//        ExecutorService threadPool = Executors.newSingleThreadExecutor ();// 单个线程
-//        ExecutorService threadPool = Executors.newFixedThreadPool ( 5 );// 固定大小的线程池
-        ExecutorService threadPool = Executors.newCachedThreadPool ();// 可伸缩的线程池
-        try {
-            for(int i=0;i<100;i++){
-                threadPool.execute ( ()->{
-                    System.out.println (Thread.currentThread ().getName ()+" ok");
-                } );
-            }
-            // 关闭线程池
-        } catch (Exception e) {
-            e.printStackTrace ();
-        } finally {
-            threadPool.shutdown ();
-        }
+package com.atguigu.queue;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+//阻塞队列
+public class BlockingQueueDemo {
+
+    public static void main(String[] args) throws InterruptedException {
+        //创建阻塞队列
+        BlockingQueue<String> blockingQueue = new ArrayBlockingQueue<>(3);
+
+        //第一组
+//        System.out.println(blockingQueue.add("a"));
+////        System.out.println(blockingQueue.add("b"));
+////        System.out.println(blockingQueue.add("c"));
+////        //System.out.println(blockingQueue.element());
+////
+////        //System.out.println(blockingQueue.add("w"));
+////        System.out.println(blockingQueue.remove());
+////        System.out.println(blockingQueue.remove());
+////        System.out.println(blockingQueue.remove());
+////        System.out.println(blockingQueue.remove());
+
+        //第二组
+//        System.out.println(blockingQueue.offer("a"));
+//        System.out.println(blockingQueue.offer("b"));
+//        System.out.println(blockingQueue.offer("c"));
+//        System.out.println(blockingQueue.offer("www"));
+//
+//        System.out.println(blockingQueue.poll());
+//        System.out.println(blockingQueue.poll());
+//        System.out.println(blockingQueue.poll());
+//        System.out.println(blockingQueue.poll());
+
+        //第三组
+//        blockingQueue.put("a");
+//        blockingQueue.put("b");
+//        blockingQueue.put("c");
+//        //blockingQueue.put("w");
+//
+//        System.out.println(blockingQueue.take());
+//        System.out.println(blockingQueue.take());
+//        System.out.println(blockingQueue.take());
+//        System.out.println(blockingQueue.take());
+
+        //第四组
+        System.out.println(blockingQueue.offer("a"));
+        System.out.println(blockingQueue.offer("b"));
+        System.out.println(blockingQueue.offer("c"));
+        System.out.println(blockingQueue.offer("w",3L, TimeUnit.SECONDS));
     }
 }
 ```
 
-![1635163019899](images/1635163019899.png)
+
+
+## 11. 线程池（重点）
+
+![Executors](./images/image-20230727144941705.png)
+
+![Executor](./images/image-20230727145104095.png)
+
+![阿里线程池规范](images/1635162492969.png)
+
+```java
+package com.atguigu.pool;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+//演示线程池三种常用分类
+public class ThreadPoolDemo1 {
+    public static void main(String[] args) {
+        //一池五线程
+        ExecutorService threadPool1 = Executors.newFixedThreadPool(5); //5个窗口
+
+        //一池一线程
+        ExecutorService threadPool2 = Executors.newSingleThreadExecutor(); //一个窗口
+
+        //一池可扩容线程
+        ExecutorService threadPool3 = Executors.newCachedThreadPool();
+        //10个顾客请求
+        try {
+            for (int i = 1; i <=10; i++) {
+                //执行
+                threadPool3.execute(()->{
+                    System.out.println(Thread.currentThread().getName()+" 办理业务");
+                });
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            //关闭
+            threadPool3.shutdown();
+        }
+
+    }
+
+}
+```
+
+```java
+package com.atguigu.pool;
+
+import java.util.concurrent.*;
+
+//自定义线程池创建
+public class ThreadPoolDemo2 {
+    public static void main(String[] args) {
+        ExecutorService threadPool = new ThreadPoolExecutor(
+                2,
+                5,
+                2L,
+                TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(3),
+                Executors.defaultThreadFactory(),
+                new ThreadPoolExecutor.AbortPolicy()
+        );
+
+        //10个顾客请求
+        try {
+            for (int i = 1; i <=10; i++) {
+                //执行
+                threadPool.execute(()->{
+                    System.out.println(Thread.currentThread().getName()+" 办理业务");
+                });
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            //关闭
+            threadPool.shutdown();
+        }
+    }
+```
 
 
 
@@ -591,34 +1253,7 @@ ThreadPoolExecutor.CallerRunsPolicy：由调用线程处理该任务
 1. CPU密集型`Runtime.getRuntime().avaiableProcessors()`
 2. IO密集型 大于你程序中十分耗IO的线程个数
 
-##  12. 四大函数式接口（必须掌握）
 
-> 函数式接口：只有一个方法的接口
-
-```java
-@FunctionalInterface
-public interface Runnable{
-    public abstract void run();
-}
-```
-
-![1635231753359](images/1635231753359.png)
-
-## 13. Stream流式计算
-
-[菜鸟教程-Java 8 Stream](https://www.runoob.com/java/java8-streams.html)
-
-大数据：存储+计算
-
-集合、Mysql是存储东西的
-
-Stream流是计算的
-
-```
-+--------------------+       +------+   +------+   +---+   +-------+
-| stream of elements +-----> |filter+-> |sorted+-> |map+-> |collect|
-+--------------------+       +------+   +------+   +---+   +-------+
-```
 
 ## 14. ForkJoin
 
@@ -639,58 +1274,64 @@ ForkJoin在JDK1.7并行执行任务！提高效率，大数据量
 ![1635233174696](images/1635233174696.png)
 
  ```JAVA
-public class TestForkJoinPool {
+package com.atguigu.forkjoin;
 
-    private static final Integer MAX = 200;
+import java.util.concurrent.*;
 
-    static class MyForkJoinTask extends RecursiveTask<Integer> {
-        // 子任务开始计算的值
-        private Integer startValue;
+class MyTask extends RecursiveTask<Integer> {
 
-        // 子任务结束计算的值
-        private Integer endValue;
+    //拆分差值不能超过10，计算10以内运算
+    private static final Integer VALUE = 10;
+    private int begin ;//拆分开始值
+    private int end;//拆分结束值
+    private int result ; //返回结果
 
-        public MyForkJoinTask(Integer startValue, Integer endValue) {
-            this.startValue = startValue;
-            this.endValue = endValue;
-        }
-
-        @Override
-        protected Integer compute() {
-            // 如果条件成立，说明这个任务所需要计算的数值分为足够小了
-            // 可以正式进行累加计算了
-            if (endValue - startValue < MAX) {
-                System.out.println ( "开始计算的部分：startValue = " + startValue + ";endValue = " + endValue );
-                Integer totalValue = 0;
-                for (int index = this.startValue; index <= this.endValue; index++) {
-                    totalValue += index;
-                }
-                return totalValue;
-            }
-            // 否则再进行任务拆分，拆分成两个任务
-            else {
-                MyForkJoinTask subTask1 = new MyForkJoinTask ( startValue, (startValue + endValue) / 2 );
-                subTask1.fork ();
-                MyForkJoinTask subTask2 = new MyForkJoinTask ( (startValue + endValue) / 2 + 1, endValue );
-                subTask2.fork ();
-                return subTask1.join () + subTask2.join ();
-            }
-        }
+    //创建有参数构造
+    public MyTask(int begin,int end) {
+        this.begin = begin;
+        this.end = end;
     }
 
-    public static void main(String[] args) {
-        // 这是Fork/Join框架的线程池
-        ForkJoinPool pool = new ForkJoinPool ();
-        ForkJoinTask<Integer> taskFuture = pool.submit ( new MyForkJoinTask ( 1, 1001 ) );
-        try {
-            Integer result = taskFuture.get ();
-            System.out.println ( "result = " + result );
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace ( System.out );
+    //拆分和合并过程
+    @Override
+    protected Integer compute() {
+        //判断相加两个数值是否大于10
+        if((end-begin)<=VALUE) {
+            //相加操作
+            for (int i = begin; i <=end; i++) {
+                result = result+i;
+            }
+        } else {//进一步拆分
+            //获取中间值
+            int middle = (begin+end)/2;
+            //拆分左边
+            MyTask task01 = new MyTask(begin,middle);
+            //拆分右边
+            MyTask task02 = new MyTask(middle+1,end);
+            //调用方法拆分
+            task01.fork();
+            task02.fork();
+            //合并结果
+            result = task01.join()+task02.join();
         }
+        return result;
     }
 }
 
+public class ForkJoinDemo {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        //创建MyTask对象
+        MyTask myTask = new MyTask(0,100);
+        //创建分支合并池对象
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
+        ForkJoinTask<Integer> forkJoinTask = forkJoinPool.submit(myTask);
+        //获取最终合并之后结果
+        Integer result = forkJoinTask.get();
+        System.out.println(result);
+        //关闭池对象
+        forkJoinPool.shutdown();
+    }
+}
  ```
 
 ```java
@@ -772,35 +1413,36 @@ public class StreamTest {
 ![1635235954180](images/1635235954180.png)
 
 ```java
-public class CompletableFutureTest {
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-        CompletableFuture<Integer> completableFuture=CompletableFuture.supplyAsync ( ()->{
-            System.out.println (Thread.currentThread ().getName ()+"supplyAsync");
-            int i=10/0;
+package com.atguigu.completable;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+//异步调用和同步调用
+public class CompletableFutureDemo {
+    public static void main(String[] args) throws Exception {
+        //同步调用
+        CompletableFuture<Void> completableFuture1 = CompletableFuture.runAsync(()->{
+            System.out.println(Thread.currentThread().getName()+" : CompletableFuture1");
+        });
+        completableFuture1.get();
+
+        //mq消息队列
+        //异步调用
+        CompletableFuture<Integer> completableFuture2 = CompletableFuture.supplyAsync(()->{
+            System.out.println(Thread.currentThread().getName()+" : CompletableFuture2");
+            //模拟异常
+            int i = 10/0;
             return 1024;
-        } );
-        System.out.println (completableFuture.whenComplete ( (t,u)->{
-            System.out.println ("t:"+t);//正确的返回结果
-            System.out.println ("u:"+u);// 错误信息
-        } ).exceptionally ( e->{
-            System.out.println (e.getMessage ());// 错误信息
-            return 233;
-        } ).get ());
+        });
+        completableFuture2.whenComplete((t,u)->{
+            System.out.println("------t="+t);
+            System.out.println("------u="+u);
+        }).get();
+
     }
 }
 ```
-
-
-
-> handle()
-
-谷粒商城P198
-
-
-
-> 线程串行化
-
-谷粒商城P199
 
 ## 16. JMM
 
@@ -942,111 +1584,7 @@ volatile可以避免指令重排，因为在上下加内存屏障
 
 ![1635239970441](images/1635239970441.png)
 
-## 18. 彻底玩转单例模式
 
-> 饿汉式并发下出现问题
-
-下面代码出现问题
-
-```java
-public class LazyMan {
-    private LazyMan(){
-        System.out.println (Thread.currentThread ().getName ()+"ok");
-    }
-    private static LazyMan lazyMan;
-    public static LazyMan getInstance(){
-        if(lazyMan==null){
-            lazyMan=new LazyMan ();
-        }
-        return lazyMan;
-    }
-
-    public static void main(String[] args) {
-        for(int i=0;i<10;i++){
-            new Thread(()->{
-                LazyMan.getInstance ();
-            }).start ();
-        }
-    }
-}
-
-```
-
-解决方案1 DCL懒汉式
-
-```java
-public class LazyMan2 {
-    private LazyMan2(){
-        System.out.println (Thread.currentThread ().getName ()+"ok");
-    }
-    private volatile static  LazyMan2 lazyMan;
-    public static LazyMan2 getInstance(){
-        if(lazyMan==null){
-            synchronized (LazyMan2.class){
-                if(lazyMan==null){
-                    lazyMan=new LazyMan2 ();
-                    /*
-                    * 1. 分配内存空间
-                    * 2. 执行构造方法，初始化对象
-                    * 3. 把对象指向这个空间
-                    * 123 正常
-                    * 132 A
-                    *     B //此时LazyMan还没有完成构造
-                    * */
-                }
-            }
-        }
-        return lazyMan;
-    }
-
-    public static void main(String[] args) {
-        for(int i=0;i<10;i++){
-            new Thread(()->{
-                LazyMan2.getInstance ();
-            }).start ();
-        }
-    }
-}
-
-```
-
-解决方案2:静态内部类
-
-```java
-public class Singleton {
-
-    private static class SingletonHolder {
-        private static Singleton instance = new Singleton();
-    }
-
-    private Singleton() {
-        
-    }
-
-    public static Singleton getInstance() {
-        return SingletonHolder.instance;
-    }
-}
-```
-
-解决方案3:枚举
-
-```java
-public enum EnumSingle {
-    INSTANCE;
-    public EnumSingle getInstance(){
-        return INSTANCE;
-    }
-    public void dosomething(){
-        System.out.println ("dosomething");
-    }
-}
-class Main{
-    public static void main(String[] args) {
-        EnumSingle.INSTANCE.dosomething ();
-    }
-}
-```
 
 ## 19. 深入理解CAS
 
@@ -1136,178 +1674,3 @@ public class CASDemo {
 }
 
 ```
-
-## 21. 各种锁的理解
-
-> 公平锁和非公平锁
-
-1. 公平锁：非常公平，不能插队
-2. 非公平锁：非常不公平，可以插队
-
----
-
-> 可重入锁（递归锁）
-
-![1635246503337](images/1635246503337.png)
-
-```java
-public class Demo1 {
-    public static void main(String[] args) {
-        Phone phone =new Phone ();
-        new Thread(()->{
-            phone.sms ();
-        },"A").start ();
-        new Thread(()->{
-            phone.sms ();
-        },"B").start ();
-    }
-}
-class Phone{
-    public synchronized void sms(){
-        System.out.println (Thread.currentThread ().getName ()+"sms");
-        call();
-    }
-    public synchronized void call(){
-        System.out.println (Thread.currentThread ().getName ()+"call");
-    }
-}
-
-```
-
-
-
-```java
-public class Demo2 {
-    public static void main(String[] args) {
-        Phone2 phone =new Phone2 ();
-        new Thread(()->{
-            phone.sms ();
-        },"A").start ();
-        new Thread(()->{
-            phone.sms ();
-        },"B").start ();
-    }
-}
-class Phone2{
-    Lock lock=new ReentrantLock (  );
-    public  void sms(){
-        lock.lock ();
-        try {
-            System.out.println (Thread.currentThread ().getName ()+"sms");
-            call();
-        } catch (Exception e) {
-            e.printStackTrace ();
-        } finally {
-            lock.unlock ();
-        }
-    }
-    public synchronized void call(){
-        lock.lock ();
-        try {
-            System.out.println (Thread.currentThread ().getName ()+"call");
-            
-        } catch (Exception e) {
-            e.printStackTrace ();
-        } finally {
-            lock.unlock ();
-        }
-    }
-}
-
-
-```
-
----
-
-> 自旋锁spinlock
-
-```java
-// 自旋锁
-public class SpinLock {
-    AtomicReference<Thread> atomicReference=new AtomicReference<> (  );
-    public void myLock(){
-        Thread thread=Thread.currentThread ();
-        System.out.println (Thread.currentThread ().getName ()+"--mylock");
-         while(!atomicReference.compareAndSet ( null,thread ))   {
-
-         }
-    }
-    public void myUnLock(){
-        Thread thread=Thread.currentThread ();
-        System.out.println (Thread.currentThread ().getName ()+"--myUnlock");
-        atomicReference.compareAndSet ( thread,null );
-    }
-
-}
-
-```
-
-A线程拿到锁后休息，B线程在拿锁过程中不断自旋
-
-```java
-public class SpinLock {
-    AtomicReference<Thread> atomicReference=new AtomicReference<> (  );
-    public void myLock(){
-        Thread thread=Thread.currentThread ();
-        System.out.println (Thread.currentThread ().getName ()+"--mylock");
-         while(!atomicReference.compareAndSet ( null,thread ))   {
-
-         }
-    }
-    public void myUnLock(){
-        Thread thread=Thread.currentThread ();
-        System.out.println (Thread.currentThread ().getName ()+"--myUnlock");
-        atomicReference.compareAndSet ( thread,null );
-    }
-
-}
-
-```
-
----
-
-> 死锁
-
-![1635249402390](images/1635249402390.png)
-
-```java
-public class  DeadLockDemo{
-    public static void main(String[] args) {
-        String lockA="lockA";
-        String lockB="lockB";
-        new Thread ( new MyThread ( lockA,lockB ),"T1" ).start ();
-        new Thread ( new MyThread ( lockB,lockA ),"T2" ).start ();
-    }
-}
- class MyThread implements Runnable {
-    private String lockA;
-    private String lockB;
-
-    public MyThread(String lockA, String lockB) {
-        this.lockA = lockA;
-        this.lockB = lockB;
-    }
-
-    @Override
-    public void run() {
-        synchronized (lockA){
-            System.out.println (Thread.currentThread ().getName ()+"lock:"+lockA+" get:"+lockB);
-            try {
-                TimeUnit.SECONDS.sleep ( 2 );
-            } catch (InterruptedException e) {
-                e.printStackTrace ();
-            }
-            synchronized (lockB){
-                System.out.println (Thread.currentThread ().getName ()+"lock:"+lockA+" get:"+lockB);
-            }
-        }
-    }
-}
-
-
-```
-
-> 乐观锁和悲观锁
-
-[JavaGuide-面试必备之乐观锁与悲观锁](https://blog.csdn.net/qq_34337272/article/details/81072874)
-
