@@ -2,21 +2,17 @@
 
 # SpringCloud
 
-## 1 微服务架构零基础小白入门
+## 1 微服务架构简介
 
 ### 01 微服务架构概述
 
-<img src=".\images\1621750114868.png" alt="1621750114868"  />
-
-![1621750443360](.\images\1621750443360.png)
+> 略
 
 ### 02 SpringCloud简介
 
-SpringCloud是分布式微服务架构的一站式解决方案，是多种微服务架构落地技术的几何体，俗称微服务全家桶
+> SpringCloud是分布式微服务架构的一站式解决方案,俗称微服务全家桶(但是学了这个还没完)
 
 <img src=".\images\1621750664002.png" alt="1621750664002"  />
-
-SpringCloud俨然成为微服务开发的主流技术栈
 
 ### 03 SpringCloud技术栈
 
@@ -24,11 +20,11 @@ SpringCloud俨然成为微服务开发的主流技术栈
 
 ![1621751011101](.\images\1621751011101.png)
 
-## 2 从2.2.x和H版开始说起
+## 2 Spring-Cloud怎么技术选型
 
 版本的选择见官网http://start.spring.io/actuator/info
 
-## 3 关于Cloud各种组件的停更/升级/替换
+## 3 关于Cloud各种组件的停更/升级/替换【别听阳哥的】
 
 ![1621752824930](.\images\1621752824930.png)
 
@@ -73,7 +69,7 @@ CREATE TABLE `payment`(
 
 ![1621757040151](.\images\1621757040151.png)
 
-### 热部署Devtools
+### 热部署Devtools【开发好像不常用？】
 
 ![1621942166042](.\images\1621942166042.png)
 
@@ -103,7 +99,7 @@ CREATE TABLE `payment`(
 
 `ctrl+F9`刷新项目重启
 
-###  打开Rundashboard
+###  打开Rundashboard【这个不常用】
 
 在workspace.xml中<component name="RunDashboard">加上
 
@@ -193,7 +189,7 @@ eureka:
     appname: eureka-server
   client:
     # 不向注册中心注册自己
-    register-with-eureka: true
+    register-with-eureka: false
     # 不去检索服务
     fetch-registry: false
     service-url:
@@ -271,29 +267,15 @@ public class PaymentMain8001 {
 }
 ```
 
-也可以使用`@EnableDiscoveryClient`
-
-**EurekaClient 服务消费端**
-
-- 改application.yml
-
-  > 不包括数据库的配置，因为是消费者
-
-  
-
-<img src="images/1638341565991.png" alt="1638341565991" style="zoom:50%;" />
+> 也可以使用`@EnableDiscoveryClient`
+>
+> 访问http://localhost:7001或http://localhost:7002查看eureka
 
 
-
-访问http://localhost:7001或http://localhost:7002查看eureka
 
 ### 集群Eureka构建步骤
 
-![1622085567095](.\images\1622085567095.png)
-
-![1638342001308](images/1638342001308.png)
-
-负载均衡
+> Eureka集群是相互守望的
 
 ```java
 @Configuration
@@ -306,18 +288,23 @@ public class ApplicationContextConfig {
 }
 ```
 
-
-
 ### Actuator微服务信息完善
+
+> - 去掉微服务名称中的主机名
+> - 显示微服务的ip地址
+>
+> > 要集成Actuator，使用health和info进行健康检查
 
 ```yml
 eureka:
 	instance:
 		instance-id: payment8002
-		  prefer-ip-address: true
+    prefer-ip-address: true
 ```
 
-### 服务发现Discovery
+### 服务发现DiscoveryClient
+
+> 主启动类上加``@DiscoveryClient`
 
 ```java
  @Resource
@@ -335,40 +322,19 @@ eureka:
         return this.discoveryClient;
     }
 ```
-控制台打印出的日志
-```
+> 控制台打印出的日志
+
+```log
 2021-12-01 15:59:38.882  INFO [cloud-payment-service,99a120605f86f9ec,99a120605f86f9ec,true] 17076 --- [nio-8001-exec-9] com.binyu.controller.PaymentController   : element:eureka-server
 2021-12-01 15:59:38.882  INFO [cloud-payment-service,99a120605f86f9ec,99a120605f86f9ec,true] 17076 --- [nio-8001-exec-9] com.binyu.controller.PaymentController   : element:cloud-payment-service
 2021-12-01 15:59:38.882  INFO [cloud-payment-service,99a120605f86f9ec,99a120605f86f9ec,true] 17076 --- [nio-8001-exec-9] com.binyu.controller.PaymentController   : element:cloud-order-service
 2021-12-01 15:59:38.892  INFO [cloud-payment-service,99a120605f86f9ec,99a120605f86f9ec,true] 17076 --- [nio-8001-exec-9] com.binyu.controller.PaymentController   : CLOUD-PAYMENT-SERVICE	192.168.1.9	8002	http://192.168.1.9:8002
 2021-12-01 15:59:38.892  INFO [cloud-payment-service,99a120605f86f9ec,99a120605f86f9ec,true] 17076 --- [nio-8001-exec-9] com.binyu.controller.PaymentController   : CLOUD-PAYMENT-SERVICE	192.168.1.9	8001	http://192.168.1.9:8001
-
 ```
-
-方法返回的数据
-
-```xml
-<EurekaDiscoveryClient>
-<services>
-<services>eureka-server</services>
-<services>cloud-payment-service</services>
-<services>cloud-order-service</services>
-</services>
-<order>0</order>
-</EurekaDiscoveryClient>
-```
-
-
-
-
 
 ### Eureka自我保护
 
-![1622087196165](.\images\1622087196165.png)
-
-![1622087457044](.\images\1622087457044.png)
-
-宁可保留错误的服务注册信息，也不盲目注销任何可能健康的服务实例
+> 宁可保留错误的服务注册信息，也**不盲目注销任何可能健康的服务实例**,满足CAP理论的AP
 
 **自定义自我保护**：
 
@@ -385,30 +351,25 @@ eureka:
 
 eureka-client
 
+> 类似Redission中的看门狗续期机制，看门狗默认是30秒超时，10秒续期
+
 ```yml
 eureka:  
   instance:
     # Eureka客户端向服务器发送心跳的时间间隔，单位为秒（默认30秒）
     lease-expiration-duration-in-seconds: 1
-    # Eureka服务端在收到最后一次心跳后等待时间上线，单位为秒（默认30秒），超时将剔除服务
+    # Eureka服务端在收到最后一次心跳后等待时间上线，单位为秒（默认90秒），超时将剔除服务
     lease-renewal-interval-in-seconds: 2
 ```
 
-
-
-
-
 ## 6 Zookeeper服务注册与发现
 
-[下载安装zookeeper](https://www.cnblogs.com/h--d/p/10269869.html)
-
-> 实际上应该是你下载错了文件。在官网上有两个tar.gz文件，从目前的最新版本3.5.5开始，带有bin名称的包才是我们想要的下载可以直接使用的里面有编译后的二进制的包，而之前的普通的tar.gz的包里面是只是源码的包无法直接使用。 亲测已解决
-
-`./zkServer.sh start`启动zookeeper
-
-`./zkCli.sh`连接zookeeper
-
-​	- `ls /`查看zookeeper根路径
+> - 下载与安装
+> - 启动服务端和客户端
+>   - `./zkServer.sh start`启动zookeeper
+>   - `./zkCli.sh`连接zookeeper
+>     -  `ls /`查看zookeeper根路径
+> - 服务节点是临时节点（不是持久节点），满足CAP理论中的CP，Eureka是持久节点
 
 ![1622175902107](.\images\1622175902107.png)
 
@@ -416,12 +377,10 @@ eureka:
 
 ```xml
 <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
-        </dependency>
+  <groupId>org.springframework.cloud</groupId>
+  <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
+</dependency>
 ```
-
-
 
 - 改yml
 
@@ -444,37 +403,31 @@ public class PaymentMain8004 {
 }
 ```
 
-
-
-服务节点是临时节点（不是持久节点）
-
 ## 7 Consul服务注册与发现
 
 > Consul是一套开源的分布式服务发现和配置管理系统，由HashiCorp用Go语言开发
-
-Consul功能：
-
-- 服务发现：提供HTTP和DNS两种发现方式
-- 健康监测：支持多种方式，http，tcp，docker，shell脚本定制化
-- KV存储：Key Value的存储方式
-- 多数据中心：Consul支持多数据中心
-- 可视化web界面
-
-[Consul下载](https://www.consul.io/downloads)
+>
+> Consul功能：
+>
+> - 服务发现：提供HTTP和DNS两种发现方式
+> - 健康监测：支持多种方式，http，tcp，docker，shell脚本定制化
+> - KV存储：Key Value的存储方式
+> - 多数据中心：Consul支持多数据中心
+> - 可视化web界面
+>
+> [Consul下载](https://www.consul.io/downloads)
 
 ```
 consul agent -dev // 运行
 ```
 
-http://localhost:8500 是Consul的web界面 Linux下未跑通
-
 - 改pom
 
 ```xml
 <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-consul-discovery</artifactId>
-        </dependency>
+  <groupId>org.springframework.cloud</groupId>
+  <artifactId>spring-cloud-starter-consul-discovery</artifactId>
+</dependency>
 ```
 
 - 改yml
@@ -505,33 +458,31 @@ public class PaymentMain8006 {
 
 ### 三个注册中心异同点
 
+> C：强一致性
+>
+> A：可用性
+>
+> P：分区容错性
+
 ![1622272950871](.\images\1622272950871.png)
 
 ![1622272975320](.\images\1622272975320.png)
 
-C：强一致性
 
-A：可用性
-
-P：分区容错性
 
 ## 8 Ribbon负载均衡服务调用
 
-主要功能是提供客户端软件负载均衡算法和服务调用的一套工具
-
-负载均衡+RestTemplate调用
+> 未来可能被LoadBlancer代替
 
 ### Ribbon本地负载均衡客户端VS Nginx服务端负载均衡区别
 
-Nginx是服务器负载均衡，客户端所有请求都会交给Nginx，然后由Nginx实现转发请求。即负载均衡是由服务端实现的
-
-Ribbon本地负载均衡，在调用为服务接口时候，会在注册中心上获取注册信息服务列表之后缓存到JVM本地，从而在本地实现RPC远程服务调用技术
-
-Nginx是选医院层面的负载均衡，Ribbon是选科室层面的负载均衡
-
-Nginx是集中式LB，Ribbon是进程内LB
-
-![1622274141939](.\images\1622274141939.png)
+> Nginx是服务器负载均衡，客户端所有请求都会交给Nginx，然后由Nginx实现转发请求。即负载均衡是由服务端实现的
+>
+> Ribbon本地负载均衡，在调用为服务接口时候，会在注册中心上获取注册信息服务列表之后缓存到JVM本地，从而在本地实现RPC远程服务调用技术
+>
+> Nginx是选医院层面的负载均衡，Ribbon是选科室层面的负载均衡
+>
+> Nginx是集中式LB，Ribbon是进程内LB
 
 > 引入spring-cloud-starter-netflix-eureka-client就引入了spring-cloud-starter-netflix-ribbon
 
@@ -543,24 +494,22 @@ Nginx是集中式LB，Ribbon是进程内LB
 
 ![1622274919714](.\images\1622274919714.png)
 
+> Ribbon配置要在`@SpringBootApplication`扫描包之外,另起一个包
+
 ```java
 @RibbonClient(name = "CLOUD-PAYMENT-SERVICE",configuration = MySelfRule.class)
 public class OrderMain80 {
 ```
 
-### 轮询负载均衡算法原理
 
-![1622275750095](.\images\1622275750095.png)
 
-### 手写一个负载算法
+### 手写一个轮询负载均衡算法
 
 ```java
 public interface LoadBalancer {
     ServiceInstance instances(List<ServiceInstance> serviceInstances);
 }
 ```
-
-
 
 ```java
 package com.binyu.lb;
@@ -616,9 +565,9 @@ public class MyLB implements LoadBalancer {
     }
 ```
 
-## 9 OpenFeign服务接口调用
+## 9 OpenFeign远程过程调用
 
-Feign可以和Eureka和Ribbon组合使用以支持负载均衡
+> Feign可以和Eureka和Ribbon组合使用以支持负载均衡
 
 ### OpenFeign的使用
 
@@ -880,8 +829,6 @@ public interface PaymentHystrixService {
     }
 ```
 
-![1638427262934](images/1638427262934.png)
-
 ### Hystrix Dashboard
 
 Hystrix Dashboard监控的主启动类：
@@ -933,6 +880,8 @@ public class PaymentHystrixMain8001 {
 
 [Spring Cloud Gateway Cors跨域问题的解决](https://www.cnblogs.com/duniqb/p/12702542.html)
 
+> 什么是websocket，什么是netty，什么是非阻塞IO？
+
 ### 概述
 
 #### Gateway是什么
@@ -945,17 +894,17 @@ Zuul1.x是阻塞式Servlet模型，Gateway是异步非阻塞的
 
 反向代理、鉴权、流量控制、熔断、日志监控。。。
 
- ### 三大核心概念
+ #### 三大核心概念
 
-路由Route：
+**路由Route：**
 
 路由是构建网关的基本模块，它由ID、目标URI，一系列的断言和过滤器组成，如果断言为true则匹配该路由
 
-Predicate断言：
+**Predicate断言：**
 
 参考JAVA8的Predicate，开发人员可以匹配HTTP请求中所有内容（例如请求头和请求参数），如果请求与断言相匹配则进行路由
 
-Filter过滤器：
+**Filter过滤器：**
 
 指Spring框架中GatewayFilter的实例，使用过滤器可以在请求被路由前或者后对请求进行修改
 
@@ -965,7 +914,7 @@ gateway工作流程核心逻辑：
 
 ### Gateway案例
 
-- 配置方式：
+- yml配置方式：
 
 ```yml
  spring:
@@ -982,9 +931,9 @@ gateway工作流程核心逻辑：
                 - Path=/payment/lb/**
 ```
 
-- 编码方式：
+- JAVA配置类编码方式：
 
-  ![1638430951690](images/1638430951690.png)
+  > 看到这你应该会查怎么写了
 
 ### Gateway动态路由
 
@@ -1011,32 +960,6 @@ gateway工作流程核心逻辑：
 
 [Spring官网-5. Route Predicate Factories](https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#gateway-request-predicates-factories)
 
-After Route Predicate 在什么时间之后
-
-```java
-public static void main(String[] args){
-    ZonedDateTime zbj=ZonedDateTime.now();//当前时区的时间
-System.out.println(zbj);
-}
-```
-
-Before Route Predicate 在什么时间之前
-
-Between Route Predicate 在什么时间之间
-
-Cookie Route Predicate 要有两个参数键值对 如username,zzyy 请求带`--cookie`
-
-```cmd
-curl http://localhost:9527/payment/lb --cookie "username=xxyy"
-```
-
-Header Route Predicate 要有两个参数键值对 请求带`-H`
-
-```cmd
-curl http://localhost:9527/payment/lb -H "X-Request-Id:123"
-```
-。。。
-
 ### Filter的使用
 
 [Spring官网-6. `GatewayFilter` Factories](https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#gatewayfilter-factories)
@@ -1056,7 +979,7 @@ spring:
 
 
 
-自定义过滤器：
+### 自定义全局过滤器
 
  主要是实现 GlobalFilter, Ordered
 
@@ -1090,17 +1013,15 @@ public class MyLogGatewayFilter implements GlobalFilter, Ordered {
 
 ### 概述
 
-集中管理配置文件。
-
-不同环境不同配置，动态化的配置更新，分环境部署比如dev/test/prod/beta/release
-
-不需要在每个服务部署的机器上编写配置文件，服务会向配置中心统一拉取配置自己的信息
-
-当配置发生改变时，服务不需要重启即可感知到配置的变化并应用新的配置
-
-将配置信息以Rest接口的形式暴露
-
-![1638432957363](images/1638432957363.png)
+> 集中管理配置文件。
+>
+> 不同环境不同配置，动态化的配置更新，分环境部署比如dev/test/prod/beta/release
+>
+> 不需要在每个服务部署的机器上编写配置文件，服务会向配置中心统一拉取配置自己的信息
+>
+> 当配置发生改变时，服务不需要重启即可感知到配置的变化并应用新的配置
+>
+> 将配置信息以Rest接口的形式暴露
 
 ### Config服务端配置与测试
 
@@ -1110,9 +1031,9 @@ public class MyLogGatewayFilter implements GlobalFilter, Ordered {
 
 ```xml
 <dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-config-server</artifactId>
-		</dependency>
+  <groupId>org.springframework.cloud</groupId>
+  <artifactId>spring-cloud-config-server</artifactId>
+</dependency>
 ```
 
 - 改yml
@@ -1161,17 +1082,9 @@ public class ConfigCenterMain3344 {
 }
 ```
 
-
-
-
-
-
-
-
-
 读取配置文件:
 
-`/{label}/{application}-{profile}.yml`
+`/{label}/{application}-{profile}.yml`【用这个】
 
 `/{application}-{profile}.yml`
 
@@ -1200,6 +1113,8 @@ spring:
 
 ### Config客户端动态刷新
 
+#### 方式一
+
 - 改yml
 
 ```yml
@@ -1218,7 +1133,9 @@ management:
 public class ConfigClientController {
 ```
 
-- 发送post刷新3355
+#### 方式二
+
+发送post刷新3355
 
 ```cmd
 curl -X POST "http://localhost:3355/actuator/refresh"
@@ -1228,27 +1145,21 @@ curl -X POST "http://localhost:3355/actuator/refresh"
 
 ### 概述
 
-Bus配合Config使用可以实现配置的动态刷新
-
-Bus支持两种消息代理：RabbitMQ和Kafka 
-
-
-
-是什么：
-
-SpringCloud Bus是用来将分布式系统的节点与轻量级消息系统链接起来的框架，它整合了Java的事件处理机制和消息中间件功能
-
-什么是总线：
-
-在微服务架构的系统中，通常会使用轻量级的消息代理来构建一个共用的消息主题，并让系统中所有的微服务实例都连接上来。由于该主题中产生的消息会被所有实例监听和消费，所以称它为消息总线。在总线上的各个实例，都可以方便地广播一些需要让其他连接在该主题上的实例都知道的消息
-
-基本原理：
-
-ConfigClient实例都监听MQ中同一个topic（默认是SpringCloudBus）。当一个服务刷新数据的时候，它会把这个消息放入topic中，这样其他监听同一topic的服务就能得到通知，然后去更新自身的配置。
+> Bus配合Config使用可以实现配置的动态刷新
+>
+> Bus支持两种消息代理：RabbitMQ和Kafka 
+>
+> SpringCloud Bus是用来将分布式系统的节点与轻量级消息系统链接起来的框架，它整合了Java的事件处理机制和消息中间件功能
+>
+> 在微服务架构的系统中，通常会使用轻量级的消息代理来构建一个共用的消息主题，并让系统中所有的微服务实例都连接上来。由于该主题中产生的消息会被所有实例监听和消费，所以称它为消息总线。在总线上的各个实例，都可以方便地广播一些需要让其他连接在该主题上的实例都知道的消息
+>
+> ConfigClient实例都监听MQ中同一个topic（默认是SpringCloudBus）。当一个服务刷新数据的时候，它会把这个消息放入topic中，这样其他监听同一topic的服务就能得到通知，然后去更新自身的配置。
+>
+> > 类似前端vue有总线和pubsub，后端也有总线和MQ
 
 ### RabbitMQ环境配置
 
-安装ERlang，安装RabbitMQ
+> 安装ERlang，安装RabbitMQ
 
 ```
 D:\RabbitMQ\rabbitmq_server-3.8.16\sbin>rabbitmq-plugins.bat enable rabbitmq_management
@@ -1266,9 +1177,9 @@ cloud-config-center3344修改
 
 ```xml
 <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bus-amqp</artifactId>
-        </dependency>
+  <groupId>org.springframework.cloud</groupId>
+  <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+</dependency>
 ```
 
 - 改yml
@@ -1291,7 +1202,7 @@ spring:
     password: guest
 
 management:
-  endpoints: # 暴露bus刷新配置的端点
+  endpoints: # 暴露bus刷新配置的端点,固定写法
     web:
       exposure:
         include: "bus-refresh"
@@ -1307,14 +1218,12 @@ curl -X POST http://localhost:3344/actuator/bus-refresh
 
 ### SpringCloud Bus动态刷新定点通知
 
-公式
+> 只更新了3355，没有更新3366
 
 ```cmd
 curl -X POST http://localhost:3344/actuator/bus-refresh/{destination}
 curl -X POST http://localhost:3344/actuator/bus-refresh/config-client:3355
 ```
-
-只更新了3355，没有更新3366
 
 ## 15 SpringCloud Stream消息驱动
 
@@ -1341,9 +1250,9 @@ Source和Sink：消息的输入输出
 
 ```xml
 <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
-        </dependency>
+  <groupId>org.springframework.cloud</groupId>
+  <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+</dependency>
 ```
 
 - 改yml
@@ -1445,25 +1354,21 @@ public class ReceiveMessageController {
 
 ### 分组消费与持久化
 
-同时启动cloud-stream-rabbitmq-consumer8803和cloud-stream-rabbitmq-consumer8802后 
-
-有两个问题：重复消费问题，消息持久化问题
-
-
-
-同一个group中的多个消费者是竞争关系，就能够保证消息只会被其中一个应用消费一次，不同组是可以全面消费的（重复消费）
+> 分组group
+>
+> - 可以避免重复消费
+>
+> - 可以实现持久化，防止消息丢失
 
 ```yml
 group: consumerA
 ```
 
-分组group可以实现持久化，防止消息丢失
-
 ## 16 SpringCloud Sleuth分布式请求链路跟踪
 
 ### 概述
 
-每一个前端请求都会形成一条复杂的分布式服务调用链路，链路中任何一环出现高延时或者错误都会引起整个请求最后的失败
+> 每一个前端请求都会形成一条复杂的分布式服务调用链路，链路中任何一环出现高延时或者错误都会引起整个请求最后的失败
 
 ### 搭建链路监控步骤
 
@@ -1476,6 +1381,8 @@ group: consumerA
 Trace：类似于树结构的Span集合，表示一条调用链路，存在唯一表示
 
 Span：表示调用链路来源，通俗的理解span就是一次请求信息
+
+> 要开启链路监控的要加pom和yml配置
 
 ```yml
  zipkin:
@@ -1538,9 +1445,9 @@ Nacos=Eureka+Config+Bus
 
 ```xml
 <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
+  <groupId>com.alibaba.cloud</groupId>
+  <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+</dependency>
 ```
 
 Nacos作为服务提供者
@@ -1564,11 +1471,9 @@ management:
 
 拷贝负载均衡的cloudalibaba-provider-payment9001 ![1623037575531](.\images\1623037575531.png)
 
-Nacos作为服务消费者：非常类似，略，也要加`@LoadBlanced`
+> nacosAP和CP切换：`curl -X PUT '$NACOS_SERVER:8848/nacos/v1/ns/operator/switches?entry=serverMode&value=CP'`
 
-
-
-nacosAP和CP切换：`curl -X PUT '$NACOS_SERVER:8848/nacos/v1/ns/operator/switches?entry=serverMode&value=CP'`
+![image-20230816203933409](./images/image-20230816203933409.png)
 
 ### Nacos作为服务配置中心演示
 
@@ -1587,7 +1492,7 @@ spring:
 
 
 
-设置DataId:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+设置DataId:{spring.application.name}-{spring.profiles.active}.{spring.cloud.nacos.config.file-extension}
 
 ![1623385484272](.\images\1623385484272.png)
 
@@ -1666,34 +1571,34 @@ spring.cloud.nacos.config.extension-configs[2].refresh=true
 
 ```xml
 <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
+  <groupId>com.alibaba.cloud</groupId>
+  <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+</dependency>
 
-        <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-datasource-nacos</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
-        </dependency>
+<dependency>
+  <groupId>com.alibaba.csp</groupId>
+  <artifactId>sentinel-datasource-nacos</artifactId>
+</dependency>
+<dependency>
+  <groupId>com.alibaba.cloud</groupId>
+  <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+</dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <version>2.2.6.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>com.binyu </groupId>
-            <artifactId>cloud-api-commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign -->
+<dependency>
+  <groupId>org.springframework.cloud</groupId>
+  <artifactId>spring-cloud-starter-openfeign</artifactId>
+  <version>2.2.6.RELEASE</version>
+</dependency>
+<dependency>
+  <groupId>com.binyu </groupId>
+  <artifactId>cloud-api-commons</artifactId>
+  <version>${project.version}</version>
+</dependency>
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
 ```
 
 
