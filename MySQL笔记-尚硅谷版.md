@@ -1,6 +1,6 @@
 # 2023Study-MySQL新版笔记
 
-> 最后修改日期：2023.8.20 原三份笔记已废弃，现在是新笔记版本
+> 最后修改日期：2023.8.20
 
 ## SQL分类
 
@@ -32,16 +32,6 @@ SELECT employee_id,department_name FROM employees e,departments d WHERE e.`depar
 ## 7种SQL JOIN的实现
 
 [一图胜千言-7种SQL JOIN的实现](https://ucc.alicdn.com/pic/developer-ecology/fe174a78a9434374a60039c09003cfe2.png)
-
-
-
-
-
-
-
-
-
-
 
 # 2021Study-MySQL高级
 
