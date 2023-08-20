@@ -17,6 +17,26 @@
 > - 数据库名、表名、表别名、字段名、字段别名都小写
 > - SQL关键字、函数名、绑定变量等都大写
 
+## SQL语法支持情况
+
+> MYSQL不支持SQL92语法，Oracle支持.
+>
+> SQL99语法支持性较好！即`LEFT JOIN ... ON`/`RIGHT JOIN...ON`
+>
+> 下面这句外连接，MYSQL执行错误，不支持该语法。
+
+```SQL
+SELECT employee_id,department_name FROM employees e,departments d WHERE e.`department_id`=d.`department_id`(+);
+```
+
+## 7种SQL JOIN的实现
+
+[一图胜千言-7种SQL JOIN的实现](https://ucc.alicdn.com/pic/developer-ecology/fe174a78a9434374a60039c09003cfe2.png)
+
+
+
+
+
 
 
 
