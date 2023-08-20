@@ -33,6 +33,24 @@ SELECT employee_id,department_name FROM employees e,departments d WHERE e.`depar
 
 [一图胜千言-7种SQL JOIN的实现](https://ucc.alicdn.com/pic/developer-ecology/fe174a78a9434374a60039c09003cfe2.png)
 
+## 删除数据库和表、清空表
+
+> `DROP DATEBASE dbName;`
+>
+> `DROP DATEBASE IF EXISTS dbName;`
+>
+> `DROP TABLE tableName;`
+>
+> `DROP TABLE IF EXISTS tableName;`
+>
+> `TRUNCATE TABLE tableName;`清空表
+
+## 表的复制
+
+> `CREATE TABLE copyDbName AS SELECT * FROM dbName`复制表
+>
+> `CREATE TABLE copyDbName AS SELECT * FROM dbName WHERE 1=2`复制表结构
+
 # 2021Study-MySQL高级
 
 
