@@ -17,7 +17,7 @@
 > - 数据库名、表名、表别名、字段名、字段别名都小写
 > - SQL关键字、函数名、绑定变量等都大写
 
-## SQL语法支持情况
+## MYSQL和ORACLE支持语法的区别
 
 > MYSQL不支持SQL92语法，Oracle支持.
 >
@@ -28,6 +28,12 @@
 ```SQL
 SELECT employee_id,department_name FROM employees e,departments d WHERE e.`department_id`=d.`department_id`(+);
 ```
+
+## MYSQL8.0新特性
+
+> MYSQL8.0支持DDL的原子化（要么成功提交，要么失败回滚）
+>
+> MYSQL8.0支持计算列
 
 ## 7种SQL JOIN的实现
 
@@ -41,15 +47,330 @@ SELECT employee_id,department_name FROM employees e,departments d WHERE e.`depar
 >
 > `DROP TABLE tableName;`
 >
-> `DROP TABLE IF EXISTS tableName;`
+> `DROP TABLE IF EXISTS tableName;`不能回滚
 >
-> `TRUNCATE TABLE tableName;`清空表
+> `TRUNCATE TABLE tableName;`清空表，不能回滚，占用资源少，开发中不要用
+>
+> `DELETE FROM tableName WHERE condition`删除表数据，可以回滚，占用资源多，开发中建议用
 
 ## 表的复制
 
 > `CREATE TABLE copyDbName AS SELECT * FROM dbName`复制表
 >
 > `CREATE TABLE copyDbName AS SELECT * FROM dbName WHERE 1=2`复制表结构
+
+
+
+# 2023Study-MySQL是怎样运行的
+
+## 4. InnoDB记录结构
+
+> - ==InnoDB中的行格式有四种：`Compact`、`Redundant`、`Dynamic`和`Compressed`==。
+>
+> - MyISAM中的行格式略有不同
+>
+>   -------
+>
+>   ==Compact行格式分为`变长字段长度列表`、`NULL值列表`、`记录头信息`和`列数据`==
+>
+>   - 各变长字段数据占用的字节数按照列的顺序`逆序存放`
+>
+>   - 变长字段长度列表中只存储值为`非NULL`的列内容占用的长度
+>
+>   - 如果表中没有允许存储 NULL的列，则NULL值列表也不存在了，否则将每个允许存储NULL的列对应一个二进制位，二进制位按照列的顺序`逆序排列`
+>
+>   - MySQL会为每个记录默认的添加一些列（也称为`隐藏列`），具体的列如下：
+>
+>   - InnoDB存储引擎会为每条记录都添加 ***transaction_id\*** 和 ***roll_pointer\*** 这两个列，但是 `row_id 是可选的`（在没有自定义主键以及Unique键的情况下才会添加该列)
+>
+>   - 对于 ***CHAR(M)\*** 类型的列来说，当列采用的是定长字符集时，该列占用的字节数不会被加到变长字段长度列表，而如果`采用变长字符集时，该列占用的字节数也会被加到变长字段长度列表`
+>
+>     | 列名             | 是否必须 | 占用空间 | 描述                   |
+>     | ---------------- | -------- | -------- | ---------------------- |
+>     | `row_id`         | 否       | `6`字节  | 行ID，唯一标识一条记录 |
+>     | `transaction_id` | 是       | `6`字节  | 事务ID                 |
+>     | `roll_pointer`   | 是       | `7`字节  | 回滚指针               |
+>
+>   ![COMPACT行格式](images/04-01.png)
+>   
+>   -----
+>   
+>   Redundant行格式
+>   
+>   - 该行格式是MYSQL5.0前使用的行格式
+>   
+>   ![img](images/04-14.png)
+>   
+>   ----
+>   
+>   - 当一行存储了很大的数据时，可能发生`行溢出`现象
+>   - Dynamic和Compressed对行溢出的处理方式略有不同
+>   - MySQL默认行格式是Dynamic
+>   - Compressed如其名，会压缩算法对页面进行压缩
+
+## 5. InnoDB数据页结构
+
+[第5章 盛放记录的大盒子-InnoDB数据页结构](https://relph1119.github.io/mysql-learning-notes/#/mysql/05-盛放记录的大盒子-InnoDB数据页结构?id=第5章-盛放记录的大盒子-innodb数据页结构)
+
+> 所以在一个数据页中查找指定主键值的记录的过程分为两步：
+>
+> 1. 通过二分法确定该记录所在的槽，并找到该槽中主键值最小的那条记录。
+> 2. 通过记录的`next_record`属性遍历该槽所在的组中的各个记录。
+>
+> ----
+>
+> 一个数据页可以被大致划分为7个部分，分别是
+>
+> - `File Header`，表示页的一些通用信息，占固定的38字节。
+> - `Page Header`，表示数据页专有的一些信息，占固定的56个字节。
+> - `Infimum + Supremum`，两个虚拟的伪记录，分别表示页中的最小和最大记录，占固定的`26`个字节。
+> - `User Records`：真实存储我们插入的记录的部分，大小不固定。
+> - `Free Space`：页中尚未使用的部分，大小不确定。
+> - `Page Directory`：页中的某些记录相对位置，也就是各个槽在页面中的地址偏移量，大小不固定，插入的记录越多，这个部分占用的空间越多。
+> - `File Trailer`：用于检验页是否完整的部分，占用固定的8个字节。
+>
+> ----
+>
+> 每个数据页的`File Header`部分都有上一个和下一个页的编号，所以所有的数据页会组成一个`双链表`
+>
+> ----
+>
+> —为保证从内存中同步到磁盘的页的完整性，在页的首部和尾部都会存储页中数据的校验和和页面最后修改时对应的`LSN`值，如果首部和尾部的校验和和`LSN`值校验不成功的话，就说明同步过程出现了问题。
+
+## 6. B+树索引
+
+> 为什么出现页分裂？
+>
+> - 下一个数据页中用户记录的主键值必须大于上一个页中用户记录的主键值
+
+## 7. B+树索引的使用
+
+> 1. `B+`树索引在空间和时间上都有代价，所以没事儿别瞎建索引。
+> 2. `B+`树索引适用于下面这些情况：
+>    - 全值匹配
+>    - 匹配左边的列
+>    - 匹配范围值
+>    - 精确匹配某一列并范围匹配另外一列
+>    - 用于排序
+>    - 用于分组
+> 3. 在使用索引时需要注意下面这些事项：
+>    - 只为用于搜索、排序或分组的列创建索引
+>    - 为列的基数大的列创建索引
+>    - 索引列的类型尽量小
+>    - 可以只对字符串值的前缀建立索引
+>    - 只有索引列在比较表达式中单独出现才可以适用索引
+>    - 为了尽可能少的让`聚簇索引`发生页面分裂和记录移位的情况，建议让主键拥有`AUTO_INCREMENT`属性。
+>    - 定位并删除表中的重复和冗余索引【如何定位？】
+>    - 尽量使用`覆盖索引`进行查询，避免`回表`带来的性能损耗。
+
+## 8. MySQL的数据目录
+
+> 数据目录要和安装目录区分开
+>
+> 创建一个数据库时，文件系统发生了什么？
+>
+> - 在`数据目录`下创建一个和数据库名同名的子目录（或者说是文件夹）。
+> - 在该与数据库名同名的子目录下创建一个名为`db.opt`的文件，这个文件中包含了该数据库的各种属性，比方说该数据库的字符集和比较规则是什么。
+>
+> information_scheme没有数据库文件目录
+>
+> 表结构的文件名是`表名.frm`:这个文件是二进制存储的，直接打开会是乱码
+
+> InnoDB的表空间：
+>
+> `系统表空间`在数据目录中是`ibdata1`，它是自拓展的，它们的文件名、大小、存储路径都可以配置。
+>
+> 在过去MySQL5.5.7到MySQL5.6.6之间的各个版本中，我们表中的数据都会被默认存储到这个 ***系统表空间\***。
+>
+> ----
+>
+> `独立表空间`在数据库对应的文件目录下的`表名.ibd`,可以有参数控制是存在独立表空间还是系统表空间。也可以用命令将系统表空间的表转移到独立表空间，反之亦然。
+
+> MyISAMd的表空间
+>
+> 不存在表空间一说，分为数据和索引，存在MYD和MYI文件中。
+
+> 视图在文件系统中以一个frm文件存在
+
+> 其他数据文件：
+>
+> - 服务器进程文件：我们知道每运行一个`MySQL`服务器程序，都意味着启动一个进程。`MySQL`服务器会把自己的进程ID写入到一个文件中。
+> - 服务器日志文件：比如常规的查询日志、错误日志、二进制日志、redo日志等等各种日志
+> - 默认/自动生成的SSL和RSA证书和密钥文件：主要是为了客户端和服务器安全通信而创建的一些文件
+
+> MYSQL系统数据库有哪些:
+>
+> - mysql
+> - information_schema
+> - performance_schema
+> - sys
+
+## 9. InnoDB表空间
+
+> 对于16KB的页来说，连续的64个页就是一个`区`，也就是说一个区默认占用1MB空间大小。每256个区被划分成一组。段不能仅定义为是某些区的集合，更精确的应该是某些零散的页以及一些完整的区的集合。
+
+## 10. 单表访问方法
+
+> 单表访问速度：const>ref>ref_not_null>range>all
+
+> Intersection合并：
+>
+> 这里是说某个查询可以使用多个二级索引，将从多个二级索引中查询到的结果取交集，比方说下面这个查询：
+>
+> ```
+> SELECT * FROM single_table WHERE key1 = 'a' AND key3 = 'b';
+> ```
+
+> Union合并
+>
+> ```
+> SELECT * FROM single_table WHERE key1 = 'a' OR key3 = 'b'
+> ```
+
+> Sort-Union合并
+>
+> ```
+> SELECT * FROM single_table WHERE key1 < 'a' OR key3 > 'z'
+> ```
+
+> MySQL没有Sort-Intersection合并，因为回表开销也不大，没必要加入
+
+> 用联合索引替代Intersection索引可以少遍历一颗B+树
+
+## 11. 连接的原理
+
+> - 对于`内连接`的两个表，驱动表中的记录在被驱动表中找不到匹配的记录，该记录不会加入到最后的结果集，我们上面提到的连接都是所谓的`内连接`。
+>
+> - 对于`外连接`的两个表，驱动表中的记录即使在被驱动表中没有匹配的记录，也仍然需要加入到结果集。
+>
+> - 下面这四种写法是等价的：
+>
+> - ```sql
+>   SELECT * FROM t1 JOIN t2;
+>   SELECT * FROM t1 INNER JOIN t2;
+>   SELECT * FROM t1 CROSS JOIN t2;
+>   SELECT * FROM t1, t2;
+>   ```
+>
+> - 连接的原理：
+>
+>   - 嵌套循环连接
+>   - 使用索引加快连接速度
+>   - 使用join buffer减少IO次数，实现基于块的嵌套循环连接
+
+
+
+## 12. MySQL基于成本的优化
+
+> 谁成本低用谁
+
+## 13. InnoDB统计数据如何收集
+
+```sql
+# 查看表的统计数据
+show table status;
+# 查看索引的统计信息
+show index;
+```
+
+### 基于磁盘的永久性统计数据
+
+> `InnoDB`默认是以表为单位来收集和存储统计数据的。
+>
+> 我们可以在创建和修改表的时候通过指定`STATS_PERSISTENT`属性来指明该表的统计数据存储方式：
+>
+> ```
+> CREATE TABLE 表名 (...) Engine=InnoDB, STATS_PERSISTENT = (1|0);
+> ALTER TABLE 表名 Engine=InnoDB, STATS_PERSISTENT = (1|0);
+> ```
+>
+> 当我们选择把某个表以及该表索引的统计数据存放到磁盘上时，实际上是把这些统计数据存储到了两个表里：
+>
+> - `innodb_table_stats`存储了关于表的统计数据，每一条记录对应着一个表的统计数据。
+>
+>   - `n_rows`的值是`9693`，表明`single_table`表中大约有`9693`条记录，注意这个数据是估计值。
+>   - `clustered_index_size`的值是`97`，表明`single_table`表的聚簇索引占用97个页面，这个值是也是一个估计值。
+>   - `sum_of_other_index_sizes`的值是`175`，表明`single_table`表的其他索引一共占用175个页面，这个值是也是一个估计值。
+>
+> - `innodb_index_stats`存储了关于索引的统计数据，每一条记录对应着一个索引的一个统计项的统计数据。
+>
+>   - innodb_index_stats表的每条记录代表着一个索引的一个统计项。可能这会大家有些懵逼这个统计项到底指什么，别着急，我们直接看一下关于`single_table`表的索引统计数据都有些什么：
+>
+>   ```
+>   mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
+>   +---------------+--------------+--------------+---------------------+--------------+------------+-------------+-----------------------------------+
+>   | database_name | table_name   | index_name   | last_update         | stat_name    | stat_value | sample_size | stat_description                  |
+>   +---------------+--------------+--------------+---------------------+--------------+------------+-------------+-----------------------------------+
+>   | xiaohaizi     | single_table | PRIMARY      | 2018-12-14 14:24:46 | n_diff_pfx01 |       9693 |          20 | id                                |
+>   | xiaohaizi     | single_table | PRIMARY      | 2018-12-14 14:24:46 | n_leaf_pages |         91 |        NULL | Number of leaf pages in the index |
+>   | xiaohaizi     | single_table | PRIMARY      | 2018-12-14 14:24:46 | size         |         97 |        NULL | Number of pages in the index      |
+>   | xiaohaizi     | single_table | idx_key1     | 2018-12-14 14:24:46 | n_diff_pfx01 |        968 |          28 | key1                              |
+>   | xiaohaizi     | single_table | idx_key1     | 2018-12-14 14:24:46 | n_diff_pfx02 |      10000 |          28 | key1,id                           |
+>   | xiaohaizi     | single_table | idx_key1     | 2018-12-14 14:24:46 | n_leaf_pages |         28 |        NULL | Number of leaf pages in the index |
+>   | xiaohaizi     | single_table | idx_key1     | 2018-12-14 14:24:46 | size         |         29 |        NULL | Number of pages in the index      |
+>   | xiaohaizi     | single_table | idx_key2     | 2018-12-14 14:24:46 | n_diff_pfx01 |      10000 |          16 | key2                              |
+>   | xiaohaizi     | single_table | idx_key2     | 2018-12-14 14:24:46 | n_leaf_pages |         16 |        NULL | Number of leaf pages in the index |
+>   | xiaohaizi     | single_table | idx_key2     | 2018-12-14 14:24:46 | size         |         17 |        NULL | Number of pages in the index      |
+>   | xiaohaizi     | single_table | idx_key3     | 2018-12-14 14:24:46 | n_diff_pfx01 |        799 |          31 | key3                              |
+>   | xiaohaizi     | single_table | idx_key3     | 2018-12-14 14:24:46 | n_diff_pfx02 |      10000 |          31 | key3,id                           |
+>   | xiaohaizi     | single_table | idx_key3     | 2018-12-14 14:24:46 | n_leaf_pages |         31 |        NULL | Number of leaf pages in the index |
+>   | xiaohaizi     | single_table | idx_key3     | 2018-12-14 14:24:46 | size         |         32 |        NULL | Number of pages in the index      |
+>   | xiaohaizi     | single_table | idx_key_part | 2018-12-14 14:24:46 | n_diff_pfx01 |       9673 |          64 | key_part1                         |
+>   | xiaohaizi     | single_table | idx_key_part | 2018-12-14 14:24:46 | n_diff_pfx02 |       9999 |          64 | key_part1,key_part2               |
+>   | xiaohaizi     | single_table | idx_key_part | 2018-12-14 14:24:46 | n_diff_pfx03 |      10000 |          64 | key_part1,key_part2,key_part3     |
+>   | xiaohaizi     | single_table | idx_key_part | 2018-12-14 14:24:46 | n_diff_pfx04 |      10000 |          64 | key_part1,key_part2,key_part3,id  |
+>   | xiaohaizi     | single_table | idx_key_part | 2018-12-14 14:24:46 | n_leaf_pages |         64 |        NULL | Number of leaf pages in the index |
+>   | xiaohaizi     | single_table | idx_key_part | 2018-12-14 14:24:46 | size         |         97 |        NULL | Number of pages in the index      |
+>   +---------------+--------------+--------------+---------------------+--------------+------------+-------------+-----------------------------------+
+>   20 rows in set (0.03 sec)Copy to clipboardErrorCopied
+>   ```
+>
+>     这个结果有点儿多，正确查看这个结果的方式是这样的：
+>
+>   - 先查看`index_name`列，这个列说明该记录是哪个索引的统计信息，从结果中我们可以看出来，`PRIMARY`索引（也就是主键）占了3条记录，`idx_key_part`索引占了6条记录。
+>
+>   - 针对`index_name`列相同的记录，`stat_name`表示针对该索引的统计项名称，`stat_value`展示的是该索引在该统计项上的值，`stat_description`指的是来描述该统计项的含义的。我们来具体看一下一个索引都有哪些统计项：
+>
+>     - `n_leaf_pages`：表示该索引的叶子节点占用多少页面。
+>
+>     - `size`：表示该索引共占用多少页面。
+>
+>     - `n_diff_pfx**NN**`：表示对应的索引列不重复的值有多少。其中的`NN`长得有点儿怪呀，什么意思呢？
+>
+>         其实`NN`可以被替换为`01`、`02`、`03`... 这样的数字。比如对于`idx_key_part`来说：
+>
+>       - `n_diff_pfx01`表示的是统计`key_part1`这单单一个列不重复的值有多少。
+>       - `n_diff_pfx02`表示的是统计`key_part1、key_part2`这两个列组合起来不重复的值有多少。
+>       - `n_diff_pfx03`表示的是统计`key_part1、key_part2、key_part3`这三个列组合起来不重复的值有多少。
+>       - `n_diff_pfx04`表示的是统计`key_part1、key_part2、key_part3、id`这四个列组合起来不重复的值有多少。
+
+### 更新统计数据
+
+> 如果发生变动的记录数量超过了表大小的`10%`，并且自动重新计算统计数据的功能是打开的，那么服务器会重新进行一次统计数据的计算，并且更新`innodb_table_stats`和`innodb_index_stats`表。不过自动重新计算统计数据的过程是异步发生的。
+>
+> 手动调用`ANALYZE TABLE`语句来更新统计信息
+>
+> 如果`innodb_stats_auto_recalc`系统变量的值为`OFF`的话，我们也可以手动调用`ANALYZE TABLE`语句来重新计算统计数据，比如我们可以这样更新关于`single_table`表的统计数据：
+
+
+
+### 基于内存的非永久性统计数据
+
+> 用的少
+
+### 索引列不重复的值的数量算不算上null
+
+> 可配置，他们提供了一个名为`innodb_stats_method`的系统变量，相当于在计算某个索引列不重复值的数量时如何对待`NULL`值这个锅甩给了用户，这个系统变量有三个候选值：
+>
+> - `nulls_equal`：认为所有`NULL`值都是相等的。这个值也是`innodb_stats_method`的默认值。
+>
+>     如果某个索引列中`NULL`值特别多的话，这种统计方式会让优化器认为某个列中平均一个值重复次数特别多，所以倾向于不使用索引进行访问。
+>
+> - `nulls_unequal`：认为所有`NULL`值都是不相等的。
+>
+>     如果某个索引列中`NULL`值特别多的话，这种统计方式会让优化器认为某个列中平均一个值重复次数特别少，所以倾向于使用索引进行访问。
+>
+> - `nulls_ignored`：直接把`NULL`值忽略掉。
 
 # 2021Study-MySQL高级
 
