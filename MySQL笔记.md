@@ -372,107 +372,145 @@ show index;
 >
 > - `nulls_ignored`：直接把`NULL`值忽略掉。
 
-# 2021Study-MySQL高级
+## 14. MySQL基于规则的优化
+
+> 考的少
 
 
 
+## 15. Explain详解
+
+> 考的少
+
+| 列名            | 描述                                                       |
+| --------------- | ---------------------------------------------------------- |
+| `id`            | 在一个大的查询语句中每个`SELECT`关键字都对应一个唯一的`id` |
+| `select_type`   | `SELECT`关键字对应的那个查询的类型                         |
+| `table`         | 表名                                                       |
+| `partitions`    | 匹配的分区信息                                             |
+| `type`          | 针对单表的访问方法                                         |
+| `possible_keys` | 可能用到的索引                                             |
+| `key`           | 实际上使用的索引                                           |
+| `key_len`       | 实际使用到的索引长度                                       |
+| `ref`           | 当使用索引列等值查询时，与索引列进行等值匹配的对象信息     |
+| `rows`          | 预估的需要读取的记录条数                                   |
+| `filtered`      | 某个表经过搜索条件过滤后剩余记录条数的百分比               |
+| `Extra`         | 一些额外的信息                                             |
+
+## 16. optimizer trace的功效
+
+> 查看优化器整个决定过程，考的少
+
+## 17. 调节磁盘和CPU的矛盾-InnoDB的buffer pool
+
+> 为了缓存磁盘中的页，考的少
+
+## 18. 事务
+
+> ACID:
+>
+> - 原子性：要么全做，要么全不做
+> - 隔离性：别的事务的变化不能影响我的事务
+> - 一致性：满足原子性和隔离性才能保证一致性，即事务前后要符合现实的约束
+> - 持久性：存在磁盘
+>
+> ----
+>
+> 事务的生命周期
+>
+> - 活动的：事务正在执行过程中
+> - 部分提交的：最后一个操作执行完，还没有刷盘
+> - 失败的：遇到了错误或手动停止、刷盘失败
+> - 提交的：从部分提交后，成功刷盘了
+> - 中止的：回滚操作执行完
+> - **只有当事务处于提交的或者中止的状态时，一个事务的生命周期才算是结束了**
+>
+> ![img](images/19-03.png)
+>
+> ----
+>
+> **隐式提交**：当我们使用`START TRANSACTION`或者`BEGIN`语句开启了一个事务，或者把系统变量`autocommit`的值设置为`OFF`时，事务就不会进行`自动提交`，但是如果我们输入了某些语句之后就会`悄悄的`提交掉，就像我们输入了`COMMIT`语句了一样，这种因为某些特殊的语句而导致事务提交的情况称为`隐式提交`，这些会导致事务隐式提交的语句包括：
+>
+> - DDL：数据定义语言
+> - 隐式使用或修改mysql数据库的表：当我们使用`ALTER USER`、`CREATE USER`、`DROP USER`、`GRANT`、`RENAME USER`、`REVOKE`、`SET PASSWORD`等语句时也会隐式的提交前面语句所属于的事务。
+> - 事务控制或关于锁定的语句：当我们在一个事务还没提交或者回滚时就又使用`START TRANSACTION`或者`BEGIN`语句开启了另一个事务时，会隐式的提交上一个事务。或者当前的`autocommit`系统变量的值为`OFF`，我们手动把它调为`ON`时，也会隐式的提交前面语句所属的事务。或者使用`LOCK TABLES`、`UNLOCK TABLES`等关于锁定的语句也会隐式的提交前面语句所属的事务。
+> - 加载数据的语句：我们使用`LOAD DATA`语句来批量往数据库中导入数据时，也会隐式的提交前面语句所属的事务
+> - MySQL复制的语句：使用`START SLAVE`、`STOP SLAVE`、`RESET SLAVE`、`CHANGE MASTER TO`等语句时也会隐式的提交前面语句所属的事务。
+> - 其它的一些语句：使用`ANALYZE TABLE`、`CACHE INDEX`、`CHECK TABLE`、`FLUSH`、 `LOAD INDEX INTO CACHE`、`OPTIMIZE TABLE`、`REPAIR TABLE`、`RESET`等语句也会隐式的提交前面语句所属的事务
+>
+> -----
+>
+> 保存点：回滚到指定的点。
 
 
 
+## 19. redo日志/重做日志
 
-## 查询截取分析
+> 为什么需要redo日志：
+>
+> - 刷新一个完整的数据页太浪费了
+> - 随机IO刷起来比较慢
+> - 用于崩溃恢复
+>
+> ----
+>
+> redo日志里是什么：
+>
+> - 某表的某页的某偏移量进行了某个修改
+> - ![img](images/20-01.png)
+>
+> ----
+>
+> redo日志什么时候刷盘：
+>
+> - log buffer空间不足时
+> - 事务提交时
+> - 后台线程每隔一秒刷盘
+> - 正常关闭服务器时
+> - checkpoint时
+>
+> ----
+>
+> redo日志对应什么文件：ib_logfile0和ib_logfile1
+>
+> ----
+>
+> redo日志有哪些配置：
+>
+> - 用innodb_log_group_home_dir配置日志所在目录
+> - 用innodb_log_file_size配置日志大小
+> - 用innodb_log_files_in_group配置日志用几个文件
 
-![1637138690569](images/1637138690569.png)
+## 20. undo日志/撤销日志
 
-![1637139561264](images/1637139561264.png)
-
-**慢查询日志**：
-
-[CSDN-Mysql慢查询日志的使用 和 Mysql的优化](https://blog.csdn.net/m_nanle_xiaobudiu/article/details/79288257)
-
-`set global slow_query_log=1;`开启慢查询日志
-
-`set global long_query_time=3;`修改慢的阈值时间
-
----
-
-**使用show profile分析SQL性能**：
-
-[CSDN-使用show profiles分析SQL性能](https://blog.csdn.net/gaoshan12345678910/article/details/78840158)
-
-`show profiling=on;`
-
-`show profiles;`
-
-出现性能瓶颈要查看以下是否出现：
-
-![1637141451840](images/1637141451840.png)
-
-----
-
-**全局查询日志**：
-
-永远不要在生产环境开启这个功能
-
-`set global_log=1;`
-
-`set global log_output='TABLE';`
-
-## Mysql锁机制
-
-### 表锁
-
- 表级锁是mysql锁中粒度最大的一种锁，表示当前的操作对整张表加锁，**资源开销比行锁少，不会出现死锁的情况，但是发生锁冲突的概率很大**。被大部分的mysql引擎支持，MyISAM和InnoDB都支持表级锁，但是InnoDB默认的是行级锁。  
-
-共享锁用法：
-
-`LOCK TABLE table_name [ AS alias_name ] READ`
-排它锁用法：
-
-`LOCK TABLE table_name [AS alias_name][ LOW_PRIORITY ] WRITE`
-
-解锁用法：
-
-`unlock tables;`
-
-`show status like 'table%';`表锁分析
-
-![1637145689475](images/1637145689475.png)
-
-### 行锁
-
-`show open tables;`查看哪些表加锁了
-
- **共享锁用法**： 
-
- 若事务T对数据对象A加上S锁，则事务T**可以读A但不能修改A**，其他事务只能再对A加S锁，而不能加X锁，直到T释放A上的S锁。这保证了其他事务可以读A，但在T释放A上的S锁之前不能对A做任何修改。 
-
- **共享锁就是允许多个线程同时获取一个锁，一个锁可以同时被多个线程拥有。** 
-
- `select ... lock in share mode; `
-
-**排它锁用法**：
-
- 若事务T对数据对象A加上X锁，事务T可以读A也可以修改A，其他事务不能再对A加任何锁，直到T释放A上的锁。这保证了其他事务在T释放A上的锁之前不能再读取和修改A。
-
-` select ... for update `
- 排它锁，也称作独占锁，一个锁在某一时刻只能被一个线程占有，其它线程必须等待锁被释放之后才可能获取到锁
-
-`show status like 'innodb_row_lock%'`行锁分析
-
----
+> select语句不会记录undo日志
+>
+> ----
+>
+> undo日志格式
+>
+> ![img](images/22-02.png)
 
 
 
-**索引失效、无索引 行锁变表锁**
+## 21. 事务隔离级别和MVCC
 
-**间隙锁**：间隙锁（Gap Lock）是Innodb在![\color{red}{可重复读}](https://math.jianshu.com/math?formula=%5Ccolor%7Bred%7D%7B%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB%7D)提交下为了解决幻读问题时引入的锁机制，（下面的所有案例没有特意强调都使用可重复读隔离级别）幻读的问题存在是因为新增或者更新操作，这时如果进行范围查询的时候（加锁查询），会出现不一致的问题，这时使用不同的行锁已经没有办法满足要求，需要对一定范围内的数据进行加锁，间隙锁就是解决这类问题的。在可重复读隔离级别下，数据库是通过行锁和间隙锁共同组成的（next-key lock），来实现的
+> MySQL在REPEATABLE READ隔离级别下，是可以禁止幻读问题的发生的
+>
+> 标准的 SQL 隔离级别定义里，REPEATABLE-READ(可重复读)是不可以防止幻读的。
+>
+> `MVCC`（Multi-Version Concurrency Control ，多版本并发控制）指的就是在使用`READ COMMITTD`、`REPEATABLE READ`这两种隔离级别的事务在执行普通的`SEELCT`操作时访问记录的版本链的过程，这样子可以使不同事务的`读-写`、`写-读`操作并发执行，从而提升系统性能。`READ COMMITTD`、`REPEATABLE READ`这两个隔离级别的一个很大不同就是：生成ReadView的时机不同，READ COMMITTD在每一次进行普通SELECT操作前都会生成一个ReadView，而REPEATABLE READ只在第一次进行普通SELECT操作前生成一个ReadView，之后的查询操作都重复使用这个ReadView就好了。
+>
+> InnoDB 实现的 REPEATABLE-READ 隔离级别其实是可以解决幻读问题发生的，主要有下面两种情况：
+>
+> - **快照读** ：由 MVCC 机制来保证不出现幻读。
+> - **当前读** ： 使用 Next-Key Lock 进行加锁来保证不出现幻读，Next-Key Lock 是行锁（Record Lock）和间隙锁（Gap Lock）的结合，行锁只能锁住已经存在的行，为了避免插入新行，需要依赖间隙锁。
 
----
+## 22. 锁
 
-### 页锁
+https://segmentfault.com/a/1190000042050754
 
-  页级锁是MySQL中锁定粒度介于行级锁和表级锁中间的一种锁。表级锁速度快，但冲突多，行级冲突少，但速度慢。所以取了折衷的页级，一次锁定相邻的一组记录。BDB支持页级锁 
+
 
 
 
