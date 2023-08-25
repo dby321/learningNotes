@@ -2,14 +2,6 @@
 
 ## 1. NoSql数据库简介
 
-![NoSQL的引入](./images/image-20230201204107949.png)
-
-![1636270428992](images/1636270428992.png)
-
-- 对数据高并发的读写
-- 海量数据的读写
-- 对数据可扩展性
-
 ## 2. Redis的安装和概述
 
 [Redis参考手册-About](https://redis.io/docs/about/)
@@ -54,8 +46,6 @@
 
 > 发布订阅是一种消息通信模式，类似微信公众号
 
-
-
 `subscribe channel1`订阅频道1
 
 `publish channel1 hello`向频道1发送hello信息
@@ -67,20 +57,6 @@
 [Redis参考手册-HyperLogLog](https://redis.io/docs/data-types/hyperloglogs/)
 
 [Redis参考手册-Geospatial](https://redis.io/docs/data-types/geospatial/)
-
-### Bitmaps
-
-并不是数据类型，只是字符串
-
-类似于数组，偏移量类似于数组索引
-
-### HyperLogLog
-
-用于基数计算，基数就是一个集合去重后剩的数
-
-### Geospatial
-
-经纬度的支持
 
 ## 7. Jedis操作Redis
 
@@ -183,14 +159,6 @@ public class Example {
 
 **悲观锁和乐观锁**：
 
-传统的关系型数据库用到了很多这种锁机制，比如行锁、表锁等，读锁、写锁等，都是在操作前上锁
-
-![1636343015257](images/1636343015257.png)
-
-适用于多读的应用类型，可以提高吞吐量
-
-![1636343207586](images/1636343207586.png)
-
 `watch key [key…]`：在执行multi之前，先执行该命令可以多个key，相当于添加乐观锁
 
 > Take the example below:
@@ -272,51 +240,7 @@ lua脚本解决原子性，解决库存问题
 
 [Redis参考手册-集群Cluster](https://redis.io/docs/reference/cluster-spec/)
 
-Redis3.0提供了无中心化集群
 
-![1636453556542](images/1636453556542.png)
-
-![1636453920362](images/1636453920362.png)
-
-先删除所有rdb文件
-
-`:%s/6379/6380`全部替换
-
-启动六个服务
-
-`cd /opt/redis-6.2.4/src`切换目录
-
-`redis-cli --cluster create --cluster-replicas 192.168.10.128:6379 192.168.10.128:6380 192.168.10.128:6381 192.168.10.128:6389 192.168.10.128:6390 192.168.10.128:6391 `把六个合体成为集群
-
-`redis-cli -c -p 6379`集群连接redis
-
-slots插槽类似于hashcode的作用
-
-![1636455474735](images/1636455474735.png)
-
-集群的操作：
-
-![1636455734899](images/1636455734899.png)
-
-![1636456016853](images/1636456016853.png)
-
-![1636456196420](images/1636456196420.png)
-
-**集群的好处**：
-
-- 实现扩容
-- 分摊压力
-- 务中心配置相对简单
-
-**集群的缺点**：
-
-- 多键操作不被支持
-- 多键Redis事务不被支持，lua脚本不被支持
-- 集群方案出现较晚，很多公司已经采用了其他的集群方案，而迁移难度大
-
-## 15. Redis应用问题解决
-
-[小林coding-什么是缓存雪崩、击穿、穿透？](https://xiaolincoding.com/redis/cluster/cache_problem.html#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9)
 
 
 

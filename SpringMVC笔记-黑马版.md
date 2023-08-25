@@ -1,7 +1,5 @@
 
 
-[/  和 /*  的区别](https://blog.csdn.net/qq_38296051/article/details/84975174)
-
 # SpringMVC
 
 [Spring官网-SpringMVC](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html)
