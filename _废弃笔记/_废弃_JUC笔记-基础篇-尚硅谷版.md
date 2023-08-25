@@ -1,8 +1,10 @@
 # 2021Study-JUC
 
-https://github.com/Ezrabin/juc_atguigu/tree/main
+> https://github.com/Ezrabin/juc_atguigu/tree/main
+>
+> 在github搜索juc_atguigu就能找到
 
-在github搜索juc_atguigu就能找到
+
 
 ## 1. 什么是JUC
 
