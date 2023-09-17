@@ -140,3 +140,5 @@ public class CglibProxyFactory {
 > - 后台有一个线程，大约每一秒将log buffer中的redo日志刷新到磁盘
 > - 正常关闭服务器时
 > - 做checkpoint时
+
+![image-20230917165523939](./images/image-20230917165523939.png)
