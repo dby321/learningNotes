@@ -115,7 +115,7 @@ public class CglibProxyFactory {
 
 ## MySQL
 
-### redo页
+### 重做日志redo页
 
 #### 为什么要有redo页，redo页是为了解决什么问题
 
@@ -141,4 +141,5 @@ public class CglibProxyFactory {
 > - 正常关闭服务器时
 > - 做checkpoint时
 
-![image-20230917165523939](./images/image-20230917165523939.png)
+### 撤销日志undo页
+
