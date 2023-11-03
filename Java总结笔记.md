@@ -113,6 +113,38 @@ public class CglibProxyFactory {
 
 ```
 
+### 访问修饰符
+
+> private是类内可访问
+>
+> default是包和类内可访问
+>
+> protected是包和类内和子类可访问
+>
+> public是都可访问
+
+### 重写
+
+> 子类重写的返回类型可以和父类不相同，但必须是派生类
+>
+> 子类重写的方法访问修饰符要比父类宽泛
+>
+> 子类重写的方法的异常可以减少，一定不能抛出更广的异常
+>
+> @Override让编译器检查是否符合
+
+### 接口
+
+> 可以实现默认方法，方法默认是public修饰，字段默认是static和final修饰
+
+### 反射
+
+> Class 和 java.lang.reflect 一起对反射提供了支持，java.lang.reflect 类库主要包含了以下三个类:
+>
+> - **Field** : 可以使用 get() 和 set() 方法读取和修改 Field 对象关联的字段；
+> - **Method** : 可以使用 invoke() 方法调用与 Method 对象关联的方法；
+> - **Constructor** : 可以用 Constructor 创建新的对象。
+
 ## MySQL
 
 ### 重做日志redo页
