@@ -92,5 +92,3 @@ sudo docker run --name mysql -e MYSQL_ROOT_PASSWORD=ROOT1234 \
 -v /tmp/mysql/data:/var/lib/mysql \
 -d mysql
 ```
-
-### 
