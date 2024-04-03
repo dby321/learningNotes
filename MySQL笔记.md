@@ -1,4 +1,4 @@
-# 2023Study-MySQL新版笔记
+# MySQL（上）
 
 > 最后修改日期：2023.8.20
 
@@ -61,7 +61,7 @@ SELECT employee_id,department_name FROM employees e,departments d WHERE e.`depar
 
 
 
-# 2023Study-MySQL是怎样运行的
+# MySQL是怎样运行的
 
 ## 4. InnoDB记录结构
 
@@ -514,7 +514,7 @@ https://segmentfault.com/a/1190000042050754
 
 
 
-# 2022Study-MySQL笔记
+# MySQL笔记（新版）
 
 ## MYSQL运算符Comparison Operators
 

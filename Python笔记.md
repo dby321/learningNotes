@@ -1,14 +1,10 @@
 
 
-# Python笔记-廖雪峰版
+# Python笔记
 
-> 参考 [廖雪峰Python教程](https://www.liaoxuefeng.com/wiki/1016959663602400)
+## Python基础
 
-> 听说很简单，来学学看。
-
-##Python基础
-
-###Python简介
+### Python简介
 
 - 简单易学
 - 解释型语言，代码不保密
