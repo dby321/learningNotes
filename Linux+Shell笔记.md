@@ -528,8 +528,6 @@ command 命令将 stdin 重定向到 file1，将 stdout 重定向到 file2。
 source filename
 ```
 
-# 
-
 
 
 # Linux笔记
