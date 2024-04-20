@@ -1,6 +1,16 @@
-# 2021Study-Redis-尚硅谷版
+# Redis笔记
+
+[CSDN-Redis 笔记（黑马点评 —— 基础篇 + 实战篇）](https://blog.csdn.net/weixin_45033015/article/details/127545710)
 
 ## 1. NoSql数据库简介
+
+> SQL是表结构化的，数据可以通过外键进行关联，语法是标准SQL,有完整的事务支持
+>
+> NoSQL是基于图、基于键值对、基于JSON字符串的非结构化的，数据是无关联的，语法是不固定的，只有基本的事务支持。
+
+![SQL和NoSQL](./images/image-20230613200030370.png)
+
+![SQL和NoSQL](./images/image-20230613200317756.png)
 
 ## 2. Redis的安装和概述
 
@@ -67,7 +77,7 @@
 [Github-Jedis](https://github.com/redis/jedis)
 
 ```java
-public class JedisDemo {
+                public class JedisDemo {
     public static void main(String[] args) {
         Jedis jedis=new Jedis ( "192.168.10.128",6379 );
         System.out.println ( jedis.ping () );
@@ -246,39 +256,11 @@ lua脚本解决原子性，解决库存问题
 
 
 
-# 2023Study-Redis-黑马版
-
-[CSDN-Redis 笔记（黑马点评 —— 基础篇 + 实战篇）](https://blog.csdn.net/weixin_45033015/article/details/127545710)
-
-## 基础篇-CRUD
-
-### 初识Redis
-
-#### SQL和NoSQL
-
-> SQL是表结构化的，数据可以通过外键进行关联，语法是标准SQL,有完整的事务支持
->
-> NoSQL是基于图、基于键值对、基于JSON字符串的非结构化的，数据是无关联的，语法是不固定的，只有基本的事务支持。
-
-![SQL和NoSQL](./images/image-20230613200030370.png)
-
-![SQL和NoSQL](./images/image-20230613200317756.png)
-
-#### Redis的特点
-
-![认识Redis](./images/image-20230613201012288.png)
 
 
 
-### Redis数据结构
-
-![Redis数据类型](./images/image-20230614112127550.png)
 
 
-
-### Redis的java客户端
-
-![Java客户端](./images/image-20230614140528857.png)
 
 
 

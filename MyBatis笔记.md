@@ -1,6 +1,6 @@
 
 
-# Mybatis
+# Mybatis笔记
 
 [Mybatis中文网](https://mybatis.net.cn/)
 
