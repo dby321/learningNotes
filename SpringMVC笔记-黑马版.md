@@ -6,54 +6,13 @@
 
 [W3Cschool-Spring MVC 4.2.4.RELEASE 中文文档](https://www.w3cschool.cn/spring_mvc_documentation_linesh_translation/)
 
+[JavaGuide-SpringMVC常见面试题总结](https://javaguide.cn/system-design/framework/spring/spring-knowledge-and-questions-summary.html#spring-mvc)
+
 ## SSM整合
 
 > 参见ssm和ssm_demo
 
-## SpringMVC的架构
-
-- 表现层框架
-- 是Spring框架的一部分
-
-![1578286176899](.\images\1578286176899.png)
-
-## SpringMVC处理流程
-
-![1578286821915](.\images\1578286821915.png)
-
-![1578288939054](.\images\1578288939054.png)
-
-### 三大组件和两个开发的部分
-
-- DispatcherServlet前端控制器
-
-  - 用户请求到达前端控制器，它就相当于mvc模式中的c，**dispatcherServlet是整个流程控制的中心**，由它调用其它组件处理用户的请求，dispatcherServlet的存在降低了组件之间的耦合性
-
-- HandlerMapping处理器映射器
-
-  - **HandlerMapping负责根据用户请求url找到Handler即处理器**，springmvc提供了不同的映射器实现不同的映射方式，例如：配置文件方式，实现接口方式，注解方式等。
-
-- HandlerAdapter处理器适配器
-
-  - **通过HandlerAdapter对处理器进行执行**，这是适配器模式的应用，通过扩展适配器可以对更多类型的处理器进行执行。
-
-- Handler处理器
-
-  - Handler 是继DispatcherServlet前端控制器的后端控制器，**在DispatcherServlet的控制下Handler对具体的用户请求进行处理**。
-
-    由于Handler涉及到具体的用户业务请求，所以一般情况需要程序员根据业务需求开发Handler。
-
-- ViewResolver视图解析器
-
-  - **View Resolver负责将处理结果生成View视图**，View Resolver首先根据逻辑视图名解析成物理视图名即具体的页面地址，再生成View视图对象，最后**对View进行渲染将处理结果通过页面展示给用户**。 
-
-- View
-
-  - springmvc框架提供了很多的View视图类型的支持，包括：jstlView、freemarkerView、pdfView等。
-
-    一般情况下需要通过页面标签或页面模版技术将模型数据通过页面展示给用户，需要由程序员根据业务需求开发具体的页面。
-
-
+## SpringMVC处理流程（考点）
 
 ### 默认加载的组件
 

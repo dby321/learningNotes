@@ -37,16 +37,9 @@
     * [配置别名](#%E9%85%8D%E7%BD%AE%E5%88%AB%E5%90%8D)
       * [删除别名](#%E5%88%A0%E9%99%A4%E5%88%AB%E5%90%8D)  
 
-# 2019Study-Git笔记
+# Git笔记
 
-## 问题解决
-
-[简书-GIT报错：connect to host github.com port 22: Connection timed out](https://www.jianshu.com/p/fe76f9867322)
-
-**分布式版本控制与集中式版本控制的最大区别**
-
->集中式的版本控制,本地没有历史记录,完整的仓库只存在服务器上,如果服务器挂了,就全都挂了,而分布式如果github挂了可以重建一个服务器,然后把任何一个人的仓库clone过去
->*一句话总结:分布式版本控制的每个节点都是完整仓库*
+## Git参考
 
 * [Git下载地址](https://git-for-windows.github.io/ )
 * [Git User Manual](https://mirrors.edge.kernel.org/pub/software/scm/git/docs/user-manual.html)
@@ -57,93 +50,6 @@
 $ git --help     //不知道怎么办就看帮助呗
 ```
 
-
-
-
-## Git简介
-
-略
-### 安装Git
-
-下载并安装Git,安装完成后，还需要最后一步设置  
-`Git Bash`命令行输入：
-```
-$ git config --global user.name "Your Name"
-$ git config --global user.email "email@example.com"
-```
-
-*注意git config命令的--global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址*
-
-### 创建版本库repository
-* 首先建一个空目录
-```cmd
-$ mkdir learngit //当前目录下创建文件夹名为learngit
-$ cd learngit //进入learngit文件夹目录下
-$ pwd  //显示当前目录
-```
-
-`pwd`命令用于显示当前目录
-* 然后通过`git init`命令把这个目录变成Git可以管理的仓库
-```cmd
-$ git init  //初始化
-$ ls -ah //显示.git目录
-```
-`ls -ah`用于显示`.git`目录
-### 把文件添加到版本库
-编写一个readme.txt,放在learngit目录下(或者子目录)
-```cmd
-$ vi readme.txt
-```
-
-
-| Vim     | 快捷键说明                            |
-| ------- | ------------------------------------- |
-| Esc     | 退出编辑,跳到命令模式                 |
-| :w      | 保存文件但不退出vi                    |
-| :w file | 将修改另外保存到file中,不退出vi       |
-| :w!     | 强制保存,不退出vi                     |
-| :wq     | 保存文件并退出vi                      |
-| :q      | 不保存文件,退出vi                     |
-| :q!     | 不保存文件,强制退出vi                 |
-| :e!     | 放弃所有修改,从上次保存文件开始再编辑 |
-
-
-#### 1.把文件添加到暂存区
-使用`git add file_name` 或 `git stage file_name`
-```
-$ git add readme.txt
-```
-
-#### 2.把文件提交到版本库
-```
-$ git commit -m "wrote a readme file"  
-```
--m后面是本次提交的说明,一次可以提交多个文件  
-**注意:**`git commit` 指定文件的时候会直接提交**工作区**的文件,不指定文件的时候提交的是**缓存区`stage`的所有文件**
-
-```
-$ git commit readme.txt -m "balabala"
-```
-### Git bash操作文件及文件夹命令
-| 命令示例         | 用途                                                  |
-| ---------------- | ----------------------------------------------------- |
-| cd d:\Github     | 切换d盘下面的Github目录                               |
-| cd ..            | 回退到上一个目录                                      |
-| cd               | 回退到主目录                                          |
-| pwd              | 显示当前目录路径                                      |
-| ls(ll)           | 列出当前目录中的所有文件,ll更详细                     |
-| ls(ll) -a        | 列出当前目录中的所有文件包括隐藏目录                  |
-| touch readme.md  | 新建一个文件                                          |
-| rm readme.md     | 删除一个文件                                          |
-| mkdir img        | 新建一个文件夹img                                     |
-| rm -r img        | 删除一个文件夹img                                     |
-| mv readme.md img | 把当前目录下的目标文件移动到一个指定目录,使用相对路径 |
-| reset            | 清屏,清空git bash 命令窗口中的所有内容                |
-### 查看Git安装目录
-* Windows
-    * cmd `where git`
-* Mac
-    * 命令行 `which git`
 ## 时光穿梭机
 ### 版本退回
 ```
@@ -463,7 +369,7 @@ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Crese
 
 > https://www.jianshu.com/p/7164a52786f3)
 
-# 2022Study-SVN笔记
+# SVN笔记
 
 ## Subversion
 
