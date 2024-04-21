@@ -2,147 +2,19 @@
 
 # SpringCloud
 
-## 1 微服务架构简介
+## 参考资料
 
-### 01 微服务架构概述
+[W3CSchool-SpringCloud教程](https://www.w3cschool.cn/scchinese/)
 
-### 02 SpringCloud简介
+[Java父子工程管理](https://www.cnblogs.com/May-day/p/14087111.html)
 
-> SpringCloud不代表微服务的全部，它只解决了微服务治理的问题。
->
-> SpringCloud是分布式微服务架构的一站式解决方案,俗称微服务全家桶(但是学了这个还没完)
+[SpringCloud官网版本选型](http://start.spring.io/actuator/info)
 
-![微服务技术栈](/Users/dongbinyu/learningNotes/images/image-20230403154520871.png)
-
-<img src=".\images\1621750664002.png" alt="1621750664002"  />
-
-### 03 SpringCloud技术栈
-
-![1621750994278](.\images\1621750994278.png)
-
-![1621751011101](.\images\1621751011101.png)
-
-## 2 Spring-Cloud怎么技术选型
-
-版本的选择见官网http://start.spring.io/actuator/info
-
-## 3 关于Cloud各种组件的停更/升级/替换【别听阳哥的】
-
-![1621752824930](.\images\1621752824930.png)
-
-## 4 微服务架构编码构建
-
-创建微服务cloud整体聚合父工程Project，有8个关键步骤：
-
-1. New Project - maven工程 - create from archetype: maven-archetype-site
-2. 聚合总父工程名字
-3. Maven选版本
-4. 工程名字
-5. 字符编码 - Settings - File encoding
-6. 注解生效激活 - Settings - Annotation Processors
-7. Java编译版本选8
-8. File Type过滤 - Settings - File Type
-
-### DependenceManagement与Dependence的区别
-
-DependenceManagement：是用于父pom锁定版本的+让子module不用写groupId和version。并不实现引入，因此子项目需要显示的声明需要用的依赖。子项目中不写version引入，就会使用父Pom的。（类似方法实现）
-
-### Maven中如何跳过单元测试
-
-![1621754643638](.\images\1621754643638.png)
-
-### 父工程创建完成执行mvn:install将父工程发布到仓库方便子工程继承
-
-### 创建子module
-
-- 建module
-- 改Pom
-- 写yml
-- 写主启动类
-- 写业务类
-
-```sql
-CREATE TABLE `payment`(
-			`id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-			`serial` varchar(200) DEFAULT '',
-			PRIMARY KEY(`id`)
-		)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
-```
-
-![1621757040151](.\images\1621757040151.png)
-
-### 热部署Devtools【开发好像不常用？】
-
-![1621942166042](.\images\1621942166042.png)
-
-```xml
-<build>
-        <plugins>
-            <!-- 插件定义 -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <fork>true</fork>
-                    <addResources>true</addResources>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-```
+[Java系列 | 远程热部署在美团的落地实践](https://tech.meituan.com/2022/03/17/java-hotswap-sonic.html)
 
 
 
-![1621942157490](.\images\1621942157490.png)
-
-`ctrl+shift+alt+/` 注册：
-
-![1638338507125](images/1638338507125.png)
-
-`ctrl+F9`刷新项目重启
-
-###  打开Rundashboard【这个不常用】
-
-在workspace.xml中<component name="RunDashboard">加上
-
-```xml
-<option name="configurationTypes">
-      <set>
-        <option value="SpringBootApplicationConfigurationType" />
-      </set>
-    </option>
-```
-
-### 远程调用HttpClient&RestTemplate
-
-1. 注入
-
-```JAVA
-@Configuration
-public class ApplicationContextConfig {
-    @Bean
-//    @LoadBalanced
-    public RestTemplate getTemplate(){
-        return new RestTemplate (  );
-    }
-}
-```
-
-2. 使用
-
-```java
-@Resource
-    private RestTemplate template;
-    @GetMapping("/consumer/payment/create")
-    public CommonResult<Payment> create(Payment payment) {
-        return template.postForObject ( PAYMENT_URL + "/payment/create", payment, CommonResult.class );
-
-    }
-```
-
-
-
-## 5 Eureka服务注册与发现
+## 5. Eureka服务注册与发现
 
 ### Eureka基础知识
 

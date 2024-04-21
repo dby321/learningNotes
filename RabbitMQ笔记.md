@@ -1,45 +1,8 @@
-# RabbitMQ
+# RabbitMQ笔记
 
-https://github.com/rabbitmq/rabbitmq-tutorials
+[Github-RabbitMQ tutorials](https://github.com/rabbitmq/rabbitmq-tutorials)
 
-https://www.rabbitmq.com/documentation.html
-
-## MQ的相关概念
-
-### 什么是MQ
-
-> 本质上是队列，队列中存放的是message，用于上下游传递消息。
-
-### 为什么要使用MQ
-
-> - 流量削峰:对访问请求进行排队，避免了系统宕机的风险，但是缺点是增加了请求完成的时间
-> - 应用解耦：主系统不会因为子系统的错误而宕机，主系统的任务交给消息队列，由消息队列监督子系统完成
-> - ![image-20230211110359212](./images/image-20230211110359212.png)
-> - 异步处理：如果A调用B需要很长时间，以前有两种方式解决：A过一段时间调用B的查询API查询，或者A提供一个callback API，B执行完之后调用API通知A。使用消息总线可以很优雅的解决这个问题
-> - ![image-20230211110618256](./images/image-20230211110618256.png)
-
-### MQ的分类
-
-> 1. ActiveMQ,Apache的消息队列，现在已经没人维护了
-> 2. Kafka，大数据领域的消息中间件
-> 3. RocketMQ,阿里巴巴开源的消息队列，支持的客户端语言不多
-> 4. RabbitMQ,社区活跃，支持多种语言
-
-### MQ的选择
-
-> 1. Kafka,适合大数据的互联网数据收集业务，大型公司可选用
-> 2. RocketMQ,适合金融互联网
-> 3. RabbitMQ,数据量没有那么大，中小型公司首选RabbitMQ
-
-## RabbitMQ
-
-> MQ相当于邮局和快递员
-
-![RabbitMQ四大核心](./images/image-20230211111752549.png)
-
-![RabbitMQ工作原理](./images/image-20230211111923237.png)
-
-### 安装
+[RabbitMQ官网文档](https://www.rabbitmq.com/documentation.html)
 
 [RabbitMQ官网-安装](https://www.rabbitmq.com/download.html)
 

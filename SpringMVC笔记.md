@@ -1,6 +1,6 @@
 
 
-# SpringMVC
+# SpringMVC笔记
 
 [Spring官网-SpringMVC](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html)
 
@@ -8,9 +8,21 @@
 
 [JavaGuide-SpringMVC常见面试题总结](https://javaguide.cn/system-design/framework/spring/spring-knowledge-and-questions-summary.html#spring-mvc)
 
+[W3Cschool-Spring MVC例子](https://www.w3cschool.cn/wkspring/9pf81ha5.html)
+
 ## SSM整合
 
 > 参见ssm和ssm_demo
+
+## Springmvc和Struts2的区别
+
+1、 **springmvc的入口是一个servlet即前端控制器**，而**struts2入口是一个filter过滤器**。
+
+2、 **springmvc是基于方法开发**(一个url对应一个方法)，请求参数传递到方法的形参，可以设计为**单例**或多例(建议单例)，**struts2是基于类开发，传递参数是通过类的属性**，只能设计为**多例**。
+
+3、 **Struts采用值栈存储请求和响应的数据**，通过OGNL存取数据， **springmvc通过参数解析器是将request请求内容解析**，并给方法形参赋值，将数据和视图封装成ModelAndView对象，最后又将ModelAndView中的模型数据通过request域传输到页面。Jsp视图解析器默认使用jstl。
+
+
 
 ## SpringMVC处理流程（考点）
 
@@ -157,9 +169,9 @@ public class ItemController {
 }
 ```
 
-## ModelAndView参数绑定
+## 方法参数绑定
 
-### 默认支持的参数
+### 默认支持的参数（servlet时代开发方式）
 
 - HttpServletRequest
 
@@ -178,8 +190,6 @@ public class ItemController {
   - Model是一个接口，在参数里直接声明model即可
 
     如果**使用Model**则可以不使用ModelAndView对象，Model对象可以向页面传递数据，**View对象则可以使用String返回值替代**。
-
-#### servlet时代开发方式
 
 ```java
 public ModelAndView toEdit(Integer id,
@@ -392,153 +402,11 @@ jsp
 </c:forEach>
 ```
 
-### `@RequestParam`
+## 方法返回值绑定
 
-```html
-<a href="user/save1?uname=xxx">save1</a>
-```
-
-
-
-```java
-@RequestMapping("/user/save1")
-public String saveAccount(@RequestParam("uname")String username)
-```
-
-### `@PathVariable`
-
-```html
-<a href="user/save2/10">save2</a>
-```
-
-
-
-```java
-@RequestMapping("/user/save2/{sid}")
-public String saveAccount(@PathVariable(name="sid")String id)
-```
-
-### `@RequestHeader`
-
-value是消息头名称，绑定的header是该消息头真正的值
-
-```java
-@RequestMapping("/user/save3")
-public String saveAccount(@RequestHeader(value="Accept") String header)
-```
-
- 当一个客户端(通常是浏览器)向Web服务器发送一个请求是，它要发送一个请求的命令行，一般是GET或POST命令，当发送POST命令时，它还必须向服务器发送一个叫“Content-Length”的请求头(Request  Header)  用以指明请求数据的长度，除了Content-Length之外，它还可以向服务器发送其它一些Headers，如：   
-
- Accept  浏览器可接受的MIME类型   
- Accept-Charset  浏览器支持的字符编码   
- Accept-Encoding  浏览器知道如何解码的数据编码类型(如  gzip)。Servlets  可以预先检查浏览器是否支持gzip并可以对支持gzip的浏览器返回gzipped的HTML页面，并设置Content-Encoding回应头(response  header)来指出发送的内容是已经gzipped的。在大多数情况下，这样做可以加快网页下载的速度。   
- Accept-Language  浏览器指定的语言，当Server支持多语种时起作用。   
- Authorization  认证信息，一般是对服务器发出的WWW-Authenticate头的回应。   
- Connection  是否使用持续连接。如果servlet发现这个字段的值是Keep-Alive，或者由发出请求的命令行发现浏览器支持  HTTP  1.1  (持续连接是它的默认选项)，使用持续连接可以使保护很多小文件的页面的下载时间减少。   
- Content-Length  (使用POST方法提交时，传递数据的字节数)   
- Cookie  (很重要的一个Header，用来进行和Cookie有关的操作，详细的信息将在后面的教程中介绍)   
- Host  (主机和端口)   
- If-Modified-Since  (只返回比指定日期新的文档，如果没有，将会反回304  "Not  Modified")   
- Referer  (URL)   
- User-Agent  (客户端的类型，一般用来区分不同的浏览器)    
-
-### `@CookieValue`
-
-value是cookie名称，绑定的cookieValue是该cookie真正的值
-
-```java
-@RequestMapping("/user/save4")
-public String saveAccount(@CookieValue(value="JSESSIONID") String cookieValue)
-```
-
-
-
-## 自定义类型转换器`converter`
-
-https://www.bilibili.com/video/BV1Sb411s7qa?p=15
-
-## Springmvc和Struts2的区别
-
-1、 **springmvc的入口是一个servlet即前端控制器**，而**struts2入口是一个filter过滤器**。
-
-2、 **springmvc是基于方法开发**(一个url对应一个方法)，请求参数传递到方法的形参，可以设计为**单例**或多例(建议单例)，**struts2是基于类开发，传递参数是通过类的属性**，只能设计为**多例**。
-
-3、 **Struts采用值栈存储请求和响应的数据**，通过OGNL存取数据， **springmvc通过参数解析器是将request请求内容解析**，并给方法形参赋值，将数据和视图封装成ModelAndView对象，最后又将ModelAndView中的模型数据通过request域传输到页面。Jsp视图解析器默认使用jstl。
-
- 
-
-## @RequestMapping
-
-### URL路径映射`value`和`path`
-
-@RequestMapping(value="item")或@RequestMapping("/item"）
-
-### 窄化路径（添加在类上面）
-
-在class上添加@RequestMapping(url)指定通用请求前缀， 限制此类下的所有方法请求url必须以请求前缀开头
-
-### 请求方法限定`method`
-
-- 限定GET方法
-
-```java
-@RequestMapping(method = RequestMethod.**GET**)
-```
-
-如果通过POST访问则报错：
-
-HTTP Status 405 - Request method 'POST' not supported
-
-例如：
-
-```java
-@RequestMapping(value = "itemList",method = RequestMethod.**POST**)
-```
-
-
-
-- 限定POST方法
-
-```java
-@RequestMapping(method = RequestMethod.**POST**)
-```
-
-如果通过GET访问则报错：
-
-HTTP Status 405 - Request method 'GET' not supported
-
-- GET和POST都可以
-
-```java
-@RequestMapping(method = {RequestMethod.**GET**,RequestMethod.**POST**})
-```
-
-
-
-### 参数`params`
-
-```html
-<a href="user/hello?username=hehe">跳转hello页面</a>
-```
-
-```java
-@RequestMapping(params={"username"})
-```
-
-### 请求头`headers`
-
-```java
-@RequestMapping(headers={"Accept"})
-```
-
-
-
-## Controller中方法换回值
-
-###返回ModelAndView
+### 返回ModelAndView
 
 > controller方法中定义ModelAndView对象并返回，对象中可添加model数据、指定view。
->
 
 ```java
     @RequestMapping("/testModelAndView")
@@ -631,22 +499,224 @@ return "itemList";
 
 [转发和重定向的区别和使用](https://blog.csdn.net/weixin_40001125/article/details/88663468)
 
-## 异常处理器
+## SpringMVC注解
 
->springmvc在处理请求过程中出现异常信息交由异常处理器进行处理，自定义异常处理器可以实现一个系统的异常处理逻辑。
+### `@RequestParam`
+
+```html
+<a href="user/save1?uname=xxx">save1</a>
+```
 
 
 
-见E:\idea_workspace\2020Study-SSM\springmvc_demo1\src\main\java\com\binyu
+```java
+@RequestMapping("/user/save1")
+public String saveAccount(@RequestParam("uname")String username)
+```
+
+### `@PathVariable`
+
+```html
+<a href="user/save2/10">save2</a>
+```
+
+
+
+```java
+@RequestMapping("/user/save2/{sid}")
+public String saveAccount(@PathVariable(name="sid")String id)
+```
+
+### `@RequestHeader`
+
+```java
+@RequestMapping("/user/save3")
+public String saveAccount(@RequestHeader(value="Accept") String header)
+```
+
+ 当一个客户端(通常是浏览器)向Web服务器发送一个请求是，它要发送一个请求的命令行，一般是GET或POST命令，当发送POST命令时，它还必须向服务器发送一个叫“Content-Length”的请求头(Request  Header)  用以指明请求数据的长度，除了Content-Length之外，它还可以向服务器发送其它一些Headers，如：   
+
+ Accept  浏览器可接受的MIME类型   
+ Accept-Charset  浏览器支持的字符编码   
+ Accept-Encoding  浏览器知道如何解码的数据编码类型(如  gzip)。Servlets  可以预先检查浏览器是否支持gzip并可以对支持gzip的浏览器返回gzipped的HTML页面，并设置Content-Encoding回应头(response  header)来指出发送的内容是已经gzipped的。在大多数情况下，这样做可以加快网页下载的速度。   
+ Accept-Language  浏览器指定的语言，当Server支持多语种时起作用。   
+ Authorization  认证信息，一般是对服务器发出的WWW-Authenticate头的回应。   
+ Connection  是否使用持续连接。如果servlet发现这个字段的值是Keep-Alive，或者由发出请求的命令行发现浏览器支持  HTTP  1.1  (持续连接是它的默认选项)，使用持续连接可以使保护很多小文件的页面的下载时间减少。   
+ Content-Length  (使用POST方法提交时，传递数据的字节数)   
+ Cookie  (很重要的一个Header，用来进行和Cookie有关的操作，详细的信息将在后面的教程中介绍)   
+ Host  (主机和端口)   
+ If-Modified-Since  (只返回比指定日期新的文档，如果没有，将会反回304  "Not  Modified")   
+ Referer  (URL)   
+ User-Agent  (客户端的类型，一般用来区分不同的浏览器)    
+
+### `@CookieValue`
+
+value是cookie名称，绑定的cookieValue是该cookie真正的值
+
+```java
+@RequestMapping("/user/save4")
+public String saveAccount(@CookieValue(value="JSESSIONID") String cookieValue)
+```
+
+### @RequestMapping
+
+#### URL路径映射`value`和`path`
+
+@RequestMapping(value="item")或@RequestMapping("/item"）
+
+#### 窄化路径（添加在类上面）
+
+在class上添加@RequestMapping(url)指定通用请求前缀， 限制此类下的所有方法请求url必须以请求前缀开头
+
+#### 请求方法限定`method`
+
+- 限定GET方法
+
+```java
+@RequestMapping(method = RequestMethod.GET)
+```
+
+如果通过POST访问则报错：
+
+HTTP Status 405 - Request method 'POST' not supported
+
+例如：
+
+```java
+@RequestMapping(value = "itemList",method = RequestMethod.POST)
+```
+
+
+
+- 限定POST方法
+
+```java
+@RequestMapping(method = RequestMethod.POST)
+```
+
+如果通过GET访问则报错：
+
+HTTP Status 405 - Request method 'GET' not supported
+
+- GET和POST都可以
+
+```java
+@RequestMapping(method = {RequestMethod.**GET**,RequestMethod.POST})
+```
+
+
+
+#### 参数`params`
+
+```html
+<a href="user/hello?username=hehe">跳转hello页面</a>
+```
+
+```java
+@RequestMapping(params={"username"})
+```
+
+#### 请求头`headers`
+
+```java
+@RequestMapping(headers={"Accept"})
+```
+
+### `@ModelAttribute`
+
+[CSDN-@SessionAttribute和@ModelAttribute详解](https://blog.csdn.net/qq_35414502/article/details/60575059)
+
+> 加了该注解的方法，优先于控制器Controller下其他方法执行
+
+可以放在参数或者方法上
+
+加在方法上：
+
+![1635835319852](images/1635835319852.png)
+
+加在参数上：
+
+![1635835516620](images/1635835516620.png)
+
+### `@SessionAttributes`
+
+> 将存到model的键值对存入SessionScope中
+>
+> 取值用ModelMap modelMap.get()
+>
+> 删值用SessionStatus status.setComplete()
+
+model.addAttribute()会存到RequestScope
+
+HttpServletRequest request.addAttribute会存到RequestScope
+
+### `@RequestBody`和`@ResponseBody`
+
+```json
+{
+"id": 1,
+"name"："测试商品",
+"price": 99.9,
+"detail": "测试商品描述",
+"pic": "123456.jpg"
+}
+```
+
+> @RequestBody注解实现接收http请求的json数据，将json数据转换为java对象进行
+
+```java
+/**
+ * 测试json的交互
+ * @param item
+ * @return
+ */
+@RequestMapping("testJson")
+// @ResponseBody
+public @ResponseBody Item testJson(@RequestBody Item item) {
+	return item;
+}
+```
+
+手写json.action
+
+
+```xml
+<script type="text/javascript">
+$(function(){
+	//alert(1);
+	var params = '{"id": 1,"name": "测试商品","price": 99.9,"detail": "测试商品描述","pic": "123456.jpg"}';
+
+// 	$.post(url,params,function(data){
+		//回调
+// 	},"json");//
+	$.ajax({
+		url : "${pageContext.request.contextPath }/json.action",
+		data : params,
+		contentType : "application/json;charset=UTF-8",//发送数据的格式
+		type : "post",
+		dataType : "json",//回调
+		success : function(data){
+			alert(data.name);
+		}
+		
+	});
+});
+</script>
+```
+
+
+
+## 自定义类型转换器`converter`（不清楚）
+
+https://www.bilibili.com/video/BV1Sb411s7qa?p=15
+
+
+
+
+
+## 全局异常处理器
 
 [CSDN-SpringMVC实现全局异常处理器](https://blog.csdn.net/hbtj_1216/article/details/81102063)
-
-实现全局异常处理器分四步走：
-
-1. 定义统一返回结果类（如`R` `CommonResult` ）
-2. 定义错误码枚举类（如`ApiResult`）
-3. 自定义业务异常类`XxxRuntimeException`
-4. **定义全局异常处理类**`GlobalExceptionHandler`
 
 ## 上传文件
 
@@ -706,99 +776,19 @@ springmvc.xml
         </bean>
 ```
 
-### 图片服务器
+### 图片服务器（没讲清楚）
 
 用到`jersey.jar`
 
 
 
-## Json数据交互`@RequestBody`和`@ResponseBody`
 
-```json
-{
-"id": 1,
-"name"："测试商品",
-"price": 99.9,
-"detail": "测试商品描述",
-"pic": "123456.jpg"
-}
-```
-
-> @RequestBody注解实现接收http请求的json数据，将json数据转换为java对象进行
-
-```java
-/**
- * 测试json的交互
- * @param item
- * @return
- */
-@RequestMapping("testJson")
-// @ResponseBody
-public @ResponseBody Item testJson(@RequestBody Item item) {
-	return item;
-}
-```
-
-手写json.action
-
-
-```xml
-<script type="text/javascript">
-$(function(){
-	//alert(1);
-	var params = '{"id": 1,"name": "测试商品","price": 99.9,"detail": "测试商品描述","pic": "123456.jpg"}';
-
-// 	$.post(url,params,function(data){
-		//回调
-// 	},"json");//
-	$.ajax({
-		url : "${pageContext.request.contextPath }/json.action",
-		data : params,
-		contentType : "application/json;charset=UTF-8",//发送数据的格式
-		type : "post",
-		dataType : "json",//回调
-		success : function(data){
-			alert(data.name);
-		}
-		
-	});
-});
-</script>
-```
-
-## `@ModelAttribute`
-
-[CSDN-@SessionAttribute和@ModelAttribute详解](https://blog.csdn.net/qq_35414502/article/details/60575059)
-
-> 加了该注解的方法，优先于控制器Controller下其他方法执行
-
-可以放在参数或者方法上
-
-加在方法上：
-
-![1635835319852](images/1635835319852.png)
-
-加在参数上：
-
-![1635835516620](images/1635835516620.png)
-
-## `@SessionAttributes`
-
-> 将存到model的键值对存入SessionScope中
->
-> 取值用ModelMap modelMap.get()
->
-> 删值用SessionStatus status.setComplete()
-
-model.addAttribute()会存到RequestScope
-
-HttpServletRequest request.addAttribute会存到RequestScope
 
 ## Restful风格开发
 
 >  请求地址一样，通过请求方式method不同来调用不同的方法
 
-## 配置静态资源不拦截
+## 静态资源不拦截配置
 
 ### 方式一
 
@@ -853,7 +843,9 @@ HttpServletRequest request.addAttribute会存到RequestScope
 
 **注意： 这种方式对spring版本必须要求3.0.5及以上**
 
-## 拦截器【重要】
+## 拦截器
+
+### 拦截器的使用
 
 > 过滤器是java中的，不能拦截静态资源。
 >
@@ -910,7 +902,7 @@ public class HandlerInterceptor1 implements HandlerInterceptor {
 }
 ```
 
-## 拦截器执行顺序
+### 拦截器执行顺序
 
 HandlerInterceptor1..preHandle..
 
@@ -948,7 +940,7 @@ HandlerInterceptor2..preHandle..
 
 HandlerInterceptor1..afterCompletion..
 
-## 拦截器的应用
+### 拦截器的应用
 
 > 登录拦截
 
