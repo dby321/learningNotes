@@ -77,7 +77,7 @@
 [Github-Jedis](https://github.com/redis/jedis)
 
 ```java
-                public class JedisDemo {
+public class JedisDemo {
     public static void main(String[] args) {
         Jedis jedis=new Jedis ( "192.168.10.128",6379 );
         System.out.println ( jedis.ping () );
@@ -96,62 +96,6 @@
 [Baeldung-Springboot整合Redis](https://www.baeldung.com/spring-data-redis-tutorial)
 
 [Spring官网-10. Redis support](https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#redis)
-
-```xml
- <dependency>
-           <groupId>org.springframework.boot</groupId>
-           <artifactId>spring-boot-starter-data-redis</artifactId>
-       </dependency>
-
-```
-
-```yml
-spring:
-    redis:
-      host: 127.0.0.1 
-      port: 6379
-      password: 123456
-      jedis:
-        pool:
-          max-active: 8
-          max-wait: -1
-          max-idle: 500
-          min-idle: 0
-      lettuce:
-        shutdown-timeout: 0
-
-```
-
-```java
-@Configuration
-class MyConfig {
-
-  @Bean
-  LettuceConnectionFactory redisConnectionFactory() {
-    return new LettuceConnectionFactory();
-  }
-
-  @Bean
-  StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-
-    StringRedisTemplate template = new StringRedisTemplate();
-    template.setConnectionFactory(redisConnectionFactory);
-    return template;
-  }
-}
-```
-
-```java
-public class Example {
-
-  @Autowired
-  private StringRedisTemplate redisTemplate;
-
-  public void addLink(String userId, URL url) {
-    redisTemplate.opsForList().leftPush(userId, url.toExternalForm());
-  }
-}
-```
 
 ## 9. Redis事务操作
 

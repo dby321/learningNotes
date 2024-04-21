@@ -6,43 +6,7 @@
 
 [Mybatis-generator/通用Mapper/Mybatis-Plus对比](https://blog.csdn.net/m0_37524586/article/details/88351833)
 
-https://www.bilibili.com/video/BV1Db411s7F5/?from=search&seid=14757358402794430637&vd_source=f58f2e2144be4e99a8cf800afeecbbcb
-
-##  持久层解决方案
-
-- JDBC技术
-
-- Spring的JdbcTemplate
-
-- Apache的DBUtils
-
-以上都不是框架
-
-## Mybaits简介
-
-- Apache开源项目，迁移到Google。从ibatis到mybatis
-- 优秀的持久层框架，对jdbc操作数据库的步骤进行封装，使用java编写的
-- 使开发者只需要关注 SQL 本身，而不需要花费精力去处理例如注册驱动、创建connection、创建statement、手动设置参数、结果集检索等jdbc繁杂的过程代码。
-
-> ORM:就是把数据库表和实体类的属性对应起来
-
-## JDBC编程问题总结
-
-### jdbc程序
-
-[菜鸟教程-Java class.forname 详解](https://www.runoob.com/w3cnote/java-class-forname.html)
-
-### 问题总结
-
-1. 数据库连接创建、释放频繁造成系统资源浪费，从而影响系统性能。如果使用**数据库连接池**可解决此问题。
-
-2. Sql语句在代码中硬编码，造成代码不易维护，实际应用中sql变化的可能较大，sql变动需要改变java代码。
-
-3. 使用preparedStatement向占有位符号传参数存在硬编码，因为sql语句的where条件不一定，可能多也可能少，修改sql还要修改代码，系统不易维护。
-
-4. 对结果集解析存在硬编码（查询列名），sql变化导致解析代码变化，系统不易维护，如果能将数据库记录封装成**pojo对象**解析比较方便。
-
-
+[黑马-MyBatis教程](https://www.bilibili.com/video/BV1Db411s7F5/?from=search&seid=14757358402794430637&vd_source=f58f2e2144be4e99a8cf800afeecbbcb)
 
 ## Mybatis入门程序
 
