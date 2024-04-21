@@ -8,11 +8,9 @@
 
 [JavaGuide-SpringMVC常见面试题总结](https://javaguide.cn/system-design/framework/spring/spring-knowledge-and-questions-summary.html#spring-mvc)
 
-[W3Cschool-Spring MVC例子](https://www.w3cschool.cn/wkspring/9pf81ha5.html)
+[W3Cschool-Spring MVC](https://www.w3cschool.cn/wkspring/9pf81ha5.html)
 
-## SSM整合
-
-> 参见ssm和ssm_demo
+[Github-2020Study-SSM](https://github.com/dby321/2020Study-SSM)
 
 ## Springmvc和Struts2的区别
 

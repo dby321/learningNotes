@@ -8,6 +8,10 @@
 
 [黑马-MyBatis教程](https://www.bilibili.com/video/BV1Db411s7F5/?from=search&seid=14757358402794430637&vd_source=f58f2e2144be4e99a8cf800afeecbbcb)
 
+[Github-MyBatis 通用 Mapper4](https://github.com/abel533/Mapper)
+
+[MyBatis-Plus](https://baomidou.com/) 
+
 ## Mybatis入门程序
 
 1. 下载Mybatis的jar包
@@ -330,26 +334,6 @@ https://www.bilibili.com/video/BV1Db411s7F5?p=56
 
 使用`#{}`占位符，或者`${}`进行sql拼接。
 
-> **#{}** 是预编译处理，像传进来的数据会加个" "（#将传入的数据都当成一个字符串，会对自动传入的数据加一个双引号）
->
->  
->
-> **${}** 就是字符串替换。直接替换掉占位符。$方式一般用于传入数据库对象，例如传入表名.
->
-> 使用 ${} 的话会导致 sql 注入。什么是 SQL 注入呢？比如 select * from user where id = ${value}
->
->  
->
-> value 应该是一个数值吧。然后如果对方传过来的是 001  and name = tom。这样不就相当于多加了一个条件嘛？把SQL语句直接写进来了。如果是攻击性的语句呢？001；drop table user，直接把表给删了
->
->  
->
-> 所以为了防止 SQL 注入，能用 #{} 的不要去用 ${}
->
->  
->
-> 如果非要用 ${} 的话，那要注意防止 SQL 注入问题，可以手动判定传入的变量，进行过滤，一般 SQL 注入会输入很长的一条 SQL 语句。
-
 ### 传递pojo对象
 
 Mybatis使用ognl表达式解析对象字段的值，`#{}`或者`${}`括号中的值为pojo属性名称。
@@ -419,130 +403,3 @@ public class QueryVo {
 @Many	实现一对多结果集封装
 @SelectProvider	实现动态 SQL 映射
 @CacheNamespace	实现注解二级缓存的使用
-
-> 简单语句用注解开发，复杂还是写xml
-
-# 通用Mapper
-
-[Github-MyBatis 通用 Mapper4](https://github.com/abel533/Mapper)
-
-## 2 快速入门
-
-[Github-通用Mapper-和Spring集成](https://github.com/abel533/Mapper/wiki/1.2-spring)
-
-## 3 常用注解
-
-[Github-通用Mapper-数据库映射](https://github.com/abel533/Mapper/wiki/2.2-mapping#22-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%A0%E5%B0%84)
-
-## 4 常用方法
-
-[Github-通用Mapper-简单示例](https://github.com/abel533/Mapper/wiki/2.1-simple)
-
-## 5 QBC查询
-
-[Github-通用Mapper-Example用法](https://github.com/abel533/Mapper/wiki/6.example)
-
-## 6 逆向工程
-
-[Github-通用Mapper-使用 Maven 执行MBG](https://github.com/abel533/Mapper/wiki/4.1.mappergenerator)
-
-![1619927679611](.\images\1619927679611.png)
-
- Maven 中的插件配置如下： 
-
-```xml
-<plugins>
-  <plugin>
-    <artifactId>maven-compiler-plugin</artifactId>
-    <configuration>
-      <source>${jdk.version}</source>
-      <target>${jdk.version}</target>
-    </configuration>
-  </plugin>
-  <plugin>
-    <groupId>org.mybatis.generator</groupId>
-    <artifactId>mybatis-generator-maven-plugin</artifactId>
-    <version>1.3.6</version>
-    <configuration>
-      <configurationFile>
-        ${basedir}/src/main/resources/generator/generatorConfig.xml
-      </configurationFile>
-      <overwrite>true</overwrite>
-      <verbose>true</verbose>
-    </configuration>
-    <dependencies>
-      <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <version>5.1.29</version>
-      </dependency>
-      <dependency>
-        <groupId>tk.mybatis</groupId>
-        <artifactId>mapper</artifactId>
-        <version>4.0.0</version>
-      </dependency>
-    </dependencies>
-  </plugin>
-</plugins>
-```
-
-下面看配置文件[generatorConfig.xml](https://github.com/abel533/MyBatis-Spring-Boot/blob/master/src/main/resources/generator/generatorConfig.xml)：
-
-```xml
-<!DOCTYPE generatorConfiguration
-        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
-        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
-
-<generatorConfiguration>
-    <!--引入外部的属性文件 -->
-    <properties resource="config.properties"/>
-
-    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
-        <property name="beginningDelimiter" value="`"/>
-        <property name="endingDelimiter" value="`"/>
-		<!--配置通用Mapper的MBG插件相关信息，可以在config.properties中提前配置-->
-        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
-            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
-            <property name="caseSensitive" value="true"/>
-        </plugin>
-		
-        <jdbcConnection driverClass="${jdbc.driverClass}"
-                        connectionURL="${jdbc.url}"
-                        userId="${jdbc.user}"
-                        password="${jdbc.password}">
-        </jdbcConnection>
-		<!--配置Java实体类存放位置，可以在pom.xml中提前配置-->
-        <javaModelGenerator targetPackage="com.isea533.mybatis.model" 
-                            targetProject="src/main/java"/>
-		<!--配置XxxMapper.xml存放位置，可以在pom.xml中提前配置-->
-        <sqlMapGenerator targetPackage="mapper" 
-                         targetProject="src/main/resources"/>
-		<!--配置XxxMapper.java存放位置，可以在pom.xml中提前配置-->
-        <javaClientGenerator targetPackage="com.isea533.mybatis.mapper" 
-                             targetProject="src/main/java"
-                             type="XMLMAPPER"/>
-		<!--根据数据库表生成Java文件的相关规则-->
-        <!--tableName="%"表示数据库中所有表都参与逆向工程，此时使用默认规则-->
-        <!--默认规则：table_dept->TableDept-->
-        <!--不符合默认规则时需要使用tableName和domainObjectName两个属性明确指定-->
-        <table tableName="user_info" domainObjectName="userInfo">
-            <!--配置主键生成策略-->
-            <generatedKey column="id" sqlStatement="JDBC"/>
-        </table>
-    </context>
-</generatorConfiguration>
-```
-
-## 7 自定义Mapper<T>接口
-
-[Github-通用Mapper-扩展通用接口](https://github.com/abel533/Mapper/wiki/5.extend)
-
-# Mybatis Plus
-
-[MyBatis-Plus](https://baomidou.com/) 
-
-> 不喜欢可以用SpringDataJPA和通用Mapper
->
-> 分页插件不喜欢可以用PageHelper
-
-SpringBoot2.0.X后使用Mysql8，引入数据库驱动选择`com.mysql.cj.jdbc.Driver`，URL加上`?useSSL=false&useUnicode=true&cahracterEncoding=utf-8&serverTimezone=GMT%2B8`

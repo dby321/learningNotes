@@ -12,9 +12,9 @@
 
 # Vue.js - Day1
 
-[黑马Vue教程](https://www.bilibili.com/video/BV11s411A7h6/?spm_id_from=333.337.search-card.all.click&vd_source=f58f2e2144be4e99a8cf800afeecbbcb)
+[黑马-Vue教程](https://www.bilibili.com/video/BV11s411A7h6/?spm_id_from=333.337.search-card.all.click&vd_source=f58f2e2144be4e99a8cf800afeecbbcb)
 
-[尚硅谷张天禹老师笔记+代码](https://github.com/yangxuesong0122/ssg--vue23-)
+[尚硅谷-张天禹老师笔记+代码](https://github.com/yangxuesong0122/ssg--vue23-)
 
 ## 课程介绍与学习须知
 前5天： 都在学习Vue基本的语法和概念；打包工具 Webpack , Gulp

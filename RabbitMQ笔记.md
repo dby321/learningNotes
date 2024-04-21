@@ -1,10 +1,12 @@
 # RabbitMQ笔记
 
+## 参考资料
+
 [Github-RabbitMQ tutorials](https://github.com/rabbitmq/rabbitmq-tutorials)
 
 [RabbitMQ官网文档](https://www.rabbitmq.com/documentation.html)
 
-[RabbitMQ官网-安装](https://www.rabbitmq.com/download.html)
+《RabbitMQ实战》
 
 Management Plugin enabled by default at http://localhost:15672
 
