@@ -70,7 +70,7 @@
 
 ## 7. Jedis操作Redis
 
-[菜鸟教程-Java 使用 Redis](https://www.runoob.com/redis/redis-java.html)
+  并 
 
 [Jedis javadoc](https://www.javadoc.io/doc/redis.clients/jedis/latest/redis/clients/jedis/Jedis.html)
 
