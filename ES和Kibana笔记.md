@@ -4,7 +4,7 @@
 
 [ES-JavaRestClient文档](https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.6/index.html)
 
-[ Elasticsearch中文文档7.3](https://learnku.com/docs/elasticsearch73/7.3)
+[Elasticsearch中文文档7.3](https://learnku.com/docs/elasticsearch73/7.3)
 
 [为什么我们要选用 Elasticsearch 而不用 Solr](https://learnku.com/articles/43880)
 
