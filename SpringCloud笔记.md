@@ -12,6 +12,81 @@
 
 [Java系列 | 远程热部署在美团的落地实践](https://tech.meituan.com/2022/03/17/java-hotswap-sonic.html)
 
+## 鱼皮的建议
+
+随着互联网的发展，项目越来越复杂，单机且庞大的巨石项目已无法满足开发、运维、并发、可靠性等需求。
+
+因此，后台架构不断演进，可以将庞大的项目拆分成一个个职责明确、功能独立的细小模块，模块可以部署在多台服务器上，相互配合协作，提供完整的系统能力。
+
+换言之，想做大型项目，这块儿一定要好好学！
+
+#### [#](https://www.codefather.cn/java学习路线-by-程序员鱼皮/#知识-18)知识
+
+##### [#](https://www.codefather.cn/java学习路线-by-程序员鱼皮/#dubbo)Dubbo
+
+- 架构演进
+- RPC
+- Zookeeper
+- 服务提供者
+- 服务消费者
+- 项目搭建
+- 相关技术：DubboX（对 Dubbo 的扩展）
+
+##### [#](https://www.codefather.cn/java学习路线-by-程序员鱼皮/#🌖-微服务)🌖 微服务
+
+- 微服务概念
+- Spring Cloud 框架
+  - 子父工程
+  - 服务注册与发现
+  - 注册中心 Eureka、Zookeeper、Consul
+  - Ribbon 负载均衡
+  - Feign 服务调用
+  - Hystrix 服务限流、降级、熔断
+  - Resilience4j 服务容错
+  - Gateway（Zuul）微服务网关
+  - Config 分布式配置中心
+  - 分布式服务总线
+  - Sleuth + Zipkin 分布式链路追踪
+- Spring Cloud Alibaba
+  - Nacos 注册、配置中心
+  - OpenFeign 服务调用
+  - Sentinel 流控
+  - Seata 分布式事务
+
+##### [#](https://www.codefather.cn/java学习路线-by-程序员鱼皮/#接口管理)接口管理
+
+- Swagger 接口文档
+- Postman 接口测试
+- 相关技术：YApi、ShowDoc
+
+#### [#](https://www.codefather.cn/java学习路线-by-程序员鱼皮/#学习建议-19)学习建议
+
+时间不急的话，建议先从 Dubbo 学起，对分布式、RPC、微服务有些基本的了解，再去食用 Spring Cloud 全家桶会更香。学完 Spring Cloud 全家桶后，再去学 Spring Cloud Alibaba 就很简单了。
+
+这部分内容的学习，原理 + 实践都很重要，也不要被各种高大上的词汇唬住了，都是上层（应用层）的东西，基本没有什么算法，跟着视频教程学，其实还是很好理解的。
+
+分布式相关知识非常多，但这里不用刻意去背，先通过视频教程实战使用一些微服务框架，也能对其中的概念有基本的了解。
+
+大厂面试的时候很少问 Spring Cloud 框架的细节，更多的是微服务以及各组件的一些思想，比如网关的好处、消息总线的好处等。
+
+#### [#](https://www.codefather.cn/java学习路线-by-程序员鱼皮/#经典面试题-14)经典面试题
+
+1. 什么是微服务，有哪些优缺点？
+2. 什么是注册中心，能解决什么问题？
+
+#### [#](https://www.codefather.cn/java学习路线-by-程序员鱼皮/#资源-18)资源
+
+- 项目实战
+  - [项目实战 - 鱼皮原创项目教程系列 (opens new window)](https://yuyuanweb.feishu.cn/wiki/SePYwTc9tipQiCktw7Uc7kujnCd)中的 API 开放平台、在线判题系统都运用了微服务，推荐学习
+- 视频
+  - ⭐️ 黑马 Spring Cloud 视频教程：[https://www.bilibili.com/video/BV1kH4y1S7wz (opens new window)](https://www.bilibili.com/video/BV1kH4y1S7wz)（11 小时，非常凝练，适合快速入门）
+  - ⭐️ 尚硅谷 Dubbo 教程：[https://www.bilibili.com/video/BV1ns411c7jV(opens new window)](https://www.bilibili.com/video/BV1ns411c7jV)
+  - 尚硅谷 SpringCloud（H版&alibaba）框架开发教程（微服务分布式架构）：[https://www.bilibili.com/video/BV18E411x7eT (opens new window)](https://www.bilibili.com/video/BV18E411x7eT)（把国外的 Spring Cloud 和国内的 Spring Cloud Alibaba 结合在一起对比着去讲，主流技术栈、知识点都讲到了，内容更全面）
+- 文档
+  - Apache Dubbo 官方文档：[https://dubbo.apache.org/zh/(opens new window)](https://dubbo.apache.org/zh/)
+  - Spring Cloud Alibaba 官方文档：[https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md(opens new window)](https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md)
+  - ⭐ Swagger 教学文档：[https://doc.xiaominfo.com/ (opens new window)](https://doc.xiaominfo.com/)（跟着快速开始直接用就好了）
+
 
 
 ## 5. Eureka服务注册与发现
