@@ -10,9 +10,15 @@
 
 [【运维】Linux tutorials](https://dunwu.github.io/linux-tutorial/#%F0%9F%93%96-%E5%86%85%E5%AE%B9)
 
-[DockerCheatSheet中文](https://github.com/wsargent/docker-cheat-sheet/tree/master/zh-cn)
+[Docker-CheatSheet中文](https://github.com/wsargent/docker-cheat-sheet/tree/master/zh-cn)
+
+[Dockerfile-CheatSheet](https://devhints.io/dockerfile)
+
+[DockerCompose-CheatSheet](https://devhints.io/docker-compose)
 
 [掘金-Docker | 数据持久化与数据共享](https://juejin.cn/post/7153436573990813703)
+
+[Docker可视化工具Portainer启动教程](https://earthly.dev/blog/portainer-for-docker-container-management/)
 
 ![1638700824899](images/1638700824899.png)
 
@@ -178,8 +184,24 @@ ff1c7e546a13   elasticsearch   0.35%     1.25GiB / 1.796GiB    69.61%    0B / 0B
 
 ## Docker网络
 
+> 保证通过服务名互相能ping通
+
+![image-20240424145438709](/Users/dongbinyu/Library/Application Support/typora-user-images/image-20240424145438709.png)
+
+## Docker可视化工具Portainer
+
+[Docker可视化工具Portainer启动教程](https://earthly.dev/blog/portainer-for-docker-container-management/)
+
+`docker system df`命令显示有关Docker守护进程使用的磁盘空间量的信息
+
 ## Docker Compose
 
-## Docker Swarm
+[DockerCompose-CheatSheet](https://devhints.io/docker-compose)
 
-## CI/CD之Jenkins
+> 集群的快速编排，写好一个docker-compose文件，可以一键启动所有容器
+>
+> 容器的统一管理思想和Spring的ApplicationContext.xml统一管理所有bean一样
+
+## CIG容器重量级监控
+
+[cnblogs-重量级监控工具CIG](https://cnblogs.com/jinyanshenxing/p/15860881.html)
