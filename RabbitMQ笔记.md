@@ -14,5 +14,3 @@
 
 Management Plugin enabled by default at http://localhost:15672
 
-https://www.rabbitmq.com/shovel.html)
-

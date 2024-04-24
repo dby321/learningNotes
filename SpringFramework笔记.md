@@ -9,5 +9,3 @@
 [黑马-Java面试题](https://www.bilibili.com/video/BV1yT411H7YK/?spm_id_from=333.337.search-card.all.click&vd_source=f58f2e2144be4e99a8cf800afeecbbcb)
 
 [简书-Java代码发起请求-RestTemplate](https://www.jianshu.com/p/90ec27b3b518) 
-
-
