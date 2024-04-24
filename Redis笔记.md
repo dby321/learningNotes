@@ -70,8 +70,6 @@
 
 ## 7. Jedis操作Redis
 
-  并 
-
 [Jedis javadoc](https://www.javadoc.io/doc/redis.clients/jedis/latest/redis/clients/jedis/Jedis.html)
 
 [Github-Jedis](https://github.com/redis/jedis)
