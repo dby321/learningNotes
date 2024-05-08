@@ -1,6 +1,6 @@
-# JUC笔记-尚硅谷
+# JUC笔记
 
-> 非完整笔记，已经知道的已删除
+![img](./images/java-concurrent-overview-1.png)
 
 ## 线程基础知识复习
 
@@ -829,9 +829,7 @@ public class LockBigDemo {
 
 ## StampedLock【非重点】  
 
-# JUC笔记
 
-![img](./images/java-concurrent-overview-1.png)
 
 
 

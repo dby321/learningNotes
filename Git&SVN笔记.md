@@ -1,55 +1,8 @@
-* [Git学习笔记](#git%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0)
-  * [Git简介](#git%E7%AE%80%E4%BB%8B)
-    * [安装Git](#%E5%AE%89%E8%A3%85git)
-    * [创建版本库repository](#%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93repository)
-    * [把文件添加到版本库](#%E6%8A%8A%E6%96%87%E4%BB%B6%E6%B7%BB%E5%8A%A0%E5%88%B0%E7%89%88%E6%9C%AC%E5%BA%93)
-      * [1\.把文件添加到暂存区](#1%E6%8A%8A%E6%96%87%E4%BB%B6%E6%B7%BB%E5%8A%A0%E5%88%B0%E6%9A%82%E5%AD%98%E5%8C%BA)
-      * [2\.把文件提交到版本库](#2%E6%8A%8A%E6%96%87%E4%BB%B6%E6%8F%90%E4%BA%A4%E5%88%B0%E7%89%88%E6%9C%AC%E5%BA%93)
-    * [Git bash操作文件及文件夹命令](#git-bash%E6%93%8D%E4%BD%9C%E6%96%87%E4%BB%B6%E5%8F%8A%E6%96%87%E4%BB%B6%E5%A4%B9%E5%91%BD%E4%BB%A4)
-    * [查看Git安装目录](#%E6%9F%A5%E7%9C%8Bgit%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95)
-  * [时光穿梭机](#%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD%E6%9C%BA)
-    * [版本退回](#%E7%89%88%E6%9C%AC%E9%80%80%E5%9B%9E)
-    * [工作区和暂存区](#%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8C%E6%9A%82%E5%AD%98%E5%8C%BA)
-      * [掌握仓库当前的状态](#%E6%8E%8C%E6%8F%A1%E4%BB%93%E5%BA%93%E5%BD%93%E5%89%8D%E7%9A%84%E7%8A%B6%E6%80%81)
-      * [查看修改内容](#%E6%9F%A5%E7%9C%8B%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9)
-    * [撤销修改](#%E6%92%A4%E9%94%80%E4%BF%AE%E6%94%B9)
-    * [文件名里有空格和()的情况](#%E6%96%87%E4%BB%B6%E5%90%8D%E9%87%8C%E6%9C%89%E7%A9%BA%E6%A0%BC%E5%92%8C%E7%9A%84%E6%83%85%E5%86%B5)
-    * [删除文件](#%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6)
-  * [远程仓库](#%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93)
-    * [添加远程库](#%E6%B7%BB%E5%8A%A0%E8%BF%9C%E7%A8%8B%E5%BA%93)
-    * [从远程库克隆](#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E5%BA%93%E5%85%8B%E9%9A%86)
-    * [取消链接并删除本地库](#%E5%8F%96%E6%B6%88%E9%93%BE%E6%8E%A5%E5%B9%B6%E5%88%A0%E9%99%A4%E6%9C%AC%E5%9C%B0%E5%BA%93)
-  * [分支管理](#%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86)
-    * [创建与合并分支](#%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF)
-    * [解决冲突](#%E8%A7%A3%E5%86%B3%E5%86%B2%E7%AA%81)
-    * [分支管理策略](#%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5)
-    * [Bug分支](#bug%E5%88%86%E6%94%AF)
-    * [Feature分支](#feature%E5%88%86%E6%94%AF)
-    * [多人协作](#%E5%A4%9A%E4%BA%BA%E5%8D%8F%E4%BD%9C)
-    * [rebase](#rebase)
-  * [标签管理](#%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86)
-    * [创建标签](#%E5%88%9B%E5%BB%BA%E6%A0%87%E7%AD%BE)
-    * [操作标签](#%E6%93%8D%E4%BD%9C%E6%A0%87%E7%AD%BE)
-  * [关联多个远程库](#%E5%85%B3%E8%81%94%E5%A4%9A%E4%B8%AA%E8%BF%9C%E7%A8%8B%E5%BA%93)
-  * [自定义Git](#%E8%87%AA%E5%AE%9A%E4%B9%89git)
-    * [忽略特殊文件](#%E5%BF%BD%E7%95%A5%E7%89%B9%E6%AE%8A%E6%96%87%E4%BB%B6)
-      * [Windows下创建\.gitignore文件的常用方法](#windows%E4%B8%8B%E5%88%9B%E5%BB%BAgitignore%E6%96%87%E4%BB%B6%E7%9A%84%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95)
-    * [配置别名](#%E9%85%8D%E7%BD%AE%E5%88%AB%E5%90%8D)
-      * [删除别名](#%E5%88%A0%E9%99%A4%E5%88%AB%E5%90%8D)  
+# Git笔记
 
-# 2019Study-Git笔记
-
-## 问题解决
-
-[简书-GIT报错：connect to host github.com port 22: Connection timed out](https://www.jianshu.com/p/fe76f9867322)
-
-**分布式版本控制与集中式版本控制的最大区别**
-
->集中式的版本控制,本地没有历史记录,完整的仓库只存在服务器上,如果服务器挂了,就全都挂了,而分布式如果github挂了可以重建一个服务器,然后把任何一个人的仓库clone过去
->*一句话总结:分布式版本控制的每个节点都是完整仓库*
+## 参考资料
 
 * [Git下载地址](https://git-for-windows.github.io/ )
-* [Git User Manual](https://mirrors.edge.kernel.org/pub/software/scm/git/docs/user-manual.html)
 * [Git中文手册](https://git-scm.com/book/zh/v2)
 
 
@@ -57,95 +10,8 @@
 $ git --help     //不知道怎么办就看帮助呗
 ```
 
-
-
-
-## Git简介
-
-略
-### 安装Git
-
-下载并安装Git,安装完成后，还需要最后一步设置  
-`Git Bash`命令行输入：
-```
-$ git config --global user.name "Your Name"
-$ git config --global user.email "email@example.com"
-```
-
-*注意git config命令的--global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址*
-
-### 创建版本库repository
-* 首先建一个空目录
-```cmd
-$ mkdir learngit //当前目录下创建文件夹名为learngit
-$ cd learngit //进入learngit文件夹目录下
-$ pwd  //显示当前目录
-```
-
-`pwd`命令用于显示当前目录
-* 然后通过`git init`命令把这个目录变成Git可以管理的仓库
-```cmd
-$ git init  //初始化
-$ ls -ah //显示.git目录
-```
-`ls -ah`用于显示`.git`目录
-### 把文件添加到版本库
-编写一个readme.txt,放在learngit目录下(或者子目录)
-```cmd
-$ vi readme.txt
-```
-
-
-| Vim     | 快捷键说明                            |
-| ------- | ------------------------------------- |
-| Esc     | 退出编辑,跳到命令模式                 |
-| :w      | 保存文件但不退出vi                    |
-| :w file | 将修改另外保存到file中,不退出vi       |
-| :w!     | 强制保存,不退出vi                     |
-| :wq     | 保存文件并退出vi                      |
-| :q      | 不保存文件,退出vi                     |
-| :q!     | 不保存文件,强制退出vi                 |
-| :e!     | 放弃所有修改,从上次保存文件开始再编辑 |
-
-
-#### 1.把文件添加到暂存区
-使用`git add file_name` 或 `git stage file_name`
-```
-$ git add readme.txt
-```
-
-#### 2.把文件提交到版本库
-```
-$ git commit -m "wrote a readme file"  
-```
--m后面是本次提交的说明,一次可以提交多个文件  
-**注意:**`git commit` 指定文件的时候会直接提交**工作区**的文件,不指定文件的时候提交的是**缓存区`stage`的所有文件**
-
-```
-$ git commit readme.txt -m "balabala"
-```
-### Git bash操作文件及文件夹命令
-| 命令示例         | 用途                                                  |
-| ---------------- | ----------------------------------------------------- |
-| cd d:\Github     | 切换d盘下面的Github目录                               |
-| cd ..            | 回退到上一个目录                                      |
-| cd               | 回退到主目录                                          |
-| pwd              | 显示当前目录路径                                      |
-| ls(ll)           | 列出当前目录中的所有文件,ll更详细                     |
-| ls(ll) -a        | 列出当前目录中的所有文件包括隐藏目录                  |
-| touch readme.md  | 新建一个文件                                          |
-| rm readme.md     | 删除一个文件                                          |
-| mkdir img        | 新建一个文件夹img                                     |
-| rm -r img        | 删除一个文件夹img                                     |
-| mv readme.md img | 把当前目录下的目标文件移动到一个指定目录,使用相对路径 |
-| reset            | 清屏,清空git bash 命令窗口中的所有内容                |
-### 查看Git安装目录
-* Windows
-    * cmd `where git`
-* Mac
-    * 命令行 `which git`
 ## 时光穿梭机
-### 版本退回
+### 版本退回【重要】
 ```
 git reset --hard commit_id
 ```
@@ -154,7 +20,7 @@ git reset --hard commit_id
     * Git的`commit_d`(版本号)是一个十六进制的用SHA1计算出来的数字
     * 在Git中用`HEAD`表示当前版本,上一个版本就是`HEAD^`,上一百个版本写成`HEAD~100`
     * 使用`git reset --hard HEAD^`命令退回上一个版本
-* 【别用】穿梭前，用`git log`可以查看提交历史，以便确定要回退到哪个版本
+* 穿梭前，用`git log`可以查看提交历史，以便确定要回退到哪个版本
     * 【用这个】使用`git log --pretty=oneline`让记录单行显示
     * 使用`git log`或`git reflog` 加`file_name`查看指定文件的历史
 * 要重返未来，用`git reflog`查看命令历史，以便确定要回到未来的哪个版本
@@ -182,7 +48,7 @@ git reset --hard commit_id
 `cat file_name`命令，其功能是显示在工作区、暂存区和分支里同名文档的**最新修改版本的内容**
 
 
-### 撤销修改
+### 撤销修改【重要】
 * **场景1**：当你改乱了**工作区**某个文件的内容，想直接丢弃工作区的修改时，用命令`git checkout -- file_name`
     * 可以用`git checkout -- *`丢弃所有工作区文件的修改
 * **场景2**：当你不但改乱了工作区某个文件的内容，还添加到了**暂存区**时，想丢弃修改，分两步
@@ -212,6 +78,8 @@ Git命令（或者所有的shell命令中）中出现括“（）”时系统把
 **注意:** 可以直接使用`git rm file_name`删除本地文件以及提交删除到暂存区,但仅用于暂存区有此本地文件的情况  
 
 ## 远程仓库
+
+[简书-git ssh免密登录](https://www.jianshu.com/p/7164a52786f3)
 
 注册GitHub账号
 
@@ -351,17 +219,38 @@ git stash
 
 ### rebase
 
-这是git文档强调的使用注意情形和原则
->只对尚未推送或分享给别人的本地修改执行`rebase`操作清理历史；
->从不对已推送至别处的提交执行`rebase`操作
+[Git中文手册-rebase](https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%8F%98%E5%9F%BA)
 
+<img src="https://git-scm.com/book/en/v2/images/basic-rebase-1.png" alt="分叉的提交历史。" style="zoom:50%;" />
 
-[gitbook.liuhui998](http://gitbook.liuhui998.com/4_2.html)下图来自这篇链接    
-![git_merge.png](img/git_merge.png)  
-![git_rebase.png](img/git_rebase.png)  
->`git rebase`会把你的`my work`分支里的每个提交`commit`取消掉，并且把它们临时 保存为补丁`patch`(这些补丁放到".git/rebase"目录中),然后把`mywork`分支更新 到最新的`origin`分支，最后把保存的这些补丁应用到`mywork`分支上。
+Figure 36. 通过合并操作来整合分叉的历史
 
->当`mywork`分支更新之后，它会指向这些新创建的提交`commit`,而那些老的提交会被丢弃。 如果运行垃圾收集命令`pruning garbage collection`, 这些被丢弃的提交就会删除. 
+其实，还有一种方法：你可以提取在 `C4` 中引入的补丁和修改，然后在 `C3` 的基础上应用一次。 在 Git 中，这种操作就叫做 **变基（rebase）**。 你可以使用 `rebase` 命令将提交到某一分支上的所有修改都移至另一分支上，就好像“重新播放”一样。
+
+在这个例子中，你可以检出 `experiment` 分支，然后将它变基到 `master` 分支上：
+
+```console
+$ git checkout experiment
+$ git rebase master
+First, rewinding head to replay your work on top of it...
+Applying: added staged command
+```
+
+它的原理是首先找到这两个分支（即当前分支 `experiment`、变基操作的目标基底分支 `master`） 的最近共同祖先 `C2`，然后对比当前分支相对于该祖先的历次提交，提取相应的修改并存为临时文件， 然后将当前分支指向目标基底 `C3`, 最后以此将之前另存为临时文件的修改依序应用。 （译注：写明了 commit id，以便理解，下同）
+
+<img src="https://git-scm.com/book/en/v2/images/basic-rebase-3.png" alt="将 `C4` 中的修改变基到 `C3` 上。" style="zoom:50%;" />
+
+Figure 37. 将 `C4` 中的修改变基到 `C3` 上
+
+现在回到 `master` 分支，进行一次快进合并。
+
+```console
+$ git checkout master
+$ git merge experiment
+```
+
+<img src="https://git-scm.com/book/en/v2/images/basic-rebase-4.png" alt="`master` 分支的快进合并。" style="zoom:50%;" />
+
 ## 标签管理
 
 >发布一个版本时，我们通常先在版本库中打一个标签（tag），这样，就唯一确定了打标签时刻的版本。将来无论什么时候，取某个标签的版本，就是把那个打标签的时刻的历史版本取出来。所以，标签也是版本库的一个快照。Git的标签虽然是版本库的快照，但其实它就是指向某个commit的指针（跟分支很像对不对？但是分支可以移动，标签不能移动），所以，创建和删除标签都是瞬间完成的。
@@ -440,13 +329,9 @@ git check-ignore -v file_name
 4. 进入cmd命令行，执行 `echo > .gitignore` 输入空内容并创建文件，或执行 `rename somefile .gitignore`、`copy somefile .gitignore` 从已有文件复制、重命名。
 
 ### 配置别名
-只需要先如此如此
 ```
 git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 ```
-然后就可以只用`git lg`输出辣么一长串的代码,看到这里我沉默了,然后我想了半天,我为什么干脆不用GitDesktop呢,可能就是因为热爱敲代码吧(雾
-
-
 配置Git的时候，加上`--global`是针对当前用户起作用的，如果不加，那只针对当前的仓库起作用。
 每个仓库的Git配置文件都放在`.git/config`文件,打开配置文件,别名就在`[alias]`后面，要删除别名，直接把对应的行删掉即可
 当前用户的Git配置文件放在`用户主目录`下的一个隐藏文件`.gitconfig`中
@@ -454,16 +339,15 @@ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Crese
 查看用户的配置信息使用`git config --global --list`命令
 查看当前仓库的配置信息使用`git config --local --list`命令
 #### 删除别名
-命令删除一个已定义的别名 `git config --global --unset alias.ci `
-`cd .git` `vi config`打开对应的配置文件,别名就在`[alias]`后面，直接把对应的行删掉即可
+- 命令删除已定义的别名 `git config --global --unset alias.ci `
+- 直接删除已定义的别名`cd .git` `vi config`打开对应的配置文件,别名就在`[alias]`后面，直接把对应的行删掉即可
 
->gitconfig配置文件的读取顺序： 
->linux中类似用户的配置文件一样有3层，系统级，用户级，项目级。 
->windows也基本一样，但常常只存在于是用户根目录(C:\User\xxx)，项目目录中。 最下层的覆盖上面的，alias配置也在其中，手动改配置文件也和命令一样。 加了--global选项的，表示配置写到了用户级，--system是系统级，win是在安装目录（如C:\Program Files\Git\mingw64\etc），不加就在项目级
+gitconfig配置文件的读取顺序：
 
-> https://www.jianshu.com/p/7164a52786f3)
+- linux中类似用户的配置文件一样有3层，系统级，用户级，项目级。 
+- windows也基本一样，但常常只存在于是用户根目录(C:\User\xxx)，项目目录中。 最下层的覆盖上面的，alias配置也在其中，手动改配置文件也和命令一样。 加了--global选项的，表示配置写到了用户级，--system是系统级，win是在安装目录（如C:\Program Files\Git\mingw64\etc），不加就在项目级
 
-# 2022Study-SVN笔记
+# SVN笔记
 
 ## Subversion
 

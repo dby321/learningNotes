@@ -1,6 +1,16 @@
-# 2021Study-Redis-尚硅谷版
+# Redis笔记
+
+[CSDN-Redis 笔记（黑马点评 —— 基础篇 + 实战篇）](https://blog.csdn.net/weixin_45033015/article/details/127545710)
 
 ## 1. NoSql数据库简介
+
+> SQL是表结构化的，数据可以通过外键进行关联，语法是标准SQL,有完整的事务支持
+>
+> NoSQL是基于图、基于键值对、基于JSON字符串的非结构化的，数据是无关联的，语法是不固定的，只有基本的事务支持。
+
+![SQL和NoSQL](./images/image-20230613200030370.png)
+
+![SQL和NoSQL](./images/image-20230613200317756.png)
 
 ## 2. Redis的安装和概述
 
@@ -60,8 +70,6 @@
 
 ## 7. Jedis操作Redis
 
-[菜鸟教程-Java 使用 Redis](https://www.runoob.com/redis/redis-java.html)
-
 [Jedis javadoc](https://www.javadoc.io/doc/redis.clients/jedis/latest/redis/clients/jedis/Jedis.html)
 
 [Github-Jedis](https://github.com/redis/jedis)
@@ -86,62 +94,6 @@ public class JedisDemo {
 [Baeldung-Springboot整合Redis](https://www.baeldung.com/spring-data-redis-tutorial)
 
 [Spring官网-10. Redis support](https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#redis)
-
-```xml
- <dependency>
-           <groupId>org.springframework.boot</groupId>
-           <artifactId>spring-boot-starter-data-redis</artifactId>
-       </dependency>
-
-```
-
-```yml
-spring:
-    redis:
-      host: 127.0.0.1 
-      port: 6379
-      password: 123456
-      jedis:
-        pool:
-          max-active: 8
-          max-wait: -1
-          max-idle: 500
-          min-idle: 0
-      lettuce:
-        shutdown-timeout: 0
-
-```
-
-```java
-@Configuration
-class MyConfig {
-
-  @Bean
-  LettuceConnectionFactory redisConnectionFactory() {
-    return new LettuceConnectionFactory();
-  }
-
-  @Bean
-  StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-
-    StringRedisTemplate template = new StringRedisTemplate();
-    template.setConnectionFactory(redisConnectionFactory);
-    return template;
-  }
-}
-```
-
-```java
-public class Example {
-
-  @Autowired
-  private StringRedisTemplate redisTemplate;
-
-  public void addLink(String userId, URL url) {
-    redisTemplate.opsForList().leftPush(userId, url.toExternalForm());
-  }
-}
-```
 
 ## 9. Redis事务操作
 
@@ -246,39 +198,11 @@ lua脚本解决原子性，解决库存问题
 
 
 
-# 2023Study-Redis-黑马版
-
-[CSDN-Redis 笔记（黑马点评 —— 基础篇 + 实战篇）](https://blog.csdn.net/weixin_45033015/article/details/127545710)
-
-## 基础篇-CRUD
-
-### 初识Redis
-
-#### SQL和NoSQL
-
-> SQL是表结构化的，数据可以通过外键进行关联，语法是标准SQL,有完整的事务支持
->
-> NoSQL是基于图、基于键值对、基于JSON字符串的非结构化的，数据是无关联的，语法是不固定的，只有基本的事务支持。
-
-![SQL和NoSQL](./images/image-20230613200030370.png)
-
-![SQL和NoSQL](./images/image-20230613200317756.png)
-
-#### Redis的特点
-
-![认识Redis](./images/image-20230613201012288.png)
 
 
 
-### Redis数据结构
-
-![Redis数据类型](./images/image-20230614112127550.png)
 
 
-
-### Redis的java客户端
-
-![Java客户端](./images/image-20230614140528857.png)
 
 
 
