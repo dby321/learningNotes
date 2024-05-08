@@ -326,6 +326,9 @@ mutations: {
 - SCSS 需要使用分号和花括号而不是换行和缩进 **好用**
 - Sass 使用换行和缩进而不是分号和花括号 **难用**
 
-  
+## Vue原理
 
-   
+### 数据代理
+
+> Object.defineProperties()
+
