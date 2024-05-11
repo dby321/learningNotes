@@ -782,3 +782,14 @@ console.log(object1.property1);
 
 
 
+## Node简记
+
+> express相当于前端的web框架
+>
+> nodemon相当于前端的热部署工具
+>
+> app.use注册全局中间件，但是在vue中app.use是注册插件
+>
+> - [掘金-Express中间件总结](https://juejin.cn/post/7150224098466430983)
+>
+> - 中间件通常是独立功能的函数，可以在应用的任何地方被 `use` 或 `middlewareFunction` 调用。插件则可能是更复杂的库，提供一系列中间件、错误处理或者服务级别的功能。
