@@ -1,11 +1,21 @@
 <!-- H5的文档声明 -->
 <!-- 不写文档声明会让浏览器进入 怪异模式(区别于标准模式) -->
 <!DOCTYPE html>
+<!--#
+	  - <html lang="zh-CN">
+		  - 让浏览器显示对应的翻译提示。
+			- 有利于搜索引擎优化。
+			- 第一种写法（ 语言-国家/地区 ），例如：
+				zh-CN ：中文-中国大陆（简体中文）
+				zh-TW ：中文-中国台湾（繁体中文）
+				zh ：中文
+				en-US ：英语-美国
+				en-GB ：英语-英国
+-->
 <html lang="en">
 
 <head>
 	<!--# <meta>
-		- 细节参见 http://www.w3school.com.cn/tags/tag_meta.asp
 		- 用来设置字符集 charset="编码"
 			- 编码如 UTF-8 GBK ...
 			- 字符集 细节参见 https://blog.csdn.net/qq_42068856/article/details/83792174
@@ -13,12 +23,15 @@
 		- 用来指定网页的描述 name="description" content="描述"
 		- 搜素引擎检索 关键字和描述，但不会影响在搜索中的排名
 		- 用来请求的重定向 http-equiv="refresh" content="几秒;url=路径"
-			- 请求的重定向 简单来说就是 几秒之后跳转另一个网址
 	 -->
 	<meta charset="UTF-8">
 	<title>尚硅谷前端HTML5视频_HTML</title>
 	<meta name="keywords" content="HTML5,Javascript,前端,java" />
 	<meta name="description" content="发布h5,js等前端相关的信息" />
+		<!--设置IE总是使用最新的文档模式进行渲染-->
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<!--优先使用 webkit ( Chromium ) 内核进行渲染, 针对360等壳浏览器-->
+	<meta name="renderer" content="webkit">
 	<!-- <meta http-equiv="refresh" content="5;url=http://www.baidu.com"> -->
 </head>
 
@@ -33,10 +46,9 @@
 		<h1>这是我的尚硅谷前端HTML基础</h1>
 		<hr />
 		<!--# 实体(转义字符串) 
-			- 细节参见 http://www.w3school.com.cn/html/html_entities.asp
 			- 由于<和>特殊字符不能直接使用，故需要 实体
 			- 举例如下	
-			    <     &lt;
+			  <     &lt;
 				>     &gt;
 				空格  &nbsp; 
 				版权符号 &copy;
@@ -71,6 +83,17 @@
 			- PNG
 				- 支持的颜色多，支持复杂的透明
 				- 带透明的图片
+			- BMP
+				- 大型游戏中图片使用，不进行压缩
+				- 支持的颜色丰富、保留的细节更多、占用空间极大、不支持透明背景、不支持动态图。
+			- WEBP
+				- 谷歌推出的格式，注意浏览器兼容性
+			- BASE64
+				1. 本质：一串特殊的文本，要通过浏览器打开，传统看图应用通常无法打开。
+				2. 原理：把图片进行 base64 编码，形成一串文本。
+				3. 如何生成：靠一些工具或网站。
+				4. 如何使用：直接作为 img 标签的 src 属性的值即可，并且不受文件位置的影响。
+				5. 使用场景：一些较小的图片，或者需要和网页一起加载的图片。 
 			# 图片使用原则
 			- 效果差不多 用小的
 		 -->
@@ -101,7 +124,8 @@
 			- 属性
 				- href 跳转到目标地址，可以写一个相对路径也可以写一个完整路径
 						- "#" 除了占位，还可以回到当前页面的顶部
-						- mailto:邮箱地址(用的很少，现在用二维码)	 
+						- mailto:邮箱地址(用的很少，现在用二维码)	
+						-  
 				- target 规定在何处打开链接文档
 					- _blank 新窗口打开
 					- _self 在当窗口中打开(默认)
@@ -116,12 +140,29 @@
 		<center>
 			<p>我是一个p标签</p>
 		</center>
-		<!--# HTML全局属性id与锚点定位
-			- 标签的唯一标识,不能重复
-			- 锚点定位见 exer-blog.html
-				- <a href="#zJL">去周杰伦</a>
-				- <a href="" id="zJL">周杰伦</a>
-		 -->
+		<!-- ######### 锚点 start ########## -->
+		<!-- 第一种方式：a标签配合name属性 -->
+		<a name="test1"></a>
+		<!-- 第二种方式：其他标签配合id属性 -->
+		<h2 id="test2">我是一个位置</h2>
+
+		<!-- 跳转到test1锚点-->
+		<a href="#test1">去test1锚点</a>
+		<!-- 跳到本页面顶部 -->
+		<a href="#">回到顶部</a>
+		<!-- 跳转到其他页面锚点 -->
+		<a href="demo.html#test1">去demo.html页面的test1锚点</a>
+		<!-- 刷新本页面 -->
+		<a href="">刷新本页面</a>
+		<!-- 执行一段js,如果还不知道执行什么，可以留空，javascript:; -->
+		<a href="javascript:alert(1);">点我弹窗</a>
+		<!-- ######### 锚点 end ########## -->
+		<!-- 唤起设备拨号 -->
+		<a href="tel:10010">电话联系</a>
+		<!-- 唤起设备发送邮件 -->
+		<a href="mailto:10010@qq.com">邮件联系</a>
+		<!-- 唤起设备发送短信 -->
+		<a href="sms:10086">短信联系</a>
 	</div>
 	<hr>
 
@@ -130,7 +171,9 @@
 			- 块元素 
 				- 独占一整行，无论他的内容有多少
 				- <h1> <h2>...
+					- h1~h6 不能互相嵌套。
 				- <p>
+					- p 中不要写块级元素。
 				- <br> <hr>
 				- <div>
 			- 内联元素(行内元素)
@@ -180,11 +223,11 @@
 			- <ul>和<li>都是块元素
 			- 列表之间是可以互相嵌套的
 		 -->
-		 <ul type="circle">
-			 <li>123</li>
-			 <li>456</li>
-			 <li>789</li>
-		 </ul>
+		<ul type="circle">
+			<li>123</li>
+			<li>456</li>
+			<li>789</li>
+		</ul>
 		<!--# <dl>定义列表
 			- 用来对一些词汇和内容进行定义
 			- 子标签<dt> <dd>
@@ -196,13 +239,34 @@
 			<dt>武大</dt>
 			<dd>武汉大学不拉不拉</dd>
 		</dl>
-		<!--# 表格<table>
-			- 原始人才用表格布局
-			- <table>是一个块元素
-			- <tr> <td> <th>表头
-			- colspan="" 横向合并单元格
-			- rowspan="" 纵向合并单元格
-		 -->
+		<!--# 表格
+			- 表格标题caption 表头thead，表格的主体tbody，表格底部tfoot
+			- table
+				- width ：设置表格宽度。
+				- height ：设置表格最小高度，表格最终高度可能比设置的值大。
+				- border ：设置表格边框宽度。
+				- cellspacing ： 设置单元格之间的间距。
+			- thead,tbody,tr,tfoot
+				- align ： 设置单元格的水平对齐方式，可选值如下：
+					1. left ：左对齐
+					2. center ：中间对齐
+					3. right ：右对齐
+				- valign ：设置单元格的垂直对齐方式，可选值如下：
+					1. top ：顶部对齐
+					2. middle ：中间对齐
+					3. bottom ：底部对齐
+			- td,th
+				- rowspan ：指定要跨的行数。
+				- colspan ：指定要跨的列数。
+				- align ： 设置单元格的水平对齐方式，可选值如下：
+					1. left ：左对齐
+					2. center ：中间对齐
+					3. right ：右对齐
+				- valign ：设置单元格的垂直对齐方式，可选值如下：
+					1. top ：顶部对齐
+					2. middle ：中间对齐
+					3. bottom ：底部对齐
+		-->
 		<table border="1">
 			<tr>
 				<th>A1</th>
@@ -223,10 +287,9 @@
 
 			</tr>
 		</table>
-		<!--# 长表格
-			- 表头thead，表格的主体tbody，表格底部tfoot
-		-->
+
 		<table class="table table-hover">
+			<caption>我是标题</caption>
 			<thead>
 				<tr>
 					<th>我是表头1</th>
@@ -249,12 +312,12 @@
 				</tr>
 			</tfoot>
 		</table>
-		<!--# 表单<form> 看实例如下
-			- form 必须制定一个action属性，该属性指向的是一个服务器的地址
-			- <input type="类型" name="提交内容的名字" value="提交的值" id="为label设置的">
-			- 用户填写的信息会在 url地址的后边以查询字符串
-				- ?属性名=属性值&属性名=属性值&属性名=属性值&属性名=属性值
-				- ?username=dby321&password=19970522&gender=male&hobby=aaa&ny=tghlx
+		<!--# 表单<form> 
+			- action:该属性指向的是一个服务器的地址
+			- target ：用于控制表单提交后，如何打开页面，常用值如下：
+				- _self ：在本窗口打开。
+				- _blank ：在新窗口打开。
+			- method ：用于控制表单的提交方式
 		 -->
 		<form action="target.html">
 			<!-- fieldset用于 表单分组 类似于optgroup用于 下拉列表分组  -->
@@ -263,13 +326,24 @@
 				<legend>用户信息</legend>
 				<!-- label的for 对应 input的id -->
 				<label for="um">用户名</label>
-				<!-- value="" 默认显示文字 HTML5有更好的显示办法 -->
+				<!-- <input type="text">
+					- name 属性：数据的名称。
+					- value 属性：输入框的默认输入值。
+					- maxlength 属性：输入框最大可输入长度。
+					- placeholder 提示文字
+					- required 必填
+					- autofocus 自动获取焦点
+					- autocomplete 自动完成 on/off
+					- pattern 填写的正则表达式 
+				-->
 				<input id="um" type="text" name="username" value="请输入用户名"><br><br>
 				<label for="mm">密码</label>
 				<input id="mm" type="password" name="password"><br><br>
 				性别
 				<input id="male" type="radio" name="gender" value="male" checked="checked"><label for="male">男</label>
 				<input id="female" type="radio" name="gender" value="female"><label for="female">女</label><br><br>
+				<!-- 隐藏域 -->
+				<input type="hidden" name="tag" value="100">
 			</fieldset>
 			<fieldset>
 				<legend>用户爱好</legend>
@@ -294,7 +368,8 @@
 						<option value="fly">□立○</option>
 					</optgroup>
 				</select><br><br>
-				<label for="zwjs">自我介绍</label> <textarea name="info" id="zwjs" cols="30" rows="10"></textarea> <br><br>
+				<label for="zwjs">自我介绍</label>
+				<textarea name="info" id="zwjs" cols="30" rows="10"></textarea> <br><br>
 			</fieldset>
 
 			<fieldset>
@@ -318,7 +393,6 @@
 			- 使用框架集则意味着页面中不能有自己的内容，只能引入其他的页面
 			- 引入几个页面就要向浏览器发送几次请求，用户体验很差
 			- 如果非得用，建议用frameset，不要用iframe
-			- 我怀疑我自己在开车
 			- 细节参见 http://www.w3school.com.cn/tags/tag_frameset.asp
 		 -->
 		<!--# 恶心的IE6中对图片格式png24支持度不高 会导致透明效果无法正常显示
@@ -327,7 +401,74 @@
 			- 细节参见 https://www.bilibili.com/video/av21557880/?p=89
 		-->
 	</div>
-
+	<!--######## html5 start #######-->
+	<div>
+		<!--
+		# 新增布局标签
+			- header 整个页面，或部分区域的头部 双
+			- footer 整个页面，或部分区域的底部 双
+			- nav 导航 双
+			- article 文章、帖子、杂志、新闻、博客、评论等。 双
+				- section 页面中的某段文字，或文章中的某段文字（里面文字通常里面会包含标题）。 双
+			- aside 侧边栏 双
+			- main 文档的主要内容 ( WHATWG 没有语义， IE 不支持)，几乎不用。 双
+			- hgroup 包裹连续的标题，如文章主标题、副标题的组合 （ W3C 将其删除）双
+		# 新增状态标签 
+			- <meter> 用于显示电量、磁盘用量
+				- high 数值 规定高值
+				- low 数值 规定低值
+				- max 数值 规定最大值
+				- min 数值 规定最小值
+				- optimum 数值 规定最优值
+				- value 数值 规定当前值
+			- <progress> 用于显示进度条
+				- max 数值 规定目标值。
+				- value 数值 规定当前值。
+			# 新增列表标签
+				- <datalist> 用于搜索框的关键字提示 双
+				- <details> 用于展示问题和答案，或对专有名词进行解释 双
+				- <summary> 写在 details 的里面，用于指定问题或专有名词 双
+			# 新增文本注音
+				- <ruby> 包裹需要注音的文字 双
+				- <rt> 写注音， rt 标签写在 ruby 的里面	
+				- <mark> 标记
+			# 新增多媒体标签
+				- <video>
+				- <audio>
+			# 新增全局属性
+			- contenteditable
+				- 表示元素是否可被用户编辑，可选值如下：
+				- true ：可编辑
+				- false ：不可编辑
+			- draggable
+				- 表示元素可以被拖动，可选值如下：
+				- true ：可拖动
+				- false ：不可拖动
+			- hidden 隐藏元素
+			- spellcheck
+				– 规定是否对元素进行拼写和语法检查，可选值如下：
+				- true ：检查
+				- false ：不检查
+			- contextmenu 规定元素的上下文菜单，在用户鼠标右键点击元素时显示。
+			- data-* 用于存储页面的私有定制数据。
+		-->
+		<input type="text" list="mydata">
+		<datalist id="mydata">
+			<option value="周冬雨">周冬雨</option>
+			<option value="周杰伦">周杰伦</option>
+			<option value="温兆伦">温兆伦</option>
+			<option value="马冬梅">马冬梅</option>
+		</datalist>
+		<details>
+			<summary>如何走上人生巅峰？</summary>
+			<p>一步一步走呗</p>
+		</details>
+		<ruby>
+			<span>魑魅魍魉</span>
+			<rt>chī mèi wǎng liǎng </rt>
+			</ruby>
+	</div>
+	<!--######## html5 end #######-->
 </body>
 <script type="text/javascript" src="">
 </script>

@@ -35,8 +35,8 @@
 
 <body>
     <div>
-<!--        [Flex 布局语法教程](https://www.runoob.com/w3cnote/flex-grammar.html)-->
-        <!--# position 定位
+        <!--[Flex 布局语法教程](https://www.runoob.com/w3cnote/flex-grammar.html)-->
+        <!--# position 定位 父相子绝
             - static(默认值，元素 没有开启定位)
             - relative(元素开启 相对定位)
                 - 用left right top bottom四个属性来设置元素的偏移量
@@ -51,7 +51,7 @@
                 4.当开启了元素相对定位以后，而不设置偏移量，元素不会发生任任何变化            
                 5.相对定位 不会改变元素的性质，块还是块，内联还是内联
             - absolute(元素开启 绝对定位)
-                1.绝对定位的元素 会脱离文档流
+                1.脱离文档流成为定位元素
                 2.当开启了元素绝对定位以后，而不设置偏移量，元素不会发生任任何变化
                 3.绝对定位是相对于 离他最近的 开启了定位的(position不是默认值就是开启了定位) 祖先元素 进行定位的
                     如果所有祖先都没有开启定位，则会相对于浏览器窗口进行定位
@@ -60,20 +60,18 @@
                     内联元素变成块元素
                     块元素的宽度和高度都被内容撑开
             - fixed(元素开启 固定定位)
+                - 脱离文档流成为定位元素
                 - 固定定位也是一种绝对定位，大部分特点和absolute一样
                 - 比较像 小网站的小广告
                 - 恶心的IE6不支持固定定位
+            - sticky(元素开启 粘性定位)
+                - 一般常用top
+            - flex 伸缩盒子布局
             - 如果定位元素都开了position定位 那么下面的div会盖住上面的div
             - z-index 用来设置元素的层级
                 - 层级越高越优先显示
                 - 对于没有开启定位的元素 不能使用z-index
                 - 父元素的层级再高，也不会盖住子元素
-            - opacity 设置不透明度 0-1
-                - opacity: 0;   完全透明
-                - opacity:0.5;  半透明
-                - opacity:1;    完全不透明
-                - IE8以下浏览器不支持 解决办法如下:
-                    - filter:alpha(opacity=50)
          -->
         <div class="box1"></div>
         <div class="box2"></div>
@@ -104,22 +102,23 @@
                 - background-attachment:scroll(默认值) 背景图片 随着窗口滚动
                 - 博客类网站经常用 background-attachment:fixed;
                 - 不随窗口滚动的图片，我们一般都是设置给body而不设置给其他元素
+            - background-origin 背景原点
+            - background-clip 背景裁剪
+            - background-size 背景大小
             - background 简写属性，可以同时设置多个背景相关的样式
                 - 没有顺序的要求 不写的就是默认值
                 - background:#bfa url(img/3.png) center center no-repeat fixed;
+            
             - 闪烁问题
                 - 设置了:link :hover :active 不同的背景图片之后，切换图片时，有一个非常快的
                 - 浏览器每加载一个外部资源就需要单独的发送一次请求
                 - 可以理解为 两个守卫换岗 有一个时间差
-                - 解决方案
+                - 解决方案 图片整合技术(css-sprite) 雪碧图
                     - 三个按钮从三个图片合成为一个图片 
-                    - 通过background-position来制定要谢欢的图片的位置
-                    - 这种技术叫做 图片整合技术(css-sprite) 雪碧图或者精灵图
+                    - 通过background-position来制定要图片的位置
                     - 优点
                         - 浏览器只用发送一次请求，可以同时加载多个图片，提高了用户体验
                         - 减小的图片大小(省去了颜色表的占用空间)，提高了用户体验       
-            - 如何使用css-sprite雪碧图
-                background-position来确定雪碧图的位置       
          -->
         <!--# css Hack
             - 特殊的代码，看起来像注释

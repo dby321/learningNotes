@@ -20,37 +20,44 @@
                 - 相对于 当前元素的字体大小 来计算
                 - 1 em=1 font-size
                 - 假设font-size:100px 则 1em=100px 10em=1000px
+            - rem
+                - 相对根字体大小，html标签就是根。
+            - vw,vh
+                - 视口高宽的百分之多少
         -->
         <!--# 颜色单位
             - 颜色单词
-                - color:red green blue skyblue ...
             - RGB值 
                 - color:rgb(0-255,0-255,0-255)
+                - color:rgba(0-255,0-255,0-255,0-1)
                 - color:rgb(0-100%,0-100%,0-100%) 
-                - 十六进制的RGB值
-                    - color:#123abf;
-                    - color:#529955;
-                    - color:#55aaff; == color:#5af;        
+                - color:#123abf;
+                - color:#ff998866;  包含不透明度
+                - color:hsla(120,100%,50%,0.3);
+                - color:hsl(120,100%,50%)
+              
          -->
         <!--# 字体的样式
-            - font-size   设置的是 文字格子的大小
-            - font-family 设置的是 字体
-                - 不支持的字体用默认
-                - 字体举例:"微软雅黑" "arial"
-                - 可以指定多个字体
-                    - 先用前面的，前面的不能用，就用后面的
-                    - font-family:华文彩云,arial,微软雅黑;
-                - 文字是否能正常显示，取决于用户电脑的字体库fonts
-            - font-style  设置的是 文字的风格
+            - font-size   
+            - font-family 
+            - font-style 
                 - normal italic(斜体) oblique(倾斜)
-                - 大部分浏览器对 italic 和 oblique 没区分
-            - font-weight 设置的是 文字的加粗效果
-                - normal bold(粗体)
-            - font        设置的是 文字全部样式
+            - font-weight 
+                - normal bold bolder lighter 100 200 300
+            - font       
                 - 基本顺序要求 字号和字体必须写
-                - font:xxx yyy zzz font-size "font-family" 
-                - font:italic small-caps bold 60px "微软雅黑";
-                - font:60px "微软雅黑";
+			- @font-face web字体 
+			@font-face {
+				font-family: "atguigu";
+				font-display: swap;
+				src: url('webfont.eot'); /* IE9 */
+				src: url('webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+				url('webfont.woff2') format('woff2'),
+				url('webfont.woff') format('woff'), /* chrome、firefox */
+				url('webfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari,
+				Android*/
+				url('webfont.svg#webfont') format('svg'); /* iOS 4.1- */
+			}
          -->
         <!--# 字体的分类
             - serif(衬线字体)        如 宋体 
@@ -65,12 +72,12 @@
           <p style="font-family:serif">衬线字体：我是一段文字，ABCDEFGabcdefg</p>
           <p style="font-family:sans-serif">非衬线字体：我是一段文字，ABCDEFGabcdefg</p>
         <!--# line-height 行高
-            - css没有提供行间距 所以用行高来设置行间距
             - 行间距 = line-height(行高) - font-size(字体大小)
             - line-height:100% == line-height:1
             - 单行文本居中技巧 可以将line-height(行高)设置为和父元素height(高度)一致
             - 通过 /30px 也可以设置行高 font:30px/30px "微软雅黑"; 
             - line-height 要写在 font的后面
+            - 垂直方向上的底部对齐，更好的解决办法是什么？—— 后面我们用定位去做。
         -->
         <!--# text-transform 大小写
             - none 不做任何处理，正常显示
@@ -85,6 +92,18 @@
             - line-through 文本添加删除线
             - 去除超链接下划线 text-decoration:none
          -->
+        <!--# text-shadow 文本阴影
+            # white-space
+                - normal 文本超出边界自动换行，文本中的换行被浏览器识别为一个空格。（默认值）
+                - pre 原样输出，与 pre 标签的效果相同。
+                - pre-wrap 在 pre 效果的基础上，超出元素边界自动换行。
+                - pre-line 在 pre 效果的基础上，超出元素边界自动换行，且只识别文本中的换行，空格会忽略。
+                - nowrap 强制不换行
+            # text-overflow
+                - clip 当内联内容溢出时，将溢出部分裁切掉。 （默认值）
+                - ellipsis 当内联内容溢出块容器时，将溢出部分替换为 ... 。
+                注意：要使得 text-overflow 属性生效，块容器必须显式定义 overflow 为非 visible值， white-space 为 nowrap 值。
+        -->
         <!--# letter-spacing 字符间距
             - letter-spacing:10px;
             ----------------------------------
@@ -100,7 +119,112 @@
             - text-indent:2em;  好用，缩进两个字
             - text-indent:-9999px; 可以把文字藏起来 不让用户看到，浏览器看的到 
          -->
-         
+         <!-- 
+            vertical-align
+            属性名： vertical-align 。
+            作用：用于指定同一行元素之间，或 表格单元格 内文字的 垂直对齐方式。
+            常用值：
+            1. baseline （默认值）：使元素的基线与父元素的基线对齐。
+            2. top ：使元素的顶部与其所在行的顶部对齐。
+            3. middle ：使元素的中部与父元素的基线加上父元素字母 x 的一半对齐。
+            4. bottom ：使元素的底部与其所在行的底部对齐。
+            特别注意： vertical-align 不能控制块元素
+
+          -->
+         <!--# ul,ol,dl的CSS属性 
+                list-style-type 设置列表符号
+                    常用值如下：
+                    none ：不显示前面的标识（很常用！）
+                    square ：实心方块
+                    disc ：圆形
+                    decimal ：数字
+                    lower-roman ：小写罗马字
+                    upper-roman ：大写罗马字
+                    lower-alpha ：小写字母
+                    upper-alpha ：大写字母
+                list-style-position 设置列表符号的位置 
+                    inside ：在 li 的里面
+                    outside ：在 li 的外边
+                list-style-image 自定义列表符号 url(图片地址)
+                list-style 复合属性 没有数量、顺序的要求
+            # 表格的CSS属性
+                border-width 边框宽度 CSS 中可用的长度值
+                border-color 边框颜色 CSS 中可用的颜色值
+                border-style 边框风格
+                    none 默认值
+                    solid 实线
+                    dashed 虚线
+                    dotted 点线
+                    double 双实线
+                border 边框复合属性 没有数量、顺序的要求
+            # table的特有CSS属性
+                table-layout 设置列宽度
+                    auto ：自动，列宽根据内容计算（默认
+                    值）。
+                    fixed ：固定列宽，平均分。
+                border-spacing 单元格间距 CSS 中可用的长度值。
+                    生效的前提：单元格边框不能合并。
+                border-collapse 合并单元格边框 
+                    collapse ：合并
+                    separate ：不合并
+                empty-cells 隐藏没有内容的单元格
+                    show ：显示，默认
+                    hide ：隐藏
+                    生效前提：单元格不能合并。
+                caption-side 设置表格标题位置 
+                    top ：上面（默认值）
+                    bottom ：在表格下面
+            # CSS背景属性
+                略
+            # CSS鼠标属性
+                cursor 设置鼠标光标的样式
+                    pointer ：小手
+                    move ：移动图标
+                    text ：文字选择器
+                    crosshair ：十字架
+                    wait ：等待
+                    help ：帮助
+          -->
+		<!--# transfrom 二维变换、三维变换
+			# transition 过渡	
+			# @keyframe
+			@keyframes 动画名 {
+				from {
+				/*property1:value1*/
+				/*property2:value2*/
+				}
+				to {
+				/*property1:value1*/
+				}
+			}
+			# 多列布局
+			- column-count ：指定列数，值是数字。
+			- column-width ：指定列宽，值是长度。
+			- columns ：同时指定列宽和列数，复合属性；值没有数量和顺序要求。
+			- column-gap ：设置列边距，值是长度。
+			- column-rule-style ：设置列与列之间边框的风格，值与 border-style 一致。
+			- column-rule-width ：设置列与列之间边框的宽度，值是长度。
+			- column-rule-color ：设置列与列之间边框的颜色。
+			- coumn-rule ：设置列边框，复合属性。
+			- column-span 指定是否跨列；值: none 、 all 。
+			# @media
+			- https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media
+			# 如何开启BFC- 
+				- 根元素
+				- 浮动元素
+				- 绝对定位、固定定位的元素
+				- 行内块元素
+				- 表格单元格： table 、 thead 、 tbody 、 tfoot 、 th 、 td 、 tr 、 caption
+				- overflow 的值不为 visible 的块元素
+				- 伸缩项目
+				- 多列容器
+				- column-span 为 all 的元素（即使该元素没有包裹在多列容器中）
+				- display 的值，设置为 flow-root
+			# 开启了BFC能解决什么问题
+				1. 元素开启 BFC 后，其子元素不会再产生 margin 塌陷问题。
+				2. 元素开启 BFC 后，自己不会被其他浮动元素所覆盖。
+				3. 元素开启 BFC 后，就算其子元素浮动，元素自身高度也不会塌陷
+		-->
     </div>
 </body>
 
