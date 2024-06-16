@@ -104,11 +104,11 @@
         /* 
             # this 
             - 根据调用的方式不同，指向不同的对象
-         */ 
+         */
         // 以 方法的形式调用，this指向 调用方法的对象
-        var obj={
-            name:"孙悟空",
-            sayName:function(){
+        var obj = {
+            name: "孙悟空",
+            sayName: function () {
                 console.log(this);
                 console.log(this.name);
             }
@@ -116,8 +116,8 @@
         obj.sayName();
 
         // 以 函数的形式调用，this指向 window对象
-        var name="沙和尚";
-        var sayName2=function(){
+        var name = "沙和尚";
+        var sayName2 = function () {
             console.log(this);
             console.log(this.name);
         };
@@ -128,26 +128,132 @@
             # 使用工厂方法创建对象
             - 使用的构造函数都是Object
          */
-        function createPerson(name,age,gender){
-            var obj=new Object();
-            obj.name=name;
-            obj.age=age;
-            obj.gender=gender;
-            obj.sayName=function(){
+        function createPerson(name, age, gender) {
+            var obj = new Object();
+            obj.name = name;
+            obj.age = age;
+            obj.gender = gender;
+            obj.sayName = function () {
                 console.log(this.name);
             }
             return obj;
         }
-        var obj2=createPerson("猪八戒",18,"男");
+        var obj2 = createPerson("猪八戒", 18, "男");
         obj2.sayName();
-        var obj2=createPerson("唐僧",16,"男");
-        var obj2=createPerson("沙和尚",18,"男");
+        var obj2 = createPerson("唐僧", 16, "男");
+        var obj2 = createPerson("沙和尚", 18, "男");
 
         console.log("-----------------------------");
-        
+
+        // ------------函数内部函数----------------
+        function fun3() {
+            function fun4() {
+                console.log("I'm fun4.");
+            }
+            fun4();
+        }
+        fun3(); // I'm fun4.
+
+        function fun5() {
+            function fun6() {
+                console.log("I'm fun6.");
+            }
+            return fun6;
+        }
+        var a = fun5();
+        a(); // I'm fun6.
+        fun5()();  // I'm fun6.
+        // ------------立即执行函数----------------
+        // 函数对象()
+        (function () {
+            console.log("I'm anoymous function.");
+        })(); // I'm anoymous function.
+        (function (a, b) {
+            console.log(a + b);
+        })(2, 3); // 5
+        // ------------变量声明提前----------------
+        // 1、变量的声明提前
+        console.log("a = " + a); // a = undefined
+        var a = "abc";
+        // ======相当于======
+        var a;
+        console.log("a = " + a); // a = undefined
+        a = "abc";
+
+        // 2、没有变量的声明提前，报错
+        console.log("b = " + b); // UncaughtReferenceError: b is not defined
+        b = "abc";
+        // ======相当于======
+        console.log("b = " + b); // UncaughtReferenceError: b is not defined
+        window.b = "abc";
+        // ------------函数声明提前----------------
+        fun1(); // fun1...
+        fun2(); // UncaughtTypeError: fun2 is not a function
+        // 函数声明，会被提前创建
+        function fun1() {
+            console.log("fun1...");
+        }
+        // 函数表达式，不会被提前创建（变量会被提前声明，但函数不会被提前创建）
+        var fun2 = function () {
+            console.log("fun2...");
+        }
+        // ------------函数作用域----------------
+        // 函数声明且调用
+        func3();
+        function func3() {
+            a = 4;
+        }
+        console.log("a = " + window.a);  // a = 4
+        console.log("a = " + window["a"]);   // a = 4
+        console.log("a = " + a);    // a = 4
+        // 函数声明不调用
+        function func4() {
+            b = 4;
+        }
+        console.log("b = " + window.b);  // b = 4
+        console.log("b = " + window["b"]);   // b = 4
+        console.log("b = " + b);    // UncaughtReferenceError: b is not defined
 
 
-
+        // -----------------练习------------------
+        // 说出以下代码的执行结果
+        var a = 123;
+        function fun() {
+            console.log(a);
+        }
+        fun(); 			// 123
+        // =====================
+        var a = 123;
+        function fun() {
+            console.log(a);
+            var a = 456;
+        }
+        fun(); 			// undefined
+        console.log(a);  // 123
+        // =====================
+        var a = 123;
+        function fun() {
+            console.log(a);
+            a = 456;
+        }
+        fun(); 			// 123
+        console.log(a);  // 456
+        // =====================
+        var a = 123;
+        function fun(a) {
+            console.log(a);
+            a = 456;
+        }
+        fun();			// undefined
+        console.log(a);  // 123
+        // =====================
+        var a = 123;
+        function fun(a) {
+            console.log(a);
+            a = 456;
+        }
+        fun(789);		// 789
+        console.log(a);  // 123
     </script>
 </body>
 

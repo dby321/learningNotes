@@ -33,11 +33,21 @@
         MyClass.prototype.toString = function () {
             return "我重写了toString方法";
         };
-        var mc2=new MyClass();
+        var mc2 = new MyClass();
         console.log(mc2);
         console.log(mc2.toString());// 我重写了toString方法
-        
-
+        // -------------hasOwnProperty----------------
+        MyClass.prototype.name = "I'm prototype's name.";
+        var mc = new MyClass();
+        mc.age = 18;
+        // 使用in检查对象中是否含有某个属性时，如果对象中没有但是原型中有，也会返回true
+        console.log("name" in mc); // true
+        console.log("age" in mc); // true
+        // 可以使用对象的hasOwnProperty()来检查对象自身中是否含有该属性
+        // 使用该方法只有当对象自身中含有属性时，才会返回true
+        console.log(mc.hasOwnProperty("name")); // false
+        console.log(mc.hasOwnProperty("age"));  // true
+        console.log(mc.hasOwnProperty("hasOwnProperty"));  // false
         // JS有自动的垃圾回收机制
     </script>
 </body>

@@ -71,7 +71,7 @@
         // slice()该方法不会改变原数组[start,end)
         arr2 = arr.slice(0, 2);
         arr3 = arr.slice(1);
-        // 针对很长的数组
+        // 针对很长的数组 -1是指倒数第一个
         arr4 = arr.slice(0, -1);
         console.log(arr);
         console.log(arr2);
@@ -91,7 +91,7 @@
         for (var i = 0; i < arr.length; i++) {
             for (var j = i + 1; j < arr.length; j++) {
                 if (arr[i] == arr[j]) {
-                    arr.splice(j, 1);
+                    arr.splice(j--, 1);
                 }
             }
         }
@@ -171,7 +171,7 @@
                 - .length 获取实参的长度 就算不定义形参也能得到.length
          */
         function fun(a,b){
-            console.log(arguments.length);// 2
+            console.log("arguments.length = " + arguments.length + ", arguments[0] = " + arguments[0]); 
             console.log(arguments.callee);// 得到当前的函数对象fun()
             console.log(arguments.callee.name);// 得到当前的 函数对象名 "fun"
         }
