@@ -101,7 +101,18 @@
     }
     fun1();//this是window
 
+    // GC js用的和java类似的可达性分析算法，而不是引用计数法，因为引用计数法会招致循环依赖
 
+    // ...剩余参数 是个真数组
+    function sum(...other){
+        let result=0;
+        for(let i in other){
+            result+=other[i];
+        }
+        return result;
+    }
+
+    console.log(sum(3, 4, 5));
 
 </script>
 </body>
