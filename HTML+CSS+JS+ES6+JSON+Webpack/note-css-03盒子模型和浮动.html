@@ -51,8 +51,8 @@
     }
 
     /* 解决高度塌陷的终极方案 */
-    .clearfix:before,
-    .clearfix:after {
+    .clearfix::before,
+    .clearfix::after {
         content: '';
         display: table;
         clear: both;
@@ -232,6 +232,8 @@
         5. 😊不会像行内块一样被当做文本处理（没有行内块的空白问题）。
      -->
     <!--# 高度塌陷问题 解决方式 overflow:hidden;zoom:1;
+        https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_display/Block_formatting_context
+        https://juejin.cn/post/7303392509664247835
         > 在文档流中，父元素的高度默认是被子元素撑开的 也就是子元素有多高，父元素就多高
           但是当为子元素设置浮动以后，子元素会完全脱离文档流 此时会导致子元素无法撑起父元素的高度
           从而形成 高度塌陷。开发中一定要避免高度塌陷问题
@@ -275,7 +277,14 @@
         <div class="box3">
         </div>
     </div>
-    
+    <!-- ####################？？？？？？？？？
+        圣杯布局和双飞翼布局
+        POSTCSS
+        自适应布局
+        等高布局
+        全屏滚动
+        闭包
+        ####################？？？？？？？？？？ -->
 </body>
 
 </html>
