@@ -25,19 +25,17 @@
             - vw,vh
                 - 视口高宽的百分之多少
         -->
-        <!--# 颜色单位
-            - 颜色单词
-            - RGB值 
-                - color:rgb(0-255,0-255,0-255)
-                - color:rgba(0-255,0-255,0-255,0-1)
+        <!--# 颜色表示
+                - color:rgb(0-255,0-255,0-255) RGB
+                - color:rgba(0-255,0-255,0-255,0-1) RGBA
                 - color:rgb(0-100%,0-100%,0-100%) 
-                - color:#123abf;
-                - color:#ff998866;  包含不透明度
-                - color:hsla(120,100%,50%,0.3);
-                - color:hsl(120,100%,50%)
+                - color:#123abf; HEX
+                - color:#ff998866;  HEXA 
+                - color:hsla(120,100%,50%,0.3); HSLA
+                - color:hsl(120,100%,50%) HSL
               
          -->
-        <!--# 字体的样式
+        <!--# 字体样式
             - font-size   
             - font-family 
             - font-style 
@@ -71,40 +69,41 @@
          -->
           <p style="font-family:serif">衬线字体：我是一段文字，ABCDEFGabcdefg</p>
           <p style="font-family:sans-serif">非衬线字体：我是一段文字，ABCDEFGabcdefg</p>
-        <!--# line-height 行高
-            - 行间距 = line-height(行高) - font-size(字体大小)
-            - line-height:100% == line-height:1
-            - 单行文本居中技巧 可以将line-height(行高)设置为和父元素height(高度)一致
-            - 通过 /30px 也可以设置行高 font:30px/30px "微软雅黑"; 
-            - line-height 要写在 font的后面
+        <!--##################CSS文本属性####################
+            # line-height 行高
+            - line-height: 60px;
+            - line-height: 1.5;
+            - line-height: 150%;
             - 垂直方向上的底部对齐，更好的解决办法是什么？—— 后面我们用定位去做。
-        -->
-        <!--# text-transform 大小写
+            ----------------------------------
+            # text-transform 大小写
             - none 不做任何处理，正常显示
             - capitalize 每个单词的首字母大写，通过空格来识别的
             - uppercase 所有字母都大写
             - lowercase 所有字母都小写
-         -->
-        <!--# text-decoration 上下划删除线
+            ----------------------------------
+            # text-decoration 上下划删除线
             - none         不做任何处理，正常显示
             - underline    文本添加下划线
             - overline     文本添加上划线
             - line-through 文本添加删除线
             - 去除超链接下划线 text-decoration:none
-         -->
-        <!--# text-shadow 文本阴影
+            ----------------------------------
+            # text-shadow 文本阴影
+            ----------------------------------
             # white-space
                 - normal 文本超出边界自动换行，文本中的换行被浏览器识别为一个空格。（默认值）
                 - pre 原样输出，与 pre 标签的效果相同。
                 - pre-wrap 在 pre 效果的基础上，超出元素边界自动换行。
                 - pre-line 在 pre 效果的基础上，超出元素边界自动换行，且只识别文本中的换行，空格会忽略。
                 - nowrap 强制不换行
+            ----------------------------------
             # text-overflow
                 - clip 当内联内容溢出时，将溢出部分裁切掉。 （默认值）
                 - ellipsis 当内联内容溢出块容器时，将溢出部分替换为 ... 。
                 注意：要使得 text-overflow 属性生效，块容器必须显式定义 overflow 为非 visible值， white-space 为 nowrap 值。
-        -->
-        <!--# letter-spacing 字符间距
+            ----------------------------------
+            # letter-spacing 字符间距
             - letter-spacing:10px;
             ----------------------------------
             # word-spacing   单词间距
@@ -118,19 +117,14 @@
             - text-indent:20px; 不好用
             - text-indent:2em;  好用，缩进两个字
             - text-indent:-9999px; 可以把文字藏起来 不让用户看到，浏览器看的到 
-         -->
-         <!-- 
-            vertical-align
-            属性名： vertical-align 。
-            作用：用于指定同一行元素之间，或 表格单元格 内文字的 垂直对齐方式。
-            常用值：
-            1. baseline （默认值）：使元素的基线与父元素的基线对齐。
-            2. top ：使元素的顶部与其所在行的顶部对齐。
-            3. middle ：使元素的中部与父元素的基线加上父元素字母 x 的一半对齐。
-            4. bottom ：使元素的底部与其所在行的底部对齐。
-            特别注意： vertical-align 不能控制块元素
-
-          -->
+            # vertical-align 用于指定同一行元素之间，或 表格单元格 内文字的 垂直对齐方式。
+            - baseline （默认值）：使元素的基线与父元素的基线对齐。
+            - top ：使元素的顶部与其所在行的顶部对齐。
+            - middle ：使元素的中部与父元素的基线加上父元素字母 x 的一半对齐。
+            - bottom ：使元素的底部与其所在行的底部对齐。
+            - 特别注意： vertical-align 不能控制块元素
+        -->
+        
          <!--# ul,ol,dl的CSS属性 
                 list-style-type 设置列表符号
                     常用值如下：
@@ -209,7 +203,7 @@
 			- column-span 指定是否跨列；值: none 、 all 。
 			# @media
 			- https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media
-			# 如何开启BFC- 
+			# 如何开启BFC
 				- 根元素
 				- 浮动元素
 				- 绝对定位、固定定位的元素

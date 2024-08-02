@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // [博客园-深入理解JS构造函数和原型对象](https://www.cnblogs.com/thonrt/p/5900510.html)
+      // 原型 类似于 Java中的父类
+      // 原型链，没找到返回null
+      function Person() {
+        console.log(this); // Person{}
+      }
+      // 普通函数
+      var fun = Person();
+      console.log(fun); // undefined
+      // 构造函数
+      var person = new Person();
+      console.log(person); // Person{}
+
+      
+      function MyClass() {}
+      console.log(MyClass);
+      console.log(MyClass.prototype);
+      var mc = new MyClass();
+      // 隐藏属性 __proto__
+      console.log(mc);
+      console.log(mc.__proto__);
+      console.log(mc.__proto__.__proto__);
+      // Object对象的原型是 null
+      console.log(mc.__proto__.__proto__.__proto__);
+
+      MyClass.prototype.a = 123;
+      console.log(mc);
+
+      // 重写 toString方法到 prototype中
+      MyClass.prototype.toString = function () {
+        return "我重写了toString方法";
+      };
+      var mc2 = new MyClass();
+      console.log(mc2);
+      console.log(mc2.toString()); // 我重写了toString方法
+      // -------------hasOwnProperty----------------
+      MyClass.prototype.name = "I'm prototype's name.";
+      var mc = new MyClass();
+      mc.age = 18;
+      // 使用in检查对象中是否含有某个属性时，如果对象中没有但是原型中有，也会返回true
+      console.log("name" in mc); // true
+      console.log("age" in mc); // true
+      // 可以使用对象的hasOwnProperty()来检查对象自身中是否含有该属性
+      // 使用该方法只有当对象自身中含有属性时，才会返回true
+      console.log(mc.hasOwnProperty("name")); // false
+      console.log(mc.hasOwnProperty("age")); // true
+      console.log(mc.hasOwnProperty("hasOwnProperty")); // false
+      // JS有自动的垃圾回收机制
+    </script>
+  </body>
+</html>

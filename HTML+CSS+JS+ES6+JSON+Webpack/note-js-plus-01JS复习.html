@@ -14,21 +14,6 @@
     * 不要使用typeof判断null,因为会返回object而不是null
     * */
     console.log(typeof null);// object
-    var a={
-        'content-type1':"xxx",
-        'content type2':"yyy"
-    };
-   console.log( a["content-type1"]);
-   console.log( a["content type2"]);
-   
-    /*
-    * 函数被任意对象调用
-    * */
-    function test2() {
-        console.log("test2()");
-    }
-    var obj={};
-    test2.call(obj);
 
     /*
     * 回调函数 你定义的，你没有调用，但它最后执行了

@@ -36,7 +36,7 @@
         console.log(person);
         // toString()测试
         console.log("------");
-        console.log(person.toString());// "[object Object]"
+        console.log(person);// "[object Object]"
         console.log(person.hasOwnProperty("toString"));// false
         console.log(person.__proto__.hasOwnProperty("toString"));// true
         console.log("------");
@@ -60,8 +60,8 @@
         console.log(person);
 
         // in 检查属性是否在对象中 
-        console.log("123" in person);
-        console.log("name" in person);
+        console.log("123" in person);// true
+        console.log("name" in person);// true
 
         // 对象字面量的 标准写法
         var person = {
@@ -74,8 +74,7 @@
                 age: 100
             }
         };
-
-
+        console.log(person)
         console.log("-----------------------------");
         /* 
             # 函数
@@ -111,6 +110,9 @@
             sayName: function () {
                 console.log(this);
                 console.log(this.name);
+                console.info(111);
+                console.warn(123);
+                console.error(123);
             }
         }
         obj.sayName();
@@ -181,10 +183,10 @@
         a = "abc";
 
         // 2、没有变量的声明提前，报错
-        console.log("b = " + b); // UncaughtReferenceError: b is not defined
+        // console.log("b = " + b); // UncaughtReferenceError: b is not defined
         b = "abc";
         // ======相当于======
-        console.log("b = " + b); // UncaughtReferenceError: b is not defined
+        // console.log("b = " + b); // UncaughtReferenceError: b is not defined
         window.b = "abc";
         // ------------函数声明提前----------------
         fun1(); // fun1...
@@ -212,7 +214,7 @@
         }
         console.log("b = " + window.b);  // b = 4
         console.log("b = " + window["b"]);   // b = 4
-        console.log("b = " + b);    // UncaughtReferenceError: b is not defined
+        // console.log("b = " + b);    // UncaughtReferenceError: b is not defined
 
 
         // -----------------练习------------------

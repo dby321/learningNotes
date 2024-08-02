@@ -1,10 +1,4 @@
-# hello-es6
-
-ES6 各种新语法 入门了解  石川blue讲解
-
-视频地址
-
-- [b站：深入解读ES6系列](https://www.bilibili.com/video/av20327829/)
+# note-es6笔记
 
 看视频整理要点笔记:
 
@@ -156,7 +150,7 @@ console.log(show4(10))
 console.log(show5(10))
 ```
 
-## 5.函数-参数
+## 5.函数-rest参数
 
 - 参数扩展／展开 `...args`
     - 收集剩余的参数，必须当到最后一个参数位置
@@ -421,31 +415,7 @@ http://www.xx.com/%7B%22a%22%3A12%2C%22b%22%3A5%7D
 { a: 12, b: 4, c: 'abc' }
 ```
 
-- 对象（object）
-    - 是 JavaScript 语言的核心概念，也是最重要的数据类型
-    - 对象就是一组“键值对”（key-value）的集合，是一种无序的复合数据集合
-    - 对象的所有键名都是字符串, 所以加不加引号都可以
-    - 如果键名是数值，会被自动转为字符串
-    - 对象的每一个键名又称为“属性”（property），它的“键值”可以是任何数据类型
-    - 如果一个属性的值为函数，通常把这个属性称为“方法”，它可以像函数那样调用
-    - in 运算符用于检查对象是否包含某个属性（注意，检查的是键名，不是键值
-    - for...in循环用来遍历一个对象的全部属性
 
-- 对象 简写
-    - key-value 一样时可以简写
-    - 里面函数可以简写, 去掉
-
-```js
-var a = 12, b = 5
-console.log({a:a, b:b})
-console.log({a, b})
-console.log({a, b, c:"c"})
-console.log({ a, b, show(){ console.log('a') }})
-{ a: 12, b: 5 }
-{ a: 12, b: 5 }
-{ a: 12, b: 5, c: 'c' }
-{ a: 12, b: 5, show: [Function: show] }
-```
 
 ## 12.Promise
 
@@ -514,7 +484,7 @@ Promise.all([p1, p2, p3]).then(function (results) {
     - 哪个结果获得的快，就返回那个结果
     - 不管结果本身是成功状态还是失败状态
 
-## 13.generator-认识生成器函数
+## 13.generator-生成器函数
 
 - generator 生成器函数
     - 普通函数，一路到底
@@ -542,7 +512,7 @@ genObj.next() // 2
 genObj.next() // 最后了，没有结果
 ```
 
-## 14.generator-yield是啥
+------------------------------
 
 - `yield`
     - 既可传参，又可以返回
@@ -582,7 +552,7 @@ console.log(res2)
 // { value: undefined, done: true } 最后的value需要return返回
 ```
 
-## 15.generator-实例
+---------------------------------
 
 - Promise 适合一次读一组
 - generator 适合逻辑性的
@@ -608,68 +578,16 @@ server.use(function * () {
 })
 ```
 
-## 16.ES7 预览
-
-- 数组
-    - `arr.includes()` 数组是否包含某个东西
-    - 数组的 arr.keys(), arr,entries()
-    - for ... in 遍历数组 下标 key
-    - for ... of 遍历数组 值 value, 不能用于json
-
+## 14.Symbol基本数据类型
 ```js
-let arr = ['a', 'b', 'c']
-console.log(arr.includes(1))
-
-for (let i in arr) {
-    console.log(i) // 循环的时下标 key
-}
-
-for (let i of arr) {
-    console.log(i) // 循环的是值 value
-}
-for (let i of arr.keys()) {
-    console.log('>'+i)
-}
-for (let [key, value] of arr.entries()) {
-    console.log('>' + key + value)
-}
-
-let json = { a: 12, b: 5, c: 7 }
-for (let i in json) {
-    console.log(i)
-}
+let s=Symbol("尚硅谷");
+let s2=Symbol("尚硅谷");
+console.log(s===s2);// false
+let s3=Symbol.for("尚硅谷");
+let s4=Symbol.for("尚硅谷");
+console.log(s3===s4);// true
 ```
+## 15.iterator迭代器
+- `for of遍历`
 
-- 字符串
-    - padStart()/padEnd() 指定宽度，不够就补空格或指定字符
-
-```js
-console.log('=' + 'abcd'.padStart(6, '0') + '=')
-console.log('=' + 'abcd'.padEnd(6, '0') + '=')
-=00abcd=
-=abcd00=
-```
-
-- 容忍度
-    - [1, 2, 3,] 老版数组最后不能有逗号，新的可以有
-    - 函数参数最后多的逗号也可以
-
-- async await
-    - 和 generator yield 类似
-    - generator 不可以写成箭头函数， async 可以
-
-```js
-async function show() {
-    console.log(1)
-    await
-    console.log(2)
-}
-```
-
-## 17. Babel
-
-[Babel官网](https://babeljs.io)
-
-`babel 源路径 --out-file 目标路径 `转码 `--out-file`也可写成`-o`如果是文件夹用`-d`
-
-![1641178543971](images/1641178543971.png)
+## 16.异步编程

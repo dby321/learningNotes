@@ -1,5 +1,11 @@
 <!-- H5的文档声明 -->
 <!-- 不写文档声明会让浏览器进入 怪异模式(区别于标准模式) -->
+<!--# 超文本标记语言 
+		- 超文本：富文本
+		- 标记：普通文本变成超文本用到的标记符号
+		- 语言：语法规则
+-->
+<!-- 输入！按回车会快速生成基本html结构 -->
 <!DOCTYPE html>
 <!--#
 	  - <html lang="zh-CN">
@@ -28,9 +34,9 @@
 	<title>尚硅谷前端HTML5视频_HTML</title>
 	<meta name="keywords" content="HTML5,Javascript,前端,java" />
 	<meta name="description" content="发布h5,js等前端相关的信息" />
-		<!--设置IE总是使用最新的文档模式进行渲染-->
+	<!--针对IE的兼容性设置 设置IE总是使用最新的文档模式进行渲染-->
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-	<!--优先使用 webkit ( Chromium ) 内核进行渲染, 针对360等壳浏览器-->
+	<!--针对360等壳浏览器的兼容性设置 优先使用 webkit ( Chromium ) 内核进行渲染 -->
 	<meta name="renderer" content="webkit">
 	<!-- <meta http-equiv="refresh" content="5;url=http://www.baidu.com"> -->
 </head>
@@ -38,11 +44,15 @@
 <body>
 	<div>
 		<!--# 前言知识
+			- IETF 早期互联网标准标准化组织
 			- W3C 定义网络标准的组织
 			- XML 可扩展标记语言
-			- WHATWG 成立的原因是W3C意图放弃HTML转为XHTML
+			- WHATWG 成立的原因是W3C意图放弃HTML转为XHTML，由苹果、火狐、欧朋等浏览器厂商成立
 			- 元素==标签 
 		 -->
+		<!-- marquee跑马灯效果 loop="1" 只会滚动一次 -->
+		<!-- 注释不可嵌套 -->
+		<marquee loop="1">尚硅谷,让天下没有学的完的技术</marquee>
 		<h1>这是我的尚硅谷前端HTML基础</h1>
 		<hr />
 		<!--# 实体(转义字符串) 
@@ -466,7 +476,7 @@
 		<ruby>
 			<span>魑魅魍魉</span>
 			<rt>chī mèi wǎng liǎng </rt>
-			</ruby>
+		</ruby>
 	</div>
 	<!--######## html5 end #######-->
 </body>

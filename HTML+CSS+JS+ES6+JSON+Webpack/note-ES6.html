@@ -70,17 +70,17 @@
         // 在解构数组中, 还可以忽略值, 例如const[x,,z]=point,忽略y坐标.
 
         // ES6新增 解构赋值(对象)
-        const gemstone = {
+        const gemstone1 = {
             type: 'quartz',
             color: 'rose',
             karat: 21.29
         };
         const {
-            type,
-            color,
+            type2,
+            color2,
             karat
-        } = gemstone;
-        console.log(type, color, karat);
+        } = gemstone1;
+        console.log(type2, color2, karat);
         // 花括号 { } 表示被解构的对象，type、color 和 karat 表示要将对象中的属性存储到其中的变量
         console.log("------------------------------");
 
@@ -88,32 +88,32 @@
 
         // # ES6 对象字面量简写法
         // ES6之前 对象属性名:赋值变量名
-        let type = 'quartz';
-        let color = 'rose';
+        let type1 = 'quartz';
+        let color1 = 'rose';
         let carat = 21.29;
 
-        const gemstone = {
+        const gemstone2 = {
             type: type,
             color: color,
             carat: carat
         };
-        console.log(gemstone);
+        console.log(gemstone2);
         // ES6 对象字面量可以简写
         let type = 'quartz';
         let color = 'rose';
-        let carat = 21.29;
-        const gemstone = {
+        let carat1 = 21.29;
+        const gemstone3 = {
             type,
             color,
             carat
         };
-        console.log(gemstone);
+        console.log(gemstone3);
         console.log("------------------------------");
 
 
         // # ES6 方法的简写 
         // ES6之前 对象中方法 xxxXxx:function(){...}
-        const gemstone = {
+        const gemstone4 = {
             type,
             color,
             carat,
@@ -237,7 +237,7 @@
         // # ES6新增 默认值与解构
         // 1. 默认值与解构数组
         // ES6之前
-        function createGrid([width = 5, height = 5]=) {
+        function createGrid([width = 5, height = 5]) {
             return `Generates a ${width} x ${height} grid`;
         }
 
@@ -249,10 +249,10 @@
         createGrid(); // throws an error (Uncaught TypeError: Cannot read property 'Symbol(Symbol.iterator)' of undefined)
 
         // ES6解决 throws an error (Uncaught TypeError: Cannot read property 'Symbol(Symbol.iterator)' of undefined)
-        function createGrid([width = 5, height = 5] = []){...}
+        function createGrid([width = 5, height = 5] = []){}
 
         // 2. 默认值与解构函数
-        function createSundae({scoops = 1, toppings = ['Hot Fudge']}={}){...}
+        function createSundae({scoops = 1, toppings = ['Hot Fudge']}={}){}
         // 如果想使用scoops的默认值，而改变toppings的值，可以这样调用:
         createSundae({toppings: ['Hot Fudge', 'Sprinkles', 'Caramel']});
 
