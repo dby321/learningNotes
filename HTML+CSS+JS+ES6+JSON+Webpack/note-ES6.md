@@ -1,25 +1,6 @@
 # note-es6笔记
 [菜鸟教程-ES6教程](https://www.runoob.com/w3cnote_genre/es6)
 
-- [hello-es6](#hello-es6)
-    - [1.ES6怎么来的](#1es6%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84)
-    - [2.ES6兼容性](#2es6%E5%85%BC%E5%AE%B9%E6%80%A7)
-    - [3.变量 let 和 常量 const](#3%E5%8F%98%E9%87%8F-let-%E5%92%8C-%E5%B8%B8%E9%87%8F-const)
-    - [4.函数-箭头函数](#4%E5%87%BD%E6%95%B0-%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0)
-    - [5.函数-参数](#5%E5%87%BD%E6%95%B0-%E5%8F%82%E6%95%B0)
-    - [6.解构赋值](#6%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC)
-    - [7.数组](#7%E6%95%B0%E7%BB%84)
-    - [8.字符串](#8%E5%AD%97%E7%AC%A6%E4%B8%B2)
-    - [9.面向对象-基础](#9%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-%E5%9F%BA%E7%A1%80)
-    - [10.面向对象应用](#10%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%BA%94%E7%94%A8)
-    - [11.json](#11json)
-    - [12.Promise](#12promise)
-    - [13.generator-认识生成器函数](#13generator-%E8%AE%A4%E8%AF%86%E7%94%9F%E6%88%90%E5%99%A8%E5%87%BD%E6%95%B0)
-    - [14.generator-yield是啥](#14generator-yield%E6%98%AF%E5%95%A5)
-    - [15.generator-实例](#15generator-%E5%AE%9E%E4%BE%8B)
-    - [16.ES7 预览](#16es7-%E9%A2%84%E8%A7%88)
-
-----
 
 ## 1.ES6怎么来的
 
