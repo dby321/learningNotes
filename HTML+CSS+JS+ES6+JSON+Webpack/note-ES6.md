@@ -1,8 +1,5 @@
 # note-es6笔记
-
-看视频整理要点笔记:
-
-----
+[菜鸟教程-ES6教程](https://www.runoob.com/w3cnote_genre/es6)
 
 - [hello-es6](#hello-es6)
     - [1.ES6怎么来的](#1es6%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84)
@@ -484,7 +481,7 @@ Promise.all([p1, p2, p3]).then(function (results) {
     - 哪个结果获得的快，就返回那个结果
     - 不管结果本身是成功状态还是失败状态
 
-## 13.generator-生成器函数
+## 13.generator——生成器函数
 
 - generator 生成器函数
     - 普通函数，一路到底
@@ -590,4 +587,358 @@ console.log(s3===s4);// true
 ## 15.iterator迭代器
 - `for of遍历`
 
-## 16.异步编程
+## 16.异步编程———Promise
+> 异步编程像同步编程一样，但是还是异步编程
+- 异步Ajax
+```js
+var xhr = new XMLHttpRequest();
+ 
+xhr.onload = function () {
+    // 输出接收到的文字数据
+    document.getElementById("demo").innerHTML=xhr.responseText;
+}
+ 
+xhr.onerror = function () {
+    document.getElementById("demo").innerHTML="请求出错";
+}
+ 
+// 发送异步 GET 请求
+xhr.open("GET", "https://www.runoob.com/try/ajax/ajax_info.txt", true);
+xhr.send();
+```
+- 优雅的异步——jquery调用
+```js
+$.get("https://www.runoob.com/try/ajax/demo_test.php",function(data,status){
+    alert("数据: " + data + "\n状态: " + status);
+});
+```
+- 回调地狱
+```js
+setTimeout(function () {
+    console.log("First");
+    setTimeout(function () {
+        console.log("Second");
+        setTimeout(function () {
+            console.log("Third");
+        }, 3000);
+    }, 4000);
+}, 1000);
+```
+- 解决回调地狱
+```js
+new Promise(function (resolve, reject) {
+    setTimeout(function () {
+        console.log("First");
+        resolve();
+    }, 1000);
+}).then(function () {
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+            console.log("Second");
+            resolve();
+        }, 4000);
+    });
+}).then(function () {
+    setTimeout(function () {
+        console.log("Third");
+    }, 3000);
+});
+```
+- Promise基础用法
+```js
+new Promise(function (resolve, reject) {
+    var a = 0;
+    var b = 1;
+    if (b == 0) reject("Divide zero");
+    else resolve(a / b);
+}).then(function (value) {
+    console.log("a / b = " + value);
+}).catch(function (err) {
+    console.log(err);
+}).finally(function () {
+    console.log("End");
+});
+```
+- Promise.all的用法
+```js
+new Promise
+.all([runAsync1(), runAsync2(), runAsync3()])
+.then(function(results){
+    console.log(results);
+});
+```
+- Ajax的实战应用
+```js
+function a(){
+      return new Promise(function(res,rej){
+        $.ajax({
+          url:"a接口",
+          type: "GET",
+          async:true,
+          dataType:"json",
+          success:function(data){
+            console.log(data,"a");
+            res(data);
+          }
+        })
+      });
+    }
+    function b(data){
+      console.log(data,"data");
+      return new Promise(function(res,rej){
+        $.ajax({
+            url:"b接口",
+            type: "POST",
+            async:true,
+            data:JSON.stringify(data),
+            dataType:"json",
+            success:function(data){
+              console.log(data,"b");
+              res();
+            }
+          })
+      });
+    }
+    $("#btn").click(function(){
+      a().then(function (data){
+        b(data);
+      }).then(function(){
+      })
+    })
+```
+- 设计Promise函数
+```js
+function print(delay, message) {
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+            console.log(message);
+            resolve();
+        }, delay);
+    });
+}
+print(1000, "First").then(function () {
+    return print(4000, "Second");
+}).then(function () {
+    print(3000, "Third");
+});
+```
+- 让异步编程更美观——使用async和await
+```js
+async function asyncFunc() {
+    await print(1000, "First");
+    await print(4000, "Second");
+    await print(3000, "Third");
+}
+asyncFunc();
+```
+- 接收返回值的async和await
+```js
+async function asyncFunc() {
+    let value = await new Promise(
+        function (resolve, reject) {
+            resolve("Return value");
+        }
+    );
+    console.log(value);
+}
+asyncFunc();
+```
+## 17.类的继承新写法
+- 旧写法——基于原型的继承
+```js
+function Animal(name) {
+  this.name = name;
+}
+ 
+Animal.prototype.eat = function() {
+  console.log(this.name + " is eating.");
+};
+ 
+function Dog(name, breed) {
+  Animal.call(this, name);
+  this.breed = breed;
+}
+ 
+// 建立原型链，让 Dog 继承 Animal
+Dog.prototype = Object.create(Animal.prototype);
+Dog.prototype.constructor = Dog;
+ 
+Dog.prototype.bark = function() {
+  console.log(this.name + " is barking.");
+};
+ 
+var dog = new Dog("Buddy", "Labrador");
+dog.eat();  // 调用从 Animal 继承的方法
+dog.bark(); // 调用 Dog 的方法
+```
+- 新写法——基于类的继承
+```js
+class Site {
+  constructor(name) {
+    this.sitename = name;
+  }
+  present() {
+    return '我喜欢' + this.sitename;
+  }
+}
+ 
+class Runoob extends Site {
+  constructor(name, age) {
+    super(name);
+    this.age = age;
+  }
+  show() {
+    return this.present() + ', 它创建了 ' + this.age + ' 年。';
+  }
+}
+ 
+let noob = new Runoob("菜鸟教程", 5);
+document.getElementById("demo").innerHTML = noob.show();
+```
+- getter和setter
+```js
+class Runoob {
+  constructor(name) {
+    this.sitename = name;
+  }
+  get s_name() {
+    return this.sitename;
+  }
+  set s_name(x) {
+    this.sitename = x;
+  }
+}
+ 
+let noob = new Runoob("菜鸟教程");
+ 
+document.getElementById("demo").innerHTML = noob.s_name;
+```
+
+## 18.模块化——export和import
+[菜鸟教程-ES6 模块](https://www.runoob.com/w3cnote/es6-module.html)
+```js
+/*-----export [test.js]-----*/
+let myName = "Tom";
+let myAge = 20;
+let myfn = function(){
+    return "My name is" + myName + "! I'm '" + myAge + "years old."
+}
+let myClass =  class myClass {
+    static a = "yeah!";
+}
+export { myName, myAge, myfn, myClass }
+ 
+/*-----import [xxx.js]-----*/
+import { myName, myAge, myfn, myClass } from "./test.js";
+console.log(myfn());// My name is Tom! I'm 20 years old.
+console.log(myAge);// 20
+console.log(myName);// Tom
+console.log(myClass.a );// yeah!
+```
+## 19.Map和Set
+[菜鸟教程-ES6 Map 与 Set](https://www.runoob.com/w3cnote/es6-map-set.html)
+## 20.Reflect和Proxy
+[菜鸟教程-ES6 Reflect 与 Proxy](https://www.runoob.com/w3cnote/es6-reflect-proxy.html)
+- 基本使用
+```js
+let target = {
+    name: 'Tom',
+    age: 24
+}
+let handler = {
+    get: function(target, key) {
+        console.log('getting '+key);
+        return target[key]; // 不是target.key
+    },
+    set: function(target, key, value) {
+        console.log('setting '+key);
+        target[key] = value;
+    }
+}
+let proxy = new Proxy(target, handler)
+proxy.name     // 实际执行 handler.get
+proxy.age = 25 // 实际执行 handler.set
+// getting name
+// setting age
+// 25
+ 
+// target 可以为空对象
+let targetEpt = {}
+let proxyEpt = new Proxy(targetEpt, handler)
+// 调用 get 方法，此时目标对象为空，没有 name 属性
+proxyEpt.name // getting name
+// 调用 set 方法，向目标对象中添加了 name 属性
+proxyEpt.name = 'Tom'
+// setting name
+// "Tom"
+// 再次调用 get ，此时已经存在 name 属性
+proxyEpt.name
+// getting name
+// "Tom"
+ 
+// 通过构造函数新建实例时其实是对目标对象进行了浅拷贝，因此目标对象与代理对象会互相
+// 影响
+targetEpt
+// {name: "Tom"}
+ 
+// handler 对象也可以为空，相当于不设置拦截操作，直接访问目标对象
+let targetEmpty = {}
+let proxyEmpty = new Proxy(targetEmpty,{})
+proxyEmpty.name = "Tom"
+targetEmpty // {name: "Tom"}
+```
+- 私有属性保护实例
+```js
+let proxy = new Proxy({}, {
+  get(target, propKey, receiver) {
+      // 实现私有属性读取保护
+      if(propKey[0] === '_'){
+          throw new Error(`Invalid attempt to get private     "${propKey}"`);
+      }
+      console.log('Getting ' + propKey);
+      return target[propKey];
+  }
+});
+ 
+let obj = Object.create(proxy);
+obj.name
+// Getting name
+```
+- 拦截不合法的赋值
+```js
+let validator = {
+    set: function(obj, prop, value) {
+        if (prop === 'age') {
+            if (!Number.isInteger(value)) {
+                throw new TypeError('The age is not an integer');
+            }
+            if (value > 200) {
+                throw new RangeError('The age seems invalid');
+            }
+        }
+        // 对于满足条件的 age 属性以及其他属性，直接保存
+        obj[prop] = value;
+    }
+};
+let proxy= new Proxy({}, validator)
+proxy.age = 100;
+proxy.age           // 100
+proxy.age = 'oppps' // 报错
+proxy.age = 300     // 报错
+```
+- setter和getter的最后一个参数receiver
+```js
+const handler = {
+    set: function(obj, prop, value, receiver) {
+        obj[prop] = receiver;
+    }
+};
+const proxy = new Proxy({}, handler);
+proxy.name= 'Tom';
+proxy.name=== proxy // true
+ 
+const exam = {}
+Object.setPrototypeOf(exam, proxy)
+exam.name = "Tom"
+exam.name === exam // true
+```
