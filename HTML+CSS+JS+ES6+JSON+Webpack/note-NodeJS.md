@@ -1,7 +1,5 @@
 # note-NodeJS
 
-[Gitee-expressHjh/nodejs 笔记](https://gitee.com/coderhjhh/nodejs-/blob/master/%E4%B8%8A%E8%AF%BE%E7%AC%94%E8%AE%B0/nodeJS%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.md)
-
 > 独立的 Chrome V8 Javascript 运行时环境
 > Node.js 是 js 的运行平台
 
