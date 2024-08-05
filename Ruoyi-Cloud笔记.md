@@ -25,3 +25,10 @@ startup.cmd -m standalone
 ## 事务失效的场景
 
 https://blog.csdn.net/HJW_233/article/details/131502536
+
+## 安装npm包
+
+``` 
+npm install art-template --registry=http://registry.npmmirror.com
+```
+
