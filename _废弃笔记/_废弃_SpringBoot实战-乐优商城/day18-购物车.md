@@ -389,7 +389,7 @@ var cartVm = new Vue({
     increment(c) {
         c.num++;
         ly.verifyUser().then(() => {
-            // TODO 已登录，向后台发起请求
+            // done 已登录，向后台发起请求
         }).catch(() => {
             // 未登录，直接操作本地数据
             ly.store.set("carts", this.carts);
@@ -401,7 +401,7 @@ var cartVm = new Vue({
         }
         c.num--;
         ly.verifyUser().then(() => {
-            // TODO 已登录，向后台发起请求
+            // done 已登录，向后台发起请求
         }).catch(() => {
             // 未登录，直接操作本地数据
             ly.store.set("carts", this.carts);
@@ -424,7 +424,7 @@ var cartVm = new Vue({
 ```js
 deleteCart(i){
     ly.verifyUser().then(res=>{
-        // TODO，已登录购物车
+        // done，已登录购物车
     }).catch(()=>{
         // 未登录购物车
         this.carts.splice(i, 1);

@@ -5,9 +5,13 @@
 
 [尚硅谷-张天禹老师笔记+代码](https://github.com/yangxuesong0122/ssg--vue23-)
 
+[Vue2官网](https://v2.cn.vuejs.org/)
+
 > Vue.js是一个渐进式Javascript框架
-> 尤雨溪受到AngularJS的启发，开发了Seed框架，后来命名为Vue.js。
-> 组件化模式 声明式编码 虚拟DOM+优秀的Diff算法
+>
+> - 组件化模式 
+> - 声明式编码 
+> - 虚拟DOM+优秀的Diff算法
 
 ## 1.Vue.js基本操作
 
@@ -28,7 +32,11 @@
 ### `v-model`
 
 - 必须在表单`input` `select`等中使用双向数据绑定
-- .lazy,.number,.trim修饰符
+- 特定修饰符
+  - `.lazy`在默认情况下，`v-model` 在每次 `input` 事件触发后将输入框的值与数据进行同步 (除了[上述](https://v2.cn.vuejs.org/v2/guide/forms.html#vmodel-ime-tip)输入法组合文字时)。你可以添加 `lazy` 修饰符，从而转为在 `change` 事件*之后*进行同步：
+  - `.number`
+  - ``.trim`
+
 
 ### `v-if` `v-else-if` `v-else` `v-show`
 
@@ -59,7 +67,7 @@
 ```html
 	<!-- 循环遍历对象身上的属性 -->
 
-    <div v-for="(value, name, index) in userInfo" :key="value.id">{{value}} --- {{name}} --- {{index}}</div>
+<div v-for="(value, name, index) in userInfo" :key="value.id">{{value}} --- {{name}} --- {{index}}</div>
 ```
 
 3. 迭代数字
@@ -69,7 +77,7 @@
 ```
 > 2.2.0+ 的版本里，**当在组件中使用** v-for 时，v-bind:key现在是必须的，值为number或者string
 
-### `Vue.$refs`
+### vm.$refs
 
 ```html
 <div ref="userinfo"></div>
@@ -88,7 +96,7 @@ show(num, event) {
 }
 ```
 ### `v-cloak`
-> 在简单项目中，使用 v-cloak 指令是解决屏幕闪动的好方法。但在大型、工程化的项目中（webpack、vue-router）只有一个空的 div 元素，元素中的内容是通过路由挂载来实现的，这时我们就不需要用到 v-cloak 指令咯。
+> 在简单项目中，使用 v-cloak 指令是解决屏幕闪动的好方法。但在大型、工程化的项目中（webpack、vue-router）只有一个空的 div 元素，元素中的内容是通过路由挂载来实现的，这时我们就不需要用到 v-cloak 指令。
 
 
 ```html
@@ -134,6 +142,7 @@ data: {
 - `passive`移动端常用，先执行默认事件再触发事件回调函数
 - `capture`捕获模式
 - `prevent.stop` 阻止默认事件和冒泡
+- `native`组件绑定事件
 
 
 ### Vue键盘事件
@@ -141,8 +150,6 @@ data: {
 [Vue官网-按键修饰符](https://cn.vuejs.org/v2/guide/events.html#%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6)
 
 [Vue官网-Vue.config.keyCodes](https://cn.vuejs.org/v2/api/#keyCodes)
-
-[CSDN-Vue中监听键盘事件](https://blog.csdn.net/xiaxiangyun/article/details/80404768)
 
 > 1. 有的键盘按键不能绑定事件，比如调整音量和背光
 >
@@ -192,7 +199,7 @@ computed: {
   }
 }
 ```
-### watch和Vue.$watch
+### watch和Vue.watch
 ```js
 watch: {
   fullName: function (newValue, oldValue) {
@@ -218,6 +225,35 @@ watch: {
   }
 }
 ```
+
+### props
+
+> [Vue官网 props](https://v2.cn.vuejs.org/v2/api/#props)
+
+```js
+// 简单语法
+Vue.component('props-demo-simple', {
+  props: ['size', 'myMessage']
+})
+
+// 对象语法，提供验证
+Vue.component('props-demo-advanced', {
+  props: {
+    // 检测类型
+    height: Number,
+    // 检测类型 + 其他验证
+    age: {
+      type: Number,
+      default: 0,
+      required: true,
+      validator: function (value) {
+        return value >= 0
+      }
+    }
+  }
+})
+```
+
 
 ### Vue绑定class样式
 
@@ -279,17 +315,17 @@ data: {
 ```html
 <h1 :style="[h1StyleObj, h1StyleObj2]">这是一个善良的H1</h1>
 ```
-### Vue.$set
+### Vue.set和vm.$set
 > [Vue官网-Vue.$set](https://cn.vuejs.org/v2/api/#Vue-set)
 ```js
 this.$set(this.userInfo, 'id', 1);
 ```
-### Vue.$delete
+### Vue.delete和vm.$delete
 > [Vue官网-Vue.$delete](https://cn.vuejs.org/v2/api/#Vue-delete)
 ```js
 this.$delete(this.userInfo, 'id');
 ```
-### Vue.$nextTick
+### Vue.nextTick和vm.$nextTick
 > [Vue官网-Vue.$nextTick](https://cn.vuejs.org/v2/api/#Vue-nextTick)
 ```js
 this.$nextTick(() => {
@@ -298,7 +334,7 @@ this.$nextTick(() => {
 });
 ```
 
-### filters
+### 过滤器 filters和Vue.filter
 > [Vue官网-过滤器](https://cn.vuejs.org/v2/guide/filters.html)
 ```js
 filters: {
@@ -309,62 +345,54 @@ filters: {
 ```
 
 
-### directives
-
-#### 全局自定义指令 和 局部(私有)自定义指令
+### 自定义指令 directives和Vue.directive
+[Vue官网 自定义指令及其钩子函数](https://cn.vuejs.org/v2/guide/custom-directive.html#%E9%92%A9%E5%AD%90%E5%87%BD%E6%95%B0)
 
 > 样式相关的在bind里面设置，行为相关的在inserted里面设置
->
 > 定义的时候是focus 调用的时候是v-focus
->
-> 注意：自定义指令的时候写**‘font-weight’**，而el.style.**fontWeight**
->
-> [Vue官网 自定义指令 钩子函数](https://cn.vuejs.org/v2/guide/custom-directive.html#%E9%92%A9%E5%AD%90%E5%87%BD%E6%95%B0)
 
-```
-    // 自定义全局指令 v-focus，为绑定的元素自动获取焦点：
-  
+一个指令定义对象可以提供如下几个钩子函数 (均为可选)：
 
-    Vue.directive('focus', {
+- bind：只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置。
 
-      inserted: function (el) { // inserted 表示被绑定元素插入父节点时调用
+- inserted：被绑定元素插入父节点时调用 (仅保证父节点存在，但不一定已被插入文档中)。
 
-        el.focus();
+- update：所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。指令的值可能发生了改变，也可能没有。但是你可以通过比较更新前后的值来忽略不必要的模板更新 (详细的钩子函数参数见下)。
 
-      }
+- componentUpdated：指令所在组件的 VNode 及其子 VNode 全部更新后调用。
 
-    });
+- unbind：只调用一次，指令与元素解绑时调用。
 
-
-
-    // 自定义局部指令 v-color 和 v-font-weight，为绑定的元素设置指定的字体颜色 和 字体粗细：
-
-      directives: {
-
-        color: { // 为元素设置指定的字体颜色
-
-          bind(el, binding) {
-
-            el.style.color = binding.value;
-
-          },
-
-        },
-
-        'font-weight': function (el, binding2) { // 自定义指令的简写形式，等同于定义了 bind 和 update 两个钩子函数
-
-          el.style.fontWeight = binding2.value;
-
-        }
-
-      }
-
-```
-
-2. 自定义指令的使用方式：
-
-```
+> 在很多时候，你可能想在 bind 和 update 时触发相同行为，而不关心其它的钩子。比如这样写：
+  ```js
+  Vue.directive('color-swatch', function (el, binding) {
+    el.style.backgroundColor = binding.value
+  })
+  ```
+> 自定义指令内的this指向window
+```html
 <input type="text" v-model="searchName" v-focus v-color="'red'" v-font-weight="900">
+
+```
+
+```js
+    // 自定义全局指令 v-focus，为绑定的元素自动获取焦点：
+    Vue.directive('focus', {
+      inserted: function (el) { // inserted 表示被绑定元素插入父节点时调用
+        el.focus();
+      }
+    });
+    // 自定义局部指令 v-color 和 v-font-weight，为绑定的元素设置指定的字体颜色 和 字体粗细：
+    directives: {
+      color: { 
+        bind(el, binding) {
+          el.style.color = binding.value;
+        },
+      },
+      'font-weight': function (el, binding2) { 
+        el.style.fontWeight = binding2.value;
+      }
+    }
 
 ```
 
@@ -377,14 +405,16 @@ filters: {
 ```html
 <div data-aid(自定义属性)="123123" v-on:click=eventFn($event)></div>
 ```
-
-
-
 ```js
 eventFn(e){
   console.log(e.srcElement.style.background);
   console.log(e.srcElement.dataset.aid);
 }
+```
+### `$mount`
+> [Vue官网-Vue.$mount](https://cn.vuejs.org/v2/api/#vm-mount)
+```js
+this.$mount('#app');
 ```
 
 ### Vue生命周期函数
@@ -400,6 +430,88 @@ eventFn(e){
 - 销毁期间的生命周期函数：
   - **beforeDestroy**：【Vue实例还可用】实例销毁之前调用。在这一步，实例仍然完全可用。
   - destroyed：【Vue实例已被销毁】Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。
+
+### 混入 mixins和Vue.mixin
+
+> [Vue官网 mixins](https://cn.vuejs.org/v2/guide/mixins.html)
+
+> 如果你的混入包含一个 created 钩子，而创建组件本身也有一个，那么两个函数都会被调用。Mixin 钩子按照传入顺序依次调用，并在调用组件自身的钩子之前被调用。
+
+```js
+var mixin = {
+  created: function () { console.log(1) }
+}
+var vm = new Vue({
+  created: function () { console.log(2) },
+  mixins: [mixin]
+})
+// => 1
+// => 2
+```
+
+### 插件
+
+> [Vue官网-插件](https://cn.vuejs.org/v2/guide/plugins.html)
+- 使用插件
+```js
+Vue.use(myPlugin);
+```
+- 定义插件
+```js
+// 插件应该暴露一个 install 方法
+// export default {};写成一个插件js文件也可以
+var myPlugin = {
+  install: function (Vue, options) {
+    // 1.全局过滤器
+    Vue.filter('mySlice', function (value) {
+          return value.slice(0, 10);
+          // return value.slice(0, 10) + '...';
+    });
+    // 2.全局指令
+    Vue.directive('my-directive', {
+      bind: function (el, binding, vnode, oldVnode) {
+        // 1.指令绑定到元素上
+        el.style.color = binding.value;
+        // 2.指令绑定到元素上
+        el.style.fontSize = binding.value + 'px';
+        // 3.指令绑定到元素上
+        el.style.backgroundColor = binding.value;
+      },
+      update: function (el, binding, vnode, oldVnode) {
+        el.style.color = binding.value;
+        el.style.fontSize = binding.value + 'px';
+        el.style.backgroundColor = binding.value;
+      },
+    );
+    // 3.全局混入
+    Vue.mixin({
+      created: function () {
+        console.log('全局混入-created');
+      },
+      updated: function () {
+        console.log('全局混入-updated');
+      }
+    );
+    // 4.实例方法
+    Vue.prototype.hello = function () {
+      alert('hello');
+      console.log(this);
+    }
+  });
+  Vue.component('my-component', {
+    data: function () {
+      return {
+        msg: 'hello'
+      },
+      created: function () {
+        console.log('created');
+      }
+    });
+};
+```
+
+
+
 
 ## 2.Vue中的动画
 
@@ -437,28 +549,29 @@ eventFn(e){
 
 `07.动画-列表动画.html`
 
-> [Vue官网-列表过渡](
 
 ## 3.Vue组件`component`
-
+> [Vue官网 Vue.extend](https://cn.vuejs.org/v2/api/#Vue-extend)
+> [Vue官网-Vue.component](https://cn.vuejs.org/v2/api/#Vue-component)
+> [Vue官网-组件](https://cn.vuejs.org/v2/guide/components.html)
 ### 组件的定义和使用
 
 - 定义组件
+```html
+<template>
+  <div>
+  </div>
+</template>
 
-  - <template>
-    <div>
-       </div>
-    </template>
-
-  - <script></script>>
-
-  - <style></style>>
+<script></script>
+<style></style>
+```
 
 - 引用组件
 
   1. 引入组件`import xxx from "xxx"`
-  2. 注册组件`conponents{'v-xxx':xxx}`
-  3. 页面上使用组件`<v-xxx></v-xxx>`	
+  2. 注册组件`conponents{'xxx':xxx}`
+  3. 页面上使用组件`<xxx></xxx>`	
 
 
 
@@ -468,7 +581,7 @@ eventFn(e){
 
 1. 页面结构：
 
-```
+```html
 <div id="app">
     <input type="button" value="toggle" @click="flag=!flag">
     <my-com1 v-if="flag"></my-com1>
@@ -478,7 +591,7 @@ eventFn(e){
 
 2. Vue实例定义：
 
-```
+```js
 <script>
     Vue.component('myCom1', {
       template: '<h3>奔波霸</h3>'
@@ -505,7 +618,7 @@ eventFn(e){
 
 1. 组件实例定义方式：
 
-```
+```js
   // 登录组件
     const login = Vue.extend({
       template: `<div>
@@ -532,7 +645,7 @@ eventFn(e){
 
 2. 使用`component`标签，来引用组件，并通过`:is`属性来指定要加载的组件：
 
-```
+```html
   <div id="app">
     <a href="#" @click.prevent="comName='login'">登录</a>
     <a href="#" @click.prevent="comName='register'">注册</a>
@@ -545,7 +658,7 @@ eventFn(e){
 
 3. 添加切换样式：
 
-```
+```html
   <style>
     .v-enter,
     .v-leave-to {
@@ -565,93 +678,129 @@ eventFn(e){
   </style>
 ```
 
-### 父组件给子组件传值
+### 父子组件传值
 
 - 父组件绑定动态属性`v-bind:xxx="数据名"`
 - 子组件用props:[]来接收父组件传过来的 数据xxx
 
-### 父组件给子组件传方法 同时 子组件通过方法带参给父组件传值
+-----
+
+
 
 - 父组件绑定动态方法`v-bind:xxx="方法名"`
 - 子组件用props:[]来接收父组件传过来的 方法xxx
 
-### 父组件直接把自己传给子组件
+----
+
+
 
 - 父组件绑定动态方法`v-bind:xxx="this"`
 - 子组件用props:[]来接收父组件传过来的 父组件自己xxx
 
-### props:[]可以验证数据的合法性
-
-```js
-props: {
-  title: String,
-  likes: Number,
-  isPublished: Boolean,
-  commentIds: Array,
-  author: Object,
-  callback: Function,
-  contactsPromise: Promise // or any other constructor
-}
-```
-
-### 父组件主动获取子组件的数据和方法
-
-`<v-header ref="header"></v-header>`
-
-`this.$refs.header.msg`
-
-### 子组件主动获取父组件的数据和方法
+### `$parent`和`$children`
 
 节制地使用 `$parent` 和 `$children` - 它们的主要目的是作为访问组件的应急方法。更推荐用 props 和 events 实现父子组件通信
 
-### Vue非父子组件传值
+### `$on`和`$off`和`$once`和`$emit`
 
-1. 封装`VueEmit.js`
+> [Vue官网 $on和$off和$once和$emit](https://v2.cn.vuejs.org/v2/api/#%E5%AE%9E%E4%BE%8B%E6%96%B9%E6%B3%95-%E4%BA%8B%E4%BB%B6)
 
-   ```javascript
-   import Vue from 'vue';
-   var VueEmit =new Vue();
-   ```
+### 全局事件总线 非父子组件传值
 
-2. 一个组件广播
+1. 创建事件总线   main.js
 
-   ​	
+```js
+import Vue from 'vue'
+// 创建事件总线   就相当于创建了一个新的vue实例
+const bus = new Vue()
+// 把bus挂载到了Vue的原型上, 保证所有的组件都能通过 this.$bus访问到事件总线
+Vue.prototype.$bus = bus
+```
 
-   ```js
-   import VueEmit from '../mdoel/VueEmit.js'
-   export default{
-   	data(){
-   	
-   	},
-   	methods:{
-   		emitNews(){
-   			VueEvent.$emit('to-news',this.msg(要传过去的数据));
-   		}
-   	}
-   }
-   ```
+2. 页面使用 发布事件 - 传递值
 
-   
+```js
+// this.$bus.$emit('事件名', 额外参数)
+this.$bus.$emit('send', 'hello')
+```
 
-3. 一个组件接收
+3. 订阅事件 - 接收组件值
 
-   ```js
-   import VueEmit from '../mdoel/VueEmit.js'
-   export default{
-   	data(){
-   	
-   	},
-   	mounted(){
-   		VueEmit.$on('to-news',function(data){
-   			console.log(data);
-   		})
-   	}
-   }
-   ```
+```js
+// 1. 在created中订阅
+// 2. 回调函数需要写成箭头函数
+// this.$bus.$on('事件名', 事件回调函数)
+this.$bus.$on('send', msg => {
+  console.log(msg)
+})
+```
+
+4. 事件解绑
+
+```js
+  beforeDestroy () {
+    // 取消对bus事件的监听
+    this.$bus.$off('send')
+  }
+```
+
+### 消息订阅与发布 非父子组件传值
+
+> [npm官网 pubsub-js](https://www.npmjs.com/package/pubsub-js)
+
+1. 引入
+
+```js
+import PubSub from 'pubsub-js'
+```
+
+2. 订阅
+
+```js
+// create a function to subscribe to topics
+var mySubscriber = function (msg, data) {
+    console.log( msg, data );
+};
+
+// add the function to the list of subscribers for a particular topic
+// we're keeping the returned token, in order to be able to unsubscribe
+// from the topic later on
+var token = PubSub.subscribe('MY TOPIC', mySubscriber);
+```
+
+3. 发布
+
+```js
+// publish a topic asynchronously
+PubSub.publish('MY TOPIC', 'hello world!');
+
+// publish a topic synchronously, which is faster in some environments,
+// but will get confusing when one topic triggers new topics in the
+// same execution chain
+// USE WITH CAUTION, HERE BE DRAGONS!!!
+PubSub.publishSync('MY TOPIC', 'hello world!');
+```
+
+4. 取消订阅
+
+```js
+// create a function to receive the topic
+var mySubscriber = function (msg, data) {
+    console.log(msg, data);
+};
+
+// add the function to the list of subscribers to a particular topic
+// we're keeping the returned token, in order to be able to unsubscribe
+// from the topic later on
+var token = PubSub.subscribe('MY TOPIC', mySubscriber);
+
+// unsubscribe this subscriber from this topic
+PubSub.unsubscribe(token);
+```
 
 
 
-## VueX
+## 4.VueX
 
 ### Vuex使用场景
 
@@ -710,7 +859,7 @@ mutations: {
 }
 ```
 
-## Vue请求数据
+## 5.Vue请求数据
 
 > [菜鸟教程-AJAX-向服务器发送请求](https://www.w3school.com.cn/ajax/ajax_xmlhttprequest_send.asp)
 
@@ -726,12 +875,42 @@ mutations: {
 
 > [Github-axios](https://github.com/axios/axios)
 
-## Scss和Sass
+## 6.Vue-cli
+
+> [Vue-cli官网 vue.config.js基础配置](https://cli.vuejs.org/zh/config/#pages)
+```js
+module.exports = {
+  pages: {
+    index: {
+      // page 的入口
+      entry: 'src/index/main.js',
+      // 模板来源
+      template: 'public/index.html',
+      // 在 dist/index.html 的输出
+      filename: 'index.html',
+      // 当使用 title 选项时，
+      // template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
+      title: 'Index Page',
+      // 在这个页面中包含的块，默认情况下会包含
+      // 提取出来的通用 chunk 和 vendor chunk。
+      chunks: ['chunk-vendors', 'chunk-common', 'index']
+    },
+    // 当使用只有入口的字符串格式时，
+    // 模板会被推导为 `public/subpage.html`
+    // 并且如果找不到的话，就回退到 `public/index.html`。
+    // 输出文件名会被推导为 `subpage.html`。
+    subpage: 'src/subpage/main.js',
+    lintOnSave: false,
+  }
+}
+```
+
+## 7.Scss和Sass
 
 - SCSS 需要使用分号和花括号而不是换行和缩进 **好用**
 - Sass 使用换行和缩进而不是分号和花括号 **难用**
 
-## Vue原理
+## 8.Vue原理
 
 ### 数据代理
 
