@@ -115,7 +115,7 @@ show(num, event) {
 <div>
     <div v-once>{{count}}</div>
     <div >{{count}}</div>
-    <button v-on:click="addCount">加个一吧</button>
+    <button @click="addCount">加个一吧</button>
 </div>
 ```
 ```js
@@ -128,7 +128,7 @@ data: {
 ```html
 <div v-pre>
   <div>{{count}}</div>
-  <button v-on:click="addCount">加个一吧</button>
+  <button @click="addCount">加个一吧</button>
 </div>
 ```
 ### Vue事件修饰符
@@ -403,7 +403,7 @@ filters: {
 事件对象可以进行诸如DOM操作,获取自定义属性等
 
 ```html
-<div data-aid(自定义属性)="123123" v-on:click=eventFn($event)></div>
+<div data-aid(自定义属性)="123123" @click=eventFn($event)></div>
 ```
 ```js
 eventFn(e){
@@ -513,44 +513,247 @@ var myPlugin = {
 
 
 
-## 2.Vue中的动画
+## 2.Vue中的过渡和动画
 
 > [Vue官网-动画](https://cn.vuejs.org/v2/guide/transitions.html)
+>
+> [animate.css](https://daneden.github.io/animate.css/)
+>
+> [Velocity.js 中文文档](http://www.5imoban.net/view/Velocity/index.html)
 
-### 使用v-if和v-show来实现动画
+### CSS过渡
 
-`02.动画-不使用动画.html`
+Vue 提供了 `transition` 的封装组件，在下列情形中，可以给任何元素和组件添加进入/离开过渡
 
-### 使用过渡类名
+- 条件渲染 (使用 `v-if`)
+- 条件展示 (使用 `v-show`)
+- 动态组件
+- 组件根节点
 
-`03.动画-使用过渡类名实现动画.html`
+这里是一个典型的例子：
 
-> [Vue官网-过渡类名](https://cn.vuejs.org/v2/guide/transitions.html#%E8%BF%87%E6%B8%A1%E7%9A%84%E7%B1%BB%E5%90%8D)
+```html
+<div id="demo">
+  <button @click="show = !show">
+    Toggle
+  </button>
+  <transition name="fade">
+    <p v-if="show">hello</p>
+  </transition>
+</div>
+```
 
-### 使用自定义过渡类名
+```js
+new Vue({
+  el: '#demo',
+  data: {
+    show: true
+  }
+})
+```
 
-`04.动画-修改v-前缀.html`
+```css
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+```
 
-> [Vue官网-自定义过渡类名](https://cn.vuejs.org/v2/guide/transitions.html#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%87%E6%B8%A1%E7%9A%84%E7%B1%BB%E5%90%8D)
+#### 初始渲染的过渡appear
 
-### 使用第三方 CSS 动画库
+```html
+<transition appear>
+  <!-- ... -->
+</transition>
+```
 
-`05.动画-使用第三方类实现动画.html`
+#### 过渡模式
 
-> [Animate.css官网](https://daneden.github.io/animate.css/)
+```html
+<transition name="fade" mode="out-in">
+  <!-- ... the buttons ... -->
+</transition>
+```
 
-### 使用动画钩子函数
+#### 列表过渡
 
-`06.动画-使用钩子函数模拟小球半场动画.html`
+```html
+<div id="list-demo" class="demo">
+  <button @click="add">Add</button>
+  <button @click="remove">Remove</button>
+  <transition-group name="list" tag="p">
+    <span v-for="item in items" v-bind:key="item" class="list-item">
+      {{ item }}
+    </span>
+  </transition-group>
+</div>
+```
 
-> [Vue官网-JavaScript钩子(动画生命周期函数)](https://cn.vuejs.org/v2/guide/transitions.html#JavaScript-%E9%92%A9%E5%AD%90)
+#### javascript钩子
 
-### 使用transition-group实现列表v-for的动画
+可以在 attribute 中声明 JavaScript 钩子
 
-`07.动画-列表动画.html`
+```html
+<transition
+  @before-enter="beforeEnter"
+  @enter="enter"
+  @after-enter="afterEnter"
+  @enter-cancelled="enterCancelled"
+
+  @before-leave="beforeLeave"
+  @leave="leave"
+  @after-leave="afterLeave"
+  @leave-cancelled="leaveCancelled"
+>
+  <!-- ... -->
+</transition>
+```
+
+```js
+
+// ...
+methods: {
+  // --------
+  // 进入中
+  // --------
+
+  beforeEnter: function (el) {
+    // ...
+  },
+  // 当与 CSS 结合使用时
+  // 回调函数 done 是可选的
+  enter: function (el, done) {
+    // ...
+    done()
+  },
+  afterEnter: function (el) {
+    // ...
+  },
+  enterCancelled: function (el) {
+    // ...
+  },
+
+  // --------
+  // 离开时
+  // --------
+
+  beforeLeave: function (el) {
+    // ...
+  },
+  // 当与 CSS 结合使用时
+  // 回调函数 done 是可选的
+  leave: function (el, done) {
+    // ...
+    done()
+  },
+  afterLeave: function (el) {
+    // ...
+  },
+  // leaveCancelled 只用于 v-show 中
+  leaveCancelled: function (el) {
+    // ...
+  }
+}
+```
+
+### CSS动画
+
+CSS 动画用法同 CSS 过渡，区别是在动画中 v-enter 类名在节点插入 DOM 后不会立即删除，而是在 animationend 事件触发时删除。
+
+```html
+<div id="example-2">
+  <button @click="show = !show">Toggle show</button>
+  <transition name="bounce">
+    <p v-if="show">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis enim libero, at lacinia diam fermentum id. Pellentesque habitant morbi tristique senectus et netus.</p>
+  </transition>
+</div>
+```
+
+```js
+new Vue({
+  el: '#example-2',
+  data: {
+    show: true
+  }
+})
+```
+
+```css
+.bounce-enter-active {
+  animation: bounce-in .5s;
+}
+.bounce-leave-active {
+  animation: bounce-in .5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+```
+
+### animate.css
+
+> [animate.css](https://daneden.github.io/animate.css/)
+
+```html
+<link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+
+<div id="example-3">
+  <button @click="show = !show">
+    Toggle render
+  </button>
+  <transition
+    name="custom-classes-transition"
+    enter-active-class="animated tada"
+    leave-active-class="animated bounceOutRight"
+  >
+    <p v-if="show">hello</p>
+  </transition>
+</div>
+```
+
+```js
+new Vue({
+  el: '#example-3',
+  data: {
+    show: true
+  }
+})
+```
+
+### velocity.js
+
+> [Velocity.js 中文文档](http://www.5imoban.net/view/Velocity/index.html)
+
+```js
+// 无 jQuery 或 Zepto 时，Velocity()方法挂载在 window 对象上 (window.velocity)
+// ( 第一个参数为原生js的dom选择器 )
+Velocity(document.getElementById("dummy"), {
+    opacity: 0.5
+}, {
+    duration: 1000
+});
+// 使用 jQuery 或 Zepto 时
+$("#dummy").velocity({
+    opacity: 0.5
+}, {
+    duration: 1000
+});
+```
 
 
-## 3.Vue组件`component`
+
+## 3.Vue组件
+
 > [Vue官网 Vue.extend](https://cn.vuejs.org/v2/api/#Vue-extend)
 > [Vue官网-Vue.component](https://cn.vuejs.org/v2/api/#Vue-component)
 > [Vue官网-组件](https://cn.vuejs.org/v2/guide/components.html)
@@ -863,15 +1066,65 @@ mutations: {
 
 > [菜鸟教程-AJAX-向服务器发送请求](https://www.w3school.com.cn/ajax/ajax_xmlhttprequest_send.asp)
 
-### 原生Ajax发起数据请求(已废弃)
+### 原生Ajax发起请求
 
 > [菜鸟教程-Ajax教程](https://www.runoob.com/ajax/ajax-tutorial.html)
 
-### 使用Vue-resource发起数据请求(已废弃)
+### jquery发起请求
+
+> [菜鸟教程-jQuery - AJAX get() 和 post() 方法](https://www.runoob.com/jquery/jquery-ajax-get-post.html)
+
+### window.fetch发起请求
+
+在构建Javascript项目时，我们可以使用window对象，并且它带有许多可以在项目中使用的出色方法。这些功能之一是Fetch API，它提供了一种简单的全局 `.fetch()` 方法，这是一种从API异步获取数据的逻辑解决方案。
+
+让我们看一下 `.fetch()` 方法的语法。
+
+```javascript
+fetch(url)
+  .then((res) => 
+    // handle response
+  )
+  .catch((error) => {
+    // handle error
+  })
+```
+
+在上面的示例中，您可以看到简单的获取GET请求的语法。在 `.fetch()` 方法中，我们有一个强制性参数**url**，它返回一个Promise，可以使用Response对象来解决。
+
+`.fetch()` 方法的第二个参数是选项，它是可选的。如果我们不传递 `options`，请求总是GET，它从给定的URL下载内容。
+
+在选项参数里面，我们可以传递方法或头信息，所以如果我们想使用POST方法或其他方法，我们必须使用这个可选的数组。
+
+正如我之前提到的，Promise会返回Response对象，正因为如此，我们需要使用另一个方法来获取响应的主体。有几种不同的方法可以使用，取决于我们需要的格式：
+
+- **response.json()**
+- **response.text()**
+- **response.formData()**
+- **response.blob()**
+- **response.arrayBuffer()**
+
+让我们看一下带有可选参数的代码示例。
+
+```javascript
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+});
+  .then((response) => response.json())
+  .catch((error) => console.log(error))
+```
+
+在上面的代码示例中，你可以看到简单的POST请求，包括 `method`、`header` 和 `body` params。然后我使用 `json()` 方法将响应转换为JSON格式。
+
+### 使用Vue-resource发起请求
 
 > [Github-Vue-resource](https://github.com/pagekit/vue-resource)
 
-### 使用axios发起数据请求
+### 使用axios发起请求
 
 > [Github-axios](https://github.com/axios/axios)
 
