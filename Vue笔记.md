@@ -510,6 +510,93 @@ var myPlugin = {
 };
 ```
 
+### 插槽slot
+
+#### 普通插槽
+
+1. 定义插槽在`navigation-link`内
+
+```html
+<a
+  v-bind:href="url"
+  class="nav-link"
+>
+  <slot></slot>
+</a>
+```
+
+2. 使用插槽
+
+```html
+<navigation-link url="/profile">
+  Your Profile
+</navigation-link>
+```
+
+#### 具名插槽
+
+1. 定义插槽在`base-layout`内
+
+```html
+<div class="container">
+  <header>
+    <slot name="header"></slot>
+  </header>
+  <main>
+    <slot></slot>
+  </main>
+  <footer>
+    <slot name="footer"></slot>
+  </footer>
+</div>
+```
+
+2. 使用插槽
+
+> v-slot:header也可以写成slot="header",前面的写法是新的，前面的写法只能用在template标签上，所以建议用后面的方式。
+
+> 现在 `<template>` 元素中的所有内容都将会被传入相应的插槽。任何没有被包裹在带有 `v-slot` 的 `<template>` 中的内容都会被视为默认插槽的内容。
+
+```html
+<base-layout>
+  <template v-slot:header>
+    <h1>Here might be a page title</h1>
+  </template>
+
+  <p>A paragraph for the main content.</p>
+  <p>And another one.</p>
+
+  <template v-slot:footer>
+    <p>Here's some contact info</p>
+  </template>
+</base-layout>
+```
+
+
+
+#### 作用域插槽
+
+1. 定义插槽在`currnet-user`组件，传递user
+
+```html
+<span>
+  <slot v-bind:user="user">
+    {{ user.lastName }}
+  </slot>
+</span>
+```
+
+2. 使用插槽时接受数据
+
+> v-slot:default也可以换成scope,然后里面的变量可以自己命名
+
+```html
+<current-user>
+  <template v-slot:default="slotProps">
+    {{ slotProps.user.firstName }}
+  </template>
+</current-user>
+```
 
 
 
