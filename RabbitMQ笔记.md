@@ -8,8 +8,6 @@
 
 [JavaGuide-RabbitMQ](https://javaguide.cn/high-performance/message-queue/rabbitmq-questions.html)
 
-[RabbitMQ实战指南笔记](https://zq99299.github.io/mq-tutorial/)
-
 [RabbitMQ的持久化思考](https://www.jianshu.com/p/84b3e5d9f8f8)
 
 《RabbitMQ实战指南》

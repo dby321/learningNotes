@@ -1,5 +1,5 @@
 
-# Vue笔记
+# Vue2笔记
 
 [黑马-Vue教程](https://www.bilibili.com/video/BV11s411A7h6/?spm_id_from=333.337.search-card.all.click&vd_source=f58f2e2144be4e99a8cf800afeecbbcb)
 
@@ -2016,6 +2016,45 @@ console.log(Object.keys(object));
 
 # Vue3笔记
 
+## 1. Vue核心语法
 
+> - Vue2是OptionsAPI
+> - Vue3是CompositionAPI
 
-> 未完待续
+### setup
+
+> - setup中没有this
+>
+> - 直接定义`let name="xxx"`不是响应式的
+> - 原本的options
+
+```js
+<template>
+  <button @click="toggle">显示隐藏图片</button>
+  <img v-show="show" alt="Vue logo" src="./assets/logo.png" />
+  <hr />
+  计数器：{{ count }} <button @click="increment">累加</button>
+</template>
+
+<script>
+import { ref } from 'vue';
+export default {
+  name: "App",
+  setup () {
+    // 显示隐藏
+    const show = ref(true)
+    const toggle = () => {
+      show.value = !show.value
+    }
+    // 计数器
+    const count = ref(0)
+    const increment = () => {
+      count.value ++
+    }
+
+    return { show, toggle, count, increment }
+  }
+};
+</script>
+```
+
