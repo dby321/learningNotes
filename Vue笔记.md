@@ -580,9 +580,7 @@ var myPlugin = {
 
 ```html
 <span>
-  <slot v-bind:user="user">
-    {{ user.lastName }}
-  </slot>
+  <slot v-bind:user="user"></slot>
 </span>
 ```
 
@@ -2016,17 +2014,17 @@ console.log(Object.keys(object));
 
 # Vue3笔记
 
-## 1. Vue核心语法
+[Vue3笔记](https://gitee.com/marina-37/vue3_vite_ts)
+
+## 1.Vue核心语法
 
 > - Vue2是OptionsAPI
 > - Vue3是CompositionAPI
 
-### setup
+### setup()
 
 > - setup中没有this
->
-> - 直接定义`let name="xxx"`不是响应式的
-> - 原本的options
+>- 直接定义`let name="xxx"`不是响应式的
 
 ```js
 <template>
@@ -2057,4 +2055,705 @@ export default {
 };
 </script>
 ```
+
+#### setup语法糖
+
+```js
+<script setup>
+// 变量
+const msg = 'Hello!'
+
+// 函数
+function log() {
+  console.log(msg)
+}
+</script>
+
+<template>
+  <button @click="log">{{ msg }}</button>
+</template>
+```
+
+#### setup语法糖-Vite 插件 vite-plugin-vue-setup-extend 
+
+[Vite中文文档-vite-plugin-vue-setup-extend](https://www.viterc.cn/en/vite-plugin-vue-setup-extend.html)
+
+> 解决组件命名的问题
+
+```
+npm i vite-plugin-vue-setup-extend -D
+```
+
+### ref()
+
+> 添加基本类型和对象类型数据响应式
+>
+> js使用时需要.value
+>
+> volar插件可以配置自动添加value
+
+```js
+<script setup>
+import { ref } from 'vue'
+
+const count = ref(0)
+
+function increment() {
+  count.value++
+}
+</script>
+
+<template>
+  <button @click="increment">
+    {{ count }}
+  </button>
+</template>
+```
+
+### reactive()
+
+> 添加对象类型数据响应式，是自动深层次的
+>
+> Object.assign(state, newObj)给reactive替换新对象是响应式的
+
+```js
+import { reactive } from 'vue'
+
+const state = reactive({ count: 0 })
+```
+
+```html
+<button @click="state.count++">
+  {{ state.count }}
+</button>
+```
+
+### toRefs和toRef()
+
+```js
+// 按原样返回现有的 ref
+toRef(existingRef)
+const fooRef = toRef(state, 'foo')
+
+const state = reactive({
+  foo: 1,
+  bar: 2
+})
+
+const stateAsRefs = toRefs(state)
+```
+
+### computed()
+
+> 不同之处在于**计算属性值会基于其响应式依赖被缓存**。一个计算属性仅会在其响应式依赖更新时才重新计算。这意味着只要 `author.books` 不改变，无论多少次访问 `publishedBooksMessage` 都会立即返回先前的计算结果，而不用重复执行 getter 函数
+
+#### 基础示例
+
+```js
+<script setup>
+import { reactive, computed } from 'vue'
+
+const author = reactive({
+  name: 'John Doe',
+  books: [
+    'Vue 2 - Advanced Guide',
+    'Vue 3 - Basic Guide',
+    'Vue 4 - The Mystery'
+  ]
+})
+
+// 一个计算属性 ref
+const publishedBooksMessage = computed(() => {
+  return author.books.length > 0 ? 'Yes' : 'No'
+})
+</script>
+
+<template>
+  <p>Has published books:</p>
+  <span>{{ publishedBooksMessage }}</span>
+</template>
+```
+
+#### 可写计算属性
+
+```js
+<script setup>
+import { ref, computed } from 'vue'
+
+const firstName = ref('John')
+const lastName = ref('Doe')
+
+const fullName = computed({
+  // getter
+  get() {
+    return firstName.value + ' ' + lastName.value
+  },
+  // setter
+  set(newValue) {
+    // 注意：我们这里使用的是解构赋值语法
+    [firstName.value, lastName.value] = newValue.split(' ')
+  }
+})
+</script>
+```
+
+### watch()
+
+> - 若修改的是ref定义的对像中的属性，newValue和o1 dValue都是新值，因为它们是同一个对像。
+> - 若修改整个ref定义的对像，newVa1ue是新值，oldValue是I旧值，因为不是同一个对像了。
+
+#### 基本示例
+
+```html
+<script setup>
+import { ref, watch } from 'vue'
+
+const question = ref('')
+const answer = ref('Questions usually contain a question mark. ;-)')
+const loading = ref(false)
+
+// 可以直接侦听一个 ref
+watch(question, async (newQuestion, oldQuestion) => {
+  if (newQuestion.includes('?')) {
+    loading.value = true
+    answer.value = 'Thinking...'
+    try {
+      const res = await fetch('https://yesno.wtf/api')
+      answer.value = (await res.json()).answer
+    } catch (error) {
+      answer.value = 'Error! Could not reach the API. ' + error
+    } finally {
+      loading.value = false
+    }
+  }
+})
+</script>
+
+<template>
+  <p>
+    Ask a yes/no question:
+    <input v-model="question" :disabled="loading" />
+  </p>
+  <p>{{ answer }}</p>
+</template>
+```
+
+#### 停止监听
+
+```html
+<template>
+  <div>
+    {{ data.val }}
+    <button @click="add">加一</button>
+  </div>
+</template>
+<script setup lang="ts">
+import { watch, reactive } from "vue";
+let data = reactive({
+  val: 2,
+});
+const flag = watch(
+  () => data.val,
+  (val: any) => {
+    console.log(val); // 3456
+    if (val >= 6) {
+      // 只要将 flag 声明的函数调用就可以结束监听了
+      flag();
+    }
+  },
+  { deep: true }
+);
+ 
+function add() {
+  data.val++;
+}
+</script>
+```
+
+#### 深度监视
+
+```html
+<template>
+    <h1>{{ numdata.name }}</h1>
+    <h1>{{ numdata.age }}</h1>
+
+    <button @click="shownum">修改名</button>
+    <button @click="shownum2">修改年龄</button>
+    <button @click="shownum3">修改全部</button>
+</template>
+
+<script setup lang="ts" name="Box">
+import { reactive, watch } from 'vue';
+
+type typeData = {
+    name: string,
+    age: number
+};
+
+let numdata = reactive<typeData>({
+    name: "张三",
+    age: 1
+});
+
+const shownum = (): void => {
+    numdata.name = "李四";
+    console.log("名字被修改");
+};
+
+const shownum2 = (): void => {
+    numdata.age = 456;
+    console.log("年龄被修改");
+};
+
+const shownum3 = (): void => {
+    console.log("修改全部");
+    /**** 
+     * 此处 调用  Object.assign 合并整合新数据和旧数据，并不算真正意义上的修改掉
+     * 
+     *
+     *  **/
+    Object.assign(numdata, { name: "王五", age: 789 })  //
+};
+
+watch(numdata, (newValue, OldValue): void => {
+    console.log("数据变化了", newValue, OldValue);
+
+    // 注意：当只修改嵌套的属性触发监听时 `newValue` 此处和 `oldValue` 是相等的
+    // 因为它们是同一个对象！
+}, { deep: false });     //   { deep: false }   默认开启深度监视，且无法通过配置项关闭。
+
+</script>
+```
+
+```html
+<template>
+    <h1>{{ numdata[0] }}</h1>
+    <h1>{{ numdata[1] }}</h1>
+
+    <button @click="shownum">修改下标0</button>
+    <button @click="shownum2">修改下标1</button>
+</template>
+
+<script setup lang="ts" name="Box">
+import { reactive, watch } from 'vue';
+
+
+let numdata = reactive<number[]>([1, 2]);
+
+const shownum = (): void => {
+    numdata[0] = 11
+    console.log("下标0 被修改");
+};
+
+const shownum2 = (): void => {
+    numdata[1] = 22
+    console.log("下标 1 被修改");
+};
+
+
+
+watch(numdata, (newValue, OldValue): void => {
+    console.log("数据变化了", newValue, OldValue);
+
+    // 注意：当只修改嵌套的属性触发监听时 `newValue` 此处和 `oldValue` 是相等的
+    // 因为它们是同一个对象！
+}, { deep: false });     //   { deep: false }   默认开启深度监视，且无法通过配置项关闭。
+
+</script>
+
+```
+
+#### 监视响应式对象中某个属性
+
+> 写函数式，如果监视的是对象，需要手动开启深度监视
+
+```html
+<template>
+    <h1>{{ numdata.name }}</h1>
+
+    <button @click="shownum">修改名</button>
+    <button @click="shownum2">修改全部</button>
+</template>
+
+<script setup lang="ts" name="Box">
+	import { ref, watch } from 'vue';
+	type typeData = {
+	    name: string,
+	    config: {
+	        n1: number,
+	        n2: number
+	    }
+	};
+	
+	let numdata = ref<typeData>({    //多级嵌套数据
+	    name: "张三",
+	    config: {
+	        n1: 123,
+	        n2: 456
+	    }
+	});
+	
+	const shownum = (): void => {      //只修改名字
+	    numdata.value.name = "李四";
+	    console.log("名字被修改");
+	};
+	
+	const shownum2 = (): void => {   //修改整个 config 属性
+	    console.log("修改全部");
+	    numdata.value.config = { n1: 789, n2: 666 }
+	};
+	
+	
+	//  只监听 name 属性     当监视响应式对象中的某个属性，且该属性是基本数据类型的，必须要写成函数式
+	watch(() => numdata.value.name, (newValue, OldValue): void => {
+	    console.log("数据变化了", newValue, OldValue);
+	});
+	
+	/**  
+	 只监听整个 config 属性。  当监视响应式对象中的某个属性，且该属性依然是引用数据类型的，
+	 可以直接写（不推荐），也能写函数（推荐），更加推荐写成函数式，函数监视效果更加的高效。
+	
+	**/
+	watch(() => numdata.value.config, (newValue, OldValue): void => {
+	    console.log("数据变化了", newValue, OldValue);
+	}, { deep: true });   // 再根据业务，选择性开启 深度监视，监视监听源里面更加深层次的数据
+
+</script>
+
+```
+
+#### 监听多个数据
+
+```html
+<template>
+    <h1>{{ data1 }}</h1>
+    <h1>{{ data2.name }}</h1>
+
+    <button @click="shownum">修改data1</button>
+    <button @click="shownum2">修改data2</button>
+</template>
+
+<script setup lang="ts" name="Box">
+    import { ref, watch, reactive } from 'vue';
+
+
+    let data1 = ref<number>(1);
+
+    let data2 = reactive({
+        name: "张三"
+    });
+
+    const shownum = (): void => {
+        data1.value += 1
+    };
+
+    const shownum2 = (): void => {
+        data2.name = "李四"
+    };
+
+
+    // 同时监听 data1 和 data2.name 等多个数据的变化  写法格式为一个数组  ，回调函数接收两个数组，分别对应来源数组中的新值和旧值：
+    watch([data1, () => data2.name], ([newValuedata1, newValuedata2], [OldValuedata1, OldValuedata2]): void => {
+        console.log("数据变化了新值", newValuedata1, newValuedata2);
+        console.log("数据变化了旧值", OldValuedata1, OldValuedata2);
+    });
+</script>
+
+```
+
+### watchEffect()
+
+> 全自动监视，首先会立即执行一次（相当于加了immediate）
+
+```js
+const todoId = ref(1)
+const data = ref(null)
+
+watch(
+  todoId,
+  async () => {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/todos/${todoId.value}`
+    )
+    data.value = await response.json()
+  },
+  { immediate: true }
+)
+```
+
+特别是注意侦听器是如何两次使用 `todoId` 的，一次是作为源，另一次是在回调中。
+
+我们可以用 [`watchEffect` 函数](https://cn.vuejs.org/api/reactivity-core.html#watcheffect) 来简化上面的代码。`watchEffect()` 允许我们自动跟踪回调的响应式依赖。上面的侦听器可以重写为：
+
+js
+
+```js
+watchEffect(async () => {
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/todos/${todoId.value}`
+  )
+  data.value = await response.json()
+})
+```
+
+### ref
+
+```html
+<!-- 存储为 this.$refs.p -->
+<p ref="p">hello</p>
+```
+
+使用组合式 API，引用将存储在与名字匹配的 ref 里：
+
+vue
+
+```html
+<script setup>
+import { ref } from 'vue'
+
+const p = ref()
+</script>
+
+<template>
+  <p ref="p">hello</p>
+</template>
+```
+
+### defineExpose()
+
+- 子组件
+
+```html
+<template>
+  <div>
+    <p>Count: {{ count }}</p>
+    <button @click="increment">Increment</button>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+
+const count = ref(0);
+
+function increment() {
+  count.value++;
+}
+
+// 使用 defineExpose 来暴露 count 和 increment
+defineExpose({
+  count,
+  increment,
+});
+</script>
+
+```
+
+- 父组件
+
+```html
+<template>
+  <div>
+    <Child ref="childRef" />
+    <button @click="accessChild">Access Child Methods</button>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import Child from './Child.vue';
+
+const childRef = ref(null);
+
+function accessChild() {
+  if (childRef.value) {
+    console.log('Current count:', childRef.value.count);
+    childRef.value.increment();
+    console.log('Count after increment:', childRef.value.count);
+  }
+}
+
+onMounted(() => {
+  if (childRef.value) {
+    console.log('Child component mounted, initial count:', childRef.value.count);
+  }
+});
+</script>
+
+```
+
+### defineProps()
+
+> 就是vue2中的props
+
+```html
+<template>
+  <h1>{{ msg }}</h1>
+  <div @click="clickThis">1111</div>
+</template>
+
+<script setup lang="ts">
+  defineProps<{ // 采用ts专有声明，无默认值
+    msg: string,
+    num?: number
+  }>()
+     // 采用ts专有声明，有默认值
+    interface Props {
+        msg?: string
+        labels?: string[]
+    }
+    const props = withDefaults(defineProps<Props>(), {
+        msg: 'hello',
+        labels: () => ['one', 'two']
+    })
+    
+  defineProps({ // 非ts专有声明
+    msg: String,
+    num: {
+      type:Number,
+      default: ''
+    }
+  })
+</script>
+
+<style scoped lang="less">
+</style>
+```
+
+## 2.Vue生命周期
+
+- `setup`:创建阶段
+
+- `onBeforeMount` – 在挂载开始之前被调用：相关的 `render` 函数首次被调用。
+- `onMounted` – 组件挂载时调用
+- `onBeforeUpdate` – 数据更新时调用，发生在虚拟 DOM 打补丁之前。这里适合在更新之前访问现有的 DOM，比如手动移除已添加的事件监听器。
+- `onUpdated` – 由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩子。
+- `onBeforeUnmount` – 在卸载组件实例之前调用。在这个阶段，实例仍然是完全正常的。
+- `onUnmounted` – 卸载组件实例后调用。调用此钩子时，组件实例的所有指令都被解除绑定，所有事件侦听器都被移除，所有子组件实例被卸载。
+- `onActivated` – 被 `keep-alive` 缓存的组件激活时调用。
+- `onDeactivated` – 被 `keep-alive` 缓存的组件停用时调用。
+- `onErrorCaptured` – 当捕获一个来自子孙组件的错误时被调用。此钩子会收到三个参数：错误对象、发生错误的组件实例以及一个包含错误来源信息的字符串。此钩子可以返回 `false` 以阻止该错误继续向上传播。
+
+## 3.Hooks
+
+- 加法功能-Hook
+
+```javascript
+const useAdd= ({ num1, num2 })  =>{
+    const addNum = ref(0)
+    watch([num1, num2], ([num1, num2]) => {
+        addFn(num1, num2)
+    })
+    const addFn = (num1, num2) => {
+        addNum.value = num1 + num2
+    }
+    return {
+        addNum,
+        addFn
+    }
+}
+export default useAdd
+```
+
+- 减法功能-Hook
+
+```javascript
+import { ref, watch } from 'vue';
+export function useSub  ({ num1, num2 }){
+    const subNum = ref(0)
+    watch([num1, num2], ([num1, num2]) => {
+        subFn(num1, num2)
+    })
+    const subFn = (num1, num2) => {
+        subNum.value = num1 - num2
+    }
+    return {
+        subNum,
+        subFn
+    }
+}
+```
+
+- 加减法计算组件
+
+```javascript
+<template>
+    <div>
+        num1:<input v-model.number="num1" style="width:100px" />
+        <br />
+        num2:<input v-model.number="num2" style="width:100px" />
+    </div>
+    <span>加法等于:{{ addNum }}</span>
+    <br />
+    <span>减法等于:{{ subNum }}</span>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import useAdd from './useAdd.js'     //引入自动hook 
+import { useSub } from './useSub.js' //引入自动hook 
+
+const num1 = ref(2)
+const num2 = ref(1)
+//加法功能-自定义Hook（将响应式变量或者方法形式暴露出来）
+const { addNum, addFn } = useAdd({ num1, num2 })
+addFn(num1.value, num2.value)
+//减法功能-自定义Hook (将响应式变量或者方法形式暴露出来)
+const { subNum, subFn } = useSub({ num1, num2 })
+subFn(num1.value, num2.value)
+</script>
+
+```
+
+## 4.Vue-router
+
+> OptionsAPI和CompositionAPI对应着写
+
+## 5.Pinia
+
+## 6.组件通信
+
+### 子传父 $emit
+
+```js
+<!-- 父组件 -->
+<template>
+    <h1>I am ParentComponent</h1>
+    <ChildComponent @child-click="zCf"/>
+    <h2>{{ x }}</h2>
+</template>
+
+<script setup>
+import ChildComponent from './ChildComponent.vue'
+import { ref } from 'vue';
+const x = ref('')
+const zCf = (value) => {
+    x.value = value;
+    console.log(x.value)
+}
+</script>
+```
+
+```js
+<!-- 子组件 -->
+<template>
+    <h2>I am ChildComponent</h2>
+    <h3>使用emit实现子传父</h3>
+    <button @click="ziChuanFu">点击我，子传父</button>
+</template>
+
+<script setup>
+import { defineEmits } from 'vue';
+const emit = defineEmits(['child-click'])
+const ziChuanFu = () => {
+    emit('child-click',1)
+}
+</script>
+```
+
+
+
+## 7.其他API
+
+
 
