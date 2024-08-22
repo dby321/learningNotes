@@ -10,4 +10,4 @@ mvn archetype:generate -DgroupId=com.binyu -DartifactId=JavawebStudy -Darchetype
 
 ## JSP
 
-[tutorialspoint_jsp教程](https://www.tutorialspoint.com/jsp/jsp_syntax.htm)
+[tutorialspoint_jsp教程](https://www.tutorialspoint.com/jsp/index.htm)
