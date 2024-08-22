@@ -11,5 +11,3 @@ mvn archetype:generate -DgroupId=com.binyu -DartifactId=JavawebStudy -Darchetype
 ## JSP
 
 [tutorialspoint_jsp教程](https://www.tutorialspoint.com/jsp/jsp_syntax.htm)
-
-> W3Cschool的过滤器和监听器写的不够详细。

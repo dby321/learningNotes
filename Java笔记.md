@@ -1,4 +1,4 @@
-# Java笔记
+# Java 八股文笔记
 
 ## 1. Java基础-面向对象
 
@@ -177,4 +177,448 @@ Java泛型这个特性是从JDK 1.5才开始加入的，因此为了兼容之前
 - [反射获取方法](#反射获取方法)
 - [调用 method.invoke() 方法](#调用-methodinvoke-方法)
 - [反射调用流程小结](#反射调用流程小结)
+
+# Java 笔记
+
+## 1. 断言
+
+### 使用步骤
+
+1. 配置断言
+
+![image-20240822105446719](images/Java笔记/image-20240822105446719.png)
+
+2. 编写代码
+
+> 上一个断言会盖住下面的断言
+
+```java
+public class AssetTest {
+
+     public static void main(String args[]) {
+        String[] weekends = {"Friday", "Saturday", "Sunday"};
+        assert weekends.length == 2;
+        assert weekends.length == 2:"这个星期有 " + weekends.length + " 个周末";
+        System.out.println("这个星期有 " + weekends.length + " 个周末");
+    }
+
+}
+```
+
+## 2. 反射
+
+### 创建名为Class的类的对象
+
+我们可以创建Class的对象，通过：
+
+- **使用forName()方法**
+
+forName()接受字符串参数（类的名称）并返回Class对象。返回的对象引用字符串指定的类。例如，
+
+```
+Class Dog {  }
+Class c1 = Class.forName("Dog");
+```
+
+- **使用getClass()方法**
+
+ getClass()方法使用特定类的对象来创建新的对象Class。例如，
+
+```
+Dog d1 = new Dog()
+Class c1 = d1.getClass();
+```
+
+- **使用.class**
+
+我们还可以使用**.class**扩展名创建Class对象。例如，
+
+```
+Class c1 = Dog.class;
+```
+
+创建Class对象后，我们可以使用这些对象执行反射。
+
+### 获取接口
+
+我们可以使用Class的getInterfaces()方法来收集类实现的接口的信息。此方法返回一个接口数组。
+
+#### 示例：获取接口
+
+```
+import java.lang.Class;
+import java.lang.reflect.*;
+
+interface Animal {
+   public void display();
+}
+
+interface Mammal {
+   public void makeSound();
+}
+
+class Dog implements Animal, Mammal {
+   public void display() {
+      System.out.println("I am a dog.");
+   }
+
+   public void makeSound() {
+      System.out.println("Bark bark");
+   }
+}
+
+class ReflectionDemo {
+  public static void main(String[] args) {
+      try {
+          //创建一个Dog类的对象
+          Dog d1 = new Dog();
+
+          //使用getClass()创建Class对象
+          Class obj = d1.getClass();
+        
+          //查找由Dog实现的接口
+          Class[] objInterface = obj.getInterfaces();
+          for(Class c : objInterface) {
+
+              //打印接口名称
+              System.out.println("Interface Name: " + c.getName());
+          }
+      }
+
+      catch(Exception e) {
+          e.printStackTrace();
+      }
+   }
+}
+```
+
+**输出结果**
+
+```
+Interface Name: Animal
+Interface Name: Mammal
+```
+
+### 获取超类和访问修饰符
+
+类Class的方法getSuperclass()可用于获取有关特定类的超类的信息。
+
+而且，Class提供了一种getModifier()方法，该方法以整数形式返回class的修饰符。
+
+#### 示例：获取超类和访问修饰符
+
+```
+import java.lang.Class;
+import java.lang.reflect.*;
+
+interface Animal {
+   public void display();
+}
+
+public class Dog implements Animal {
+   public void display() {
+       System.out.println("I am a dog.");
+   }
+}
+
+class ReflectionDemo {
+   public static void main(String[] args) {
+       try {
+           //创建一个Dog类的对象
+           Dog d1 = new Dog();
+
+           //使用getClass()创建Class对象
+           Class obj = d1.getClass();
+
+           //以整数形式获取Dog的访问修饰符
+           int modifier = obj.getModifiers();
+           System.out.println("修饰符： " + Modifier.toString(modifier));
+
+           //找到Dog的超类
+           Class superClass = obj.getSuperclass();
+           System.out.println("Superclass: " + superClass.getName());
+       }
+
+       catch(Exception e) {
+           e.printStackTrace();
+       }
+   }
+}
+```
+
+**输出结果**
+
+```
+修饰符： public
+Superclass: Animal
+```
+
+### 反射字段，方法和构造函数
+
+该软件包java.lang.reflect提供了可用于操作类成员的类。例如，
+
+- **方法类** - 提供有关类中方法的信息
+- **字段类** - 提供有关类中字段的信息
+- **构造函数类** - 提供有关类中构造函数的信息
+
+### Java 反射与字段
+
+ 我们可以使用Field类提供的各种方法检查和修改类的不同字段。
+
+- **getFields() -** 返回该类及其超类的所有公共字段
+- **getDeclaredFields()** - 返回类的所有字段
+- **getModifier()** - 以整数形式返回字段的修饰符
+- **set(classObject,value)** - 使用指定的值设置字段的值
+- **get(classObject)** - 获取字段的值
+- **setAccessible(boolean)** - 使私有字段可访问
+
+**注意：**如果我们知道字段名称，则可以使用
+
+- **getField("fieldName"）** - 从类返回名称为**fieldName**的公共字段。
+- **getDeclaredField\**("fieldName"）\**** - 从类返回名称为**fieldName**的字段。
+
+#### 示例：访问访问公共字段
+
+```
+import java.lang.Class;
+import java.lang.reflect.*;
+
+class Dog {
+  public String type;
+}
+
+class ReflectionDemo {
+  public static void main(String[] args) {
+     try{
+         Dog d1 = new Dog();
+          //创建Class对象
+         Class obj = d1.getClass();
+
+        //操纵Dog类的公共字段type
+         Field field1 = obj.getField("type");
+        //设置字段的值
+         field1.set(d1, "labrador");
+        //通过转换成字符串来获取字段的值
+         String typeValue = (String)field1.get(d1);
+         System.out.println("type: " + typeValue);
+
+         //获取类型的访问修饰符
+         int mod1 = field1.getModifiers();
+         String modifier1 = Modifier.toString(mod1);
+         System.out.println("修饰符： " + modifier1);
+         System.out.println(" ");
+     }
+     catch(Exception e) {
+         e.printStackTrace();
+     }
+  }
+}
+```
+
+**输出结果**
+
+```
+type: labrador
+修饰符： public
+```
+
+### 示例：访问私有字段
+
+```
+import java.lang.Class;
+import java.lang.reflect.*;
+
+class Dog {
+ private String color;
+}
+
+class ReflectionDemo {
+public static void main(String[] args) {
+   try {
+      Dog d1 = new Dog();
+      //创建类Class对象
+      Class obj = d1.getClass();
+
+      //访问私有字段
+      Field field2 = obj.getDeclaredField("color");
+     
+      //使私有字段可访问
+      field2.setAccessible(true);
+      //设置color值
+      field2.set(d1, "brown");
+      // get the value of type converting in String
+      String colorValue = (String)field2.get(d1);
+      System.out.println("color: " + colorValue);
+
+      //获取color的访问修饰符
+      int mod2 = field2.getModifiers();
+      String modifier2 = Modifier.toString(mod2);
+      System.out.println("modifier: " + modifier2);
+   }
+   catch(Exception e) {
+      e.printStackTrace();
+   }
+ }
+}
+```
+
+**输出结果**
+
+```
+color: brown
+modifier: private
+```
+
+### Java 反射与方法
+
+像字段一样，我们可以使用Method类提供的各种方法来检查类的不同方法。
+
+- **getMethods()** - 返回该类及其超类的所有公共方法
+- **getDeclaredMethod()** - 返回该类的所有方法
+- **getName()** - 返回方法的名称
+- **getModifiers()** - 以整数形式返回方法的访问修饰符
+- **getReturnType()** - 返回方法的返回类型
+
+#### 示例：方法反射
+
+```
+import java.lang.Class;
+import java.lang.reflect.*;
+
+class Dog {
+   public void display() {
+      System.out.println("I am a dog.");
+   }
+
+   protected void eat() {
+      System.out.println("I eat dog food.");
+   }
+
+   private void makeSound() {
+      System.out.println("Bark Bark");
+   }
+
+}
+
+class ReflectionDemo {
+   public static void main(String[] args) {
+      try {
+          Dog d1 = new Dog();
+
+          //创建一个Class对象
+          Class obj = d1.getClass();
+          
+          //使用getDeclaredMethod()获取所有方法
+          Method[] methods = obj.getDeclaredMethods();
+
+          //获取方法的名称
+          for(Method m : methods) {
+               
+             System.out.println("方法名称： " + m.getName());
+              
+             //获取方法的访问修饰符
+             int modifier = m.getModifiers();
+             System.out.println("修饰符： " + Modifier.toString(modifier));
+              
+             //获取方法的返回类型
+             System.out.println("Return Types: " + m.getReturnType());
+             System.out.println(" ");
+          }
+       }
+       catch(Exception e) {
+           e.printStackTrace();
+       }
+   }
+}
+```
+
+**输出结果**
+
+```
+方法名称： display
+修饰符： public
+Return type: void
+
+方法名称： eat
+修饰符： protected
+返回类型： void
+
+方法名称： makeSound
+修饰符： private
+返回类型： void
+```
+
+### Java 反射与构造函数
+
+我们还可以使用Constructor类提供的各种方法检查类的不同构造函数。
+
+- **getConstructors()** - 返回该类的所有公共构造函数以及该类的超类
+- **getDeclaredConstructor()** -返回所有构造函数
+- **getName()** - 返回构造函数的名称
+- **getModifiers()** - 以整数形式返回构造函数的访问修饰符
+- **getParameterCount()** - 返回构造函数的参数数量
+
+#### 示例：构造函数反射
+
+```
+import java.lang.Class;
+import java.lang.reflect.*;
+
+class Dog {
+
+   public Dog() {
+      
+   }
+   public Dog(int age) {
+      
+   }
+
+   private Dog(String sound, String type) {
+      
+   }
+}
+
+class ReflectionDemo {
+   public static void main(String[] args) {
+      try {
+           Dog d1 = new Dog();
+           Class obj = d1.getClass();
+
+           //使用getDeclaredConstructor()获取一个类中的所有构造函数
+           Constructor[] constructors = obj.getDeclaredConstructors();
+
+           for(Constructor c : constructors) {
+               //获取构造函数的名称
+               System.out.println("构造函数名称： " + c.getName());
+
+               //获取构造函数的访问修饰符
+               int modifier = c.getModifiers();
+               System.out.println("修饰符： " + Modifier.toString(modifier));
+
+               //获取构造函数中的参数数量
+               System.out.println("参数个数： " + c.getParameterCount());
+          }
+       }
+       catch(Exception e) {
+           e.printStackTrace();
+       }
+    }
+}
+```
+
+**输出结果**
+
+```
+构造函数名称： Dog
+修饰符： public
+参数个数： 0
+
+构造函数名称： Dog
+修饰符： public
+参数个数： 1
+
+构造函数名称： Dog
+修饰符： private
+参数个数： 2
+```
 
