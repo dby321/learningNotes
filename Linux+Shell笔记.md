@@ -26,7 +26,7 @@ Ken Thompson 的 sh 是第一种 Unix Shell，Windows Explorer 是一个典型�
 > 注意，变量名和等号之间不能有空格，这可能和你熟悉的所有编程语言都不一样
 
 使用变量
-
+ 
 ```
 your_name="qinjx"
 echo $your_name
