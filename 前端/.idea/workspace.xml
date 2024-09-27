@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="babc9edb-6161-4dbc-82f8-137aa31e0159" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../JVM笔记-尚硅谷版.md" beforeDir="false" afterPath="$PROJECT_DIR$/../JVM笔记-尚硅谷版.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/note-JSON.md" beforeDir="false" afterPath="$PROJECT_DIR$/note-JSON.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/note-css-01选择器.html" beforeDir="false" afterPath="$PROJECT_DIR$/note-css-01选择器.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,20 +20,29 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
   <component name="ProjectId" id="1zFjjOjSU97a3ClP1kU559x3gs3" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/dongbinyu/learningNotes/前端",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\【学习笔记】\2019Study-HTML+CSS+JS+ES6+JSON\note-webpack\webpack-demo\build" />
@@ -42,7 +55,7 @@
       <recent name="E:\【学习笔记】\2019Study-HTML+CSS+JS+ES6+JSON\note-webpack\webpack-demo\src\img" />
     </key>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.note-js-plus-02函数高级.html">
+  <component name="RunManager" selected="JavaScript 调试.index.html">
     <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/2019Study-HTML+CSS+JS+ES6+JSON/note-webpack/webpack-demo/dist/index.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
@@ -61,11 +74,16 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JavaScript Debug.note-js-plus-02函数高级.html" />
         <item itemvalue="npm.start" />
-        <item itemvalue="JavaScript Debug.index.html" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-WS-241.14494.235" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
@@ -105,6 +123,7 @@
       <workItem from="1673675017326" duration="52000" />
       <workItem from="1673754250220" duration="152000" />
       <workItem from="1674026168053" duration="100000" />
+      <workItem from="1726832380855" duration="1529000" />
     </task>
     <servers />
   </component>
@@ -121,31 +140,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="WindowStateProjectService">
-    <state width="746" height="239" key="GridCell.Tab.0.bottom" timestamp="1653903844783">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="746" height="239" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1653903844783" />
-    <state width="746" height="239" key="GridCell.Tab.0.center" timestamp="1653903844783">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="746" height="239" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1653903844783" />
-    <state width="746" height="239" key="GridCell.Tab.0.left" timestamp="1653903844782">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="746" height="239" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1653903844782" />
-    <state width="746" height="239" key="GridCell.Tab.0.right" timestamp="1653903844783">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="746" height="239" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1653903844783" />
-    <state x="270" y="54" key="SettingsEditor" timestamp="1654238361607">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="270" y="54" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1654238361607" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1654244424647">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1654244424647" />
   </component>
 </project>
