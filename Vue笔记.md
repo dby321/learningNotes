@@ -37,6 +37,56 @@
   - `.number`
   - ``.trim`
 
+#### [在组件上使用 `v-model`](https://v2.cn.vuejs.org/v2/guide/components.html#在组件上使用-v-model)
+
+自定义事件也可以用于创建支持 `v-model` 的自定义输入组件。记住：
+
+```
+<input v-model="searchText">
+```
+
+等价于：
+
+```
+<input
+  v-bind:value="searchText"
+  v-on:input="searchText = $event.target.value"
+>
+```
+
+当用在组件上时，`v-model` 则会这样：
+
+```
+<custom-input
+  v-bind:value="searchText"
+  v-on:input="searchText = $event"
+></custom-input>
+```
+
+为了让它正常工作，这个组件内的 `<input>` 必须：
+
+- 将其 `value` attribute 绑定到一个名叫 `value` 的 prop 上
+- 在其 `input` 事件被触发时，将新的值通过自定义的 `input` 事件抛出
+
+写成代码之后是这样的：
+
+```
+Vue.component('custom-input', {
+  props: ['value'],
+  template: `
+    <input
+      v-bind:value="value"
+      v-on:input="$emit('input', $event.target.value)"
+    >
+  `
+})
+```
+
+现在 `v-model` 就应该可以在这个组件上完美地工作起来了：
+
+```
+<custom-input v-model="searchText"></custom-input>
+```
 
 ### `v-if` `v-else-if` `v-else` `v-show`
 
@@ -200,6 +250,48 @@ computed: {
 }
 ```
 ### watch和Vue.watch
+
+#### watch允许执行异步请求
+
+[watch允许执行异步请求](https://v2.cn.vuejs.org/v2/guide/computed.html#%E4%BE%A6%E5%90%AC%E5%99%A8)
+
+```js
+ watch: {
+    // 如果 `question` 发生改变，这个函数就会运行
+    question: function (newQuestion, oldQuestion) {
+      this.answer = 'Waiting for you to stop typing...'
+      this.debouncedGetAnswer()
+    }
+  },
+  created: function () {
+    // `_.debounce` 是一个通过 Lodash 限制操作频率的函数。
+    // 在这个例子中，我们希望限制访问 yesno.wtf/api 的频率
+    // AJAX 请求直到用户输入完毕才会发出。想要了解更多关于
+    // `_.debounce` 函数 (及其近亲 `_.throttle`) 的知识，
+    // 请参考：https://lodash.com/docs#debounce
+    this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)
+  },
+  methods: {
+    getAnswer: function () {
+      if (this.question.indexOf('?') === -1) {
+        this.answer = 'Questions usually contain a question mark. ;-)'
+        return
+      }
+      this.answer = 'Thinking...'
+      var vm = this
+      axios.get('https://yesno.wtf/api')
+        .then(function (response) {
+          vm.answer = _.capitalize(response.data.answer)
+        })
+        .catch(function (error) {
+          vm.answer = 'Error! Could not reach the API. ' + error
+        })
+    }
+  }
+```
+
+####　常规用法
+
 ```js
 watch: {
   fullName: function (newValue, oldValue) {
@@ -247,13 +339,65 @@ Vue.component('props-demo-advanced', {
       default: 0,
       required: true,
       validator: function (value) {
-        return value >= 0
+        // 这个值必须匹配下列字符串中的一个
+        return ['success', 'warning', 'danger'].includes(value)
       }
     }
   }
 })
 ```
 
+#### [禁用 Attribute 继承](https://v2.cn.vuejs.org/v2/guide/components-props.html#禁用-Attribute-继承)
+
+如果你**不**希望组件的根元素继承 attribute，你可以在组件的选项中设置 `inheritAttrs: false`。例如：
+
+```
+Vue.component('my-component', {
+  inheritAttrs: false,
+  // ...
+})
+```
+
+这尤其适合配合实例的 `$attrs` property 使用，该 property 包含了传递给一个组件的 attribute 名和 attribute 值，例如：
+
+```
+{
+  required: true,
+  placeholder: 'Enter your username'
+}
+```
+
+有了 `inheritAttrs: false` 和 `$attrs`，你就可以手动决定这些 attribute 会被赋予哪个元素。在撰写[基础组件](https://v2.cn.vuejs.org/v2/style-guide/#基础组件名-强烈推荐)的时候是常会用到的：
+
+```
+Vue.component('base-input', {
+  inheritAttrs: false,
+  props: ['label', 'value'],
+  template: `
+    <label>
+      {{ label }}
+      <input
+        v-bind="$attrs"
+        v-bind:value="value"
+        v-on:input="$emit('input', $event.target.value)"
+      >
+    </label>
+  `
+})
+```
+
+注意 `inheritAttrs: false` 选项**不会**影响 `style` 和 `class` 的绑定。
+
+这个模式允许你在使用基础组件的时候更像是使用原始的 HTML 元素，而不会担心哪个元素是真正的根元素：
+
+```
+<base-input
+  label="Username:"
+  v-model="username"
+  required
+  placeholder="Enter your username"
+></base-input>
+```
 
 ### Vue绑定class样式
 
@@ -275,10 +419,31 @@ Vue.component('props-demo-advanced', {
 <h1 :class="['red', 'thin', {'active': isactive}]">这是一个邪恶的H1</h1>
 ```
 
-4. 直接使用对象【推荐使用】
+4. 直接使用对象
 
 ```html
 <h1 :class="{red:true, italic:true, active:true, thin:true}">这是一个邪恶的H1</h1>
+```
+
+5. 绑定计算属性
+
+```html
+<div v-bind:class="classObject"></div>
+```
+
+```js
+data: {
+  isActive: true,
+  error: null
+},
+computed: {
+  classObject: function () {
+    return {
+      active: this.isActive && !this.error,
+      'text-danger': this.error && this.error.type === 'fatal'
+    }
+  }
+}
 ```
 
 
@@ -861,7 +1026,9 @@ $("#dummy").velocity({
   2. 注册组件`conponents{'xxx':xxx}`
   3. 页面上使用组件`<xxx></xxx>`	
 
+### 自定义事件
 
+不同于组件和 prop，事件名不存在任何自动化的大小写转换。而是触发的事件名需要完全匹配监听这个事件所用的名称。举个例子，如果触发一个 camelCase 名字的事件：
 
 ### 使用v-if和v-else来实现组件的切换
 
