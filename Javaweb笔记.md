@@ -11,3 +11,11 @@ mvn archetype:generate -DgroupId=com.binyu -DartifactId=JavawebStudy -Darchetype
 ## JSP
 
 [tutorialspoint_jsp教程](https://www.tutorialspoint.com/jsp/index.htm)
+
+## JWT
+
+[JWT详细讲解(保姆级教程)](https://developer.aliyun.com/article/995894)
+
+## Filter
+
+[JavaWeb过滤器(Filter)详解，是时候该把过滤器彻底搞懂了(万字说明)](https://blog.csdn.net/m0_51545690/article/details/123677340)
