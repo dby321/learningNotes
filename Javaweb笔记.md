@@ -2,13 +2,7 @@
 
 ## 创建一个Javaweb项目
 
-```cmd
-mvn archetype:generate -DgroupId=com.binyu -DartifactId=JavawebStudy -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
-```
-
 [CSDN-idea创建javaweb项目步骤超详细（2022最新版本）](https://blog.csdn.net/m0_52861000/article/details/127914719)
-
-https://www.bilibili.com/video/BV1UN411x7
 
 ## JSP
 
@@ -152,3 +146,7 @@ https://www.bilibili.com/video/BV1m84y1w7Tb?spm_id_from=333.788.videopod.episode
 ![image-20241030173106370](images/Javaweb笔记/image-20241030173106370.png)
 
 ![image-20241030173048382](images/Javaweb笔记/image-20241030173048382.png)
+
+### 8. get和post乱码解决
+
+![image-20241030231420388](/Users/dongbinyu/Library/Application Support/typora-user-images/image-20241030231420388.png)
