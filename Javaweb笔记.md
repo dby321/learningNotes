@@ -8,6 +8,8 @@ mvn archetype:generate -DgroupId=com.binyu -DartifactId=JavawebStudy -Darchetype
 
 [CSDN-idea创建javaweb项目步骤超详细（2022最新版本）](https://blog.csdn.net/m0_52861000/article/details/127914719)
 
+https://www.bilibili.com/video/BV1UN411x7
+
 ## JSP
 
 [tutorialspoint_jsp教程](https://www.tutorialspoint.com/jsp/index.htm)
@@ -79,3 +81,74 @@ Bootstrap 配置文件
 https://www.bilibili.com/video/BV1m84y1w7Tb?spm_id_from=333.788.videopod.episodes&vd_source=f58f2e2144be4e99a8cf800afeecbbcb&p=199
 
 [从零开始：Nexus私服搭建与Maven仓库配置的完全指南](https://developer.aliyun.com/article/1328445)
+
+## Tomcat
+
+[【科普】Tomcat使用方法(超级详细)](https://blog.csdn.net/love_Aym/article/details/80613183)
+
+[iDEA中使用Tomcat](https://blog.csdn.net/2301_76979886/article/details/142316604)
+
+> 安装后需要确认JAVA_HOME和PATH配置正确
+>
+> `startup.bat`/`startup.sh`启动Tomcat
+>
+> `shutdown.bat`/`shutdown.sh`停止Tomcat
+
+![image-20241030162714651](images/Javaweb笔记/image-20241030162714651.png)
+
+### 1. Tomcat控制台中文乱码解决
+
+> conf/logging.properties
+
+![image-20241030163112892](images/Javaweb笔记/image-20241030163112892.png)
+
+### 2. 配置Tomcat到环境变量后cmd窗口启动Tomcat
+
+![image-20241030163315928](images/Javaweb笔记/image-20241030163315928.png)
+
+![image-20241030163414566](images/Javaweb笔记/image-20241030163414566.png)
+
+![image-20241030163720555](images/Javaweb笔记/image-20241030163720555.png)
+
+### 3. 修改Tomcat端口号
+
+![image-20241030164034001](images/Javaweb笔记/image-20241030164034001.png)
+
+### 4. 项目的上下文路径和项目的部署目录
+
+> 这两者可能不一样
+
+![image-20241030164909530](images/Javaweb笔记/image-20241030164909530.png)
+
+### 5. webapp的标准结构
+
+- myapp
+
+  - static
+
+    - js
+    - css
+
+  - WEB-INF
+
+    - classes 字节码根路径
+
+    - lib 项目依赖
+
+    - web.xml 项目配置文件
+
+  - login.html
+
+### 6. 配置Tomcat账号密码
+
+### 7. 创建空的MyJavaweb项目
+
+双击shift -> 搜索 Add framework support -> 回车 -> 选中Maven
+
+![idea2023没有Add framework support_搜索_02](images/Javaweb笔记/d68c6d71665d534d1497d3ec1dacc3de.png)
+
+![image-20241030172502182](images/Javaweb笔记/image-20241030172502182.png)
+
+![image-20241030173106370](images/Javaweb笔记/image-20241030173106370.png)
+
+![image-20241030173048382](images/Javaweb笔记/image-20241030173048382.png)
