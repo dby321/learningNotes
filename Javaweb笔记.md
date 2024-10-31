@@ -78,7 +78,7 @@ https://www.bilibili.com/video/BV1m84y1w7Tb?spm_id_from=333.788.videopod.episode
 
 ## Tomcat
 
-[【科普】Tomcat使用方法(超级详细)](https://blog.csdn.net/love_Aym/article/details/80613183)
+[【科普】Tomcat使用方法(超级详细) Eclipse](https://blog.csdn.net/love_Aym/article/details/80613183)
 
 [iDEA中使用Tomcat](https://blog.csdn.net/2301_76979886/article/details/142316604)
 
@@ -148,5 +148,3 @@ https://www.bilibili.com/video/BV1m84y1w7Tb?spm_id_from=333.788.videopod.episode
 ![image-20241030173048382](images/Javaweb笔记/image-20241030173048382.png)
 
 ### 8. get和post乱码解决
-
-![image-20241030231420388](/Users/dongbinyu/Library/Application Support/typora-user-images/image-20241030231420388.png)
