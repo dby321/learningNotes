@@ -2,6 +2,8 @@
 
 [CSDN-Redis 笔记（黑马点评 —— 基础篇 + 实战篇）](https://blog.csdn.net/weixin_45033015/article/details/127545710)
 
+
+
 ## 1. NoSql数据库简介
 
 > SQL是表结构化的，数据可以通过外键进行关联，语法是标准SQL,有完整的事务支持
