@@ -8,10 +8,6 @@
 >
 > NoSQL是基于图、基于键值对、基于JSON字符串的非结构化的，数据是无关联的，语法是不固定的，只有基本的事务支持。
 
-![SQL和NoSQL](./images/image-20230613200030370.png)
-
-![SQL和NoSQL](./images/image-20230613200317756.png)
-
 ## 2. Redis的安装和概述
 
 [Redis参考手册-About](https://redis.io/docs/about/)
@@ -50,8 +46,6 @@
 >
 > protected-mode 改为no,允许远程访问
 
-
-
 ## 5. Redis的发布和订阅
 
 > 发布订阅是一种消息通信模式，类似微信公众号
@@ -70,9 +64,13 @@
 
 ## 7. Jedis操作Redis
 
+![image-20241031140205945](images/Redis笔记/image-20241031140205945.png)
+
 [Jedis javadoc](https://www.javadoc.io/doc/redis.clients/jedis/latest/redis/clients/jedis/Jedis.html)
 
 [Github-Jedis](https://github.com/redis/jedis)
+
+![image-20241031140539054](images/Redis笔记/image-20241031140539054.png)
 
 ```java
 public class JedisDemo {
