@@ -1,6 +1,6 @@
 # RabbitMQ笔记
 
-## 参考资料
+## 1. 参考资料
 
 [Github-RabbitMQ tutorials](https://github.com/rabbitmq/rabbitmq-tutorials)
 
