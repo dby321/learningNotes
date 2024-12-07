@@ -6,12 +6,6 @@
 
 [W3CSchool-SpringCloud教程](https://www.w3cschool.cn/scchinese/)
 
-[Java父子工程管理](https://www.cnblogs.com/May-day/p/14087111.html)
-
-[SpringCloud官网版本选型](http://start.spring.io/actuator/info)
-
-[Java系列 | 远程热部署在美团的落地实践](https://tech.meituan.com/2022/03/17/java-hotswap-sonic.html)
-
 ## 鱼皮的建议
 
 随着互联网的发展，项目越来越复杂，单机且庞大的巨石项目已无法满足开发、运维、并发、可靠性等需求。
@@ -143,7 +137,7 @@ eureka:
     fetch-registry: false
     service-url:
       # 设置与EurekaServer交互的地址查询服务和注册服务都需要依赖这个地址
-      defaultZone: http://eureka7001.com:7001/eureka/
+      defaultZone: http://eureka7002.com:7002/eureka/
 ```
 - 主启动加配置
 
@@ -163,9 +157,9 @@ public class EurekaMain7002 {
 
 ```xml
 <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
+  <groupId>org.springframework.cloud</groupId>
+  <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
 ```
 
 - 改appplication.yml
@@ -193,7 +187,7 @@ eureka:
   client:
     register-with-eureka: true
     service-url:
-      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka
+      defaultZone: http://eureka7002.com:7002/eureka/
     fetch-registry: true
   instance:
     instance-id: payment8001
@@ -216,23 +210,158 @@ public class PaymentMain8001 {
 }
 ```
 
+
+
 > 也可以使用`@EnableDiscoveryClient`
 >
-> 访问http://localhost:7001或http://localhost:7002查看eureka
-
-
+> 访问http://localhost:7001查看Eureka
 
 ### 集群Eureka构建步骤
 
-> Eureka集群是相互守望的
+**EurekaServer端**
+
+- 要在hosts文件里添加
+
+```
+127.0.0.1 eureka7001.com 
+127.0.0.1 eureka7002.com 
+```
+
+- 改两个微服务的pom.xml
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+</dependency>
+```
+
+
+- 改appplication.yml
+```yml
+server:
+  port: 7002
+eureka:
+  instance:
+    hostname: eureka7002.com 
+    appname: eureka-server # eureka服务端的实例名称
+  client:
+    # 不向注册中心注册自己
+    register-with-eureka: false
+    # 不去检索服务
+    fetch-registry: false
+    service-url:
+      # 设置与EurekaServer交互的地址查询服务和注册服务都需要依赖这个地址
+      defaultZone: http://eureka7001.com:7001/eureka/
+```
+- 改appplication.yml
+
+```yaml
+server:
+  port: 7001
+eureka:
+  instance:
+    hostname: eureka7001.com 
+    appname: eureka-server # eureka服务端的实例名称
+  client:
+    # 不向注册中心注册自己
+    register-with-eureka: false
+    # 不去检索服务
+    fetch-registry: false
+    service-url:
+      # 设置与EurekaServer交互的地址查询服务和注册服务都需要依赖这个地址
+      defaultZone: http://eureka7002.com:7002/eureka/
+```
+
+
+
+- 主启动加配置
+
+```java
+@SpringBootApplication
+@EnableEurekaServer
+public class EurekaMain7001 {
+    public static void main(String[] args) {
+        SpringApplication.run ( EurekaMain7001.class );
+    }
+}
+```
+- 主启动加配置
+```java
+@SpringBootApplication
+@EnableEurekaServer
+public class EurekaMain7002 {
+    public static void main(String[] args) {
+        SpringApplication.run ( EurekaMain7002.class );
+    }
+}
+```
+
+**EurekaClient端**
+
+- 改Pom.xml
+
+```xml
+<dependency>
+  <groupId>org.springframework.cloud</groupId>
+  <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+```
+
+- 改appplication.yml
+
+```yml
+server:
+  port: 8001
+
+spring:
+  application:
+    name: cloud-payment-service
+  datasource:
+    # 当前数据源操作类型
+    type: com.alibaba.druid.pool.DruidDataSource
+    # mysql驱动类
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/2021study-springcloud?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: root
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+#  type-aliases-package:
+
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eureka7002.com:7002/eureka/,http://eureka7001.com:7001/eureka/
+    fetch-registry: true
+  instance:
+    instance-id: payment8001
+    prefer-ip-address: true
+    lease-expiration-duration-in-seconds: 1
+    lease-renewal-interval-in-seconds: 2
+```
+
+- 主启动加配置
+
+```java
+@SpringBootApplication
+@EnableEurekaClient
+public class PaymentMain8001 {
+    public static void main(String[] args) {
+        SpringApplication.run ( PaymentMain8001.class,args );
+    }
+}
+```
+
+> 解决RestTemplate根据服务名调用
 
 ```java
 @Configuration
 public class ApplicationContextConfig {
     @Bean
-   @LoadBalanced
+   	@LoadBalanced
     public RestTemplate getTemplate(){
-        return new RestTemplate (  );
+        return new RestTemplate ();
     }
 }
 ```
@@ -243,33 +372,47 @@ public class ApplicationContextConfig {
 > - 显示微服务的ip地址
 >
 > > 要集成Actuator，使用health和info进行健康检查
+> >
+> > Actuator 2.x 中的默认端点增加了`/actuator`前缀。默认暴露的两个端点为`/actuator/health`和 `/actuator/info`
+
+- 引入pom依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+- 添加配置
 
 ```yml
 eureka:
 	instance:
-		instance-id: payment8002
-    prefer-ip-address: true
+		instance-id: payment8002 # 去掉微服务名称中的主机名
+    prefer-ip-address: true # 显示微服务的ip地址
 ```
 
 ### 服务发现DiscoveryClient
 
-> 主启动类上加``@DiscoveryClient`
+> 主启动类上加`@DiscoveryClient`
 
 ```java
- @Resource
-    private DiscoveryClient discoveryClient;
-     @GetMapping(value = "/payment/discovery")
-    public Object discovery() {
-        List<String> services = discoveryClient.getServices ();
-        for (String element : services) {
-            log.info ( "element:" + element );
-        }
-        List<ServiceInstance> instances = discoveryClient.getInstances ( "CLOUD-PAYMENT-SERVICE" );
-        for (ServiceInstance instance : instances) {
-            log.info ( instance.getServiceId () + "\t" + instance.getHost () + "\t" + instance.getPort () + "\t" + instance.getUri () );
-        }
-        return this.discoveryClient;
-    }
+@Resource
+private DiscoveryClient discoveryClient;
+
+@GetMapping(value = "/payment/discovery")
+public Object discovery() {
+  List<String> services = discoveryClient.getServices ();
+  for (String element : services) {
+    log.info ( "element:" + element );
+  }
+  List<ServiceInstance> instances = discoveryClient.getInstances ( "CLOUD-PAYMENT-SERVICE" );
+  for (ServiceInstance instance : instances) {
+    log.info ( instance.getServiceId () + "\t" + instance.getHost () + "\t" + instance.getPort () + "\t" + instance.getUri () );
+  }
+  return this.discoveryClient;
+}
 ```
 > 控制台打印出的日志
 
@@ -287,7 +430,7 @@ eureka:
 
 **自定义自我保护**：
 
-eureka-serve：
+eureka-server：
 
 ```yml
 eureka:
@@ -429,9 +572,6 @@ public class PaymentMain8006 {
 >
 > Ribbon本地负载均衡，在调用为服务接口时候，会在注册中心上获取注册信息服务列表之后缓存到JVM本地，从而在本地实现RPC远程服务调用技术
 >
-> Nginx是选医院层面的负载均衡，Ribbon是选科室层面的负载均衡
->
-> Nginx是集中式LB，Ribbon是进程内LB
 
 > 引入spring-cloud-starter-netflix-eureka-client就引入了spring-cloud-starter-netflix-ribbon
 
@@ -503,15 +643,15 @@ public class MyLB implements LoadBalancer {
 
 ```java
 @GetMapping("/consumer/payment/lb")
-    public String getPaymentLB() {
-        List<ServiceInstance> instances = discoveryClient.getInstances ( "CLOUD-PAYMENT-SERVICE" );
-        if(instances==null||instances.size ()<0){
-            return null;
-        }
-        ServiceInstance serviceInstance=loadBalancer.instances ( instances );
-        URI uri = serviceInstance.getUri ();
-        return template.getForObject ( uri+"/payment/lb",String.class );
-    }
+public String getPaymentLB() {
+  List<ServiceInstance> instances = discoveryClient.getInstances ( "CLOUD-PAYMENT-SERVICE" );
+  if(instances==null||instances.size ()<0){
+    return null;
+  }
+  ServiceInstance serviceInstance=loadBalancer.instances ( instances );
+  URI uri = serviceInstance.getUri ();
+  return template.getForObject ( uri+"/payment/lb",String.class );
+}
 ```
 
 ## 9 OpenFeign远程过程调用
@@ -754,7 +894,7 @@ public interface PaymentHystrixService {
 
 ----
 
-[cCSDN-Hystrix 用法,@HystrixProperty参数说明](https://blog.csdn.net/weixin_45498999/article/details/108982100)
+[CSDN-Hystrix 用法,@HystrixProperty参数说明](https://blog.csdn.net/weixin_45498999/article/details/108982100)
 
 服务降级->熔断后->会尝试半开，如果可以就恢复链路
 
