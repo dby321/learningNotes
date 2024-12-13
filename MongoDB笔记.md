@@ -35,12 +35,19 @@
 | 事务支持       | 支持ACID事务                 | 不支持完整事务                     | 单文档操作是原子的，多文档事务支持 | 不支持事务                           |
 | 性能           | 对复杂查询优化较好           | 极速读写，特别适合简单查询         | 对非结构化数据查询性能好           | 搜索和分析性能非常好                 |
 
-## 2. MongoDB安装
 
-> 参考菜鸟教程
 
-![局部截取_20241212_184059](images/MongoDB笔记/局部截取_20241212_184059.png)
+## 2. MongoDB基础操作
+
+[菜鸟教程-MongoDB](https://www.runoob.com/mongodb/mongodb-tutorial.html)
 
 ## 3. SpringData MongoDB
 
-https://github.com/spring-projects/spring-data-examples.git
+[Spring-Data-MongoDB中文文档](https://springdoc.cn/spring-data-mongodb/)
+
+## 4. 集群
+
+以后再说
+
+
+
