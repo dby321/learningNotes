@@ -1305,6 +1305,8 @@ public void tryPayOrderByBalance(PayOrderDTO payOrderDTO) {
 ## 5.1.抽取共享的MQ配置
 将MQ配置抽取到Nacos中管理，微服务中直接使用共享配置。
 
+答案：[将MQ抽取到nacos](https://b11et3un53m.feishu.cn/wiki/OQH4weMbcimUSLkIzD6cCpN0nvc?comment_id=7402157410754871297&comment_type=0&comment_anchor=true)
+
 ## 5.2.改造下单功能
 改造下单功能，将基于OpenFeign的清理购物车同步调用，改为基于RabbitMQ的异步通知：
 
@@ -1328,7 +1330,9 @@ public void tryPayOrderByBalance(PayOrderDTO payOrderDTO) {
 参考资料：
 [Spring AMQP](https://docs.spring.io/spring-amqp/docs/2.4.14/reference/html/#post-processing)
 
+答案：[在消息请求头中传递userId](https://b11et3un53m.feishu.cn/wiki/OQH4weMbcimUSLkIzD6cCpN0nvc?comment_id=7400098804805926914&comment_type=0&comment_anchor=true)
 
+即在请求头或者消息体中带上userId，在监听器中获取到后存入当前ThreadLocal中。
 
 ## 5.4.改造项目一
 思考一下，项目一中的哪些业务可以由同步方式改为异步方式调用？试着改造一下。
