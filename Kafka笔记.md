@@ -43,10 +43,6 @@
   - 消息可回溯
   - 消费者相互独立，都可以消费到数据
 
-### 1.5 Kafka的基础架构
-
-> 前置知识好多没学过，学不下去了
-
 ## 2. 简单实战
 
 ### 简单集成
@@ -64,7 +60,7 @@
 #### 添加配置
 
 ```
-spring.kafka.producer.bootstrap-servers=127.0.0.1:9092
+spring.kafka.producer.bootstrap-servers=192.168.31.16:9092
 ```
 
 #### 测试发送和接收
@@ -258,7 +254,7 @@ initialize ()：当 setAutoCreate 为 false 时，需要我们程序显示的调
 ```java
 	@Test
 	public void testCreateTopic()throws Exception{
-		ZkClient zkClient =new ZkClient("127.0.0.1:2181", 3000, 3000, ZKStringSerializer$.MODULE$)
+		ZkClient zkClient =new ZkClient("192.168.31.16:2181", 3000, 3000, ZKStringSerializer$.MODULE$)
 		String topicName = "topic-kl";
 		int partitions = 1;
 		int replication = 1;
@@ -277,7 +273,7 @@ initialize ()：当 setAutoCreate 为 false 时，需要我们程序显示的调
 	public void testCreateTopic(){
 		String [] options= new String[]{
 				"--create",
-				"--zookeeper","127.0.0.1:2181",
+				"--zookeeper","192.168.31.16:2181",
 				"--replication-factor", "3",
 				"--partitions", "3",
 				"--topic", "topic-kl"
@@ -605,7 +601,7 @@ public class Application {
 
 除了上面谈到的通过手动 Ack 模式来控制消息偏移量外，其实 Spring-kafka 内部还封装了可重试消费消息的语义，也就是可以设置为当消费数据出现异常时，重试这个消息。而且可以设置重试达到多少次后，让消息进入预定好的 Topic。也就是死信队列里。下面代码演示了这种效果：
 
-```
+```java
 	@Autowired
 	private KafkaTemplate template;
 
@@ -639,3 +635,60 @@ public class Application {
 ```
 
 上面应用，在 topic-kl 监听到消息会，会触发运行时异常，然后监听器会尝试三次调用，当到达最大的重试次数后。消息就会被丢掉重试死信队列里面去。死信队列的 Topic 的规则是，业务 Topic 名字 +“.DLT”。如上面业务 Topic 的 name 为 “topic-kl”，那么对应的死信队列的 Topic 就是 “topic-kl.DLT”
+
+## 3. Kafka集群docker部署
+
+1. 运行zookeeper
+
+```cmd
+docker run -d --name zookeeper -p 2181:2181 -t wurstmeister/zookeeper
+```
+
+2. 分别创建3个Kafka节点，并注册到ZK上,不同Kafka节点只需要更改端口号即可。
+
+   - Kafka0：
+
+   ```cobol
+   docker run -d --name kafka0 -p 9092:9092 -e KAFKA_BROKER_ID=0 -e KAFKA_ZOOKEEPER_CONNECT=192.168.31.16:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.31.16:9092 -e KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092 -t wurstmeister/kafka
+   ```
+
+   - Kafka1：
+
+   ```cobol
+   docker run -d --name kafka1 -p 9093:9093 -e KAFKA_BROKER_ID=1 -e KAFKA_ZOOKEEPER_CONNECT=192.168.31.16:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.31.16:9093 -e KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9093 -t wurstmeister/kafka
+   ```
+
+   - Kafka2：
+
+   ```cobol
+   docker run -d --name kafka2 -p 9094:9094 -e KAFKA_BROKER_ID=2 -e KAFKA_ZOOKEEPER_CONNECT=192.168.31.16:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.31.16:9094 -e KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9094 -t wurstmeister/kafka
+   ```
+
+3. 进入kafka执行命令
+
+```
+docker exec -it kafka1 /bin/bash
+```
+
+创建主题
+
+```
+kafka-topics.sh --create --bootstrap-server 192.168.31.16:9092 --topic test
+```
+
+查看主题
+
+```
+kafka-topics.sh --describe  --zookeeper 192.168.31.16:2181 --topic test
+```
+
+## 4. Offset Explorer3 (图形化Kafka操作KafkaTool)
+
+[KafkaTool官网](https://www.kafkatool.com/)
+
+## 5. Kafka性能测试
+
+[CSDN-Kafka性能测试](https://blog.csdn.net/weixin_42641909/article/details/89320999)
+
+## 6. Java操作Kafka
+
