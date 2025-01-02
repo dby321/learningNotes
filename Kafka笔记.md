@@ -1746,3 +1746,69 @@ docker run -d --name kafka-eagle -p 8048:8048 -e EFAK_CLUSTER_ZK_LIST="192.168.1
 http://127.0.0.1:8048/topic/list
 ```
 
+## 9. Kafka原理
+
+### 9.1 leader和follower
+
+- Kafka中的leade和follower是相对分区有意义，不是相对broker
+- Kafka在创建topic的时候，会尽量分配分区的leader在不同的broker中，其实就是负载均衡
+- leader职责：读写数据
+- follower职责：同步数据、参与选举,leader crash之后，会选举一个follower重新成为分区的leader
+- 注意和zookeeper的区别：zookeeper的leader负责读写，follower可以读取
+
+### 9.2 AR、ISR（In Sync Replicas）、OSR
+
+- AR：分区中所有副本
+- ISR:所有与leader副本保持一定同步的副本（包括leader副本本身）
+- OSR：同步滞后的副本
+- AR=ISR+OSR
+- 正常情况下，所有follower副本都应该与leader副本保持同步，应该AR=ISR，OSR为空
+
+### 9.3 leader选举
+
+- Controller是kafka集群的老大，是针对broker的角色，
+
+- Controller是高可用的，通过ZK来进行选举
+
+- Leader针对ISR快速选举
+
+- leader的负载均衡
+
+  - 如果某个broker crash之后，就可能会导致partition的leader副本分布不均匀
+
+  - ```
+    bin/kafka-leader-election.sh --bootstrap-server node1.itcast.cn:9092 --topic test --partition=2 --election-type preferred
+    ```
+
+    
+
+### 9.4 Kafka 生产、消费数据的工作流程
+
+#### 生产者写入数据流程
+
+![img](images/Kafka笔记/1.png)
+
+1. 生产者先从 zookeeper 的 "/brokers/topics/主题名/partitions/分区名/state"节点找到该 partition 的 leader
+2. 生产者将消息发送给作为 leader 的 partition
+3. leader 收到消息后，将消息写入到本地 log 中
+4. follower 从 leader 上拉取消息，写入到本地 log，并向 leader 发送 ACK
+5. leader 接收到所有的 ISR 中的 Replica 的 ACK 后，并向生产者返回 ACK
+6. 生产者收到 leader 的 ACK，证明生产的数据已被 kafka 成功写入
+
+#### 消费者消费数据流程
+
+![img](images/Kafka笔记/2.png)
+
+- kafka 采用拉取模型，由消费者自己记录消费状态，每个消费者互相独立地顺序拉取每个分区的消息
+- 消费者可以按照任意的顺序消费消息。比如，消费者可以重置到旧的偏移量，重新处理之前已经消费过的消息；或者直接跳到最近的位置，从当前的时刻开始消费。
+
+![img](images/Kafka笔记/3.png)
+
+1. 每个 consumer 都可以根据分配策略（默认RangeAssignor），获得要消费的分区
+2. 获取到 consumer 对应的 offset（默认从 ZK 中获取上一次消费的offset）
+3. 找到该分区的 leader，拉取数据
+4. 消费者提交 offset
+
+### 9.5 Kafka的数据存储形式
+
+![img](images/Kafka笔记/v2-b5d3f9b3dcd69b4bff7b7fa5b5b065ea_1440w.jpg)
