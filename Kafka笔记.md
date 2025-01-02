@@ -1812,3 +1812,15 @@ http://127.0.0.1:8048/topic/list
 ### 9.5 Kafka的数据存储形式
 
 ![img](images/Kafka笔记/v2-b5d3f9b3dcd69b4bff7b7fa5b5b065ea_1440w.jpg)
+
+### 9.6 Kafka消息不丢失
+
+- brokeri消息不丢失：因为有本relicasf的存在，会不断地从leader中同步副本，所以，一个broker crash,不会导致数据丢失，除非是只有一个副本。
+- 生产者消息不丢失：ACK机制（配置成AL1)、配置0或者1有可能会存在丢失
+- 消费者消费不丢失：
+  - 重点控制offset oAt-least once:一种数据可能会重复消费 
+  - Exactly-Once:仅被一次消费
+
+### 9.7 数据积压（以后再学）
+
+### 9.8 日志清理（以后再学）
