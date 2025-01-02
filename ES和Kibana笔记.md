@@ -60,7 +60,10 @@ https://github.com/mobz/elasticsearch-head
 ### 启动
 
 ```
-cd elasticsearch-head# 安装依赖npm install# 启动npm run start# 访问http://localhost:9100/
+cd elasticsearch-head# 安装依赖
+npm install
+npm run start
+访问http://localhost:9100/
 ```
 
 **开启跨域（在elasticsearch解压目录config下elasticsearch.yml中添加）**
