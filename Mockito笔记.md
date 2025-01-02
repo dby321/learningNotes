@@ -18,10 +18,11 @@
 通常任何软件都会划分为不同的模块和组件。单独测试一个组件时，我们叫做单元测试。单元测试用于验证相关的一小段代码是否正常工作。单元测试不是用于发现应用程序范围内的 bug，或者回归测试的 bug，而是分别检测每个代码片段。
 单元测试不验证应用程序代码是否和外部依赖正常工作。它聚焦与单个组件并且 Mock 所有和它交互的依赖。例如，方法中调用发短信的服务，以及和数据库的交互，我们只需要 Mock 假执行即可，毕竟测试的焦点在当前方法上。
 单元测试的特点：
--不依赖任何模块。
--基于代码的测试，不需要在 ApplicationContext 中运行。
--方法执行快，500ms以内（也和不启动 Spring 有关）。
--同一单元测试可重复执行N次，并每次运行结果相同。
+
+- 不依赖任何模块。
+- 基于代码的测试，不需要在 ApplicationContext 中运行。
+- 方法执行快，500ms以内（也和不启动 Spring 有关）。
+- 同一单元测试可重复执行N次，并每次运行结果相同。
 
 ### 1.2. 集成测试
 
@@ -29,8 +30,9 @@
 集成测试主要用于发现用户端到端请求时不同模块交互产生的问题。集成测试范围可以是整个应用程序，也可以是一个单独的模块，取决于要测试什么。
 在集成测试中，我们应该聚焦于从控制器层到持久层的完整请求。应用程序应该运行嵌入服务（例如：Tomcat）以创建应用程序上下文和所有 bean。这些 bean 有的可能会被 Mock 覆盖。
 集成测试的特点：
--集成测试的目的是测试不同的模块一共工作能否达到预期。
--应用程序应该在 ApplicationContext 中运行。Spring boot 提供 @SpringBootTest 注解创建运行上下文。
+
+- 集成测试的目的是测试不同的模块一共工作能否达到预期。
+- 应用程序应该在 ApplicationContext 中运行。Spring boot 提供 @SpringBootTest 注解创建运行上下文。
 
 - 使用 @TestConfiguration 等配置测试环境。
 
@@ -256,7 +258,6 @@ MyDictionary dic = new MyDictionary();
 @Test
 public void whenUseInjectMocksAnnotation_thenCorrect() {
     Mockito.when(wordMap.get("aWord")).thenReturn("aMeaning");
-
     assertEquals("aMeaning", dic.getMeaning("aWord"));
 }
 ```
@@ -320,7 +321,7 @@ Map<String, String> wordMap;
 
 MyDictionary spyDic;
 
-@@BeforeEach
+@BeforeEach
 public void init() {
     MockitoAnnotations.openMocks(this);
     spyDic = Mockito.spy(new MyDictionary(wordMap));
