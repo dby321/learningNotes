@@ -217,11 +217,50 @@ void testPublisherConfirm() {
 ### 2.1.3.消息持久化
 在控制台发送消息的时候，可以添加很多参数，而消息的持久化是要配置一个`properties`：
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/27967491/1687354083723-84971642-712d-42bc-ba65-6e3b3b33758c.png#averageHue=%23faf8f8&clientId=ue4302575-73b6-4&from=paste&height=423&id=T4xqJ&originHeight=524&originWidth=995&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=17663&status=done&style=none&taskId=u75d6c2e2-1770-43f8-9a9f-9bc5f480099&title=&width=802.6890498990275)
-
-:::warning
 **说明**：在开启持久化机制以后，如果同时还开启了生产者确认，那么MQ会在消息持久化以后才发送ACK回执，进一步确保消息的可靠性。
-不过出于性能考虑，为了减少IO次数，发送到MQ的消息并不是逐条持久化到数据库的，而是每隔一段时间批量持久化。一般间隔在100毫秒左右，这就会导致ACK有一定的延迟，因此建议生产者确认全部采用异步方式。
-:::
+不过出于性能考虑，为了减少IO次数，发送到MQ的消息并不是逐条持久化到数据库的，而是每隔一段时间批量持久化。一般间隔在100毫秒左右，这就会导致ACK有一定的延迟，因此建议生产者确认全部采用**异步方式**。
+
+- 交换机和队列的持久化配置：
+
+```java
+ 		/**
+     * 声明交换机
+     * @return Direct类型交换机
+     */
+    @Bean
+    public DirectExchange directExchange(){
+        return ExchangeBuilder.directExchange("hmall.direct").durable(true).build();
+    }
+
+    /**
+     * 第1个队列
+     */
+    @Bean
+    public Queue directQueue1(){
+        return new Queue("direct.queue1",true);
+    }
+```
+
+- 消息的持久化配置(默认就是持久化的)
+
+```java
+  	@Test
+    public void testSendTopicExchange() {
+        // 交换机名称
+        String exchangeName = "hmall.topic";
+        // 消息
+        String message = "喜报！孙悟空大战哥斯拉，胜!";
+        Message message1=new Message(message.getBytes(StandardCharsets.UTF_8));
+        MessageProperties messageProperties = message1.getMessageProperties();
+        System.out.println(messageProperties.getDeliveryMode());
+        messageProperties.setDeliveryMode(MessageDeliveryMode.PERSISTENT);
+        // 发送消息
+//        rabbitTemplate.convertAndSend(exchangeName, "china.news", message);
+        rabbitTemplate.send(exchangeName, "china.news", message1);
+    }
+```
+
+
 
 ## 2.2.LazyQueue
 在默认情况下，RabbitMQ会将接收到的信息保存在内存中以降低消息收发的延迟。但在某些特殊情况下，这会导致消息积压，比如：
@@ -590,6 +629,11 @@ UPDATE `order` SET status = ? , pay_time = ? WHERE id = ? AND status = 1
 有没有其它兜底方案，能够确保订单的支付状态一致呢？
 
 其实思想很简单：既然MQ通知不一定发送到交易服务，那么交易服务就必须自己**主动去查询**支付状态。这样即便支付服务的MQ通知失败，我们依然能通过主动查询来保证订单状态的一致。
+
+`SpringTask @Scheduled`
+
+
+
 流程如下：
 ![](https://cdn.nlark.com/yuque/0/2023/jpeg/27967491/1687521150465-25b54b36-b64a-4b2d-90b7-8dff12fb075b.jpeg)
 
@@ -608,6 +652,8 @@ UPDATE `order` SET status = ? , pay_time = ? WHERE id = ? AND status = 1
 - 首先，支付服务会正在用户支付成功以后利用MQ消息通知交易服务，完成订单状态同步。
 - 其次，为了保证MQ消息的可靠性，我们采用了生产者确认机制、消费者确认、消费者失败重试等策略，确保消息投递的可靠性
 - 最后，我们还在交易服务设置了定时任务，定期查询订单支付状态。这样即便MQ通知失败，还可以利用定时任务作为兜底方案，确保订单支付状态的最终一致性。
+
+
 
 # 4.延迟消息
 在电商的支付业务中，对于一些库存有限的商品，为了更好的用户体验，通常都会在用户下单时立刻扣减商品库存。例如电影院购票、高铁购票，下单后就会锁定座位资源，其他人无法重复购买。
@@ -669,7 +715,128 @@ UPDATE `order` SET status = ? , pay_time = ? WHERE id = ? AND status = 1
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/27967491/1687574086294-106fe14b-6652-4783-a6c3-3d722d1f5232.png#averageHue=%23fbf5f5&clientId=u76b62a19-f8dc-4&from=paste&height=373&id=ub429262c&originHeight=462&originWidth=1633&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=81718&status=done&style=none&taskId=u244f2a30-7d51-48a2-969b-b880a7f2442&title=&width=1317.3781090302632)
 也就是说，publisher发送了一条消息，但最终consumer在5秒后才收到消息。我们成功实现了**延迟消息**。
 
+```java
+package com.itheima.mp.config;
+
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author dongbinyu
+ * @version 1.0
+ * @project mp-demo
+ * @description
+ * @date 2025/1/1 15:47:59
+ */
+@Configuration
+public class LetterExchangeConfig {
+
+        //===========================普通===========================
+        //定义队列的名称常量
+        public static final String DIRECT_QUEUE = "directQueue";
+        public static final String DIRECT_QUEUE2 = "directQueue2";
+        //定义直接交换机的名称常量
+        public static final String DIRECT_EXCHANGE = "directExchange";
+        //定义路由键常量，用于交换机和队列之间的绑定
+        public static final String DIRECT_ROUTING_KEY = "direct";
+        //定义路由键常量，用于交换机和队列之间的绑定
+        public static final String DIRECT_ROUTING_KEY_2= "direct2";
+
+
+
+
+
+        //定义队列，名称为DIRECT_QUEUE
+        //为普通队列 绑设置 死信参数
+        @Bean
+        public Queue directQueue() {
+            //return new Queue(DIRECT_QUEUE, true);
+            Map<String, Object> args = new HashMap<>();
+            // 设置死信交换机
+            args.put("x-dead-letter-exchange", DLX_EXCHANGE);
+            // 设置发送到死信交换机的路由键
+            args.put("x-dead-letter-routing-key", DLX_ROUTING_KEY);
+            // 创建队列，设置为持久化、非排他、非自动删除，并附带死信参数
+            return new Queue(DIRECT_QUEUE, true, false, false, args);
+        }
+
+
+        //定义直接交换机
+        @Bean
+        public DirectExchange directExchange() {
+            return new DirectExchange(DIRECT_EXCHANGE, true, false);
+        }
+
+        //定义队列，名称为DIRECT_QUEUE2
+        @Bean
+        public Queue directQueue2() {
+            return new Queue(DIRECT_QUEUE2, true);
+        }
+
+
+        //定义一个绑定，将directQueue队列绑定到directExchange交换机上，
+        //使用direct作为路由键
+        @Bean
+        public Binding bindingDirectExchange(Queue directQueue, DirectExchange directExchange) {
+            return BindingBuilder.bind(directQueue).to(directExchange).with(DIRECT_ROUTING_KEY);
+        }
+
+        // 定义一个绑定Bean，将directQueue2队列也绑定到directExchange交换机上，
+        @Bean
+        public Binding bindingDirectExchange2(Queue directQueue2, DirectExchange directExchange) {
+            return BindingBuilder.bind(directQueue2).to(directExchange).with(DIRECT_ROUTING_KEY_2);
+        }
+
+        //===========================死信===========================
+        // 定义死信交换机的名称
+        public static final String DLX_EXCHANGE = "dlx_exchange";
+        // 定义发送到死信交换机的路由键
+        public static final String DLX_ROUTING_KEY = "dlx.routing.key";
+        // 定义死信队列的名称
+        public static final String DLX_QUEUE = "dlx_queue";
+
+        /**
+         * 声明死信交换机，这里使用Direct类型。
+         * @return 返回一个配置好的DirectExchange对象。
+         */
+        @Bean
+        DirectExchange dlxExchange() {
+            // 创建并返回Direct类型的交换机
+            return new DirectExchange(DLX_EXCHANGE,true, false);
+        }
+        /**
+         * 声明死信队列。
+         * @return 返回一个配置好的Queue对象，用作死信队列。
+         */
+        @Bean
+        Queue dlxQueue() {
+            // 创建并返回死信队列，设置为持久化
+            return new Queue(DLX_QUEUE, true);
+        }
+
+        /**
+         * 绑定死信队列到死信交换机，使用指定的路由键。
+         */
+        @Bean
+        Binding binding(Queue dlxQueue,DirectExchange dlxExchange) {
+            return BindingBuilder.bind(dlxQueue).to(dlxExchange).with(DLX_ROUTING_KEY);
+        }
+
+}
+
+```
+
+
+
 ### 4.1.3.总结
+
 :::warning
 **注意：**
 RabbitMQ的消息过期是基于追溯方式来实现的，也就是说当一个消息的TTL到期以后不一定会被移除或投递到死信交换机，而是在消息恰好处于队首时才会被处理。
@@ -690,33 +857,30 @@ RabbitMQ的消息过期是基于追溯方式来实现的，也就是说当一个
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/27967491/1687611117405-f30b7216-cbef-44fc-a8a9-b62c50ef2a06.png#averageHue=%23f8f8f7&clientId=ua8cb106d-b05e-4&from=paste&height=131&id=u601c044f&originHeight=163&originWidth=855&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=15305&status=done&style=none&taskId=uaae26ad5-bd00-4347-bc5c-5a16a006ef3&title=&width=689.7478770489131)
 
 ### 4.2.2.安装
-因为我们是基于Docker安装，所以需要先查看RabbitMQ的插件目录对应的数据卷。
+
+进入docker容器终端：
+
 ```shell
-docker volume inspect mq-plugins
+rabbitmq-plugins directories -s
 ```
 结果如下：
 ```shell
-[
-    {
-        "CreatedAt": "2024-06-19T09:22:59+08:00",
-        "Driver": "local",
-        "Labels": null,
-        "Mountpoint": "/var/lib/docker/volumes/mq-plugins/_data",
-        "Name": "mq-plugins",
-        "Options": null,
-        "Scope": "local"
-    }
-]
-
+Plugin archives directory: /opt/rabbitmq/plugins
+Plugin expansion directory: /var/lib/rabbitmq/mnesia/rabbit@mq1-plugins-expand
+Enabled plugins file: /etc/rabbitmq/enabled_plugins
 ```
-插件目录被挂载到了`/var/lib/docker/volumes/mq-plugins/_data`这个目录，我们上传插件到该目录下。
+```
+docker cp /Users/dongbinyu/Downloads/rabbitmq_delayed_message_exchange-3.11.1.ez rabbitmq:/opt/rabbitmq/plugins
+```
 
-接下来执行命令，安装插件：
+注意：这里的rabbitmq是容器名,rabbitmq_delayed_message_exchange的版本要和broker一致
+
 ```shell
-docker exec -it mq rabbitmq-plugins enable rabbitmq_delayed_message_exchange
+rabbitmq-plugins enable rabbitmq_delayed_message_exchange
 ```
 运行结果如下：
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/27967491/1687576988700-43b5d4ad-a77c-4463-bea4-4f3c0888ebe5.png#averageHue=%23031f33&clientId=u76b62a19-f8dc-4&from=paste&height=428&id=u46bbc0d8&originHeight=530&originWidth=1456&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=64423&status=done&style=none&taskId=uecc0751f-db71-4d55-86a5-c859569b939&title=&width=1174.58819764119)
+
 ### 4.2.3.声明延迟交换机
 基于注解方式：
 ```java
@@ -784,11 +948,9 @@ void testPublisherDelayMessage() {
 ```
 
 
-:::warning
 **注意：**
 延迟消息插件内部会维护一个本地数据库表，同时使用Elang Timers功能实现计时。如果消息的延迟时间设置较长，可能会导致堆积的延迟消息非常多，会带来较大的CPU开销，同时延迟消息的时间会存在误差。
 因此，**不建议设置延迟时间过长的延迟消息**。
-:::
 
 
 ## 4.5.订单状态同步问题
@@ -830,7 +992,7 @@ public class MultiDelayMessage<T> {
         this.delayMillis = delayMillis;
     }
     public static <T> MultiDelayMessage<T> of(T data, Long ... delayMillis){
-        return new MultiDelayMessage<>(data, CollUtils.newArrayList(delayMillis));
+        return new MultiDelayMessage<>(data, CollUtil.newArrayList(delayMillis));
     }
 
     /**

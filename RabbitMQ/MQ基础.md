@@ -440,7 +440,7 @@ Work queues，任务模型。简单来说就是**让多个消费者绑定到一�
 @Test
 public void testWorkQueue() throws InterruptedException {
     // 队列名称
-    String queueName = "simple.queue";
+    String queueName = "work.queue";
     // 消息
     String message = "hello, message_";
     for (int i = 0; i < 50; i++) {
@@ -854,8 +854,8 @@ public void listenTopicQueue2(String msg){
 
 - Topic交换机接收的消息RoutingKey必须是多个单词，以 `**.**` 分割
 - Topic交换机与队列绑定时的bindingKey可以指定通配符
-- `#`：代表0个或多个词
-- `*`：代表1个词
+- `#`：代表1个或多个词
+- `*`：代表恰好匹配1个词
 
 ## 3.8.声明队列和交换机
 在之前我们都是基于RabbitMQ控制台来创建队列、交换机。但是在实际开发时，队列和交换机是程序员定义的，将来项目上线，又要交给运维去创建。那么程序员就需要把程序中运行的所有队列和交换机都写下来，交给运维。在这个过程中是很容易出现错误的。
@@ -999,7 +999,65 @@ public class DirectConfig {
 
 ```
 
+### 3.8.3.topic示例
+
+```java
+package com.itheima.mp.config;
+
+import org.springframework.amqp.core.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class TopicConfig {
+
+    /**
+     * 声明交换机
+     * @return Direct类型交换机
+     */
+    @Bean
+    public TopicExchange topicExchange(){
+        return ExchangeBuilder.topicExchange("hmall.topic").build();
+    }
+
+    /**
+     * 第1个队列
+     */
+    @Bean
+    public Queue topicQueue1(){
+        return new Queue("topic.queue1");
+    }
+    /**
+     * 第2个队列
+     */
+    @Bean
+    public Queue topicQueue2(){
+        return new Queue("topic.queue2");
+    }
+
+    /**
+     * 绑定队列和交换机
+     */
+    @Bean
+    public Binding bindingQueue1WithNews(Queue topicQueue1, TopicExchange topicExchange){
+        return BindingBuilder.bind(topicQueue1).to(topicExchange).with("#.news");
+    }
+    /**
+     * 绑定队列和交换机
+     */
+    @Bean
+    public Binding bindingQueue2WithChina(Queue topicQueue1, TopicExchange topicExchange){
+        return BindingBuilder.bind(topicQueue1).to(topicExchange).with("china.#");
+    }
+
+
+
+```
+
+
+
 ### 3.8.4.基于注解声明
+
 基于@Bean的方式声明队列和交换机比较麻烦，Spring还提供了基于注解方式来声明。
 
 例如，我们同样声明Direct模式的交换机和队列：
@@ -1062,7 +1120,8 @@ Spring的消息发送代码接收的消息体是一个Object：
 1）创建测试队列
 首先，我们在consumer服务中声明一个新的配置类：
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/27967491/1687183868403-242aa812-a07f-4748-8863-dc5d1e161dc1.png#averageHue=%23f9fbf8&clientId=u0fe93ba5-a0ba-4&from=paste&height=351&id=u77b665f4&originHeight=435&originWidth=1053&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=48481&status=done&style=none&taskId=uf6d36991-ec76-497c-93d3-3e96d9d6590&title=&width=849.4789643655035)
-利用@Bean的方式创建一个队列，![](assets/image-20211104102144275.png#id=PyGPl&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)具体代码：
+利用@Bean的方式创建一个队列，具体代码：
+
 ```java
 package com.itheima.consumer.config;
 
@@ -1084,10 +1143,10 @@ public class MessageConfig {
 
 重启consumer服务以后，该队列就会被自动创建出来了：
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/27967491/1687184033157-c4c8e59e-a2b3-4b2b-9c20-ca3c597e556c.png#averageHue=%23f3f0ef&clientId=u0fe93ba5-a0ba-4&from=paste&height=456&id=u7c3fdb16&originHeight=565&originWidth=1196&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=72445&status=done&style=none&taskId=u03cddb0f-41a3-483d-83c7-d53a5ecb269&title=&width=964.8403052052632)
-![](assets/image-20211104102409347.png#id=tPRoz&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
 
 2）发送消息
 我们在publisher模块的SpringAmqpTest中新增一个消息发送的代码，发送一个Map对象：
+
 ```java
 @Test
 public void testSendMap() throws InterruptedException {
@@ -1131,10 +1190,9 @@ public MessageConverter messageConverter(){
 ```
 消息转换器中添加的messageId可以便于我们将来做幂等性判断。
 
-
 此时，我们到MQ控制台**删除**`object.queue`中的旧的消息。然后再次执行刚才的消息发送的代码，到MQ的控制台查看消息结构：
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/27967491/1687245684217-8b401cc5-29e6-4d08-9a9b-4fbe0dffd486.png#averageHue=%23f9f7f7&clientId=ucdd993b6-34bc-4&from=paste&height=432&id=ue5acc96b&originHeight=535&originWidth=990&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=41352&status=done&style=none&taskId=u158a691b-c3b3-4103-993a-3064dc7139b&title=&width=798.655436582952)
-![](assets/image-20211104102831385.png#id=mx45K&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
 ### 3.9.3.消费者接收Object
 我们在consumer服务中定义一个新的消费者，publisher是用Map发送，那么消费者也一定要用Map接收，格式如下：
 ```java
@@ -1143,8 +1201,6 @@ public void listenSimpleQueueMessage(Map<String, Object> msg) throws Interrupted
     System.out.println("消费者接收到object.queue消息：【" + msg + "】");
 }
 ```
-![](assets/image-20211104103017170.png#id=E5J5O&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
-
 # 4.业务改造
 案例需求：改造余额支付功能，将支付成功后基于OpenFeign的交易服务的更新订单状态接口的同步调用，改为基于RabbitMQ的异步通知。
 如图：
@@ -1249,6 +1305,8 @@ public void tryPayOrderByBalance(PayOrderDTO payOrderDTO) {
 ## 5.1.抽取共享的MQ配置
 将MQ配置抽取到Nacos中管理，微服务中直接使用共享配置。
 
+答案：[将MQ抽取到nacos](https://b11et3un53m.feishu.cn/wiki/OQH4weMbcimUSLkIzD6cCpN0nvc?comment_id=7402157410754871297&comment_type=0&comment_anchor=true)
+
 ## 5.2.改造下单功能
 改造下单功能，将基于OpenFeign的清理购物车同步调用，改为基于RabbitMQ的异步通知：
 
@@ -1272,7 +1330,9 @@ public void tryPayOrderByBalance(PayOrderDTO payOrderDTO) {
 参考资料：
 [Spring AMQP](https://docs.spring.io/spring-amqp/docs/2.4.14/reference/html/#post-processing)
 
+答案：[在消息请求头中传递userId](https://b11et3un53m.feishu.cn/wiki/OQH4weMbcimUSLkIzD6cCpN0nvc?comment_id=7400098804805926914&comment_type=0&comment_anchor=true)
 
+即在请求头或者消息体中带上userId，在监听器中获取到后存入当前ThreadLocal中。
 
 ## 5.4.改造项目一
 思考一下，项目一中的哪些业务可以由同步方式改为异步方式调用？试着改造一下。
