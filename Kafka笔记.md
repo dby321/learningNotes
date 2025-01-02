@@ -1,5 +1,7 @@
 # Kafka笔记
 
+https://www.bilibili.com/video/BV19y4y1b7Uo/
+
 ## 1. Kafka简介
 
 ### 1.1 Kafka定义
@@ -1612,7 +1614,7 @@ partition = first-0
 
 这是因为两次运行的程序的消费者组id都是test，为同一个消费者组，当第二次运行程序时，对原来的分区进行回收，进行了分区的rebalance重新分配(默认range分配)。
 
-### 7.5 位移提交
+### 7.5 位移提交（视频没讲）
 
 　　　　对于 Kafka 中的分区而言，它的每条消息都有唯一 的 offset，用来表示消息在分区中对应 的位置 。 对于消费者而言 ， 它也有一个 offset 的概念，消费者使用 offset 来表示消费到分区中某个消息所在的位置。
 
