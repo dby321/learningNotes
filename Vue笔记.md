@@ -7,6 +7,10 @@
 
 [Vue2官网](https://v2.cn.vuejs.org/)
 
+``` 
+npm install packageName --registry=http://registry.npmmirror.com
+```
+
 > Vue.js是一个渐进式Javascript框架
 >
 > - 组件化模式 
