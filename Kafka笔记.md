@@ -2,6 +2,8 @@
 
 https://www.bilibili.com/video/BV19y4y1b7Uo/
 
+https://www.baeldung.com/spring-kafka
+
 ## 1. Kafka简介
 
 ### 1.1 Kafka定义
@@ -1829,6 +1831,5 @@ http://127.0.0.1:8048/topic/list
 
 ### 9.8 日志清理（以后再学）
 
-## 10. Bealdung.com Intro to Apache Kafka with Spring
 
-https://www.baeldung.com/spring-kafka
+
