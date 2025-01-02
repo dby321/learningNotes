@@ -192,6 +192,82 @@ SELECT COUNT(*) FROM employees;
 SELECT department_id,AVG(salary) from employees GROUP BY department_id WITH ROLLUP;
 ```
 
+### MYSQL常用字符串函数
+
+```sql
+CONCAT(S1,S2)
+LOWER(str)
+UPPER(str)
+LPAD( string, length, pad_string )# 填充
+
+# substring
+mysql> SELECT SUBSTRING('Techonthenet.com', 5);
+Result: 'onthenet.com'
+
+mysql> SELECT SUBSTRING('Techonthenet.com' FROM 5);
+Result: 'onthenet.com'
+
+mysql> SELECT SUBSTRING('Techonthenet.com', 1, 4);
+Result: 'Tech'
+
+mysql> SELECT SUBSTRING('Techonthenet.com' FROM 1 FOR 4);
+Result: 'Tech'
+
+mysql> SELECT SUBSTRING('Techonthenet.com', -3, 3);
+Result: 'com'
+
+mysql> SELECT SUBSTRING('Techonthenet.com' FROM -3 FOR 3);
+Result: 'com'
+
+# trim
+mysql> SELECT TRIM(LEADING ' ' FROM '  techonthenet.com  ');
+Result: 'techonthenet.com  '
+
+mysql> SELECT TRIM(TRAILING ' ' FROM '  techonthenet.com  ');
+Result: '  techonthenet.com'
+
+mysql> SELECT TRIM(BOTH ' ' FROM '  techonthenet.com  ');
+Result: 'techonthenet.com'
+
+mysql> SELECT TRIM(' ' FROM '  techonthenet.com  ');
+Result: 'techonthenet.com'
+
+mysql> SELECT TRIM('   techonthenet.com   ');
+Result: 'techonthenet.com'
+
+mysql> SELECT TRIM(LEADING '0' FROM '000123');
+Result: '123'
+
+mysql> SELECT TRIM(TRAILING '1' FROM 'Tech1');
+Result: 'Tech'
+
+mysql> SELECT TRIM(BOTH '123' FROM '123Tech123');
+Result: 'Tech'
+```
+
+### MYSQL常用数值函数
+
+```sql
+select ceil(1.5);
+select floor(1.9);
+select mod(3,4);
+select rand();
+select round(2.34,2);
+```
+
+### MYSQL常用日期函数
+
+```sql
+select curdate()
+select curtime()
+select now()
+select year(date)
+select month(date)
+select day(date)
+```
+
+
+
 ## SQL的执行顺序，WHERE和HAVING效率对比
 
 > FROM …,….->ON->(LEFT/RIGHT JOIN)->WHERE->GROUP BY->HAVING->SELECT->DICTINCT->ORDER BY->LIMIT
@@ -784,6 +860,29 @@ show variables like 'datadir';-- 查看mysql数据库和表存放位置
 ## MYSQL用户与权限管理
 
 [MYSQL8.0参考手册-数据库管理语句](https://dev.mysql.com/doc/refman/8.0/en/sql-server-administration-statements.html)
+
+```sql
+-- 创建用户只能在本机访问
+create user 'itcast'@'localhost' identified by '123456';
+-- 创建用户可以远程访问
+create user 'heima'@'%' identified by '123456';
+-- 修改用户密码
+alter user 'heima'@'%' identified with mysql_native_password by '1234';
+-- 删除用户
+drop user 'heima'@'%';
+-- 查询权限
+show grants for 'heima'@'%'
+-- 授予权限
+GRANT ALL ON db1.* TO 'jeffrey'@'localhost';
+GRANT 'role1', 'role2' TO 'user1'@'localhost', 'user2'@'localhost';
+GRANT SELECT ON world.* TO 'role3';
+-- 撤销权限
+REVOKE INSERT ON *.* FROM 'jeffrey'@'localhost';
+REVOKE 'role1', 'role2' FROM 'user1'@'localhost', 'user2'@'localhost';
+REVOKE SELECT ON world.* FROM 'role3';
+```
+
+
 
 ### 配置文件
 
