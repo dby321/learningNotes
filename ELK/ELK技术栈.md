@@ -1,6 +1,6 @@
 # 					ELK搜索高级课程
 
-# 1． 课程简介
+# 1.课程简介
 
 ## 1.1 课程内容
 
@@ -31,9 +31,9 @@ ELK是包含但不限于Elasticsearch（简称es）、Logstash、Kibana 三个�
 
 每个知识点先学概念，在学rest api,最后java代码上手。
 
-# 2． Elastic Stack简介
+# 2.Elastic Stack简介
 
-## 2.1简介
+## 2.1 简介
 
 ELK是一个免费开源的日志分析架构技术栈总称，官网https://www.elastic.co/cn。包含三大基础组件，分别是Elasticsearch、Logstash、Kibana。但实际上ELK不仅仅适用于日志分析，它还可以支持其它任何数据搜索、分析和收集的场景，日志分析和收集只是更具有代表性。并非唯一性。下面是ELK架构：
 
@@ -43,7 +43,7 @@ ELK是一个免费开源的日志分析架构技术栈总称，官网https://www
 
 ![1567691098941](img\1567691098941.png)
 
-##  2.2特色
+##  2.2 特色
 
 - 处理方式灵活：elasticsearch是目前最流行的准实时全文检索引擎，具有高速检索大数据的能力。
 
@@ -57,7 +57,7 @@ ELK是一个免费开源的日志分析架构技术栈总称，官网https://www
 
 -  数据展现华丽：kibana作为前端展现工具，图表华丽，配置简单。
 
-##  2.3组件介绍
+##  2.3 组件介绍
 
 **Elasticsearch**
 
@@ -97,9 +97,9 @@ Beats由如下组成:
 
 ![1567691213668](img\1567691213668.png)
 
-# 3． Elasticsearch是什么
+# 3.Elasticsearch是什么
 
-## 3.1搜索是什么
+## 3.1 搜索是什么
 
 概念：用户输入想要的关键词，返回含有该关键词的所有信息。
 
@@ -111,7 +111,7 @@ Beats由如下组成:
 
 ## 3.2 数据库做搜索弊端
 
-### 3.2.1站内搜索（垂直搜索）：数据量小，简单搜索，可以使用数据库。
+### 3.2.1 站内搜索（垂直搜索）：数据量小，简单搜索，可以使用数据库。
 
 问题出现：
 
@@ -121,7 +121,7 @@ l  性能问题：解决上面问题后，查询“笔记本电脑”等关键�
 
 l  不能分词。如搜索“笔记本电脑”，只能搜索完全和关键词一样的数据，那么数据量小时，搜索“笔记电脑”，“电脑”数据要不要给用户。
 
-### 3.2.2互联网搜索，肯定不会使用数据库搜索。数据量太大。PB级。
+### 3.2.2 互联网搜索，肯定不会使用数据库搜索。数据量太大。PB级。
 
 ## 3.3全文检索、倒排索引和Lucene
 
@@ -304,7 +304,7 @@ es6默认新建索引时，5分片，2副本，也就是一主一备，共10个�
 | 数据列Column                  | 字段Field                           |
 | 约束 Schema                   | 映射Mapping                         |
 
-# 4． Elasticsearch相关软件安装
+# 4. Elasticsearch相关软件安装
 
 ## 4.1.  Windows安装elasticsearch
 
@@ -584,9 +584,9 @@ http.cors.allow-origin: /.*/
 
 本教程使用kibana的dev tool，因为地址栏省略了http://localhost:9200。
 
-# 5． es快速入门
+# 5.es快速入门
 
-## 5.1． 文档（document）的数据格式
+## 5.1.文档（document）的数据格式
 
 （1）应用系统的数据结构都是面向对象的，具有复杂的数据结构
 
@@ -630,7 +630,7 @@ private class ClassInfo {
 }
 ```
 
-## 5.2图书网站商品管理案例：背景介绍
+## 5.2 图书网站商品管理案例：背景介绍
 
 有一个售卖图书的网站，需要为其基于ES构建一个后台系统，提供以下功能：
 
@@ -644,7 +644,7 @@ private class ClassInfo {
 
 （5）对数据进行简单的聚合分析
 
-## 5.3． 简单的集群管理
+## 5.3 简单的集群管理
 
 ### 5.3.1快速检查集群的健康状况
 
@@ -693,7 +693,7 @@ green  open   .kibana_1                       1cRiyIdATya5xS6qK5pGJw   1   0    
 
 删除索引：DELETE /demo_index?pretty
 
-## 5.4商品的CRUD操作（document CRUD操作）
+## 5.4 商品的CRUD操作（document CRUD操作）
 
 ### 5.4.1 新建图书索引
 
@@ -917,9 +917,9 @@ DELETE /book/_doc/1
 }
 ```
 
-# 6． 文档document入门
+# 6.文档document入门
 
-## 6.1． 默认自带字段解析
+## 6.1.默认自带字段解析
 
 ```json
 {
@@ -964,7 +964,7 @@ DELETE /book/_doc/1
 
 ### 6.1.4 创建索引时，不同数据放到不同索引中
 
-## 6.2． 生成文档id
+## 6.2.生成文档id
 
 ### 6.2.1 手动生成id
 
@@ -1013,7 +1013,7 @@ POST /test_index/_doc
 
 长度为20个字符，URL安全，base64编码，GUID，分布式生成不冲突 
 
-## 6.3． _source 字段
+## 6.3._source 字段
 
 ###  6.3.1 _source
 
@@ -1043,7 +1043,7 @@ GET  /book/_doc/1?__source_includes=name,price
 }
 ```
 
-## 6.4． 文档的替换与删除
+## 6.4.文档的替换与删除
 
 ### 6.4.1全量替换
 
@@ -1109,7 +1109,7 @@ DELETE  /test_index/_doc/1/
 
 lazy delete
 
-## 6.5． 局部替换 partial update
+## 6.5.局部替换 partial update
 
 使用 PUT /index/type/id 为文档全量替换，需要将文档所有数据提交。
 
@@ -1158,7 +1158,7 @@ POST /test_index/_doc/5/_update
 }
 ```
 
-## 6.6． 使用脚本更新
+## 6.6.使用脚本更新
 
 es可以内置脚本执行复杂操作。例如painless脚本。
 
@@ -1265,11 +1265,11 @@ Painless是内置支持的。脚本内容可以通过多种途径传给 es，包
 
 官方文档：https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting-using.html
 
-## 6.7． 图解es的并发问题
+## 6.7.图解es的并发问题
 
 如同秒杀，多线程情况下，es同样会出现并发冲突问题。
 
-## 6.8． 图解悲观锁与乐观锁机制
+## 6.8.图解悲观锁与乐观锁机制
 
 为控制并发问题，我们通常采用锁机制。分为悲观锁和乐观锁两种机制。
 
@@ -1281,7 +1281,7 @@ Painless是内置支持的。脚本内容可以通过多种途径传给 es，包
 
 特点：优点是并发能力高。缺点是操作繁琐，在提交数据时，可能反复重试多次。
 
-## 6.9． 图解es内部基于_version乐观锁控制
+## 6.9.图解es内部基于_version乐观锁控制
 
 #### 实验基于_version的版本控制
 
@@ -1341,7 +1341,7 @@ PUT /test_index/_doc/3
 
 es内部主从同步时，是多线程异步。乐观锁机制。
 
-## 6.10． 演示客户端程序基于_version并发操作流程
+## 6.10.演示客户端程序基于_version并发操作流程
 
 java python客户端更新的机制。
 
@@ -1431,7 +1431,7 @@ PUT /test_index/_doc/5?if_seq_no=22&if_primary_term=1
 
 修改成功。
 
-## 6.11． 演示自己手动控制版本号 external version
+## 6.11.演示自己手动控制版本号 external version
 
 背景：已有数据是在数据库中，有自己手动维护的版本号的情况下，可以使用external version控制。hbase。
 
@@ -1509,7 +1509,7 @@ PUT /test_index/_doc/4?version=3&version_type=external
 }
 ```
 
-## 6.12．更新时 retry_on_conflict 参数
+## 6.12.更新时 retry_on_conflict 参数
 
 ####  retry_on_conflict 
 
@@ -1535,7 +1535,7 @@ POST /test_index/_doc/5/_update?retry_on_conflict=3&version=22&version_type=exte
 }
 ```
 
-## 6.13． 批量查询 mget
+## 6.13.批量查询 mget
 
 单条查询 GET  /test_index/_doc/1，如果查询多个id的文档一条一条查询，网络开销太大。
 
@@ -1639,7 +1639,7 @@ post /test_index/_doc/_search
 }
 ```
 
-## 6.14． 批量增删改 bulk
+## 6.14.批量增删改 bulk
 
 Bulk 操作解释将文档的增删改查一些列操作，通过一次请求全都做完。减少网络传输次数。
 
@@ -1677,7 +1677,7 @@ POST /_bulk
 
 4实际用法：bulk请求一次不要太大，否则一下积压到内存中，性能会下降。所以，一次请求几千个操作、大小在几M正好。
 
-## 6.15． 文档概念学习总结
+## 6.15.文档概念学习总结
 
 **章节回顾**
 
@@ -1708,7 +1708,7 @@ POST /_bulk
 
 这个时候选用ES这种NoSQL型的数据存储，比传统的复杂的事务强大的关系型数据库，更加合适一些。无论是性能，还是吞吐量，可能都会更好。
 
-# 7． Java api 实现文档管理
+# 7.Java api 实现文档管理
 
 ## 7.1 es技术特点
 
@@ -2142,9 +2142,9 @@ POST /_bulk
     }
 ```
 
-# 8． 图解es内部机制
+# 8.图解es内部机制
 
-## 8.1． 图解es分布式基础
+## 8.1.图解es分布式基础
 
 ### 8.1.1es对复杂分布式机制的透明隐藏特性
 
@@ -2177,7 +2177,7 @@ POST /_bulk
 - 自动请求路由
 - 响应收集
 
-## 8.2． 图解分片shard、副本replica机制
+## 8.2.图解分片shard、副本replica机制
 
 ### 8.2.1shard&replica机制
 
@@ -2238,15 +2238,15 @@ PUT /test_index1
 - replica容错：新master将replica提升为primary shard，yellow
 -  重启宕机node，master copy replica到该node，使用原有的shard并同步宕机后的修改，green
 
-# 9． 图解文档存储机制
+# 9.图解文档存储机制
 
-## 9.1． 数据路由
+## 9.1.数据路由
 
-### 9.1.1文档存储如何路由到相应分片
+### 9.1.1 文档存储如何路由到相应分片
 
 一个文档，最终会落在主分片的一个分片上，到底应该在哪一个分片？这就是数据路由。
 
-### 9.1.2路由算法
+### 9.1.2 路由算法
 
 ```
 shard = hash(routing) % number_of_primary_shards
@@ -2266,7 +2266,7 @@ shard = hash(routing) % number_of_primary_shards
 
 无论hash值是几，无论是什么数字，对number_of_primary_shards求余数，结果一定是在0~number_of_primary_shards-1之间这个范围内的。0,1,2。
 
-### 9.1.3手动指定 routing number
+### 9.1.3 手动指定 routing number
 
 ```
 PUT /test_index/_doc/15?routing=num
@@ -2280,11 +2280,11 @@ PUT /test_index/_doc/15?routing=num
 
 所以，不同文档尽量放到不同的索引中。剩下的事情交给es集群自己处理。
 
-### 9.1.4主分片数量不可变
+### 9.1.4 主分片数量不可变
 
 涉及到以往数据的查询搜索，所以一旦建立索引，主分片数不可变。
 
-## 9.2． 图解文档的增删改内部机制
+## 9.2.图解文档的增删改内部机制
 
 增删改可以看做update,都是对数据的改动。一个改动请求发送到es集群，经历以下四个步骤：
 
@@ -2296,7 +2296,7 @@ PUT /test_index/_doc/15?routing=num
 
 （4）coordinating node，如果发现primary node和所有replica node都搞定之后，就返回响应结果给客户端。
 
-## 9.3．图解文档的查询内部机制
+## 9.3.图解文档的查询内部机制
 
 1、客户端发送请求到任意一个node，成为coordinate node
 
@@ -2308,7 +2308,7 @@ PUT /test_index/_doc/15?routing=num
 
 5、特殊情况：document如果还在建立索引过程中，可能只有primary shard有，任何一个replica shard都没有，此时可能会导致无法读取到document，但是document完成索引建立之后，primary shard和replica shard就都有了。
 
-## 9.4．bulk api奇特的json格式
+## 9.4.bulk api奇特的json格式
 
 ```json
 POST /_bulk
@@ -2385,9 +2385,9 @@ POST /_bulk
 
 5、最大的优势在于，不需要将json数组解析为一个JSONArray对象，形成一份大数据的拷贝，浪费内存空间，尽可能地保证性能。
 
-# 10． Mapping映射入门
+# 10.Mapping映射入门
 
-## 10.1． 什么是mapping映射
+## 10.1.什么是mapping映射
 
 概念：自动或手动为index中的_doc建立的一种数据结构和相关配置，简称为mapping映射。
 
@@ -2481,7 +2481,7 @@ GET /website/_search?q=post_date:2019          0 条结果
 
 搜索结果为什么不一致，因为es自动建立mapping的时候，设置了不同的field不同的data type。不同的data type的分词、搜索等行为是不一样的。所以出现了_all field和post_date field的搜索表现完全不一样。
 
-## 10.2． 精确匹配与全文搜索的对比分析
+## 10.2.精确匹配与全文搜索的对比分析
 
 ### 10.2.1 exact value 精确匹配
 
@@ -2519,7 +2519,7 @@ like，搜索love，同义词，也可以将like搜索出来
 
 就不是说单纯的只是匹配完整的一个值，而是可以对值进行拆分词语后（分词）进行匹配，也可以通过缩写、时态、大小写、同义词等进行匹配。深入 NPL,自然语义处理。
 
-## 10.3． 全文检索下倒排索引核心原理快速揭秘
+## 10.3.全文检索下倒排索引核心原理快速揭秘
 
 doc1：I really liked my small dogs, and I think my mom also liked them.
 
@@ -2742,7 +2742,7 @@ position 在此词条在原文本中的位置
 
 start_offset/end_offset字符在原始字符串中的位置
 
-## 10.6． mapping回顾总结
+## 10.6.mapping回顾总结
 
 （1）往es里面直接插入数据，es会自动建立索引，同时建立对应的mapping。(dynamic mapping)
 
@@ -2756,7 +2756,7 @@ start_offset/end_offset字符在原始字符串中的位置
 
 （6）可以用es的dynamic mapping，让其自动建立mapping，包括自动设置数据类型；也可以提前手动创建index和tmapping，自己对各个field进行设置，包括数据类型，包括索引行为，包括分词器，等。
 
-## 10.7． mapping的核心数据类型以及dynamic mapping
+## 10.7.mapping的核心数据类型以及dynamic mapping
 
 ### 10.7.1 核心的数据类型
 
@@ -3179,9 +3179,9 @@ object
 }
 ```
 
-# 11． 索引Index入门
+# 11.索引Index入门
 
-## 11.1． 索引管理
+## 11.1.索引管理
 
 ### 11.1.1. 为什么我们要手动创建索引
 
@@ -3290,7 +3290,7 @@ elasticsearch.yml
 
 action.destructive_requires_name: true
 
-## 11.2． 定制分词器
+## 11.2.定制分词器
 
 ### 11.2.1 默认的分词器
 
@@ -3822,7 +3822,7 @@ norms是指标时间的评分因素。如果您不关心评分，例如，如果
       }
 ```
 
-## 11.5． 零停机重建索引
+## 11.5.零停机重建索引
 
 ### 11.5.1零停机重建索引 
 
@@ -4026,9 +4026,9 @@ POST /_aliases
 }
 ```
 
-# 12． 中文分词器 IK分词器
+# 12.中文分词器 IK分词器
 
-## 12.1． Ik分词器安装使用
+## 12.1.Ik分词器安装使用
 
 ### 12.1.1 中文分词器
 
@@ -4149,7 +4149,7 @@ IKAnalyzer.cfg.xml：ext_dict，创建mydict.dic。
 
 custom/ext_stopword.dic，已经有了常用的中文停用词，可以补充自己的停用词，然后重启es
 
-## 12.3． 使用mysql热更新 词库
+## 12.3.使用mysql热更新 词库
 
 ### 12.3.1热更新
 
@@ -4219,7 +4219,7 @@ GET /_analyze
 }
 ```
 
-# 13． java api 实现索引管理
+# 13.java api 实现索引管理
 
 代码
 
@@ -4498,9 +4498,9 @@ public void testCloseIndex() throws IOException {
 }
 ```
 
-# 14． search搜索入门
+# 14.search搜索入门
 
-## 14.1． 搜索语法入门
+## 14.1.搜索语法入门
 
 ### 14.1.1query string search
 
@@ -4659,7 +4659,7 @@ GET /book/_search?timeout=10ms
 
 全局设置：配置文件中设置 search.default_search_timeout：100ms。默认不超时。
 
-## 14.2．multi-index 多索引搜索
+## 14.2.multi-index 多索引搜索
 
 ### 14.2.1multi-index搜索模式
 
@@ -4684,7 +4684,7 @@ log_to_es_20180910
 
 搜索原理初步图解
 
-## 14.3． 分页搜索
+## 14.3.分页搜索
 
 ### 14.3.1分页搜索的语法
 
@@ -4719,7 +4719,7 @@ GET /book_search?from=0&size=3
 3消耗cup，coordinate node 要把传回来的数据进行排序，这个排序过程很消耗cpu。
 所以：鉴于deep paging的性能问题，所有应尽量减少使用。
 
-## 14.4． query string基础语法
+## 14.4.query string基础语法
 
 ### 14.4.1query string基础语法
 
@@ -4753,7 +4753,7 @@ es中_all元数据。建立索引的时候，插入一条docunment，es会将所
 
 _all : jack,123@qq.com,beijing 
 
-## 14.5． query DSL入门
+## 14.5.query DSL入门
 
 ### 14.5.1 DSL
 
@@ -4815,7 +4815,7 @@ GET /book/_search
 
 通过组合以上各种类型查询，实现复杂查询。
 
-### 14.5.2． Query DSL语法
+### 14.5.2.Query DSL语法
 
 ```
 {
@@ -4969,7 +4969,7 @@ GET /test_index/_search
 }
 ```
 
-## 14.6． full-text search 全文检索
+## 14.6.full-text search 全文检索
 
 ### 14.6.1 全文检索
 
@@ -5133,7 +5133,7 @@ java 2,3
 
 2、搜索时，直接找description中含有java的文档 2,3，并且3号文档含有两个java字段，一个程序员，所以得分高，排在前面。2号文档含有一个java，排在后面。
 
-## 14.7． DSL 语法练习
+## 14.7.DSL 语法练习
 
 ### 14.7.1 match_all
 
@@ -5296,7 +5296,7 @@ GET /book/_search
 }
 ```
 
-## 14.8． Filter
+## 14.8.Filter
 
 ### 14.8.1 filter与query示例
 
@@ -5372,7 +5372,7 @@ filter，不需要计算相关度分数，不需要按照相关度分数进行�
 
 query，相反，要计算相关度分数，按照分数进行排序，而且无法cache结果
 
-## 14.9． 定位错误语法
+## 14.9.定位错误语法
 
 验证错误语句：
 
@@ -5433,7 +5433,7 @@ GET /book/_validate/query?explain
 
 合法以后，explain就像mysql的执行计划，可以看到搜索的目标等信息。
 
-## 14.10． 定制排序规则
+## 14.10.定制排序规则
 
 ### 14.10.1 默认排序规则
 
@@ -5486,7 +5486,7 @@ GET /book/_search
 }
 ```
 
-## 14.11． Text字段排序问题
+## 14.11.Text字段排序问题
 
 如果对一个text field进行排序，结果往往不准确，因为分词后是多个单词，再排序就不是我们想要的结果了。
 
@@ -5564,7 +5564,7 @@ GET /website/_search
 }
 ```
 
-### 14.12． Scroll分批查询
+### 14.12.Scroll分批查询
 
 场景：下载某一个索引中1亿条数据，到文件或是数据库。
 
@@ -5630,7 +5630,7 @@ scroll是用户系统内部操作，如下载批量数据，数据转移。零�
 
 
 
-# 15． java api实现搜索
+# 15.java api实现搜索
 
 
 
@@ -5674,9 +5674,9 @@ scroll是用户系统内部操作，如下载批量数据，数据转移。零�
 
 
 
-# 16． 评分机制详解
+# 16.评分机制详解
 
-## 16.1． 评分机制 TF\IDF
+## 16.1.评分机制 TF\IDF
 
 ### 16.1.1 算法介绍
 
@@ -6012,7 +6012,7 @@ GET /book/_explain/3
 }
 ```
 
-## 16.2． Doc value
+## 16.2.Doc value
 
 搜索的时候，要依靠倒排索引；排序的时候，需要依靠正排索引，看到每个document的每个field，然后进行排序，所谓的正排索引，其实就是doc values
 
@@ -6068,7 +6068,7 @@ doc2: { "name": "tom", "age": 30 }
 | doc1     | jack | 27   |
 | doc2     | tom  | 30   |
 
-## 16.3． query phase
+## 16.3.query phase
 
 ### 1、query phase
 
@@ -6082,7 +6082,7 @@ doc2: { "name": "tom", "age": 30 }
 
 一次请求要打到所有shard的一个replica/primary上去，如果每个shard都有多个replica，那么同时并发过来的搜索请求可以同时打到其他的replica上去
 
-## 16.4． fetch phase
+## 16.4.fetch phase
 
 ### 1、fetch phbase工作流程
 
@@ -6094,7 +6094,7 @@ doc2: { "name": "tom", "age": 30 }
 
 ### 2、一般搜索，如果不加from和size，就默认搜索前10条，按照_score排序
 
-## 16.5． 搜索参数小总结
+## 16.5.搜索参数小总结
 
 ### 1、preference
 
@@ -6122,7 +6122,7 @@ default：query_then_fetch
 
 dfs_query_then_fetch，可以提升revelance sort精准度
 
-# 17． 聚合入门
+# 17.聚合入门
 
 ## 17.1聚合示例
 
@@ -6934,7 +6934,7 @@ GET /tvs/_search
 }
 ```
 
-# 18． java api实现聚合
+# 18.java api实现聚合
 
 简单聚合，多种聚合，详见代码。
 
@@ -7362,7 +7362,7 @@ public class TestAggs {
 }
 ```
 
-# 19． es7 sql新特性
+# 19.es7 sql新特性
 
 ## 19.1 快速入门
 
@@ -7486,7 +7486,7 @@ public static void main(String[] args) {
 
 大型企业可以购买白金版，增加Machine Learning、高级安全性x-pack。
 
-# 20． Logstash学习
+# 20.Logstash学习
 
 ## 20.1Logstash基本语法组成
 
@@ -7838,7 +7838,7 @@ elasticsearch {
 }
 ```
 
-# 21． kibana学习
+# 21.kibana学习
 
 ## 21.1基本查询
 
@@ -7866,7 +7866,7 @@ discover 中使用DSL搜索。
 
 监控，日志，APM等功能非常丰富。
 
-# 22． 集群部署
+# 22.集群部署
 
 见部署图
 
@@ -7891,7 +7891,7 @@ master=true，data=false：仅是主结点，不存储数据
 master=false，data=false：即不是主结点也不是数据结点，此时可设置ingest为true表示它是一个客户端。
 ```
 
-# 23． 项目实战
+# 23.项目实战
 
 ## 23.1项目一：ELK用于日志分析
 
