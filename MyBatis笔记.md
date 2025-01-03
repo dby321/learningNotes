@@ -12,7 +12,7 @@
 
 [MyBatis-Plus](https://baomidou.com/) 
 
-## Mybatis入门程序
+## Mybatis入门
 
 1. 下载Mybatis的jar包
 
@@ -126,50 +126,25 @@ public class MybatisTest {
 }
 ```
 
-### 测试程序提取
+### Mybatis解决jdbc编程的问题
 
-```java
-// 1. 创建SqlSessionFactoryBuilder对象
-		SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
-
-		// 2. 加载SqlMapConfig.xml配置文件
-		InputStream inputStream = Resources.getResourceAsStream("SqlMapConfig.xml");
-
-		// 3. 创建SqlSessionFactory对象
-		this.sqlSessionFactory = sqlSessionFactoryBuilder.build(inputStream);
-
-		// 4. 创建SqlSession对象
-		SqlSession sqlSession = sqlSessionFactory.openSession();
-
-		// 5. 执行SqlSession对象执行查询，获取结果User
-		// 第一个参数是User.xml的statement的id，第二个参数是执行sql需要的参数；
-		Object user = sqlSession.selectOne("queryUserById", 1);
-
-		// 有时需要
-		sqlSession.commit();
-		// 6. 打印结果
-		System.out.println(user);
-```
-
-## Mybatis解决jdbc编程的问题
-
-1、 数据库连接创建、释放频繁造成系统资源浪费从而影响系统性能，如果使用数据库连接池可解决此问题。
+1. 数据库连接创建、释放频繁造成系统资源浪费从而影响系统性能，如果使用数据库连接池可解决此问题。
 
 解决：在SqlMapConfig.xml中配置数据连接池，使用连接池管理数据库链接。
 
-2、 Sql语句写在代码中造成代码不易维护，实际应用sql变化的可能较大，sql变动需要改变java代码。
+2. Sql语句写在代码中造成代码不易维护，实际应用sql变化的可能较大，sql变动需要改变java代码。
 
 解决：将Sql语句配置在XXXmapper.xml文件中与java代码分离。
 
-3、 向sql语句传参数麻烦，因为sql语句的where条件不一定，可能多也可能少，占位符需要和参数一一对应。
+3. 向sql语句传参数麻烦，因为sql语句的where条件不一定，可能多也可能少，占位符需要和参数一一对应。
 
 解决：Mybatis自动将java对象映射至sql语句，通过statement中的parameterType定义输入参数的类型。
 
-4、 对结果集解析麻烦，sql变化导致解析代码变化，且解析前需要遍历，如果能将数据库记录封装成pojo对象解析比较方便。
+4. 对结果集解析麻烦，sql变化导致解析代码变化，且解析前需要遍历，如果能将数据库记录封装成pojo对象解析比较方便。
 
 解决：Mybatis自动将sql执行结果映射至java对象，通过statement中的resultType定义输出结果的类型。
 
-## Mybatis和Hibernate的区别
+### Mybatis和Hibernate的区别
 
 Mybatis和hibernate不同，它不完全是一个ORM（对象关系映射）框架，**因为MyBatis需要程序员自己编写Sql语句**。mybatis可以通过XML或注解方式灵活配置要运行的sql语句，并将java对象和sql语句映射生成最终执行的sql，最后将sql执行的结果再映射生成java对象。
 
@@ -183,11 +158,7 @@ Hibernate对象/关系映射能力强，**数据库无关性好**，对于关系
 
 总之，按照用户的需求在有限的资源环境下只要能做出维护性、扩展性良好的软件架构都是好架构，所以框架只有适合才是最好。 
 
-## Mapper动态代理方式开发
-
-> Mapper接口开发方法**只需要程序员编写Mapper接口**（相当于Dao接口），由Mybatis框架根据接口定义创建接口的动态代理对象，代理对象的方法体同上边Dao接口实现类方法。
-
-### Mapper接口开发遵循规则
+## Mapper开发
 
 1. Mapper.xml文件中的**namespace**与mapper接口的**类路径相同**。
 
@@ -322,11 +293,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </select>
 ```
 
-#### 多对多
+##### 多对多
 
-https://www.bilibili.com/video/BV1Db411s7F5?p=55
-
-https://www.bilibili.com/video/BV1Db411s7F5?p=56
+> 必须要加入中间表，其实写映射的时候只能写一对多。
+>
+> 例如：角色和用户是多对多，每次查询left join只能写一对多，即一个角色的所有用户，或者一个用户的所有角色。
 
 ## 输入映射和输出映射
 
