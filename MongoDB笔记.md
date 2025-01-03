@@ -45,6 +45,8 @@
 
 [Spring-Data-MongoDB中文文档](https://springdoc.cn/spring-data-mongodb/)
 
+[Baeldung MongoDB](https://www.baeldung.com/spring-data-mongodb-series)
+
 # Spring Data MongoDB 中文文档
 
 version 4.1.0-SNAPSHOT,2023-09-10
@@ -260,7 +262,7 @@ Spring Boot会为你选择一个最新版本的Spring Data模块。如果你仍�
 
 Spring Data Repository 抽象的目标是大大减少为各种持久性store实现数据访问层所需的模板代码量。
 
-|      | *Spring Data Repository 文档和你的模块*本章解释了Spring Data Repository 的核心概念和接口。本章的信息是从Spring Data Commons模块中提取的。它使用了Jakarta Persistence API（JPA）模块的配置和代码样本。 如果你想使用XML配置，你应该将XML命名空间声明和要扩展的类型调整为你使用的特定模块的等价物。“[命名空间参考](https://springdoc.cn/spring-data-mongodb/#repositories.namespace-reference)” 涵盖了XML配置，所有支持 Repository API的Spring Data模块都支持这种配置。 “[Repository query 关键字](https://springdoc.cn/spring-data-mongodb/#repository-query-keywords)” 涵盖了 Repository 抽象所支持的一般的查询方法关键字。关于你的模块的具体功能的详细信息，请参阅本文档中关于该模块的章节。 |
+|      | Spring Data Repository 文档和你的模块本章解释了Spring Data Repository 的核心概念和接口。本章的信息是从Spring Data Commons模块中提取的。它使用了Jakarta Persistence API（JPA）模块的配置和代码样本。 如果你想使用XML配置，你应该将XML命名空间声明和要扩展的类型调整为你使用的特定模块的等价物。“[命名空间参考](https://springdoc.cn/spring-data-mongodb/#repositories.namespace-reference)” 涵盖了XML配置，所有支持 Repository API的Spring Data模块都支持这种配置。 “[Repository query 关键字](https://springdoc.cn/spring-data-mongodb/#repository-query-keywords)” 涵盖了 Repository 抽象所支持的一般的查询方法关键字。关于你的模块的具体功能的详细信息，请参阅本文档中关于该模块的章节。 |
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
@@ -958,8 +960,8 @@ XML
 ```java
 @Configuration
 @EnableMongoRepositories(basePackages = "com.acme.repositories",
-    includeFilters = { @Filter(type = FilterType.REGEX, pattern = ".*SomeRepository") },
-    excludeFilters = { @Filter(type = FilterType.REGEX, pattern = ".*SomeOtherRepository") })
+    includeFilters = { @Filter(type = FilterType.REGEX, pattern = ".SomeRepository") },
+    excludeFilters = { @Filter(type = FilterType.REGEX, pattern = ".SomeOtherRepository") })
 class ApplicationConfiguration {
 
   @Bean
@@ -1827,9 +1829,9 @@ Example 52. 使用基于Java的bean元数据注册一个 `com.mongodb.client.Mon
 @Configuration
 public class AppConfig {
 
-  /*
-   * Use the standard Mongo driver API to create a com.mongodb.client.MongoClient instance.
-   */
+  /
+    Use the standard Mongo driver API to create a com.mongodb.client.MongoClient instance.
+   /
    public @Bean MongoClient mongoClient() {
        return MongoClients.create("mongodb://localhost:27017");
    }
@@ -1846,9 +1848,9 @@ Example 53. 通过使用Spring的 `MongoClientFactoryBean` 注册 `com.mongodb.c
 @Configuration
 public class AppConfig {
 
-    /*
-     * Factory bean that creates the com.mongodb.client.MongoClient instance
-     */
+    /
+      Factory bean that creates the com.mongodb.client.MongoClient instance
+     /
      public @Bean MongoClientFactoryBean mongo() {
           MongoClientFactoryBean mongo = new MongoClientFactoryBean();
           mongo.setHost("localhost");
@@ -2399,13 +2401,13 @@ Person qp = mongoTemplate.findOne(query(where("age").is(33)), Person.class);
 
 可以进行以下插入和保存操作。
 
-- `void` **save** `(Object objectToSave)`: 将该对象保存到默认的集合中。
-- `void` **save** `(Object objectToSave, String collectionName)`: 将该对象保存到指定的集合中。
+- `void` save `(Object objectToSave)`: 将该对象保存到默认的集合中。
+- `void` save `(Object objectToSave, String collectionName)`: 将该对象保存到指定的集合中。
 
 也有一套类似的插入操作。
 
-- `void` **insert** `(Object objectToSave)`: 将该对象插入到默认集合中。
-- `void` **insert** `(Object objectToSave, String collectionName)`: 插入对象到指定的集合。
+- `void` insert `(Object objectToSave)`: 将该对象插入到默认集合中。
+- `void` insert `(Object objectToSave, String collectionName)`: 插入对象到指定的集合。
 
 ##### 我的文档被保存在哪个集合中？
 
@@ -2415,15 +2417,15 @@ Person qp = mongoTemplate.findOne(query(where("age").is(33)), Person.class);
 
 MongoDB 驱动支持在单个操作中插入一个文档集合。`MongoOperations` 接口中的下列方法支持这一功能。
 
-- **insert**: 插入一个对象。如果有一个具有相同 `id` 的现有文档，就会产生一个错误。
-- **insertAll**: 接受一个 `Collection` 的集合作为第一个参数。该方法检查每个对象，并根据前面指定的规则将其插入到适当的集合中。
-- **save**: 保存对象，覆盖任何可能有相同 `id` 的对象。
+- insert: 插入一个对象。如果有一个具有相同 `id` 的现有文档，就会产生一个错误。
+- insertAll: 接受一个 `Collection` 的集合作为第一个参数。该方法检查每个对象，并根据前面指定的规则将其插入到适当的集合中。
+- save: 保存对象，覆盖任何可能有相同 `id` 的对象。
 
 ##### 批量插入对象
 
 MongoDB驱动支持在一个操作中插入一个文档集合。`MongoOperations` 接口中的下列方法支持这一功能。
 
-- **insert** 方法: 以一个 `Collection` 作为第一个参数。它们在一次批量写入数据库中插入一个对象的列表。
+- insert 方法: 以一个 `Collection` 作为第一个参数。它们在一次批量写入数据库中插入一个对象的列表。
 
 #### 10.5.4. 更新集合中的文档
 
@@ -2442,8 +2444,8 @@ WriteResult wr = mongoTemplate.updateMulti(new Query(where("accounts.accountType
 
 ##### 运行更新文档的方法
 
-- **updateFirst**: 用更新后的文档更新第一个符合查询文档 criteria 的文档。
-- **updateMulti**: 用更新后的文档更新所有符合查询文档 criteria 的对象。
+- updateFirst: 用更新后的文档更新第一个符合查询文档 criteria 的文档。
+- updateMulti: 用更新后的文档更新所有符合查询文档 criteria 的对象。
 
 |      | `updateFirst` 不支持排序。请使用 [findAndModify](https://springdoc.cn/spring-data-mongodb/#mongo-template.find-and-upsert) 来应用 `Sort`。 |
 | ---- | ------------------------------------------------------------ |
@@ -2455,22 +2457,22 @@ WriteResult wr = mongoTemplate.updateMulti(new Query(where("accounts.accountType
 
 `Update` 类包含以下方法。
 
-- `Update` **addToSet** `(String key, Object value)` 使用 `$addToSet` 更新修改器（update modifier）进行更新
-- `Update` **currentDate** `(String key)` 使用 `$currentDate` 更新修改器进行更新
-- `Update` **currentTimestamp** `(String key)` 使用 `$currentDate` 更新修改器与 `$type` `timestamp` 进行更新
-- `Update` **inc** `(String key, Number inc)` 使用 `$inc` 更新修改器进行更新
-- `Update` **max** `(String key, Object max)` 使用 `$max` 更新修改器进行更新
-- `Update` **min** `(String key, Object min)` 使用 `$min` 更新修改器进行更新
-- `Update` **multiply** `(String key, Number multiplier)` 使用 `$mul` 更新修改器进行更新
-- `Update` **pop** `(String key, Update.Position pos)` 使用 `$pop` 更新修改器进行更新
-- `Update` **pull** `(String key, Object value)` 使用 `$pull` 更新修改器进行更新
-- `Update` **pullAll** `(String key, Object[] values)` 使用 `$pullAll` 更新修改器进行更新
-- `Update` **push** `(String key, Object value)` 使用 `$push` 更新修改器进行更新
-- `Update` **pushAll** `(String key, Object[] values)` 使用 `$pushAll` 更新修改器进行更新
-- `Update` **rename** `(String oldName, String newName)` 使用 `$rename` 更新修改器进行更新
-- `Update` **set** `(String key, Object value)` 使用 `$set` 更新修改器进行更新
-- `Update` **setOnInsert** `(String key, Object value)` 使用 `$setOnInsert` 更新修改器进行更新
-- `Update` **unset** `(String key)` 使用 `$unset` 更新修改器进行更新
+- `Update` addToSet `(String key, Object value)` 使用 `$addToSet` 更新修改器（update modifier）进行更新
+- `Update` currentDate `(String key)` 使用 `$currentDate` 更新修改器进行更新
+- `Update` currentTimestamp `(String key)` 使用 `$currentDate` 更新修改器与 `$type` `timestamp` 进行更新
+- `Update` inc `(String key, Number inc)` 使用 `$inc` 更新修改器进行更新
+- `Update` max `(String key, Object max)` 使用 `$max` 更新修改器进行更新
+- `Update` min `(String key, Object min)` 使用 `$min` 更新修改器进行更新
+- `Update` multiply `(String key, Number multiplier)` 使用 `$mul` 更新修改器进行更新
+- `Update` pop `(String key, Update.Position pos)` 使用 `$pop` 更新修改器进行更新
+- `Update` pull `(String key, Object value)` 使用 `$pull` 更新修改器进行更新
+- `Update` pullAll `(String key, Object[] values)` 使用 `$pullAll` 更新修改器进行更新
+- `Update` push `(String key, Object value)` 使用 `$push` 更新修改器进行更新
+- `Update` pushAll `(String key, Object[] values)` 使用 `$pushAll` 更新修改器进行更新
+- `Update` rename `(String oldName, String newName)` 使用 `$rename` 更新修改器进行更新
+- `Update` set `(String key, Object value)` 使用 `$set` 更新修改器进行更新
+- `Update` setOnInsert `(String key, Object value)` 使用 `$setOnInsert` 更新修改器进行更新
+- `Update` unset `(String key)` 使用 `$unset` 更新修改器进行更新
 
 一些更新修改器，如 `$push` 和 `$addToSet`，允许嵌套额外的操作符。
 
@@ -2607,10 +2609,10 @@ db.students.update(
 )
 ```
 
-|      | 第1个 `$set` 阶段根据 *tests* 字段的平均值（average）计算出一个新的字段 *average*。 |
+|      | 第1个 `$set` 阶段根据 tests 字段的平均值（average）计算出一个新的字段 average。 |
 | ---- | ------------------------------------------------------------ |
-|      | 第2个 `$set` 阶段根据第一聚合阶段计算的 *average* 字段，计算新的字段 *grade*。 |
-|      | 该管道在 *students* 集合上运行，并使用 `Student` 作为聚合字段的映射。 |
+|      | 第2个 `$set` 阶段根据第一聚合阶段计算的 average 字段，计算新的字段 grade。 |
+|      | 该管道在 students 集合上运行，并使用 `Student` 作为聚合字段的映射。 |
 |      | 将更新应用于集合中所有匹配的文档。                           |
 
 #### 10.5.8. 查和替换文档
@@ -2737,53 +2739,53 @@ List<Person> result = template.query(Person.class)
 
 `Criteria` 类提供了以下方法，它们都对应于MongoDB中的操作符。
 
-- `Criteria` **all** `(Object o)` 使用 `$all` 操作符创建一个 criterion。
-- `Criteria` **and** `(String key)` 在当前的 `Criteria` 中添加一个带有指定 `key` 的 `Criteria` 调用链 ，并返回新创建的 `Criteria` 。
-- `Criteria` **andOperator** `(Criteria… criteria)` 使用 `$and` 操作符为所有提供的 criteria 创建一个 and 查询（需要MongoDB 2.0 或更高版本）。
-- `Criteria` **andOperator** `(Collection<Criteria> criteria)` 使用 `$and` 操作符为所有提供的 criteria 创建一个 and 查询（需要MongoDB 2.0 或更高版本）。
-- `Criteria` **elemMatch** `(Criteria c)` 使用 `$elemMatch` 操作符创建一个 criteria。
-- `Criteria` **exists** `(boolean b)` 使用 `$exists` 操作符创建一个 criteria
-- `Criteria` **gt** `(Object o)` 使用 `$gt` 操作符创建一个 criteria
-- `Criteria` **gte** `(Object o)` 使用 `$gte` 操作符创建一个 criteria
-- `Criteria` **in** `(Object… o)` 使用 `$in` 操作符为可边长参数创建一个 criteria。
-- `Criteria` **in** `(Collection<?> collection)` 使用 `$in` 操作符创建一个 criteria，使用一个集合。
-- `Criteria` **is** `(Object o)` 使用字段匹配（`{ key:value }`）创建一个 criteria。如果指定的值是一个文档，那么字段的顺序和在文档中的完全相等就很重要。
-- `Criteria` **lt** `(Object o)` 使用 `$lt` 操作符创建一个 criteria。
-- `Criteria` **lte** `(Object o)` 使用 `$lte` 操作符创建一个 criteria。
-- `Criteria` **mod** `(Number value, Number remainder)` 使用 `$mod` 操作符创建一个 criteria。
-- `Criteria` **ne** `(Object o)` 使用 `$ne` 操作符创建一个 criteria。
-- `Criteria` **nin** `(Object… o)` 使用 `$nin` 操作符创建一个 criteria。
-- `Criteria` **norOperator** `(Criteria… criteria)` 使用 `$nor` 操作符对所有提供的 criteria 创建一个nor查询。
-- `Criteria` **norOperator** `(Collection<Criteria> criteria)` 使用 `$nor` 操作符对所有提供的 criteria 创建一个nor查询。
-- `Criteria` **not** `()` 使用 `$not` 元操作符创建一个criteria，该 criteria 会影响到后面直接的子句。
-- `Criteria` **orOperator** `(Criteria… criteria)` 使用 `$or` 操作符为所有提供的 criteria 创建一个 or 查询。
-- `Criteria` **orOperator** `(Collection<Criteria> criteria)` 使用 `$or` 操作符为所有提供的 criteria 创建一个 or 查询。
-- `Criteria` **regex** `(String re)` 使用 `$regex` 操作符创建一个 criteria。
-- `Criteria` **sampleRate** `(double sampleRate)` 使用 `$sampleRate` 操作符创建一个 criteria。
-- `Criteria` **size** `(int s)` 使用 `$size` 操作符创建一个 criteria。
-- `Criteria` **type** `(int t)` 使用 `$type` 操作符创建一个 criteria。
-- `Criteria` **matchingDocumentStructure** `(MongoJsonSchema schema)` 使用 `$jsonSchema` 操作符为 [JSON schema criteria](https://springdoc.cn/spring-data-mongodb/#mongo.jsonSchema) 创建一个 criteria。 `$jsonSchema` 只能应用于查询的顶层，而不是特定的属性。使用 schema 的 `properties` 属性来匹配嵌套字段。
-- `Criteria` **bits()** 是通往 [MongoDB bit 数查询操作符](https://docs.mongodb.com/manual/reference/operator/query-bitwise/)（如 `$bitsAllClear`）的 gateway。
+- `Criteria` all `(Object o)` 使用 `$all` 操作符创建一个 criterion。
+- `Criteria` and `(String key)` 在当前的 `Criteria` 中添加一个带有指定 `key` 的 `Criteria` 调用链 ，并返回新创建的 `Criteria` 。
+- `Criteria` andOperator `(Criteria… criteria)` 使用 `$and` 操作符为所有提供的 criteria 创建一个 and 查询（需要MongoDB 2.0 或更高版本）。
+- `Criteria` andOperator `(Collection<Criteria> criteria)` 使用 `$and` 操作符为所有提供的 criteria 创建一个 and 查询（需要MongoDB 2.0 或更高版本）。
+- `Criteria` elemMatch `(Criteria c)` 使用 `$elemMatch` 操作符创建一个 criteria。
+- `Criteria` exists `(boolean b)` 使用 `$exists` 操作符创建一个 criteria
+- `Criteria` gt `(Object o)` 使用 `$gt` 操作符创建一个 criteria
+- `Criteria` gte `(Object o)` 使用 `$gte` 操作符创建一个 criteria
+- `Criteria` in `(Object… o)` 使用 `$in` 操作符为可边长参数创建一个 criteria。
+- `Criteria` in `(Collection<?> collection)` 使用 `$in` 操作符创建一个 criteria，使用一个集合。
+- `Criteria` is `(Object o)` 使用字段匹配（`{ key:value }`）创建一个 criteria。如果指定的值是一个文档，那么字段的顺序和在文档中的完全相等就很重要。
+- `Criteria` lt `(Object o)` 使用 `$lt` 操作符创建一个 criteria。
+- `Criteria` lte `(Object o)` 使用 `$lte` 操作符创建一个 criteria。
+- `Criteria` mod `(Number value, Number remainder)` 使用 `$mod` 操作符创建一个 criteria。
+- `Criteria` ne `(Object o)` 使用 `$ne` 操作符创建一个 criteria。
+- `Criteria` nin `(Object… o)` 使用 `$nin` 操作符创建一个 criteria。
+- `Criteria` norOperator `(Criteria… criteria)` 使用 `$nor` 操作符对所有提供的 criteria 创建一个nor查询。
+- `Criteria` norOperator `(Collection<Criteria> criteria)` 使用 `$nor` 操作符对所有提供的 criteria 创建一个nor查询。
+- `Criteria` not `()` 使用 `$not` 元操作符创建一个criteria，该 criteria 会影响到后面直接的子句。
+- `Criteria` orOperator `(Criteria… criteria)` 使用 `$or` 操作符为所有提供的 criteria 创建一个 or 查询。
+- `Criteria` orOperator `(Collection<Criteria> criteria)` 使用 `$or` 操作符为所有提供的 criteria 创建一个 or 查询。
+- `Criteria` regex `(String re)` 使用 `$regex` 操作符创建一个 criteria。
+- `Criteria` sampleRate `(double sampleRate)` 使用 `$sampleRate` 操作符创建一个 criteria。
+- `Criteria` size `(int s)` 使用 `$size` 操作符创建一个 criteria。
+- `Criteria` type `(int t)` 使用 `$type` 操作符创建一个 criteria。
+- `Criteria` matchingDocumentStructure `(MongoJsonSchema schema)` 使用 `$jsonSchema` 操作符为 [JSON schema criteria](https://springdoc.cn/spring-data-mongodb/#mongo.jsonSchema) 创建一个 criteria。 `$jsonSchema` 只能应用于查询的顶层，而不是特定的属性。使用 schema 的 `properties` 属性来匹配嵌套字段。
+- `Criteria` bits() 是通往 [MongoDB bit 数查询操作符](https://docs.mongodb.com/manual/reference/operator/query-bitwise/)（如 `$bitsAllClear`）的 gateway。
 
 Criteria 类还为地理空间（geospatial）查询提供了以下方法（见 [地理空间查询](https://springdoc.cn/spring-data-mongodb/#mongo.geospatial)一节，可以看到它们的实际应用）。
 
-- `Criteria` **within** `(Circle circle)` 使用 `$geoWithin $center` 运算符创建一个地理空间 criteria。
-- `Criteria` **within** `(Box box)` 使用 `$geoWithin $box` 运算符创建一个地理空间 criteria。
-- `Criteria` **withinSphere** `(Circle circle)` 使用 `$geoWithin $center` 运算符创建一个地理空间 criteria。
-- `Criteria` **near** `(Point point)` 使用 `$near` 运算符创建一个地理空间 criteria。
-- `Criteria` **nearSphere** `(Point point)` 使用 `$nearSphere$center` 运算符创建一个地理空间criteria。这仅适用于MongoDB 1.7 及以上版本。
-- `Criteria` **minDistance** `(double minDistance)` 使用 `$minDistance` 运算符创建一个地理空间criteria，供 `$near` 使用。
-- `Criteria` **maxDistance** `(double maxDistance)` 使用 `$maxDistance` 运算符创建一个地理空间 criteria，供 `$near` 使用。
+- `Criteria` within `(Circle circle)` 使用 `$geoWithin $center` 运算符创建一个地理空间 criteria。
+- `Criteria` within `(Box box)` 使用 `$geoWithin $box` 运算符创建一个地理空间 criteria。
+- `Criteria` withinSphere `(Circle circle)` 使用 `$geoWithin $center` 运算符创建一个地理空间 criteria。
+- `Criteria` near `(Point point)` 使用 `$near` 运算符创建一个地理空间 criteria。
+- `Criteria` nearSphere `(Point point)` 使用 `$nearSphere$center` 运算符创建一个地理空间criteria。这仅适用于MongoDB 1.7 及以上版本。
+- `Criteria` minDistance `(double minDistance)` 使用 `$minDistance` 运算符创建一个地理空间criteria，供 `$near` 使用。
+- `Criteria` maxDistance `(double maxDistance)` 使用 `$maxDistance` 运算符创建一个地理空间 criteria，供 `$near` 使用。
 
 ##### Query 类的方法
 
 `Query` 类有一些额外的方法，为查询提供选项。
 
-- `Query` **addCriteria** `(Criteria criteria)` 用来为query添加额外的criteria。
-- `Field` **fields** `()` 用于定义要包含在query结果中的字段。
-- `Query` **limit** `(int limit)` 用于将返回结果的大小限制在所提供的限度内（用于分页）。
-- `Query` **skip** `(int skip)` 用来跳过结果中所提供的文档数量（用于分页）。
-- `Query` **with** `(Sort sort)` 用来为结果提供排序定义。
+- `Query` addCriteria `(Criteria criteria)` 用来为query添加额外的criteria。
+- `Field` fields `()` 用于定义要包含在query结果中的字段。
+- `Query` limit `(int limit)` 用于将返回结果的大小限制在所提供的限度内（用于分页）。
+- `Query` skip `(int skip)` 用来跳过结果中所提供的文档数量（用于分页）。
+- `Query` with `(Sort sort)` 用来为结果提供排序定义。
 
 ##### 选择字段
 
@@ -2848,11 +2850,11 @@ query.fields()
 
 这些查询方法需要指定返回的目标类型 `T`，而且它们被重载了，有一个明确的集合名称，用于查询应该操作的集合，而不是返回类型所指示的那个。下面的查询方法让你找到一个或多个文档。
 
-- **findAll**: 从集合中查询类型为 `T` 的对象列表。
-- **findOne**: 将集合上的临时查询结果映射到一个指定类型的对象的单个实例。
-- **findById**: 返回一个具有给定ID和目标类的对象。
-- **find**: 将集合上的临时查询结果映射到指定类型的 `List`。
-- **findAndRemove**:将集合上的临时查询结果映射到一个指定类型的对象的单个实例。匹配查询的第一个文档被返回并从数据库中的集合中删除。
+- findAll: 从集合中查询类型为 `T` 的对象列表。
+- findOne: 将集合上的临时查询结果映射到一个指定类型的对象的单个实例。
+- findById: 返回一个具有给定ID和目标类的对象。
+- find: 将集合上的临时查询结果映射到指定类型的 `List`。
+- findAndRemove:将集合上的临时查询结果映射到一个指定类型的对象的单个实例。匹配查询的第一个文档被返回并从数据库中的集合中删除。
 
 #### 10.6.3. 查询不同（Distinct ）的值
 
@@ -2986,7 +2988,7 @@ List<Venue> venues =
 
 ##### 地域附近查询
 
-|      | **在 2.2 中有所改变!** [MongoDB 4.2](https://docs.mongodb.com/master/release-notes/4.2-compatibility/) 删除了对 `geoNear` 命令的支持，该命令之前被用于运行 `NearQuery`。Spring Data MongoDB 2.2 `MongoOperations#geoNear` 使用 `$geoNear` [聚合](https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/) 而不是 `geoNear` 命令来运行 `NearQuery`。以前在包装类型中返回的计算距离（使用 `geoNear` 命令时的 `dis`）现在被嵌入到结果文档中。如果给定的 domain 类型已经包含了一个具有该名称的属性，那么计算出的距离将被命名为带有潜在随机后缀的 `calculated-distance`。目标类型可以包含一个以返回的距离命名的属性，以（另外）直接读回 domain 类型中，如下图所示。`GeoResults<VenueWithDisField> = template.query(Venue.class)     .as(VenueWithDisField.class)                                .near(NearQuery.near(new GeoJsonPoint(-73.99, 40.73), KILOMETERS))    .all(); `用于识别目标集合和潜在查询映射的domain类型。目标类型包含一个 `Number` 类型的 `dis` 字段。 |
+|      | 在 2.2 中有所改变! [MongoDB 4.2](https://docs.mongodb.com/master/release-notes/4.2-compatibility/) 删除了对 `geoNear` 命令的支持，该命令之前被用于运行 `NearQuery`。Spring Data MongoDB 2.2 `MongoOperations#geoNear` 使用 `$geoNear` [聚合](https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/) 而不是 `geoNear` 命令来运行 `NearQuery`。以前在包装类型中返回的计算距离（使用 `geoNear` 命令时的 `dis`）现在被嵌入到结果文档中。如果给定的 domain 类型已经包含了一个具有该名称的属性，那么计算出的距离将被命名为带有潜在随机后缀的 `calculated-distance`。目标类型可以包含一个以返回的距离命名的属性，以（另外）直接读回 domain 类型中，如下图所示。`GeoResults<VenueWithDisField> = template.query(Venue.class)     .as(VenueWithDisField.class)                                .near(NearQuery.near(new GeoJsonPoint(-73.99, 40.73), KILOMETERS))    .all(); `用于识别目标集合和潜在查询映射的domain类型。目标类型包含一个 `Number` 类型的 `dis` 字段。 |
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
@@ -3016,18 +3018,18 @@ public class Store {
 
 	String id;
 
-	/**
-	 * location is stored in GeoJSON format.
-	 * {
-	 *   "type" : "Point",
-	 *   "coordinates" : [ x, y ]
-	 * }
-	 */
+	/
+	  location is stored in GeoJSON format.
+	  {
+	    "type" : "Point",
+	    "coordinates" : [ x, y ]
+	  }
+	 /
 	GeoJsonPoint location;
 }
 ```
 
-|      | 如果一个 `GeoJSON` 对象的坐标（`coordinates`）代表经度和纬度对，则首先是经度（*latitude*），然后是纬度（*longitude*）。 因此，`GeoJsonPoint` 将 `getX()` 视为经度，将 `getY()` 视为纬度。 |
+|      | 如果一个 `GeoJSON` 对象的坐标（`coordinates`）代表经度和纬度对，则首先是经度（latitude），然后是纬度（longitude）。 因此，`GeoJsonPoint` 将 `getX()` 视为经度，将 `getY()` 视为纬度。 |
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
@@ -3042,25 +3044,25 @@ public interface StoreRepository extends CrudRepository<Store, String> {
 
 }
 
-/*
- * {
- *   "location": {
- *     "$geoWithin": {
- *       "$geometry": {
- *         "type": "Polygon",
- *         "coordinates": [
- *           [
- *             [-73.992514,40.758934],
- *             [-73.961138,40.760348],
- *             [-73.991658,40.730006],
- *             [-73.992514,40.758934]
- *           ]
- *         ]
- *       }
- *     }
- *   }
- * }
- */
+/
+  {
+    "location": {
+      "$geoWithin": {
+        "$geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [-73.992514,40.758934],
+              [-73.961138,40.760348],
+              [-73.991658,40.730006],
+              [-73.992514,40.758934]
+            ]
+          ]
+        }
+      }
+    }
+  }
+ /
 repo.findByLocationWithin(                              
   new GeoJsonPolygon(
     new Point(-73.992514, 40.758934),
@@ -3068,15 +3070,15 @@ repo.findByLocationWithin(
     new Point(-73.991658, 40.730006),
     new Point(-73.992514, 40.758934)));                 
 
-/*
- * {
- *   "location" : {
- *     "$geoWithin" : {
- *        "$polygon" : [ [-73.992514,40.758934] , [-73.961138,40.760348] , [-73.991658,40.730006] ]
- *     }
- *   }
- * }
- */
+/
+  {
+    "location" : {
+      "$geoWithin" : {
+         "$polygon" : [ [-73.992514,40.758934] , [-73.961138,40.760348] , [-73.991658,40.730006] ]
+      }
+    }
+  }
+ /
 repo.findByLocationWithin(                              
   new Polygon(
     new Point(-73.992514, 40.758934),
@@ -3113,7 +3115,7 @@ NearQuery.near(new GeoJsonPoint(-73.99171, 40.738868))
 
 虽然在语法上不同，但无论集合中的目标文档使用什么格式，服务器都能接受这两种格式。
 
-|      | 在距离计算方面有很大的不同。使用传统格式的操作 在一个类似于地球的球体上操作 *Radians*，而GeoJSON格式则使用 *Meters*。 |
+|      | 在距离计算方面有很大的不同。使用传统格式的操作 在一个类似于地球的球体上操作 Radians，而GeoJSON格式则使用 Meters。 |
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
@@ -3191,12 +3193,12 @@ Example 72. 使用GeoJSON的GeoNear
 }
 ```
 
-|      | 与中心点的最大距离，单位：米 (*Meters*)。 |
-| ---- | ----------------------------------------- |
-|      | GeoJSON总是在一个球体上操作。             |
-|      | 与中心点的距离，单位是米(*Meters*)。      |
+|      | 与中心点的最大距离，单位：米 (Meters)。 |
+| ---- | --------------------------------------- |
+|      | GeoJSON总是在一个球体上操作。           |
+|      | 与中心点的距离，单位是米(Meters)。      |
 
-现在，当使用传统的坐标对时，就像之前讨论的那样，在 *Radians* 上操作。所以我们在构建 `$geoNear` 命令时使用 `Metrics#KILOMETERS`。`Metric` 确保距离乘数被正确设置。
+现在，当使用传统的坐标对时，就像之前讨论的那样，在 Radians 上操作。所以我们在构建 `$geoNear` 命令时使用 `Metrics#KILOMETERS`。`Metric` 确保距离乘数被正确设置。
 
 Example 73. 带有传统坐标对的GeoNear
 
@@ -3237,11 +3239,11 @@ Example 73. 带有传统坐标对的GeoNear
 }
 ```
 
-|      | 与中心点的最大距离，单位：弧度(*Radians*)。                  |
+|      | 与中心点的最大距离，单位：弧度(Radians)。                    |
 | ---- | ------------------------------------------------------------ |
-|      | 距离的乘数，所以我们得到公里(*Kilometers*)作为结果距离。     |
+|      | 距离的乘数，所以我们得到公里(Kilometers)作为结果距离。       |
 |      | 确保我们对 2d_sphere 索引进行操作。                          |
-|      | 与中心点的距离，以公里(*Kilometers*)为单位—取其1000倍以匹配GeoJSON变量的米(*Meters*)数。 |
+|      | 与中心点的距离，以公里(Kilometers)为单位—取其1000倍以匹配GeoJSON变量的米(Meters)数。 |
 
 ##### GeoJSON Jackson 模块
 
@@ -3324,11 +3326,11 @@ TextQuery.queryText(new TextCriteria().matching("coffee").matching("-cake"));
 TextQuery.queryText(new TextCriteria().matching("coffee").notMatching("cake"));
 ```
 
-`TextCriteria.matching` 将提供的术语作为原样。因此，你可以通过把短语放在双引号之间（例如，`\"coffee cake\"`)）或使用 `TextCriteria.phrase` 来定义短语。下面的例子显示了定义短语的两种方式。
+`TextCriteria.matching` 将提供的术语作为原样。因此，你可以通过把短语放在双引号之间（例如，`"coffee cake"`)）或使用 `TextCriteria.phrase` 来定义短语。下面的例子显示了定义短语的两种方式。
 
 ```java
 // search for phrase 'coffee cake'
-TextQuery.queryText(new TextCriteria().matching("\"coffee cake\""));
+TextQuery.queryText(new TextCriteria().matching(""coffee cake""));
 TextQuery.queryText(new TextCriteria().phrase("coffee cake"));
 ```
 
@@ -3732,7 +3734,7 @@ MongoJsonSchema schema = MongoJsonSchema.builder()
     .properties(
         encrypted(string("ssn"))
             .algorithm("AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic")
-            .keyId("*key0_id")
+            .keyId("key0_id")
 	).build();
 ```
 
@@ -4096,20 +4098,20 @@ public class PersonService {
 
 Spring Data MongoDB 提供对以下匹配选项的支持。
 
-| Matching                    | Logical result                                              |
-| :-------------------------- | :---------------------------------------------------------- |
-| `DEFAULT` (区分大小写)      | `{"firstname" : firstname}`                                 |
-| `DEFAULT` (不区分大小写)    | `{"firstname" : { $regex: firstname, $options: 'i'}}`       |
-| `EXACT` (区分大小写)        | `{"firstname" : { $regex: /^firstname$/}}`                  |
-| `EXACT` (不区分大小写)      | `{"firstname" : { $regex: /^firstname$/, $options: 'i'}}`   |
-| `STARTING` (区分大小写)     | `{"firstname" : { $regex: /^firstname/}}`                   |
-| `STARTING` (不区分大小写)   | `{"firstname" : { $regex: /^firstname/, $options: 'i'}}`    |
-| `ENDING` (区分大小写)       | `{"firstname" : { $regex: /firstname$/}}`                   |
-| `ENDING` (不区分大小写)     | `{"firstname" : { $regex: /firstname$/, $options: 'i'}}`    |
-| `CONTAINING` (区分大小写)   | `{"firstname" : { $regex: /.*firstname.*/}}`                |
-| `CONTAINING` (不区分大小写) | `{"firstname" : { $regex: /.*firstname.*/, $options: 'i'}}` |
-| `REGEX` (区分大小写)        | `{"firstname" : { $regex: /firstname/}}`                    |
-| `REGEX` (不区分大小写)      | `{"firstname" : { $regex: /firstname/, $options: 'i'}}`     |
+| Matching                    | Logical result                                            |
+| :-------------------------- | :-------------------------------------------------------- |
+| `DEFAULT` (区分大小写)      | `{"firstname" : firstname}`                               |
+| `DEFAULT` (不区分大小写)    | `{"firstname" : { $regex: firstname, $options: 'i'}}`     |
+| `EXACT` (区分大小写)        | `{"firstname" : { $regex: /^firstname$/}}`                |
+| `EXACT` (不区分大小写)      | `{"firstname" : { $regex: /^firstname$/, $options: 'i'}}` |
+| `STARTING` (区分大小写)     | `{"firstname" : { $regex: /^firstname/}}`                 |
+| `STARTING` (不区分大小写)   | `{"firstname" : { $regex: /^firstname/, $options: 'i'}}`  |
+| `ENDING` (区分大小写)       | `{"firstname" : { $regex: /firstname$/}}`                 |
+| `ENDING` (不区分大小写)     | `{"firstname" : { $regex: /firstname$/, $options: 'i'}}`  |
+| `CONTAINING` (区分大小写)   | `{"firstname" : { $regex: /.firstname./}}`                |
+| `CONTAINING` (不区分大小写) | `{"firstname" : { $regex: /.firstname./, $options: 'i'}}` |
+| `REGEX` (区分大小写)        | `{"firstname" : { $regex: /firstname/}}`                  |
+| `REGEX` (不区分大小写)      | `{"firstname" : { $regex: /firstname/, $options: 'i'}}`   |
 
 #### 10.7.6. Untyped Example
 
@@ -4143,7 +4145,7 @@ List<Person> result = template.find(query, Person.class);
 
 从Spring Data MongoDB 3.x开始，任何 `count` 操作都会通过MongoDB的 `countDocuments` 使用基于聚合的 `count` 方法，而不考虑过滤条件的存在。如果应用程序对基于集合统计的工作限制没有意见，`MongoOperations.estimatedCount()` 提供了一个替代方案。
 
-|      | 通过将 `MongoTemplate#useEstimatedCount(…)` 设置为 `true`，*MongoTemplate#count(…)* 操作，即使用空的过滤器查询，将被委托给 `estimatedCount`，只要没有事务活动和template没有绑定到 [session](https://springdoc.cn/spring-data-mongodb/#mongo.sessions)。仍然可以通过 `MongoTemplate#exactCount` 获得精确的数字，但可能会加快事情的进展。 |
+|      | 通过将 `MongoTemplate#useEstimatedCount(…)` 设置为 `true`，MongoTemplate#count(…) 操作，即使用空的过滤器查询，将被委托给 `estimatedCount`，只要没有事务活动和template没有绑定到 [session](https://springdoc.cn/spring-data-mongodb/#mongo.sessions)。仍然可以通过 `MongoTemplate#exactCount` 获得精确的数字，但可能会加快事情的进展。 |
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
@@ -4159,7 +4161,7 @@ Spring通过在 `MongoOperations` 上提供方法来简化Map-Reduce操作的创
 
 #### 10.9.1. 使用示例
 
-为了了解如何进行Map-Reduce操作，我们使用 *MongoDB - The Definitive Guide* [[1](https://springdoc.cn/spring-data-mongodb/#_footnotedef_1)] 一书中的一个例子。在这个例子中，我们创建了三个文档，其值分别为 [a,b]、[b,c] 和 [c,d]。每个文档中的值都与key "x" 相关，如下例所示（假设这些文档都在一个名为 `jmr1` 的集合中）。
+为了了解如何进行Map-Reduce操作，我们使用 MongoDB - The Definitive Guide [[1](https://springdoc.cn/spring-data-mongodb/#_footnotedef_1)] 一书中的一个例子。在这个例子中，我们创建了三个文档，其值分别为 [a,b]、[b,c] 和 [c,d]。每个文档中的值都与key "x" 相关，如下例所示（假设这些文档都在一个名为 `jmr1` 的集合中）。
 
 ```
 { "_id" : ObjectId("4e5ff893c0277826074ec533"), "x" : [ "a", "b" ] }
@@ -4447,10 +4449,10 @@ MongoDB聚合框架提供以下类型的聚合操作。
 | Pipeline 聚合操作。          | `bucket`, `bucketAuto`, `count`, `facet`, `geoNear`, `graphLookup`, `group`, `limit`, `lookup`, `match`, `project`, `rand`, `replaceRoot`, `skip`, `sort`, `unwind` |
 | ---------------------------- | ------------------------------------------------------------ |
 | Set 聚合操作。               | `setEquals`, `setIntersection`, `setUnion`, `setDifference`, `setIsSubset`, `anyElementTrue`, `allElementsTrue` |
-| Group/Accumulator 聚合操作。 | `addToSet`, `bottom`, `bottomN`, `covariancePop`, `covarianceSamp`, `expMovingAvg`, `first`, `firstN`, `last`, `lastN` `max`, `maxN`, `min`, `minN`, `avg`, `push`, `sum`, `top`, `topN`, `count` (*), `stdDevPop`, `stdDevSamp` |
-| Arithmetic 聚合操作。        | `abs`, `acos`, `acosh`, `add` (* via `plus`), `asin`, `asin`, `atan`, `atan2`, `atanh`, `ceil`, `cos`, `cosh`, `derivative`, `divide`, `exp`, `floor`, `integral`, `ln`, `log`, `log10`, `mod`, `multiply`, `pow`, `round`, `sqrt`, `subtract` (* via `minus`), `sin`, `sinh`, `tan`, `tanh`, `trunc` |
+| Group/Accumulator 聚合操作。 | `addToSet`, `bottom`, `bottomN`, `covariancePop`, `covarianceSamp`, `expMovingAvg`, `first`, `firstN`, `last`, `lastN` `max`, `maxN`, `min`, `minN`, `avg`, `push`, `sum`, `top`, `topN`, `count` (), `stdDevPop`, `stdDevSamp` |
+| Arithmetic 聚合操作。        | `abs`, `acos`, `acosh`, `add` ( via `plus`), `asin`, `asin`, `atan`, `atan2`, `atanh`, `ceil`, `cos`, `cosh`, `derivative`, `divide`, `exp`, `floor`, `integral`, `ln`, `log`, `log10`, `mod`, `multiply`, `pow`, `round`, `sqrt`, `subtract` ( via `minus`), `sin`, `sinh`, `tan`, `tanh`, `trunc` |
 | String 聚合操作。            | `concat`, `substr`, `toLower`, `toUpper`, `strcasecmp`, `indexOfBytes`, `indexOfCP`, `regexFind`, `regexFindAll`, `regexMatch`, `replaceAll`, `replaceOne`, `split`, `strLenBytes`, `strLenCP`, `substrCP`, `trim`, `ltrim`, `rtim` |
-| Comparison 聚合操作。        | `eq` (* via `is`), `gt`, `gte`, `lt`, `lte`, `ne`            |
+| Comparison 聚合操作。        | `eq` ( via `is`), `gt`, `gte`, `lt`, `lte`, `ne`             |
 | Array 聚合操作。             | `arrayElementAt`, `arrayToObject`, `concatArrays`, `filter`, `first`, `in`, `indexOfArray`, `isArray`, `last`, `range`, `reverseArray`, `reduce`, `size`, `sortArray`, `slice`, `zip` |
 | Literal Operators            | `literal`                                                    |
 | Date 聚合操作。              | `dateSubstract`, `dateTrunc`, `dayOfYear`, `dayOfMonth`, `dayOfWeek`, `year`, `month`, `week`, `hour`, `minute`, `second`, `millisecond`, `dateAdd`, `dateDiff`, `dateToString`, `dateFromString`, `dateFromParts`, `dateToParts`, `isoDayOfWeek`, `isoWeek`, `isoWeekYear`, `tsIncrement`, `tsSecond` |
@@ -4461,7 +4463,7 @@ MongoDB聚合框架提供以下类型的聚合操作。
 | Object 聚合操作。            | `objectToArray`, `mergeObjects`, `getField`, `setField`      |
 | Script 聚合操作。            | `function`, `accumulator`                                    |
 
-\* 该操作是由Spring Data MongoDB映射或添加的。
+ 该操作是由Spring Data MongoDB映射或添加的。
 
 请注意，Spring Data MongoDB目前不支持这里未列出的聚合操作。Comparison 聚合操作。是以 `Criteria` 表达式来表示的。
 
@@ -4627,7 +4629,7 @@ sortByCount("country");
 | a ⇐ b           | { $lte : [$a, $b] }      |
 | a + b           | { $add : [$a, $b] }      |
 | a - b           | { $subtract : [$a, $b] } |
-| a * b           | { $multiply : [$a, $b] } |
+| a  b            | { $multiply : [$a, $b] } |
 | a / b           | { $divide : [$a, $b] }   |
 | a^b             | { $pow : [$a, $b] }      |
 | a % b           | { $mod : [$a, $b] }      |
@@ -4750,7 +4752,7 @@ class StateStats {
 TypedAggregation<ZipInfo> agg = newAggregation(ZipInfo.class,
     group("state").sum("population").as("totalPop"),
     sort(ASC, previousOperation(), "totalPop"),
-    match(where("totalPop").gte(10 * 1000 * 1000))
+    match(where("totalPop").gte(10  1000  1000))
 );
 
 AggregationResults<StateStats> result = mongoTemplate.aggregate(agg, StateStats.class);
@@ -4807,9 +4809,9 @@ TypedAggregation<Product> agg = newAggregation(Product.class,
         .andExpression("netPrice + 1").as("netPricePlus1")
         .andExpression("netPrice - 1").as("netPriceMinus1")
         .andExpression("netPrice / 2").as("netPriceDiv2")
-        .andExpression("netPrice * 1.19").as("grossPrice")
+        .andExpression("netPrice  1.19").as("grossPrice")
         .andExpression("spaceUnits % 2").as("spaceUnitsMod2")
-        .andExpression("(netPrice * 0.8  + 1.2) * 1.19").as("grossPriceIncludingDiscountAndCharge")
+        .andExpression("(netPrice  0.8  + 1.2)  1.19").as("grossPriceIncludingDiscountAndCharge")
 
 );
 
@@ -4834,7 +4836,7 @@ double shippingCosts = 1.2;
 
 TypedAggregation<Product> agg = newAggregation(Product.class,
     project("name", "netPrice")
-        .andExpression("(netPrice * (1-discountRate)  + [0]) * (1+taxRate)", shippingCosts).as("salesPrice")
+        .andExpression("(netPrice  (1-discountRate)  + [0])  (1+taxRate)", shippingCosts).as("salesPrice")
 );
 
 AggregationResults<Document> result = mongoTemplate.aggregate(agg, Document.class);
@@ -4969,11 +4971,11 @@ if (!mongoTemplate.getCollectionNames().contains("MyNewCollection")) {
 mongoTemplate.dropCollection("MyNewCollection");
 ```
 
-- **getCollectionNames**: 返回一组 collection 的名称。
-- **collectionExists**: 检查是否存在一个具有给定名称的collection 。
-- **createCollection**: 创建一个无上限的collection。
-- **dropCollection**: 删除collection.
-- **getCollection**: 通过名字获取一个collection，如果它不存在，则创建它。
+- getCollectionNames: 返回一组 collection 的名称。
+- collectionExists: 检查是否存在一个具有给定名称的collection 。
+- createCollection: 创建一个无上限的collection。
+- dropCollection: 删除collection.
+- getCollection: 通过名字获取一个collection，如果它不存在，则创建它。
 
 |      | Collection 创建允许使用 `CollectionOptions` 进行定制，并支持 [collation](https://springdoc.cn/spring-data-mongodb/#mongo.collation).。 |
 | ---- | ------------------------------------------------------------ |
@@ -4985,9 +4987,9 @@ mongoTemplate.dropCollection("MyNewCollection");
 
 #### 10.14.1. 运行命令的方法
 
-- `Document` **executeCommand** `(Document command)`: 运行一个MongoDB命令。
-- `Document` **executeCommand** `(Document command, ReadPreference readPreference)`: 用给定的可忽略的MongoDB `ReadPreference` 运行一个MongoDB命令。
-- `Document` **executeCommand** `(String jsonCommand)`: 运行一个以JSON字符串表示的MongoDB命令。
+- `Document` executeCommand `(Document command)`: 运行一个MongoDB命令。
+- `Document` executeCommand `(Document command, ReadPreference readPreference)`: 用给定的可忽略的MongoDB `ReadPreference` 运行一个MongoDB命令。
+- `Document` executeCommand `(String jsonCommand)`: 运行一个以JSON字符串表示的MongoDB命令。
 
 ### 10.15. 生命周期事件
 
@@ -5043,7 +5045,7 @@ Spring Data基础设施提供了钩子（hooks），用于在某些方法被调�
 
 实体回调通常按API类型分开。这种分离意味着同步API只考虑同步的实体回调，而响应式实现只考虑响应式实体回调。
 
-|      | 实体回调API是由Spring Data Commons 2.2引入的。它是应用实体修改的推荐方式。在调用可能注册的 `EntityCallback` 实例 **之前**，现有的 store 特定的 `ApplicationEvents` 仍然被发布。 |
+|      | 实体回调API是由Spring Data Commons 2.2引入的。它是应用实体修改的推荐方式。在调用可能注册的 `EntityCallback` 实例 之前，现有的 store 特定的 `ApplicationEvents` 仍然被发布。 |
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
@@ -5057,12 +5059,12 @@ Example 106. Anatomy of an `EntityCallback`
 @FunctionalInterface
 public interface BeforeSaveCallback<T> extends EntityCallback<T> {
 
-	/**
-	 * Entity callback method invoked before a domain object is saved.
-	 * Can return either the same or a modified instance.
-	 *
-	 * @return the domain object to be persisted.
-	 */
+	/
+	  Entity callback method invoked before a domain object is saved.
+	  Can return either the same or a modified instance.
+	 
+	  @return the domain object to be persisted.
+	 /
 	T onBeforeSave(T entity <2>, String collection <3>); 
 }
 ```
@@ -5078,12 +5080,12 @@ Example 107. Anatomy of a reactive `EntityCallback`
 @FunctionalInterface
 public interface ReactiveBeforeSaveCallback<T> extends EntityCallback<T> {
 
-	/**
-	 * Entity callback method invoked on subscription, before a domain object is saved.
-	 * The returned Publisher can emit either the same or a modified instance.
-	 *
-	 * @return Publisher emitting the domain object to be persisted.
-	 */
+	/
+	  Entity callback method invoked on subscription, before a domain object is saved.
+	  The returned Publisher can emit either the same or a modified instance.
+	 
+	  @return Publisher emitting the domain object to be persisted.
+	 /
 	Publisher<T> onBeforeSave(T entity <2>, String collection <3>); 
 }
 ```
@@ -5216,11 +5218,11 @@ Spring框架为各种各样的数据库和映射技术提供了异常转换。�
 
 下面的列表描述了 execute 回调方法。
 
-- `<T> T` **execute** `(Class<?> entityClass, CollectionCallback<T> action)`: 为指定类别的实体 collection 运行给定的 `CollectionCallback`。
-- `<T> T` **execute** `(String collectionName, CollectionCallback<T> action)`: 在给定名称的 collection 上运行给定的 `CollectionCallback`。
-- `<T> T` **execute** `(DbCallback<T> action)`: 运行一个 `DbCallback`，必要时翻译任何异常。Spring Data MongoDB为2.2版本中引入MongoDB的聚合框架提供支持。
-- `<T> T` **execute** `(String collectionName, DbCallback<T> action)`: 在给定名称的集合上运行一个 `DbCallback`，必要时翻译任何异常。
-- `<T> T` **executeInSession** `(DbCallback<T> action)`: 在与数据库的同一连接中运行给定的 `DbCallback`，以确保在一个“多写”的环境中的一致性，你可能会读取你写的数据。
+- `<T> T` execute `(Class<?> entityClass, CollectionCallback<T> action)`: 为指定类别的实体 collection 运行给定的 `CollectionCallback`。
+- `<T> T` execute `(String collectionName, CollectionCallback<T> action)`: 在给定名称的 collection 上运行给定的 `CollectionCallback`。
+- `<T> T` execute `(DbCallback<T> action)`: 运行一个 `DbCallback`，必要时翻译任何异常。Spring Data MongoDB为2.2版本中引入MongoDB的聚合框架提供支持。
+- `<T> T` execute `(String collectionName, DbCallback<T> action)`: 在给定名称的集合上运行一个 `DbCallback`，必要时翻译任何异常。
+- `<T> T` executeInSession `(DbCallback<T> action)`: 在与数据库的同一连接中运行给定的 `DbCallback`，以确保在一个“多写”的环境中的一致性，你可能会读取你写的数据。
 
 下面的例子使用 `CollectionCallback` 来返回关于一个索引的信息。
 
@@ -5315,7 +5317,7 @@ class GridFsClient {
 
   @Test
   public void readFilesFromGridFs() {
-    GridFsResources[] txtFiles = operations.getResources("*.txt");
+    GridFsResources[] txtFiles = operations.getResources(".txt");
   }
 }
 ```
@@ -5534,7 +5536,7 @@ public class Measurement {
 template.createCollection(Measurement.class);
 ```
 
-上面的片段可以很容易地转移到提供同样方法的响应式API。请确保正确 *subscribe* 返回的发布者（publisher）。
+上面的片段可以很容易地转移到提供同样方法的响应式API。请确保正确 subscribe 返回的发布者（publisher）。
 
 ### 10.23. 可观察性（Observability）
 
@@ -5554,7 +5556,7 @@ Spring Data MongoDB目前拥有最新的代码，以支持MongoDB应用程序中
    }
    ```
 
-2. 你的项目必须包括 **Spring Boot Actuator**。
+2. 你的项目必须包括 Spring Boot Actuator。
 
 3. 禁用Spring Boot自动配置的MongoDB命令监听器，并通过在 `application.properties` 中添加以下属性，手动启用跟踪。
 
@@ -5678,7 +5680,7 @@ template.withSession(session)
 
 从版本4开始，MongoDB支持 [事务](https://www.mongodb.com/transactions)。事务是建立在 [会话](https://springdoc.cn/spring-data-mongodb/#mongo.sessions)之上的，因此，需要一个活跃的 `ClientSession`。
 
-|      | 除非你在你的应用程序上下文中指定一个 `MongoTransactionManager`，否则事务支持是 **DISABLED**（禁用的）。你可以使用 `setSessionSynchronization(ALWAYS)` 来参与正在进行的非本地 MongoDB 事务。 |
+|      | 除非你在你的应用程序上下文中指定一个 `MongoTransactionManager`，否则事务支持是 DISABLED（禁用的）。你可以使用 `setSessionSynchronization(ALWAYS)` 来参与正在进行的非本地 MongoDB 事务。 |
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
@@ -5802,7 +5804,7 @@ public class StateService {
 
 与支持响应式 `ClientSession` 一样，`ReactiveMongoTemplate` 提供了专门的方法，用于在事务中进行操作，而不必担心根据操作结果提交或停止操作。
 
-|      | 除非你在你的 application context 中指定一个 `ReactiveMongoTransactionManager`，否则事务支持是 **DISABLED**（禁用的）。你可以使用 `setSessionSynchronization(ALWAYS)` 来参与正在进行的非本地MongoDB事务。 |
+|      | 除非你在你的 application context 中指定一个 `ReactiveMongoTransactionManager`，否则事务支持是 DISABLED（禁用的）。你可以使用 `setSessionSynchronization(ALWAYS)` 来参与正在进行的非本地MongoDB事务。 |
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
@@ -5909,7 +5911,7 @@ public class StateService {
 
 在事务内部，MongoDB服务器有一个稍微不同的行为。
 
-**Connection Settings**
+Connection Settings
 
 MongoDB驱动提供了一个专门的副本集名称配置选项，使驱动进入自动检测模式。这个选项有助于识别主要的副本集节点和事务中的命令路由。
 
@@ -5917,17 +5919,17 @@ MongoDB驱动提供了一个专门的副本集名称配置选项，使驱动进�
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-**Collection Operations**
+Collection Operations
 
 MongoDB不支持集合操作，例如在事务中创建集合。这也会影响到第一次使用时发生的即时集合创建。因此，请确保所有需要的结构都已到位。
 
-**Transient Errors**
+Transient Errors
 
 MongoDB可以为在事务性操作中出现的错误添加特殊标签。这些标签可能表示暂时性的故障，这些故障可能通过重试操作而消失。我们强烈推荐 [Spring Retry](https://github.com/spring-projects/spring-retry) 用于这些目的。然而，我们可以覆写 `MongoTransactionManager#doCommit(MongoTransactionObject)`，以实现MongoDB参考手册中所述的重试提交操作行为。
 
-**Count**
+Count
 
-MongoDB的 `count` 操作是基于集合统计的，可能无法反映事务中的实际情况。当在一个多文档事务中发出 `count` 命令时，服务器会响应 *error 50851*。一旦 `MongoTemplate` 检测到一个活动的事务，所有暴露的 `count()` 方法都会被转换，并使用 `$match` 和 `$count` 操作符委托给聚合框架，保留 `Query` 设置，如 `collation`。
+MongoDB的 `count` 操作是基于集合统计的，可能无法反映事务中的实际情况。当在一个多文档事务中发出 `count` 命令时，服务器会响应 error 50851。一旦 `MongoTemplate` 检测到一个活动的事务，所有暴露的 `count()` 方法都会被转换，并使用 `$match` 和 `$count` 操作符委托给聚合框架，保留 `Query` 设置，如 `collation`。
 
 在 aggregation count helper 中使用 geo 命令时，有一些限制。以下运算符不能使用，必须用不同的运算符代替。
 
@@ -6112,9 +6114,9 @@ Example 130. 使用基于Java的bean元数据注册一个 `com.mongodb.reactives
 @Configuration
 public class AppConfig {
 
-  /*
-   * Use the Reactive Streams Mongo Client API to create a com.mongodb.reactivestreams.client.MongoClient instance.
-   */
+  /
+    Use the Reactive Streams Mongo Client API to create a com.mongodb.reactivestreams.client.MongoClient instance.
+   /
    public @Bean MongoClient reactiveMongoClient()  {
        return MongoClients.create("mongodb://localhost");
    }
@@ -6133,9 +6135,9 @@ Example 131. 使用Spring的 `MongoClientFactoryBean` 注册 `com.mongodb.reacti
 @Configuration
 public class AppConfig {
 
-    /*
-     * Factory bean that creates the com.mongodb.reactivestreams.client.MongoClient instance
-     */
+    /
+      Factory bean that creates the com.mongodb.reactivestreams.client.MongoClient instance
+     /
      public @Bean ReactiveMongoClientFactoryBean mongoClient() {
 
           ReactiveMongoClientFactoryBean clientFactory = new ReactiveMongoClientFactoryBean();
@@ -6155,28 +6157,28 @@ public class AppConfig {
 ```java
 public interface ReactiveMongoDatabaseFactory {
 
-  /**
-   * Creates a default {@link MongoDatabase} instance.
-   *
-   * @return
-   * @throws DataAccessException
-   */
+  /
+    Creates a default {@link MongoDatabase} instance.
+   
+    @return
+    @throws DataAccessException
+   /
   MongoDatabase getMongoDatabase() throws DataAccessException;
 
-  /**
-   * Creates a {@link MongoDatabase} instance to access the database with the given name.
-   *
-   * @param dbName must not be {@literal null} or empty.
-   * @return
-   * @throws DataAccessException
-   */
+  /
+    Creates a {@link MongoDatabase} instance to access the database with the given name.
+   
+    @param dbName must not be {@literal null} or empty.
+    @return
+    @throws DataAccessException
+   /
   MongoDatabase getMongoDatabase(String dbName) throws DataAccessException;
 
-  /**
-   * Exposes a shared {@link MongoExceptionTranslator}.
-   *
-   * @return will never be {@literal null}.
-   */
+  /
+    Exposes a shared {@link MongoExceptionTranslator}.
+   
+    @return will never be {@literal null}.
+   /
   PersistenceExceptionTranslator getExceptionTranslator();
 }
 ```
@@ -6407,9 +6409,9 @@ public class ReactiveMongoApp {
 
 这里有一个 `execute` 回调方法的列表。
 
-- `<T> Flux<T>` **execute** `(Class<?> entityClass, ReactiveCollectionCallback<T> action)`: 为指定类别的实体集合运行给定的 `ReactiveCollectionCallback`。
-- `<T> Flux<T>` **execute** `(String collectionName, ReactiveCollectionCallback<T> action)`: 在给定名称的集合上运行给定的 `ReactiveCollectionCallback`。
-- `<T> Flux<T>` **execute** `(ReactiveDatabaseCallback<T> action)`: 运行一个 `ReactiveDatabaseCallback`，必要时翻译任何异常。
+- `<T> Flux<T>` execute `(Class<?> entityClass, ReactiveCollectionCallback<T> action)`: 为指定类别的实体集合运行给定的 `ReactiveCollectionCallback`。
+- `<T> Flux<T>` execute `(String collectionName, ReactiveCollectionCallback<T> action)`: 在给定名称的集合上运行给定的 `ReactiveCollectionCallback`。
+- `<T> Flux<T>` execute `(ReactiveDatabaseCallback<T> action)`: 运行一个 `ReactiveDatabaseCallback`，必要时翻译任何异常。
 
 下面的例子使用 `ReactiveCollectionCallback` 来返回关于一个索引的信息。
 
@@ -6500,7 +6502,7 @@ class ReactiveGridFsClient {
 
   @Test
   public void readFilesFromGridFs() {
-     Flux<ReactiveGridFsResource> txtFiles = operations.getResources("*.txt");
+     Flux<ReactiveGridFsResource> txtFiles = operations.getResources(".txt");
   }
 }
 ```
@@ -6551,7 +6553,7 @@ XML
 
 ```java
 @Configuration
-@EnableMongoRepositories("com.acme.*.repositories")
+@EnableMongoRepositories("com.acme..repositories")
 class ApplicationConfig extends AbstractMongoClientConfiguration {
 
   @Override
@@ -6561,7 +6563,7 @@ class ApplicationConfig extends AbstractMongoClientConfiguration {
 
   @Override
   protected String getMappingBasePackage() {
-    return "com.acme.*.repositories";
+    return "com.acme..repositories";
   }
 }
 ```
@@ -7990,12 +7992,12 @@ class Person {
 
 #### 17.1.3. 一般建议
 
-- *尽量坚持使用不可变的对象* --不可变的对象创建起来很简单，因为具体化一个对象只需要调用其构造函数即可。同时，这也避免了你的domain对象充满了允许客户端代码操纵对象状态的 setter 方法。如果你需要这些，最好使它们受到 `package` 的保护，这样它们就只能被有限的共存类型所调用。纯构造函数实例化属性比填充快30%。
-- *提供一个全参数构造函数* — 即使你不能或不想将你的实体建模为不可变的值，提供一个将实体的所有属性作为参数的构造函数仍有价值，包括可变的属性，因为这允许对象映射跳过属性填充以获得最佳性能。
-- *使用工厂方法而不是重载构造函数，以避免 `@PersistenceCreator`* — 由于需要全参数构造函数以获得最佳性能，我们通常希望暴露更多的应用用例特定的构造函数，省略自动生成的ID等东西。宁愿使用静态工厂方法来暴露这些全参数构造函数的变体，这是一种既定的模式。
-- *确保你遵守允许生成的实例化器（instantiator）和属性访问器（accessor）类被使用的约束。* — 
-- *对于要生成的ID，仍然使用 final 字段与全参数持久化构造函数（首选）或 `with…` 方法相结合* — 
-- *使用Lombok来避免模板代码* --由于持久化操作通常需要一个接受所有参数的构造器，它们的声明变成了繁琐的重复的模板参数到字段的分配，通过使用 Lombok 的 `@AllArgsConstructor` 可以最好地避免。
+- 尽量坚持使用不可变的对象 --不可变的对象创建起来很简单，因为具体化一个对象只需要调用其构造函数即可。同时，这也避免了你的domain对象充满了允许客户端代码操纵对象状态的 setter 方法。如果你需要这些，最好使它们受到 `package` 的保护，这样它们就只能被有限的共存类型所调用。纯构造函数实例化属性比填充快30%。
+- 提供一个全参数构造函数 — 即使你不能或不想将你的实体建模为不可变的值，提供一个将实体的所有属性作为参数的构造函数仍有价值，包括可变的属性，因为这允许对象映射跳过属性填充以获得最佳性能。
+- 使用工厂方法而不是重载构造函数，以避免 `@PersistenceCreator` — 由于需要全参数构造函数以获得最佳性能，我们通常希望暴露更多的应用用例特定的构造函数，省略自动生成的ID等东西。宁愿使用静态工厂方法来暴露这些全参数构造函数的变体，这是一种既定的模式。
+- 确保你遵守允许生成的实例化器（instantiator）和属性访问器（accessor）类被使用的约束。 — 
+- 对于要生成的ID，仍然使用 final 字段与全参数持久化构造函数（首选）或 `with…` 方法相结合 — 
+- 使用Lombok来避免模板代码 --由于持久化操作通常需要一个接受所有参数的构造器，它们的声明变成了繁琐的重复的模板参数到字段的分配，通过使用 Lombok 的 `@AllArgsConstructor` 可以最好地避免。
 
 ##### 属性覆盖
 
@@ -8100,7 +8102,7 @@ data class Person(var id: String, val name: String = "unknown")
 data class Person(val id: String, val name: String)
 ```
 
-这个类实际上是不可变的。它允许创建新的实例，因为 Kotlin 生成了一个 `copy(…)` 方法，该方法创建了新的对象实例，复制了现有对象的所有属性值并应用了作为参数提供给该方法的属性值。
+这个类实际上是不可变的。它允许创建新的实例，因为 Kotlin 生成了一个 `(…)` 方法，该方法创建了新的对象实例，复制了现有对象的所有属性值并应用了作为参数提供给该方法的属性值。
 
 ##### Kotlin 属性覆盖
 
@@ -8201,7 +8203,7 @@ MongoDB要求你为所有文档提供一个 `_id` 字段。如果你没有提供
 
 ### 17.3. 数据映射和类型转换
 
-本节解释了如何将类型映射到 MongoDB 的表示方法，以及如何从 MongoDB 的表示方法中获取类型。Spring Data MongoDB支持所有可表示为BSON（MongoDB的内部文档格式）的类型。除了这些类型外，Spring Data MongoDB 还提供了一组内置的转换器来映射其他类型。你可以提供您自己的转换器来调整类型转换。请参阅 [[mapping-explicit-converters\]](https://springdoc.cn/spring-data-mongodb/#mapping-explicit-converters) 以了解更多细节。
+本节解释了如何将类型映射到 MongoDB 的表示方法，以及如何从 MongoDB 的表示方法中获取类型。Spring Data MongoDB支持所有可表示为BSON（MongoDB的内部文档格式）的类型。除了这些类型外，Spring Data MongoDB 还提供了一组内置的转换器来映射其他类型。你可以提供您自己的转换器来调整类型转换。请参阅 [[mapping-explicit-converters]](https://springdoc.cn/spring-data-mongodb/#mapping-explicit-converters) 以了解更多细节。
 
 下面提供了每个可用类型转换的样本。
 
@@ -8327,7 +8329,7 @@ public class Person {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-|      | 自动索引创建默认是禁用的（**disabled** ），需要通过配置启用（见 [创建索引](https://springdoc.cn/spring-data-mongodb/#mapping.index-creation)）。 |
+|      | 自动索引创建默认是禁用的（disabled ），需要通过配置启用（见 [创建索引](https://springdoc.cn/spring-data-mongodb/#mapping.index-creation)）。 |
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
@@ -8339,7 +8341,7 @@ Spring Data MongoDB可以为用 `@Document` 注解的实体类型自动创建索
 
 如果你想利用 `@Indexed` 注解，如 `@GeoSpatialIndexed`、`@TextIndexed`、 `@CompoundIndex` 和 `@WildcardIndexed`，`IndexResolver` 为编程式索引定义的创建提供了一个抽象。你可以使用带有 `IndexOperations` 的索引定义来创建索引。创建索引的一个好的时间点是在应用程序启动时，特别是在 application context 被刷新后，通过观察 `ContextRefreshedEvent` 触发的。这个事件保证了 context 是完全初始化的。请注意，此时其他组件，尤其是Bean Factory 可能会访问MongoDB数据库。
 
-|      | 除非用 `@WildcardIndexed` 注解，否则类似 `Map` 的属性会被 `IndexResolver` 跳过，因为 *map key* 必须是索引定义的一部分。因为 map 的目的是使用动态的key和value，所以key不能从静态的映射元数据中解决。 |
+|      | 除非用 `@WildcardIndexed` 注解，否则类似 `Map` 的属性会被 `IndexResolver` 跳过，因为 map key 必须是索引定义的一部分。因为 map 的目的是使用动态的key和value，所以key不能从静态的映射元数据中解决。 |
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
@@ -8404,7 +8406,7 @@ class MyListener{
 - `@MongoId`: 在字段级应用，以标记用于ID的字段。接受一个可选的 `FieldType` 来定制ID转换。
 - `@Document`: 应用在类的层面上，表示这个类是映射到数据库的候选对象。你可以指定存储数据的集合的名称。
 - `@DBRef`: 应用在字段上，表明它将使用 `com.mongodb.DBRef` 来存储。
-- `@DocumentReference`: 应用在字段上，表示它将作为一个指向另一个文档的指针被存储。这可以是一个单一的值（默认为 *id*），也可以是一个通过 converter 提供的 `Document`。
+- `@DocumentReference`: 应用在字段上，表示它将作为一个指向另一个文档的指针被存储。这可以是一个单一的值（默认为 id），也可以是一个通过 converter 提供的 `Document`。
 - `@Indexed`: 应用于字段级，描述如何对字段进行索引。
 - `@CompoundIndex` (可重复): 在类型层面上应用于声明复合索引。
 - `@GeoSpatialIndexed`: 应用于 domain 层面，描述如何对 domain 进行地理索引（geoindex ）。
@@ -8625,7 +8627,7 @@ Example 182. 程序化通配符索引设置
 mongoOperations
     .indexOps(User.class)
     .ensureIndex(new WildcardIndex("userMetadata"));
-db.user.createIndex({ "userMetadata.$**" : 1 }, {})
+db.user.createIndex({ "userMetadata.$" : 1 }, {})
 ```
 
 `@WildcardIndex` 注解允许一个声明性的索引设置，可以与文档类型或属性一起使用。
@@ -8640,7 +8642,7 @@ Example 183. domain类的通配符索引
 public class Product {
 	// …
 }
-db.product.createIndex({ "$**" : 1 },{})
+db.product.createIndex({ "$" : 1 },{})
 ```
 
 通配符投影（`wildcardProjection`）可以用来指定索引中的包含/排除。
@@ -8655,7 +8657,7 @@ public class User {
     private UserMetadata userMetadata;
 }
 db.user.createIndex(
-  { "$**" : 1 },
+  { "$" : 1 },
   { "wildcardProjection" :
     { "userMetadata.age" : 0 }
   }
@@ -8674,7 +8676,7 @@ public class User {
     @WildcardIndexed
     private UserMetadata userMetadata;
 }
-db.user.createIndex({ "userMetadata.$**" : 1 }, {})
+db.user.createIndex({ "userMetadata.$" : 1 }, {})
 ```
 
 #### 17.5.7. 文本索引
@@ -8740,7 +8742,7 @@ public class Person {
 
 `DBRef` 也可以被延迟地解析。在这种情况下，实际的 `Object` 或引用 `Collection` 在第一次访问该属性时被解析。使用 `@DBRef` 的 `lazy` 属性来指定这一点。同样被定义为懒加载 `DBRef` 并被用作构造函数参数的必要属性也会用懒加载代理进行装饰，以确保尽可能地减少对数据库和网络的压力。
 
-|      | 懒加载 `DBRef` 可能很难调试。确保工具不会通过调用 `toString()` 或一些内联 debug 渲染调用属性 getter 而意外地触发代理解析。请考虑为 `org.springframework.data.mongodb.core.convert.DefaultDbRefResolver` 启用 *trace* logging，以深入了解 `DBRef` 的解析情况。 |
+|      | 懒加载 `DBRef` 可能很难调试。确保工具不会通过调用 `toString()` 或一些内联 debug 渲染调用属性 getter 而意外地触发代理解析。请考虑为 `org.springframework.data.mongodb.core.convert.DefaultDbRefResolver` 启用 trace logging，以深入了解 `DBRef` 的解析情况。 |
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
@@ -8751,7 +8753,7 @@ public class Person {
 #### 17.5.9. 使用文档引用
 
 使用 `@DocumentReference` 提供了一种在MongoDB中引用实体的灵活方式。虽然目标与使用 [DBRef](https://springdoc.cn/spring-data-mongodb/#mapping-usage-references) 时相同，但存储的表示方法却不同。`DBRef` 解析到一个具有固定结构的文档，如 [MongoDB参考文档](https://docs.mongodb.com/manual/reference/database-references/)中所述。
-文档引用，不遵循特定的格式。它们实际上可以是任何东西，一个单一的值，整个文档，基本上所有可以存储在MongoDB中的东西。默认情况下，映射层将使用被引用实体的 *id* 值进行存储和检索，就像下面的例子。
+文档引用，不遵循特定的格式。它们实际上可以是任何东西，一个单一的值，整个文档，基本上所有可以存储在MongoDB中的东西。默认情况下，映射层将使用被引用实体的 id 值进行存储和检索，就像下面的例子。
 
 ```java
 @Document
@@ -8969,7 +8971,7 @@ class Publisher {
 
 有了以上所有的东西，就有可能对实体之间的各种关联进行建模。请看下面这个不完全的样本列表，以获得对可能的东西的感觉。
 
-Example 187. 使用 *id* 字段的简单文档引用
+Example 187. 使用 id 字段的简单文档引用
 
 ```java
 class Entity {
@@ -8992,7 +8994,7 @@ class Entity {
 | ---- | ----------------------------------------------- |
 |      |                                                 |
 
-Example 188. 使用 *id* 字段的简单文档参考，带有明确的 lookup query。
+Example 188. 使用 id 字段的简单文档参考，带有明确的 lookup query。
 
 ```java
 class Entity {
@@ -9011,9 +9013,9 @@ class Entity {
 }
 ```
 
-|      | *target* 定义了引用值本身。 |
-| ---- | --------------------------- |
-|      |                             |
+|      | target 定义了引用值本身。 |
+| ---- | ------------------------- |
+|      |                           |
 
 Example 189. 文档引用提取查询的 `refKey` 字段
 
@@ -9072,7 +9074,7 @@ class Entity {
 
 |      | 根据 lookup query，从链接文档中读取/写入key `fn` & `ln`。 |
 | ---- | --------------------------------------------------------- |
-|      | 使用非 *id* 字段来查找目标文档。                          |
+|      | 使用非 id 字段来查找目标文档。                            |
 
 Example 191. 从目标集合中读取文档引用
 
@@ -9440,7 +9442,7 @@ public class Payment {
 }
 ```
 
-|      | 代表有效 `ObjectId` 的字符串 *id* 值会自动转换。详见 [在映射层中如何处理 `_id` 字段](https://springdoc.cn/spring-data-mongodb/#mongo-template.id-handling) 。 |
+|      | 代表有效 `ObjectId` 的字符串 id 值会自动转换。详见 [在映射层中如何处理 `_id` 字段](https://springdoc.cn/spring-data-mongodb/#mongo-template.id-handling) 。 |
 | ---- | ------------------------------------------------------------ |
 |      | 所需的目标类型被明确定义为 `Decimal128`，翻译成 `NumberDecimal`。否则 `BigDecimal` 的值就会被截成一个 `String`。 |
 |      | `Date` 值由MongoDB驱动本身处理，并存储为 `ISODate`。         |
@@ -9673,7 +9675,7 @@ Document shardCmd = new Document("shardCollection", "db.users")
 adminDB.runCommand(shardCmd);
 ```
 
-|      | 分片命令需要针对 *admin* 数据库运行。        |
+|      | 分片命令需要针对 admin 数据库运行。          |
 | ---- | -------------------------------------------- |
 |      | 如有必要，为特定的数据库启用分片。           |
 |      | 分片是数据库中启用了分片的集合。             |
@@ -9912,7 +9914,7 @@ Example 209. 配置MongoDB的XML schema
 
 | Name                           | Description                                                  |
 | :----------------------------- | :----------------------------------------------------------- |
-| `base-package`                 | 定义在自动检测模式下扫描扩展 `*Repository`（实际接口由特定的Spring Data模块决定）的 repository 接口的包。在配置的包下面的所有包也会被扫描到。允许使用通配符。 |
+| `base-package`                 | 定义在自动检测模式下扫描扩展 `Repository`（实际接口由特定的Spring Data模块决定）的 repository 接口的包。在配置的包下面的所有包也会被扫描到。允许使用通配符。 |
 | `repository-impl-postfix`      | 定义用于自动检测自定义 repository 实现的后缀。名称以配置的后缀结尾的类被认为是候选类。默认为 `Impl`。 |
 | `query-lookup-strategy`        | 确定用于创建 finder 查询的策略。详见 “[Query 的查询策略](https://springdoc.cn/spring-data-mongodb/#repositories.query-methods.query-lookup-strategies)” 。默认为 `create-if-not-found`。 |
 | `named-queries-location`       | 定义了搜索包含外部定义的查询的属性（Properties）文件的位置。 |
@@ -10026,7 +10028,7 @@ Example 209. 配置MongoDB的XML schema
 
 ------
 
-[1](https://springdoc.cn/spring-data-mongodb/#_footnoteref_1). Kristina Chodorow. *MongoDB - The Definitive Guide*. O’Reilly Media, 2013
+[1](https://springdoc.cn/spring-data-mongodb/#_footnoteref_1). Kristina Chodorow. MongoDB - The Definitive Guide. O’Reilly Media, 2013
 
 [2](https://springdoc.cn/spring-data-mongodb/#_footnoteref_2). Uses UTC zone offset. Configure via [MongoConverterConfigurationAdapter](https://springdoc.cn/spring-data-mongodb/#mapping-configuration)
 
@@ -10039,9 +10041,731 @@ Last updated 2023-02-14 20:03:34 +0800
 
 [主页](https://springdoc.cn/docs/)
 
-## 4. 集群
-
-以后再说
 
 
+# Spring Data MongoDB 简介
 
+##  1. 概述
+
+这篇文章将是一个快速实用的《Spring Data MongoDB》简介。
+
+我们将使用MongoTemplate和MongoRepository的基本知识，并通过实际示例来展示每个操作。
+
+##  进一步阅读：
+
+## [地理空间支持在 MongoDB 中](https://www.baeldung.com/mongodb-geospatial-support)
+
+看看如何使用 MongoDB 存储、索引和搜索地理空间数据
+
+[阅读更多 ](https://www.baeldung.com/mongodb-geospatial-support)→
+
+## [Spring Boot 集成测试与嵌入式 MongoDB](https://www.baeldung.com/spring-boot-embedded-mongodb)
+
+学习如何使用 Flapdoodle 的嵌入式 MongoDB 解决方案与 Spring Boot 一起顺利运行 MongoDB 集成测试。
+
+[阅读更多 ](https://www.baeldung.com/spring-boot-embedded-mongodb)→
+
+## 2. mongo 模板和mongo 仓库
+
+《MongoTemplate》遵循 Spring 中的标准模板模式，并为底层持久化引擎提供现成的、基本的 API。
+
+该仓库遵循以 Spring Data 为中心的方法，并提供了更灵活和复杂的 API 操作，基于所有 Spring Data 项目中已知的访问模式。
+
+对于两者，我们都需要首先定义依赖关系——例如，在 pom.xml 中，使用 Maven：
+
+```xml
+<dependency>	
+    <groupId>org.springframework.data</groupId>	
+    <artifactId>spring-boot-starter-data-boot</artifactId>	
+    <version>3.1.5</version>	
+</dependency>
+```
+
+要检查是否有新版本的库发布，请在此处[跟踪发布](https://mvnrepository.com/artifact/org.springframework.data/spring-data-mongodb)。
+
+## 3. MongoTemplate 的配置 
+
+###  3.1. XML 配置
+
+让我们从 Mongo 模板的简单 XML 配置开始：
+
+```xml
+<mongo:mongo-client id="mongoClient" host="localhost" />
+<mongo:db-factory id="mongoDbFactory" dbname="test" mongo-client-ref="mongoClient" />
+```
+
+首先需要定义负责创建 Mongo 实例的工厂 Bean。
+
+接下来，我们需要实际定义（并配置）模板 Bean：
+
+```xml
+<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate"> 
+    <constructor-arg ref="mongoDbFactory"/> 
+</bean>
+```
+
+最后，我们需要定义一个后处理器来翻译在由@Repository注解的类中抛出的任何MongoExceptions异常：
+
+```xml
+<bean class=
+  "org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+```
+
+###  3.2. Java 配置
+
+现在让我们通过扩展 MongoDB 配置的基础类AbstractMongoConfiguration使用 Java 配置创建一个类似的配置
+
+```java
+@Configuration
+public class MongoConfig extends AbstractMongoClientConfiguration {
+ 
+    @Override
+    protected String getDatabaseName() {
+        return "test";
+    }
+ 
+    @Override
+    public MongoClient mongoClient() {
+        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/test");
+        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+            .applyConnectionString(connectionString)
+            .build();
+        
+        return MongoClients.create(mongoClientSettings);
+    }
+ 
+    @Override
+    public Collection getMappingBasePackages() {
+        return Collections.singleton("com.baeldung");
+    }
+}
+```
+
+请注意，在前一个配置中我们不需要定义 MongoTemplate bean，因为它已经在 AbstractMongoClientConfiguration 中定义了。
+
+我们也可以从头开始使用我们的配置，而不扩展AbstractMongoClientConfiguration：
+
+```java
+@Configuration
+public class SimpleMongoConfig {
+ 
+    @Bean
+    public MongoClient mongo() {
+        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/test");
+        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+          .applyConnectionString(connectionString)
+          .build();
+        
+        return MongoClients.create(mongoClientSettings);
+    }
+
+    @Bean
+    public MongoTemplate mongoTemplate() throws Exception {
+        return new MongoTemplate(mongo(), "test");
+    }
+}
+```
+
+## 4. MongoRepository 的配置
+
+###  4.1. XML 配置
+
+为了使用自定义仓库（扩展 MongoRepository），我们需要从第 3.1 节继续配置并设置仓库：
+
+```xml
+<mongo:repositories 
+  base-package="com.baeldung.repository" mongo-template-ref="mongoTemplate"/>
+
+```
+
+###  4.2. Java 配置
+
+同样，我们将在第 3.2 节中已创建的配置基础上进行扩展，并添加一个新的注释到其中：
+
+```java
+@EnableMongoRepositories(basePackages = "com.baeldung.repository")
+
+```
+
+### 4.3. 创建仓库
+
+配置完成后，我们需要创建一个仓库——扩展现有的 MongoRepository 接口：
+
+```java
+public interface UserRepository extends MongoRepository<User, String> {
+    // 
+}
+```
+
+现在我们可以自动连接这个UserRepository并使用MongoRepository的操作或添加自定义操作。
+
+## 5. 使用 MongoTemplate 
+
+### 5.1. 插入
+
+让我们从插入操作以及一个空数据库开始：
+
+```javascript
+{
+}
+```
+
+现在如果我们插入一个新用户：
+
+```java
+User user = new User();
+user.setName("Jon");
+mongoTemplate.insert(user, "user");
+```
+
+数据库将看起来像这样：
+
+```javascript
+{
+    "_id" : ObjectId("55b4fda5830b550a8c2ca25a"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Jon"
+}
+```
+
+### 5.2. 保存 – 插入
+
+保存操作具有保存或更新的语义：如果存在 id，则执行更新，否则执行插入。
+
+让我们看看第一个语义——插入。
+
+这是数据库的初始状态:
+
+```javascript
+{
+}
+```
+
+当我们现在保存一个新用户时：
+
+```java
+User user = new User();
+user.setName("Albert"); 
+mongoTemplate.save(user, "user");
+```
+
+该实体将被插入到数据库中：
+
+```javascript
+{
+    "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Albert"
+}
+```
+
+接下来，我们将查看相同的操作——保存——带有更新语义。
+
+### 5.3. 保存 – 更新
+
+现在让我们看看带有更新语义的 save 操作，它作用于现有实体：
+
+```javascript
+{
+    "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Jack"
+}
+```
+
+当我们保存现有用户时，我们将更新它：
+
+```java
+user = mongoTemplate.findOne(
+  Query.query(Criteria.where("name").is("Jack")), User.class);
+user.setName("Jim");
+mongoTemplate.save(user, "user");
+```
+
+数据库将看起来像这样：
+
+```javascript
+{
+    "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Jim"
+}
+```
+
+我们可以看到，在这个特定例子中，保存使用了更新的语义，因为我们使用了一个带有给定_id的对象。
+
+### 5.4. 更新首次
+
+updateFirst 更新与查询匹配的第一个文档。
+
+让我们从数据库的初始状态开始：
+
+```javascript
+[
+    {
+        "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Alex"
+    },
+    {
+        "_id" : ObjectId("55b5ffa5511fee0e45ed614c"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Alex"
+    }
+]
+```
+
+当我们现在运行 updateFirst：
+
+```java
+Query query = new Query();
+query.addCriteria(Criteria.where("name").is("Alex"));
+Update update = new Update();
+update.set("name", "James");
+mongoTemplate.updateFirst(query, update, User.class);
+```
+
+仅第一个条目将被更新：
+
+```javascript
+[
+    {
+        "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "James"
+    },
+    {
+        "_id" : ObjectId("55b5ffa5511fee0e45ed614c"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Alex"
+    }
+]
+```
+
+### 5.5. 更新多
+
+更新多更新所有匹配给定查询的文档。
+
+首先，这是在执行 updateMulti 更新之前数据库的状态：
+
+```javascript
+[
+    {
+        "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Eugen"
+    },
+    {
+        "_id" : ObjectId("55b5ffa5511fee0e45ed614c"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Eugen"
+    }
+]
+
+```
+
+现在让我们运行 updateMulti 操作：
+
+```java
+Query query = new Query();
+query.addCriteria(Criteria.where("name").is("Eugen"));
+Update update = new Update();
+update.set("name", "Victor");
+mongoTemplate.updateMulti(query, update, User.class);
+```
+
+两个现有对象将在数据库中更新：
+
+```javascript
+[
+    {
+        "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Victor"
+    },
+    {
+        "_id" : ObjectId("55b5ffa5511fee0e45ed614c"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Victor"
+    }
+]
+```
+
+### 5.6. 查找并修改
+
+这个操作类似于 updateMulti，但它 返回修改前的对象。
+
+首先，这是调用findAndModify之前数据库的状态：
+
+```javascript
+{
+    "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Markus"
+}
+
+```
+
+让我们看看实际的操作代码：
+
+```java
+Query query = new Query();
+query.addCriteria(Criteria.where("name").is("Markus"));
+Update update = new Update();
+update.set("name", "Nick");
+User user = mongoTemplate.findAndModify(query, update, User.class);
+```
+
+返回的 用户对象 与数据库中的初始状态具有相同的值。
+
+然而，这是数据库中的新状态：
+
+```javascript
+{
+    "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Nick"
+}
+```
+
+### 5.7. Upsert
+
+The upsert works on the find and modify else create semantics: if the document is matched, update it, or else create a new document by combining the query and update object.
+
+让我们从数据库的初始状态开始：
+
+```javascript
+{
+    "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Markus"
+}
+```
+
+现在让我们运行 upsert：
+
+```java
+Query query = new Query();
+query.addCriteria(Criteria.where("name").is("Markus"));
+Update update = new Update();
+update.set("name", "Nick");
+mongoTemplate.upsert(query, update, User.class);
+```
+
+这是操作后的数据库状态：
+
+```javascript
+{
+    "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Nick"
+}
+```
+
+### 5.8. 删除
+
+我们将调用删除之前查看数据库的状态：
+
+```javascript
+{
+    "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Benn"
+}
+```
+
+现在让我们运行 删除：
+
+```java
+mongoTemplate.remove(user, "user");
+```
+
+预期结果将如预期所示：
+
+```javascript
+{
+}
+```
+
+## 6. 使用 MongoRepository 
+
+### 6.1. 插入
+
+首先，我们将查看在运行插入之前数据库的状态：
+
+```javascript
+{
+}
+```
+
+现在我们将插入一个新用户：
+
+```java
+User user = new User();
+user.setName("Jon");
+userRepository.insert(user);
+
+```
+
+这是数据库的最终状态：
+
+```javascript
+{
+    "_id" : ObjectId("55b4fda5830b550a8c2ca25a"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Jon"
+}
+```
+
+注意操作与 插入 在 MongoTemplate API 中的操作相同。
+
+### 6.2. 保存–插入
+
+同样，保存与在 MongoTemplate API 中的保存操作相同。
+
+让我们首先看看操作的插入语义。
+
+这是数据库的初始状态：
+
+```javascript
+{
+}
+```
+
+现在我们执行 保存 操作：
+
+```java
+User user = new User();
+user.setName("Aaron");
+userRepository.save(user);
+```
+
+这导致用户被添加到数据库中：
+
+```javascript
+{
+    "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Aaron"
+}
+```
+
+再次注意保存与插入语义如何协同工作，因为我们正在插入一个新对象。
+
+### 6.3. 保存–更新
+
+现在让我们看看同样的操作，但这次是针对 更新语义。
+
+首先，这是运行新的保存之前数据库的状态：
+
+```javascript
+{
+    "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Jack"816
+}
+```
+
+现在我们执行操作：
+
+```java
+user = mongoTemplate.findOne(
+  Query.query(Criteria.where("name").is("Jack")), User.class);
+user.setName("Jim");
+userRepository.save(user);
+```
+
+最后，这是数据库的状态：
+
+```javascript
+{
+    "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Jim"
+}
+```
+
+注意再次如何保存与更新语义一起工作，因为我们正在使用现有对象。
+
+### 6.4. 删除
+
+这里是在调用删除之前数据库的状态：
+
+```javascript
+{
+    "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Benn"
+}
+```
+
+让我们运行 删除：
+
+```java
+userRepository.delete(user);
+
+```
+
+ 并且这是我们的结果：
+
+```javascript
+{
+}
+```
+
+### 6.5. 查找一个
+
+接下来，这是调用 findOne 时数据库的状态：
+
+```javascript
+{
+    "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Chris"
+}
+```
+
+现在让我们执行 findOne：
+
+```java
+userRepository.findOne(user.getId())
+
+```
+
+并且结果将返回现有数据：
+
+```javascript
+{
+    "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Chris"
+}
+```
+
+### 6.6. 存在
+
+数据库调用前的状态：exists：
+
+```javascript
+{
+    "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Harris"
+}
+```
+
+现在让我们运行 exists，当然它会返回 true：
+
+```java
+boolean isExists = userRepository.exists(user.getId());
+```
+
+### 6.7. 查找所有 With 排序
+
+数据库调用 findAll 之前的状态：
+
+```javascript
+[
+    {
+        "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Brendan"
+    },
+    {
+       "_id" : ObjectId("67b5ffa5511fee0e45ed614b"),
+       "_class" : "com.baeldung.model.User",
+       "name" : "Adam"
+    }
+]
+```
+
+现在让我们运行findAll和Sort：
+
+```java
+List<User> users = userRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+```
+
+结果将按名称升序排序：排序
+
+```javascript
+[
+    {
+        "_id" : ObjectId("67b5ffa5511fee0e45ed614b"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Adam"
+    },
+    {
+        "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Brendan"
+    }
+]
+```
+
+### 6.8. 查找所有 With 可分页的 
+
+数据库调用 findAll 之前的状态：
+
+```javascript
+[
+    {
+        "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Brendan"
+    },
+    {
+        "_id" : ObjectId("67b5ffa5511fee0e45ed614b"),
+        "_class" : "com.baeldung.model.User",
+        "name" : "Adam"
+    }
+]
+```
+
+现在让我们使用分页请求执行findAll：
+
+```java
+Pageable pageableRequest = PageRequest.of(0, 1);
+Page<User> page = userRepository.findAll(pageableRequest);
+List<User> users = pages.getContent();
+```
+
+结果中的用户列表将只有一个用户：
+
+
+```javascript
+{
+    "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
+    "_class" : "com.baeldung.model.User",
+    "name" : "Brendan"
+}
+```
+
+##  7. 注释
+
+最后，让我们也回顾一下 Spring Data 用来驱动这些 API 操作的一些简单注解。
+
+字段级别的 @Id 注解可以装饰任何类型，包括 long 和 string：
+
+```java
+@Id
+private String id;
+```
+
+如果@Id字段的值不为空，则直接存储在数据库中；否则，转换器将假设我们想要在数据库中存储一个ObjectId（可以是 ObjectId、 String 或 BigInteger ）。
+
+我们将接下来查看@Document：
+
+```java
+@Document
+public class User {
+    //
+}
+```
+
+此注释简单地标记一个类为域对象，该对象需要持久化到数据库中，同时允许我们选择要使用的集合名称。
+
+##  8. 结论
+
+这篇文章是关于使用 Spring Data 与 MongoDB 的快速而全面的介绍，包括通过MongoTemplate API 以及利用MongoRepository。
+
+所有这些示例和代码片段的实现都可以在 GitHub 上找到。[请在此处查看](https://github.com/eugenp/tutorials/tree/master/persistence-modules/spring-data-mongodb)。
