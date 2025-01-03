@@ -114,7 +114,7 @@ version 4.1.0-SNAPSHOT,2023-09-10
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-# 前言
+## 前言
 
 Spring Data MongoDB项目将Spring的核心概念应用于开发使用MongoDB文档风格数据存储的解决方案。我们提供一个 “template” 作为存储和查询文档的高级抽象。你可能会注意到与Spring框架所提供的JDBC支持有相似之处。
 
@@ -122,7 +122,7 @@ Spring Data MongoDB项目将Spring的核心概念应用于开发使用MongoDB文
 
 本节提供了一些关于Spring和文档数据库的基本介绍。本文的其余部分仅提及Spring Data MongoDB的功能，并假设用户熟悉MongoDB和Spring的概念。
 
-## 1. 学习 Spring
+### 1. 学习 Spring
 
 Spring Data使用Spring框架的 [核心](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/core.html) 功能，包括。
 
@@ -138,7 +138,7 @@ Spring Data使用Spring框架的 [核心](https://docs.spring.io/spring-framewor
 
 要了解更多关于Spring的信息，你可以参考详细解释Spring框架的综合文档。有很多关于这个主题的文章、博客条目和书籍。更多信息请参见 Spring framework [主页](https://spring.io/docs)。
 
-## 2. 学习NoSQL和文档数据库
+### 2. 学习NoSQL和文档数据库
 
 NoSQL存储已经在存储世界中掀起了风暴。这是一个庞大的领域，有大量的解决方案、术语和模式（更糟糕的是，甚至这个术语本身也有多种 [含义](https://www.google.com/search?q=nosoql+acronym)）。虽然有些原则是通用的，但你必须在某种程度上熟悉MongoDB。熟悉的最好方法是阅读文档和跟随例子。通常不需要花5-10分钟就能看完，特别是如果你只来自于 RDMBS （关系数据库管理系统）的背景，这些练习可以让你大开眼界。
 
@@ -150,13 +150,13 @@ NoSQL存储已经在存储世界中掀起了风暴。这是一个庞大的领域
 - 你可以购买的几本 [书](https://www.mongodb.org/books)。
 - Karl Seguin的在线书籍： [The Little MongoDB Book](https://openmymind.net/mongodb.pdf)。
 
-## 3. 要求
+### 3. 要求
 
 Spring Data MongoDB 4.x二进制文件需要JDK 17级及以上，以及 [Spring Framework](https://spring.io/docs) 6.0.4 及以上。
 
 在文档存储方面，你至少需要3.6版的 [MongoDB](https://www.mongodb.org/)，尽管我们建议使用较新的版本。
 
-### 3.1. 兼容性表
+#### 3.1. 兼容性表
 
 下面的兼容性表总结了Spring Data版本与MongoDB驱动/数据库版本的关系。数据库版本显示的是通过Spring Data测试套件的最高支持服务器版本。你可以使用较新的服务器版本，除非你的应用程序使用的功能受到 [MongoDB 服务器变化](https://springdoc.cn/spring-data-mongodb/#compatibility.changes) 的影响。关于驱动程序和服务器版本的兼容性，还请参见 [官方的MongoDB驱动程序兼容性表](https://www.mongodb.com/docs/drivers/java/sync/current/compatibility/)。
 
@@ -171,17 +171,17 @@ Spring Data MongoDB 4.x二进制文件需要JDK 17级及以上，以及 [Spring 
 | Moore                     | `2.2.x`             | `3.11.x/Reactive Streams 1.12.x` | `4.2.x`        |
 | Lovelace                  | `2.1.x`             | `3.8.x/Reactive Streams 1.9.x`   | `4.0.x`        |
 
-#### 3.1.1. MongoDB 4.4 的相关变化
+##### 3.1.1. MongoDB 4.4 的相关变化
 
 - 当没有 `$text` 条件存在时，字段列表不得包含文本搜索得分属性。另见 [`$text` 操作符](https://docs.mongodb.com/manual/reference/operator/query/text/)
 - 在运行 map reduce 时，排序不能是一个空文档。
 
-#### 3.1.2. MongoDB 4.2 的相关变化
+##### 3.1.2. MongoDB 4.2 的相关变化
 
 - 移除 `geoNear` 命令。另见 ["移除地理坐标"（Removal of `geoNear`）](https://docs.mongodb.com/manual/release-notes/4.2-compatibility/#remove-support-for-the-geonear-command)。
 - 移除 `eval` 命令。参见 ["移除 `eval`"](https://docs.mongodb.com/manual/release-notes/4.2-compatibility/#remove-support-for-the-eval-command)。
 
-## 4. 其他帮助资源
+### 4. 其他帮助资源
 
 学习一个新的框架并不总是简单明了的。在本节中，我们试图提供一个我们认为是简单易行的指南，让大家从Spring Data MongoDB模块开始学习。然而，如果你遇到问题或需要建议，请随时使用以下链接。
 
@@ -195,23 +195,23 @@ Spring Data MongoDB 4.x二进制文件需要JDK 17级及以上，以及 [Spring 
 
 Spring Data和Spring背后的公司 [Pivotal Software, Inc.](https://pivotal.io/) 提供专业的、来自源头的支持，并保证响应时间。
 
-## 5. 关注
+### 5. 关注
 
 有关Spring Data Mongo源代码库、夜间构建和快照工件的信息，请参阅Spring Data Mongo [主页](https://spring.io/projects/spring-data-mongodb/)。你可以通过 [Stack Overflow](https://stackoverflow.com/questions/tagged/spring-data) 上的社区与开发人员互动，帮助Spring Data最好地满足Spring社区的需求。要关注开发人员的活动，请在Spring Data Mongo [主页](https://spring.io/projects/spring-data-mongodb/) 上查找邮件列表信息。如果你遇到了一个错误或想提出改进建议，请在Spring Data [issue tracker](https://github.com/spring-projects/spring-data-mongodb/issues) 上创建一个 ticket。要想了解Spring生态中的最新新闻和公告，请订阅Spring社区 [门户](https://spring.io/)。你也可以在Twitter（ [SpringData](https://twitter.com/SpringData)）上关注Spring [博客](https://spring.io/blog) 或项目团队。
 
-## 6. 升级
+### 6. 升级
 
-### 6.1. Spring Data 升级
+#### 6.1. Spring Data 升级
 
 关于如何从Spring Data的早期版本升级的说明在项目 [wiki](https://github.com/spring-projects/spring-data-commons/wiki)上提供。按照 [发布说明部分](https://github.com/spring-projects/spring-data-commons/wiki#release-notes) 的链接，找到你要升级的版本。
 
 升级说明总是在发行说明中的第一项。如果你落后一个以上的版本，请确保你也查看你跳过的版本的发行说明。
 
-### 6.2. 升级 MongoDB 驱动
+#### 6.2. 升级 MongoDB 驱动
 
 Spring Data MongoDB 4.x 需要 MongoDB Java 驱动 4.8.x。 要了解更多关于驱动版本的信息，请访问 [MongoDB文档](https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/)。
 
-## 7. 依赖
+### 7. 依赖
 
 由于各个Spring Data模块的起始日期不同，它们中的大多数都有不同的主要和次要版本号。找到兼容的模块最简单的方法是依靠Spring Data Release Train BOM，我们在发行时定义了兼容版本。在Maven项目中，你可以在POM的 `<dependencyManagement />` 部分声明这一依赖，如下所示。
 
@@ -250,15 +250,15 @@ Example 2. Declaring a dependency to a Spring Data module
 <dependencies>
 ```
 
-### 7.1. 使用Spring Boot的依赖管理
+#### 7.1. 使用Spring Boot的依赖管理
 
 Spring Boot会为你选择一个最新版本的Spring Data模块。如果你仍然想升级到较新的版本，将 `spring-data-releasetrain.version` 属性设置为你想使用的[train version 和 iteration](https://springdoc.cn/spring-data-mongodb/#dependencies.train-version)。
 
-### 7.2. Spring Framework
+#### 7.2. Spring Framework
 
 当前版本的Spring Data模块需要Spring框架 6.0.4 或更高的版本。这些模块也可能在该次要版本的较早的错误修复版本中工作。但是，强烈建议使用那一代中的最新版本。
 
-## 8. 与 Spring Data Repository 一起工作
+### 8. 与 Spring Data Repository 一起工作
 
 Spring Data Repository 抽象的目标是大大减少为各种持久性store实现数据访问层所需的模板代码量。
 
@@ -266,7 +266,7 @@ Spring Data Repository 抽象的目标是大大减少为各种持久性store实�
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 8.1. 核心概念
+#### 8.1. 核心概念
 
 Spring Data repository 抽象的中心接口是 `Repository`。它把要管理的 domain 类以及 domain 类的ID类型作为泛型参数。这个接口主要是作为一个标记接口，用来捕捉工作中的类型，并帮助你发现扩展这个接口的接口。 [`CrudRepository`](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html) 和 [`ListCrudRepository`](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/ListCrudRepository.html) 接口为被管理的实体类提供复杂的CRUD功能。
 
@@ -349,7 +349,7 @@ interface UserRepository extends CrudRepository<User, Long> {
 }
 ```
 
-### 8.2. Query 方法
+#### 8.2. Query 方法
 
 标准的CRUD Repository 通常有对底层数据store的查询。使用Spring Data，声明这些查询成为一个四步过程。
 
@@ -404,11 +404,11 @@ interface UserRepository extends CrudRepository<User, Long> {
 - [创建 Repository 实例](https://springdoc.cn/spring-data-mongodb/#repositories.create-instances)
 - [自定义 Spring Data Repository 的实现](https://springdoc.cn/spring-data-mongodb/#repositories.custom-implementations)
 
-### 8.3. 定义 Repository 接口
+#### 8.3. 定义 Repository 接口
 
 要定义一个 repository 接口，你首先需要定义一个domain类专用的 repository 接口。该接口必须继承 `Repository`，并将其泛型设置为domain类和ID类。如果你想为该domain类公开CRUD方法，你可以继承 `CrudRepository`，或其变体，而不是 `Repository`。
 
-#### 8.3.1. 稍微修改 Repository 的定义
+##### 8.3.1. 稍微修改 Repository 的定义
 
 有几种变体可以让你开始使用你的 repository 接口。
 
@@ -448,7 +448,7 @@ interface UserRepository extends MyBaseRepository<User, Long> {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 8.3.2. 在多个Spring数据模块中使用 Repository
+##### 8.3.2. 在多个Spring数据模块中使用 Repository
 
 在你的应用程序中使用一个独特的Spring Data模块使事情变得简单，因为定义范围内的所有 repository 接口都绑定到Spring Data模块。有时，应用程序需要使用一个以上的Spring Data模块。在这种情况下，repository 定义必须区分持久化技术。当它检测到类路径上有多个 repository 工厂时，Spring Data会进入严格的 repository 配置模式。严格的配置使用 repository 或domain类的细节来决定 repository 定义的Spring Data模块绑定。
 
@@ -533,7 +533,7 @@ Example 12. 注解驱动的 base package 的配置
 class Configuration { … }
 ```
 
-### 8.4. 定义 Query 方法
+#### 8.4. 定义 Query 方法
 
 repository 代理有两种方法可以从方法名中推导出 repository 特定的查询。
 
@@ -542,14 +542,14 @@ repository 代理有两种方法可以从方法名中推导出 repository 特定
 
 可用的选项取决于实际的store。然而，必须有一个策略来决定创建什么样的实际查询。下一节将介绍可用的选项。
 
-#### 8.4.1. Query 的查询策略
+##### 8.4.1. Query 的查询策略
 
 下列策略可用于 repository 基础设施解析查询。 对于 XML 配置，你可以通过 `query-lookup-strategy` 属性在命名空间配置策略。 对于 Java 配置，你可以使用 `EnableMongoRepositories` 注解的 `queryLookupStrategy` 属性。有些策略可能不支持特定的datastore。
 
 - `CREATE` 试图从查询方法名称中构建一个特定的存储查询。一般的做法是从方法名中删除一组已知的前缀，然后解析方法的其余部分。你可以在 “[Query 创建](https://springdoc.cn/spring-data-mongodb/#repositories.query-methods.query-creation)” 中阅读更多关于查询构建的信息。 `USE_DECLARED_QUERY` 试图找到一个已声明的查询，如果找不到就会抛出一个异常。查询可以由某处的注解来定义，也可以通过其他方式来声明。请参阅特定store的文档以找到该store的可用选项。如果 repository 基础设施在启动时没有为该方法找到一个已声明的查询，则会失败。
 - `CREATE_IF_NOT_FOUND` (默认) 结合了 `CREATE` 和 `USE_DECLARED_QUERY`。它首先查找一个已声明的查询， 如果没有找到已声明的查询， 它将创建一个基于方法名的自定义查询。这是默认的查询策略，因此，如果你没有明确地配置任何东西，就会使用这种策略。它允许通过方法名快速定义查询，但也可以根据需要通过引入已声明的查询对这些查询进行自定义调整。
 
-#### 8.4.2. Query 创建
+##### 8.4.2. Query 创建
 
 内置在Spring Data repository 基础架构中的查询 builder 机制对于在资源库的实体上建立约束性查询非常有用。
 
@@ -587,7 +587,7 @@ interface PersonRepository extends Repository<Person, Long> {
 - 方法解析器支持为单个属性（例如，`findByLastnameIgnoreCase(…)`）或支持忽略大小写的类型的所有属性（通常是字符串实例—例如，`findByLastnameAndFirstnameAllIgnoreCase`(…)）设置忽略大小写标志。是否支持忽略大小写可能因store而异，所以请查阅参考文档中的相关章节，了解特定store的查询方法。
 - 你可以通过在引用属性的查询方法中附加一个 `OrderBy` 子句，并提供一个排序方向（`Asc` 或 `Desc`）来应用静态排序。要创建一个支持动态排序的查询方法，请参阅 “[特殊参数处理](https://springdoc.cn/spring-data-mongodb/#repositories.special-parameters)”。
 
-#### 8.4.3. 属性表达式
+##### 8.4.3. 属性表达式
 
 属性表达式只能引用被管理实体的一个直接属性，如前面的例子所示。在查询创建时，你已经确保解析的属性是被管理的domian类的一个属性。然而，你也可以通过遍历嵌套属性来定义约束。考虑一下下面的方法签名。
 
@@ -607,7 +607,7 @@ List<Person> findByAddress_ZipCode(ZipCode zipCode);
 
 因为我们把下划线字符当作一个保留字符，所以我们强烈建议遵循标准的Java命名惯例（也就是说，不要在属性名中使用下划线，而要使用驼峰大写）。
 
-#### 8.4.4. 特殊参数处理
+##### 8.4.4. 特殊参数处理
 
 为了处理你的查询中的参数，定义方法参数，正如在前面的例子中已经看到的。除此之外，基础设施还能识别某些特定的类型，如 `Pageable` 和 `Sort`，以动态地将分页和排序应用于你的查询。下面的例子演示了这些功能。
 
@@ -670,7 +670,7 @@ QSort sort = QSort.by(QPerson.firstname.asc())
   .and(QSort.by(QPerson.lastname.desc()));
 ```
 
-#### 8.4.5. 限制查询结果
+##### 8.4.5. 限制查询结果
 
 你可以通过使用 `first` 或 `top` 关键字来限制查询方法的结果，这两个关键字可以互换使用。你可以在 `top` 或 `first` 后面附加一个可选的数值，以指定要返回的最大结果大小。如果不加数字，就会假定结果大小为 `1`。下面的例子显示了如何限制查询的大小。
 
@@ -698,7 +698,7 @@ List<User> findTop10ByLastname(String lastname, Pageable pageable);
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 8.4.6. Repository 方法返回 Collection 或 Iterable
+##### 8.4.6. Repository 方法返回 Collection 或 Iterable
 
 返回多个结果的查询方法可以使用标准的Java `Iterable`、`List` 和 `Set`。除此之外，我们还支持返回Spring Data的 `Streamable`，这是 `Iterable` 的一个自定义扩展，以及 [Vavr](https://www.vavr.io/) 提供的 collection 类型。请参考附录中对所有可能的 [查询方法返回类型](https://springdoc.cn/spring-data-mongodb/#appendix.query.return.types)的解释。
 
@@ -774,7 +774,7 @@ interface ProductRepository implements Repository<Product, Long> {
 
 你可以使用第一列中的类型（或其子类型）作为查询方法的返回类型，并根据实际查询结果的Java类型（第三列），获得第二列中的类型作为实现类型使用。或者，你可以声明 `Traversable`（相当于Vavr `Iterable`），然后我们从实际返回值中派生出实现类。也就是说，`java.util.List` 会变成 Vavr `List` 或 `Seq`，`java.util.Set` 会变成 Vavr `LinkedHashSet` `Set`，以此类推。
 
-#### 8.4.7. Repository 方法的 Null 处理
+##### 8.4.7. Repository 方法的 Null 处理
 
 从Spring Data 2.0开始，返回单个聚合实例的 repository CRUD方法使用Java 8的 `Optional` 来表示可能没有的值。除此之外，Spring Data还支持在查询方法上返回以下 wrapper 类型。
 
@@ -846,7 +846,7 @@ interface UserRepository : Repository<User, String> {
 | ---- | ------------------------------------------------------------ |
 |      | 这个方法接受 `null` 作为 `firstname` 参数，如果查询没有产生结果，则返回 `null`。 |
 
-#### 8.4.8. 流式（Stream）查询结果
+##### 8.4.8. 流式（Stream）查询结果
 
 你可以通过使用Java 8 `Stream<T>` 作为返回类型来增量地处理查询方法的结果。如下面的例子所示，不把查询结果包裹在 `Stream` 中，而是使用 data store 的特定方法来执行流式处理。
 
@@ -878,7 +878,7 @@ try (Stream<User> stream = repository.findAllByCustomQueryAndStream()) {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 8.4.9. 异步（Asynchronous）查询结果
+##### 8.4.9. 异步（Asynchronous）查询结果
 
 你可以通过使用 [Spring的异步方法运行能力](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/integration.html#scheduling) 来异步运行 repository 查询。这意味着该方法在调用后立即返回，而实际的查询发生在一个已经提交给Spring `TaskExecutor` 的任务中。异步查询与响应式查询不同，不应混合使用。关于响应式支持的更多细节，请参见store的特定文档。下面的例子显示了一些异步查询的案例。
 
@@ -894,11 +894,11 @@ CompletableFuture<User> findOneByFirstname(String firstname);
 | ---- | ------------------------------------------------------------ |
 |      | 使用 Java 8 `java.util.concurrent.CompletableFuture` 作为返回类型。 |
 
-### 8.5. 创建 Repository 实例
+#### 8.5. 创建 Repository 实例
 
 本节介绍了如何为定义的 repository 接口创建实例和Bean定义。
 
-#### 8.5.1. Java 配置
+##### 8.5.1. Java 配置
 
 在Java配置类上使用store特有的 `@EnableMongoRepositories` 注解来定义 repository 激活的配置。关于基于Java的Spring容器配置的介绍，请参见 [Spring参考文档中的JavaConfig](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/core.html#beans-java)。
 
@@ -922,7 +922,7 @@ class ApplicationConfiguration {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 8.5.2. XML 配置
+##### 8.5.2. XML 配置
 
 每个Spring Data模块都包括一个 `repositories` 元素，让你定义一个Spring为你扫描的 base package，如下例所示。
 
@@ -945,7 +945,7 @@ Example 26. 通过XML启用Spring Data Repository
 
 在前面的例子中，Spring被指示扫描 `com.acme.repositories` 及其所有子包，以寻找扩展 `Repository` 或其子接口之一的接口。对于找到的每个接口，基础设施都会注册持久化技术专用的 `FactoryBean`，以创建适当的代理，处理查询方法的调用。每个Bean都被注册在一个从接口名称衍生出来的Bean名称下，所以 `UserRepository` 的接口将被注册在 `userRepository` 下。嵌套的存储库接口的Bean名是以其包裹的类型名称为前缀。base package 属性允许通配符，这样你就可以定义一个扫描包的模式。
 
-#### 8.5.3. 使用 Filter
+##### 8.5.3. 使用 Filter
 
 默认情况下，基础架构会抓取每个扩展了位于配置的 base package 下的持久化技术特定的 `Repository` 子接口的接口，并为其创建一个Bean实例。然而，你可能想要更精细地控制哪些接口为其创建Bean实例。要做到这一点，可以在 Repository 声明中使用 filter 元素。其语义与Spring的组件过滤器中的元素完全等同。详情请见 [Spring参考文档](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/core.html#beans-scanning-filters) 中的这些元素。
 
@@ -973,7 +973,7 @@ class ApplicationConfiguration {
 
 前面的例子排除了所有以 `SomeRepository` 结尾的接口被实例化，包括以 `SomeOtherRepository` 结尾的接口。
 
-#### 8.5.4. 单独使用
+##### 8.5.4. 单独使用
 
 你也可以在Spring容器之外使用资源库基础设施—例如，在CDI环境中。你仍然需要在你的classpath中使用一些Spring库，但是，一般来说，你也可以通过编程来设置 Repository。Repository 支持的Spring Data模块都有一个特定于持久化技术的 `RepositoryFactory`，你可以使用，如下所示。
 
@@ -984,11 +984,11 @@ RepositoryFactorySupport factory = … // Instantiate factory here
 UserRepository repository = factory.getRepository(UserRepository.class);
 ```
 
-### 8.6. 自定义 Spring Data Repository 的实现
+#### 8.6. 自定义 Spring Data Repository 的实现
 
 Spring Data提供了各种选项来创建查询方法，只需少量编码。但当这些选项不符合你的需求时，你也可以为 repository 方法提供你自己的自定义实现。本节介绍了如何做到这一点。
 
-#### 8.6.1. 自定义个别 Repository
+##### 8.6.1. 自定义个别 Repository
 
 要用自定义的功能来丰富 repository，你必须首先定义一个片段（fragment）接口和自定义功能的实现，如下所示。
 
@@ -1172,7 +1172,7 @@ class MyClass {
 }
 ```
 
-#### 8.6.2. 自定义 Base Repository
+##### 8.6.2. 自定义 Base Repository
 
 当你想定制基础 repository 的行为时，[上一节](https://springdoc.cn/spring-data-mongodb/#repositories.manual-wiring)描述的方法需要定制每个 repository 的接口，以便所有的 repository 都受到影响。为了改变所有 repository 的行为，你可以创建一个扩展持久化技术特定 repository 基类的实现。然后这个类作为 repository 代理的自定义基类，如下面的例子所示。
 
@@ -1217,7 +1217,7 @@ XML
 class ApplicationConfiguration { … }
 ```
 
-### 8.7. 从 Aggregate Root （聚合ROOT）中发布事件
+#### 8.7. 从 Aggregate Root （聚合ROOT）中发布事件
 
 由 Repository 管理的实体是 aggregate root。在领域驱动设计应用程序中，这些aggregate root通常会发布 domain 事件。Spring Data提供了一个名为 `@DomainEvents` 的注解，你可以在 aggregate root 的一个方法上使用该注解，以使这种发布尽可能地简单，如下例所示。
 
@@ -1244,11 +1244,11 @@ class AnAggregateRoot {
 
 每次调用Spring Data Repository的 `save(…)`、`saveAll(…)`、`delete(…)` 或 `deleteAll(…)` 方法时都会调用这些方法。
 
-### 8.8. Spring Data 扩展
+#### 8.8. Spring Data 扩展
 
 本节记录了一组Spring Data扩展，这些扩展使Spring Data能够在各种情况下使用。目前，大部分的集成都是针对Spring MVC的。
 
-#### 8.8.1. Querydsl 扩展
+##### 8.8.1. Querydsl 扩展
 
 [Querydsl](http://www.querydsl.com/) 是一个框架，可以通过其 fluent API构建静态类型的类似SQL的查询。
 
@@ -1295,7 +1295,7 @@ Predicate predicate = user.firstname.equalsIgnoreCase("dave")
 userRepository.findAll(predicate);
 ```
 
-#### 8.8.2. Web 的支持
+##### 8.8.2. Web 的支持
 
 支持 repository 编程模型的Spring Data模块带有各种Web支持。web相关的组件需要添加 Spring MVC 到项目。其中一些甚至提供了与 [Spring HATEOAS](https://github.com/spring-projects/spring-hateoas)的整合。一般来说，集成支持是通过在你的 `JavaConfig` 配置类中使用 `@EnableSpringDataWebSupport` 注解来启用的，如下面例子所示。
 
@@ -1585,7 +1585,7 @@ interface UserRepository extends CrudRepository<User, String>,
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 8.8.3. Repository 填充
+##### 8.8.3. Repository 填充
 
 如果你使用Spring JDBC模块，你可能很熟悉对用SQL脚本填充 `DataSource` 的支持。在 repository 层面也有类似的抽象，尽管它不使用SQL作为数据定义语言，因为它必须是独立于store的。因此，填充器支持XML（通过Spring的OXM抽象）和JSON（通过Jackson）来定义数据，用它来填充repository。
 
@@ -1652,11 +1652,11 @@ Example 51. 声明一个 `unmarshalling` repository populator（使用JAXB）。
 </beans>
 ```
 
-# 参考文档
+## 参考文档
 
-## 9. 简介
+### 9. 简介
 
-### 9.1. 文档结构
+#### 9.1. 文档结构
 
 参考文档的这一部分解释了 Spring Data MongoDB 所提供的核心功能。
 
@@ -1664,7 +1664,7 @@ Example 51. 声明一个 `unmarshalling` repository populator（使用JAXB）。
 
 “[MongoDB Repository](https://springdoc.cn/spring-data-mongodb/#mongo.repositories)” 介绍了对 MongoDB 的 repository 支持。
 
-## 10. MongoDB 的支持
+### 10. MongoDB 的支持
 
 MongoDB的支持包含广泛的功能。
 
@@ -1682,7 +1682,7 @@ MongoDB的支持包含广泛的功能。
 
 对于大多数任务，你应该使用 `MongoTemplate` 或 `Repository` 支持，它们都利用了丰富的映射功能。`MongoTemplate` 是访问功能的地方，如递增计数器或临时CRUD操作。`MongoTemplate` 还提供了回调方法，这样你就很容易获得低级别的API工件，如 `com.mongodb.client.MongoDatabase`，从而直接与MongoDB进行通信。对各种API工件进行命名的目的是为了复制基础MongoDB Java驱动中的那些API工件，这样你就可以轻松地将现有知识映射到Spring API上。
 
-### 10.1. 入门
+#### 10.1. 入门
 
 建立工作环境的一个简单方法是在 [STS](https://spring.io/tools/) 中创建一个基于Spring的项目。
 
@@ -1807,11 +1807,11 @@ public class MongoApp {
 - 映射约定可以使用字段访问。请注意，`Person` 类只有 getter。
 - 如果构造函数的参数名与存储文档的字段名相匹配，它们将被用来实例化对象。
 
-### 10.2. 示例仓库
+#### 10.2. 示例仓库
 
 有一个GitHub仓库，里面有 [几个例子](https://github.com/spring-projects/spring-data-examples)，你可以下载并玩一玩，感受一下这个库是如何工作的。
 
-### 10.3. 使用 Spring 连接到 MongoDB
+#### 10.3. 使用 Spring 连接到 MongoDB
 
 在使用MongoDB和Spring时，首要任务之一是使用IoC容器创建一 个 `com.mongodb.client.MongoClient` 对象。有两种主要的方法可以做到这一点，一种是使用基于Java的bean元数据，另一种是使用基于 XML 的 bean 元数据。这两种方式将在下面的章节中讨论。
 
@@ -1819,7 +1819,7 @@ public class MongoApp {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 10.3.1. 通过使用基于 Java 的元数据注册 Mongo 实例
+##### 10.3.1. 通过使用基于 Java 的元数据注册 Mongo 实例
 
 下面的例子显示了一个使用基于Java的bean元数据来注册 `com.mongodb.client.MongoClient` 实例的例子。
 
@@ -1861,7 +1861,7 @@ public class AppConfig {
 
 要访问由 `MongoClientFactoryBean` 在其他 `@Configuration` 类或你自己的类中创建的 `com.mongodb.client.MongoClient` 对象，请使用一个私有的 `@Autowired MongoClient mongoClient;` 字段。
 
-#### 10.3.2. 通过使用基于XML的元数据注册Mongo实例
+##### 10.3.2. 通过使用基于XML的元数据注册Mongo实例
 
 虽然你可以使用Spring传统的 `<beans/>` XML命名空间来向容器注册 `com.mongodb.client.MongoClient` 的实例，但由于它是通用的，所以XML可能相当冗长。XML 命名空间是配置常用对象（如 Mongo 实例）的一个更好的选择。mongo命名空间可以让你创建一个Mongo实例的服务器位置、副本集和选项。
 
@@ -1914,7 +1914,7 @@ Example 56. 用 XML schema 来配置带有Replica Sets的 `com.mongodb.client.Mo
 </mongo:mongo-client>
 ```
 
-#### 10.3.3. MongoDatabaseFactory 接口
+##### 10.3.3. MongoDatabaseFactory 接口
 
 虽然 `com.mongodb.client.MongoClient` 是 MongoDB 驱动程序 API 的入口，但连接到特定的 MongoDB 数据库实例需要额外的信息，例如数据库名称以及可选的用户名和密码。有了这些信息，你就可以获得 `com.mongodb.client.MongoDatabase` 对象并访问特定 MongoDB 数据库实例的所有功能。Spring 提供了 `org.springframework.data.mongodb.core.MongoDatabaseFactory` 接口，如下表所示，用于引导与数据库的连接。
 
@@ -1955,7 +1955,7 @@ public class MongoApp {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 10.3.4. 注册 `MongoDatabaseFactory`
+##### 10.3.4. 注册 `MongoDatabaseFactory`
 
 为了在容器中注册一个 `MongoDatabaseFactory` 实例，你写的代码很像前面代码清单中强调的那样。下面的列表显示了一个简单的例子。
 
@@ -2042,7 +2042,7 @@ public class ApplicationContextEventTestsAppConfig extends AbstractMongoClientCo
 }
 ```
 
-### 10.4. `MongoTemplate` 简介
+#### 10.4. `MongoTemplate` 简介
 
 `MongoTemplate` 类位于 `org.springframework.data.mongodb.core` 包中，是 Spring 支持 MongoDB 的中心类，为与数据库交互提供了丰富的功能集。该 template 提供了创建、更新、删除和查询MongoDB文档的便利操作，并提供了你的domain对象和MongoDB文档之间的映射。
 
@@ -2066,7 +2066,7 @@ MongoDB 文档和 domain 类之间的映射是通过委托给 `MongoConverter` �
 
 下一节包含一个例子，说明如何在Spring容器的背景下使用 `MongoTemplate`。
 
-#### 10.4.1. 实例化 `MongoTemplate`
+##### 10.4.1. 实例化 `MongoTemplate`
 
 你可以使用下面的配置来创建和注册 `MongoTemplate` 的实例，如下例所示。
 
@@ -2104,15 +2104,15 @@ class AppConfig {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 10.4.2. `WriteResultChecking` 策略
+##### 10.4.2. `WriteResultChecking` 策略
 
 在开发过程中，如果从任何 MongoDB 操作返回的 `com.mongodb.WriteResult` 包含一个错误，那么记录或抛出一个异常是很方便的。在开发过程中，忘记这样做是很常见的，然后最终得到一个看起来运行成功的应用程序，而事实上，数据库并没有按照你的预期进行修改。你可以将 `MongoTemplate` 的 `WriteResultChecking` 属性设置为以下值之一。`EXCEPTION` 或 `NONE`，分别用来抛出一个 `Exception` 或不做任何事情。默认是使用 `NONE` 的 `WriteResultChecking` 值。
 
-#### 10.4.3. `WriteConcern`
+##### 10.4.3. `WriteConcern`
 
 如果尚未通过驱动程序在更高层次（如 `com.mongodb.client.MongoClient`）上指定，可以设置 `MongoTemplate` 用于写操作的 `com.mongodb.WriteConcern` 属性。如果没有设置 `WriteConcern` 属性，则默认为 MongoDB 驱动程序的 DB 或 Collection 设置中的设置。
 
-#### 10.4.4. `WriteConcernResolver`
+##### 10.4.4. `WriteConcernResolver`
 
 对于更高级的情况，即你想在每个操作的基础上设置不同的 `WriteConcern` 值（对于 remove, update, insert 和 save操作），可以在 `MongoTemplate` 上配置一个名为 `WriteConcernResolver` 的策略接口。由于 `MongoTemplate` 用于持久化POJO， `WriteConcernResolver` 让你创建一个策略，可以将特定的POJO类映射到 `WriteConcern` 值。下面的列表显示了 `WriteConcernResolver` 的接口。
 
@@ -2138,7 +2138,7 @@ private class MyAppWriteConcernResolver implements WriteConcernResolver {
 }
 ```
 
-### 10.5. 保存、更新和删除文档
+#### 10.5. 保存、更新和删除文档
 
 `MongoTemplate` 让你保存、更新和删除你的 domain 对象，并将这些对象映射到存储在MongoDB中的文档。
 
@@ -2243,7 +2243,7 @@ DEBUG work.data.mongodb.core.MongoTemplate: 376 - Dropped collection [database.p
 
 前面的例子中使用的查询语法在 “[查询文档](https://springdoc.cn/spring-data-mongodb/#mongo.query)” 一节中有更详细的解释。
 
-#### 10.5.1. 在映射层中如何处理 `_id` 字段
+##### 10.5.1. 在映射层中如何处理 `_id` 字段
 
 MongoDB要求你为所有的文档设置一个 `_id` 字段。如果你没有提供一个，驱动程序就会分配一个带有生成值的 `ObjectId`。当你使用 `MappingMongoConverter` 时，某些规则规定了如何将Java类中的属性映射到这个 `_id` 字段。
 
@@ -2282,7 +2282,7 @@ public class StringToObjectId {
 |      | id 被视为 `ObjectId'。                                       |
 |      | 如果给定的 `String` 是一个有效的 `ObjectId` 十六进制，id将被视为 `ObjectId`，否则视为 `String`。对应于 `@Id` 的用法。 |
 
-#### 10.5.2. 类型映射
+##### 10.5.2. 类型映射
 
 MongoDB 集合（collection）可以包含代表各种类型实例的文档。如果你存储了一个类的层次结构，或者有一个具有 `Object` 类型属性的类，那么这个特性就很有用。在后一种情况下，当检索对象时，必须正确地读入该属性内的值。
 
@@ -2374,7 +2374,7 @@ class SampleMongoConfiguration extends AbstractMongoClientConfiguration {
 
 请注意，前面的例子扩展了 `AbstractMongoClientConfiguration` 类，并覆写了 `MappingMongoConverter` 的 bean 定义，我们在那里配置了我们的自定义 `MongoTypeMapper`。
 
-#### 10.5.3. 保存和插入文档的方法
+##### 10.5.3. 保存和插入文档的方法
 
 `MongoTemplate` 上有几个方便的方法，用于保存和插入你的对象。为了对转换过程有更精细的控制，你可以用 `MappingMongoConverter` 注册 Spring Converter — 例如 `Converter<Person, Document>` 和 `Converter<Document, Person>`。
 
@@ -2427,7 +2427,7 @@ MongoDB驱动支持在一个操作中插入一个文档集合。`MongoOperations
 
 - insert 方法: 以一个 `Collection` 作为第一个参数。它们在一次批量写入数据库中插入一个对象的列表。
 
-#### 10.5.4. 更新集合中的文档
+##### 10.5.4. 更新集合中的文档
 
 对于更新，你可以通过使用 `MongoOperation.updateFirst` 来更新找到的第一个文档，或者你可以通过使用 `MongoOperation.updateMulti` 方法来更新所有找到的符合查询的文档。下面的例子显示了对所有 `SAVINGS` 账户的更新，我们通过使用 `$inc` 操作符在余额中添加一次性的50美元奖金。
 
@@ -2490,7 +2490,7 @@ new Update().push("key").slice(5).each(Arrays.asList("Arya", "Arry", "Weasel"));
 new Update().addToSet("values").each("spring", "data", "mongodb");
 ```
 
-#### 10.5.5. 在一个集合中 “Upsert” 文档
+##### 10.5.5. 在一个集合中 “Upsert” 文档
 
 与执行 `updateFirst` 操作相关，你也可以执行 “upsert” 操作，如果没有找到与查询相匹配的文档，它将执行插入操作。被插入的文档是查询文档和更新文档的组合。下面的例子显示了如何使用 `upsert` 方法。
 
@@ -2505,7 +2505,7 @@ template.update(Person.class)
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 10.5.6. 查和 Upsert 集合中的文档
+##### 10.5.6. 查和 Upsert 集合中的文档
 
 `MongoCollection` 上的 `findAndModify(…)` 方法可以更新一个文档，并在一次操作中返回旧的或新更新的文档。`MongoTemplate` 提供了四个 `findAndModify` 重载方法，这些方法采用 `Query` 和 `Update` 类，并从 `Document` 转换为你的POJO。
 
@@ -2565,7 +2565,7 @@ assertThat(upserted.getFirstName()).isEqualTo("Mary");
 assertThat(upserted.getAge()).isOne();
 ```
 
-#### 10.5.7. 聚合管道（Aggregation Pipeline）更新
+##### 10.5.7. 聚合管道（Aggregation Pipeline）更新
 
 `MongoOperations` 和 `ReactiveMongoOperations` 暴露的更新方法也通过 `AggregationUpdate` 接受一个 [Aggregation Pipeline（聚合管道）](https://springdoc.cn/spring-data-mongodb/#mongo.aggregation)。使用 `AggregationUpdate` 可以在更新操作中利用 MongoDB 4.2 聚合。在更新中使用聚合允许通过用单个操作表达多个阶段和多个条件来更新一个或多个字段。
 
@@ -2615,7 +2615,7 @@ db.students.update(
 |      | 该管道在 students 集合上运行，并使用 `Student` 作为聚合字段的映射。 |
 |      | 将更新应用于集合中所有匹配的文档。                           |
 
-#### 10.5.8. 查和替换文档
+##### 10.5.8. 查和替换文档
 
 替换整个 `Document` 的最直接的方法是通过其 `id` 使用 `save` 方法。 `findAndReplace` 提供了一个替代方法，允许通过一个简单的查询来确定要替换的文档。
 
@@ -2641,7 +2641,7 @@ Optional<User> result = template.update(Person.class)
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 10.5.9. 删除文档的方法
+##### 10.5.9. 删除文档的方法
 
 你可以使用五个重载方法中的一个来从数据库中删除一个对象。
 
@@ -2664,7 +2664,7 @@ template.findAllAndRemove(new Query().limit(3), "GOT");
 |      | 从 `GOT` 集合中删除所有符合查询条件的文档。与<3>不同，文档不会被批量删除，而是一个一个地删除。 |
 |      | 删除 `GOT` 集合中的前三个文档。与 <3> 不同，文档不会被批量删除，而是一个一个地删除。 |
 
-#### 10.5.10. 乐观锁
+##### 10.5.10. 乐观锁
 
 `@Version` 注解提供了类似于 JPA 在 MongoDB 上下文中的语法，并确保更新只应用于具有匹配 version 的文档。因此，version 属性的实际值被添加到更新查询中，如果在此期间另一个操作改变了文档，那么更新就不会有任何影响。在这种情况下，会抛出一个 `OptimisticLockingFailureException`。下面的例子显示了这些特征。
 
@@ -2704,7 +2704,7 @@ template.save(tmp); // throws OptimisticLockingFailureException
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 10.6. 查询文档
+#### 10.6. 查询文档
 
 你可以使用 `Query` 和 `Criteria` 类来表达你的查询。它们的方法名称反映了MongoDB的本地操作符名称，如 `lt`、`lte`、`is` 等。`Query` 和 `Criteria` 类遵循 fluent API风格，因此你可以将多个 criteria 和 query 方法连在一起，同时拥有易于理解的代码。 为了提高可读性，静态导入让你避免使用 'new' 关键字来创建 `Query` 和 `Criteria` 实例。你也可以使用 `BasicQuery` 来从普通的 JSON 字符串中创建 `Query` 实例，如下例所示。
 
@@ -2717,7 +2717,7 @@ List<Person> result = mongoTemplate.find(query, Person.class);
 
 Spring MongoDB 还支持 GeoSpatial 查询（见 [GeoSpatial查询](https://springdoc.cn/spring-data-mongodb/#mongo.geospatial)部分）和 Map-Reduce 操作（见 [Map-Reduce](https://springdoc.cn/spring-data-mongodb/#mongo.mapreduce) 部分）。
 
-#### 10.6.1. 查询集合中的文档
+##### 10.6.1. 查询集合中的文档
 
 在前面，我们看到了如何通过使用 `MongoTemplate` 上的 `findOne` 和 `findById` 方法来检索单个文档。这些方法返回一个单一的 domain 对象。我们也可以查询一个文档的集合，将其作为 domain 对象的列表返回。假设我们有一些带有 name 和 age 的 `Person` 对象作为文档存储在一个集合中，并且每个 person 都有一个带有 balance 的嵌入的 account 文档，我们现在可以使用下面的代码运行一个查询。
 
@@ -2846,7 +2846,7 @@ query.fields()
 
 `@Query(fields="…")` 允许在 `Repository` 级别使用表达式字段投影，如 [MongoDB基于JSON的查询方法和字段限制](https://springdoc.cn/spring-data-mongodb/#mongodb.repositories.queries.json-based) 中所述。
 
-#### 10.6.2. 文档查询方法
+##### 10.6.2. 文档查询方法
 
 这些查询方法需要指定返回的目标类型 `T`，而且它们被重载了，有一个明确的集合名称，用于查询应该操作的集合，而不是返回类型所指示的那个。下面的查询方法让你找到一个或多个文档。
 
@@ -2856,7 +2856,7 @@ query.fields()
 - find: 将集合上的临时查询结果映射到指定类型的 `List`。
 - findAndRemove:将集合上的临时查询结果映射到一个指定类型的对象的单个实例。匹配查询的第一个文档被返回并从数据库中的集合中删除。
 
-#### 10.6.3. 查询不同（Distinct ）的值
+##### 10.6.3. 查询不同（Distinct ）的值
 
 MongoDB 提供了一个操作，通过使用从结果文档中的查询来获取单个字段的不同值。结果值不需要具有相同的数据类型，该功能也不限于简单类型。对于检索来说，实际的结果类型对于 conversion 和 typing 来说的确很重要。下面的例子显示了如何查询不同的值。
 
@@ -2892,7 +2892,7 @@ template.query(Person.class)
 |      | 检索到的值被转换为所需的目标类型—在本例中是 `String`。如果存储的字段包含一个文档，也有可能将值映射到一个更复杂的类型。 |
 |      | 检索所有不同的值，作为一个 `List<String>` 。如果该类型不能被转换为所需的目标类型，该方法会抛出一个 `DataAccessException`。 |
 
-#### 10.6.4. 地理空间（GeoSpatial）查询
+##### 10.6.4. 地理空间（GeoSpatial）查询
 
 MongoDB通过使用 `$near`、`$within`、`geoWithin` 和 `$nearSphere` 等操作符支持地理空间查询。地理空间查询的特定方法在 `Criteria` 类中可用。还有一些形状类（`Box`、`Circle` 和 `Point`）可以与地理空间相关的 `Criteria` 方法一起使用。
 
@@ -3005,7 +3005,7 @@ GeoResults<Restaurant> = operations.geoNear(query, Restaurant.class);
 
 geo-near 操作返回一个封装 `GeoResult` 实例的 `GeoResults` 包装对象。包裹 `GeoResults` 可以访问所有结果的平均距离。一个 `GeoResult` 对象携带着所发现的实体以及它与原点的距离。
 
-#### 10.6.5. GeoJSON 的支持
+##### 10.6.5. GeoJSON 的支持
 
 MongoDB支持地理空间数据的 [GeoJSON](https://geojson.org/) 和简单（传统）坐标对。这些格式既可用于存储，也可用于查询数据。请参阅 [MongoDB关于GeoJSON支持](https://docs.mongodb.org/manual/core/2dsphere/#geospatial-indexes-store-geojson/) 的手册，以了解有关要求和限制。
 
@@ -3268,7 +3268,7 @@ org.springframework.data.mongodb.core.geo.GeoJsonMultiPolygon
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 10.6.6. 全文检索
+##### 10.6.6. 全文检索
 
 从MongoDB的 2.6 版本开始，你可以通过使用 `$text` 操作符来运行全文检索。在 `TextQuery` 和 `TextCriteria` 中，有专门针对全文检索的方法和操作。在进行全文检索时，请参见 [MongoDB参考文献](https://docs.mongodb.org/manual/reference/operator/query/text/#behavior)，了解其行为和限制。
 
@@ -3336,7 +3336,7 @@ TextQuery.queryText(new TextCriteria().phrase("coffee cake"));
 
 你可以通过使用 `TextCriteria` 上的相应方法为 `$caseSensitive` 和 `$diacriticSensitive` 设置标志。请注意，这两个可选的标志在 MongoDB 3.2 中被引入，除非明确设置，否则不包括在查询中。
 
-#### 10.6.7. Collations
+##### 10.6.7. Collations
 
 从 3.4 版本开始，MongoDB 支持用于集合和索引创建以及各种查询操作的校对。Collations 定义了基于 [ICU collations](http://userguide.icu-project.org/collation/concepts) 的字符串比较规则。一个 collation 文档由各种属性组成，这些属性被封装在 `Collation` 中，如下面的列表所示。
 
@@ -3800,7 +3800,7 @@ static class Patient {
 
 欲了解更多信息，请参见 [$jsonSchema](https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/#op._S_jsonSchema)。
 
-#### 10.6.8. Fluent Template API
+##### 10.6.8. Fluent Template API
 
 `MongoOperations` 接口是与MongoDB进行更多底层交互的核心组件之一。它提供了广泛的方法，涵盖了从集合创建、索引创建、CRUD操作到更高级的功能，如Map-Reduce和聚合。你可以为每个方法找到多个重载。它们中的大多数涵盖了API的可选或可忽略的部分。
 
@@ -3852,7 +3852,7 @@ GeoResults<Jedi> results = mongoOps.query(SWCharacter.class)
   .all();
 ```
 
-#### 10.6.9. Kotlin的类型安全的查询
+##### 10.6.9. Kotlin的类型安全的查询
 
 Kotlin 通过其语言语法和扩展系统拥抱特定领域的语言创建。Spring Data MongoDB提供了一个Kotlin扩展，用于使用 [Kotlin属性引用](https://kotlinlang.org/docs/reference/reflection.html#property-references) 来构建类型安全的查询。使用该扩展的查询通常会受益于可读性的提高。`Criteria` 上的大多数关键字都有匹配的Kotlin扩展，例如 `inValues` 和 `regex`。
 
@@ -3891,7 +3891,7 @@ mongoOperations.find<Book>(
 |      | 对于位操作符，传递一个lambda参数，在这里你调用 `Criteria.BitwiseCriteriaOperators` 中的一个方法。 |
 |      | 要构建嵌套属性，请使用 `/` 字符（重载操作符 `div`）。        |
 
-#### 10.6.10. 其他查询选项
+##### 10.6.10. 其他查询选项
 
 MongoDB提供了各种应用元信息的方法，如comment或batch size，到查询中。直接使用 `Query` API，有几种方法可以实现这些选项。
 
@@ -3912,15 +3912,15 @@ Query query = query(where("firstname").is("luke"))
 List<Person> findByFirstname(String firstname);
 ```
 
-### 10.7. Example 查询
+#### 10.7. Example 查询
 
-#### 10.7.1. 介绍
+##### 10.7.1. 介绍
 
 本章介绍了 "Example 查询" 并解释了如何使用它。
 
 Example 查询（QBE）是一种用户友好的查询技术，接口简单。它允许动态查询创建，不要求你写包含字段名的查询。事实上，"Example 查询" 根本不要求你通过使用store特定的查询语言来编写查询。
 
-#### 10.7.2. 使用方式
+##### 10.7.2. 使用方式
 
 Example 查询API由四部分组成。
 
@@ -3994,7 +3994,7 @@ public interface QueryByExampleExecutor<T> {
 }
 ```
 
-#### 10.7.3. Example Matcher
+##### 10.7.3. Example Matcher
 
 示例不限于默认设置。你可以通过使用 `ExampleMatcher` 为字符串匹配、null处理和特定属性设置指定你自己的默认值，如下面的例子所示。
 
@@ -4055,7 +4055,7 @@ ExampleMatcher matcher = ExampleMatcher.matching()
 | Case sensitivity     | `ExampleMatcher` and property path |
 | Value transformation | Property path                      |
 
-#### 10.7.4. Fluent API
+##### 10.7.4. Fluent API
 
 `QueryByExampleExecutor` 还提供了一个方法，我们到目前为止还没有提到。`<S extends T, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction)` 。和其他方法一样，它执行一个从 `Example` 派生的查询。然而，通过第二个参数，你可以控制该执行的各个方面，否则你无法动态地控制。你可以通过调用第二个参数中的 `FetchableFluentQuery` 的各种方法来做到这一点。 `sortBy` 让你为你的结果指定一个排序。`as` 让你指定你希望结果被转换的类型。`project` 限制了被查询的属性。`first`, `firstValue`, `one`, `oneValue`, `all`, `page`, `stream`, `count`, 和 `exists` 定义了你得到什么样的结果以及当超过预期结果数量时查询的行为方式。
 
@@ -4069,7 +4069,7 @@ Optional<Person> match = repository.findBy(example,
 );
 ```
 
-#### 10.7.5. Example
+##### 10.7.5. Example
 
 下面的例子显示了在使用 repository（这里是指 `Person` 对象）时如何通过 example 进行查询。
 
@@ -4113,7 +4113,7 @@ Spring Data MongoDB 提供对以下匹配选项的支持。
 | `REGEX` (区分大小写)        | `{"firstname" : { $regex: /firstname/}}`                  |
 | `REGEX` (不区分大小写)      | `{"firstname" : { $regex: /firstname/, $options: 'i'}}`   |
 
-#### 10.7.6. Untyped Example
+##### 10.7.6. Untyped Example
 
 默认情况下，`Example` 是严格类型化的。这意味着映射的查询有一个包含的类型匹配，将其限制在可探测的可分配类型。例如，当坚持使用默认的类型键（`_class`）时，查询有如下限制（`_class : { $in : [ com.acme.Person] }`）。
 
@@ -4139,7 +4139,7 @@ List<Person> result = template.find(query, Person.class);
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 10.8. 统计文档
+#### 10.8. 统计文档
 
 在SpringData MongoDB的3.x之前的版本中，count操作使用MongoDB的内部集合统计。随着 [MongoDB 事务](https://springdoc.cn/spring-data-mongodb/#mongo.transactions) 的引入，这已不再可能，因为统计数据无法正确反映事务过程中的潜在变化，需要采用基于聚合的count方法。因此，在2.x版本中，如果没有事务正在进行，`MongoOperations.count()` 将使用集合统计数据，如果有，则使用聚合变量。
 
@@ -4153,13 +4153,13 @@ List<Person> result = template.find(query, Person.class);
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 10.9. Map-Reduce 操作
+#### 10.9. Map-Reduce 操作
 
 你可以通过使用Map-Reduce来查询MongoDB，这对批量处理、数据聚合以及查询语言不能满足你的需求时非常有用。
 
 Spring通过在 `MongoOperations` 上提供方法来简化Map-Reduce操作的创建和运行，提供了与MongoDB的Map-Reduce的集成。它可以将Map-Reduce操作的结果转换为POJO，并与Spring的 [Resource 抽象](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/core.html#resources) 集成。 这让你可以将你的JavaScript文件放在文件系统、classpath、HTTP服务器或任何其他Spring资源实现上，然后通过简单的URI风格的语法来引用JavaScript资源—例如， `classpath:reduce.js;`。在文件中外部化JavaScript代码通常比在代码中作为Java字符串嵌入更可取。注意，如果你愿意，你仍然可以将JavaScript代码作为Java字符串传递。
 
-#### 10.9.1. 使用示例
+##### 10.9.1. 使用示例
 
 为了了解如何进行Map-Reduce操作，我们使用 MongoDB - The Definitive Guide [[1](https://springdoc.cn/spring-data-mongodb/#_footnotedef_1)] 一书中的一个例子。在这个例子中，我们创建了三个文档，其值分别为 [a,b]、[b,c] 和 [c,d]。每个文档中的值都与key "x" 相关，如下例所示（假设这些文档都在一个名为 `jmr1` 的集合中）。
 
@@ -4268,7 +4268,7 @@ MapReduceResults<ValueObject> results = mongoOperations.mapReduce(query, "jmr1",
 
 注意，你可以在查询上指定额外的 limit 和 sort 值，但你不能跳过这些值。
 
-### 10.10. 脚本操作
+#### 10.10. 脚本操作
 
 |      | [MongoDB 4.2](https://docs.mongodb.com/master/release-notes/4.2-compatibility/) 删除了对 `ScriptOperations` 所使用的 `eval` 命令的支持。 对于被删除的功能，没有任何替代物。 |
 | ---- | ------------------------------------------------------------ |
@@ -4291,13 +4291,13 @@ scriptOps.call("echo", "execute script via name");
 |      | 用 'echo' 作为它的名字来存储脚本。给定的名称可以识别该脚本，并允许以后调用它。 |
 |      | 使用所提供的参数运行名称为 'echo' 的脚本。                   |
 
-### 10.11. Group 操作
+#### 10.11. Group 操作
 
 作为使用Map-Reduce进行数据聚合的替代方法，你可以使用 [`group` 操作](https://www.mongodb.org/display/DOCS/Aggregation#Aggregation-Group)，这感觉类似于使用SQL的按查询方式分组，所以与使用Map-Reduce相比，它可能感觉更容易接近。使用分组操作确实有一些限制，例如，在共享环境中不支持分组操作，而且它在一个BSON对象中返回全部结果集，所以结果应该很小，少于10000个键。
 
 Spring通过在 MongoOperations 上提供方法来简化 group 操作的创建和运行，从而提供了与MongoDB的 group 操作的集成。它可以将 group 操作的结果转换为POJO，还可以与Spring的 [Resource 抽象](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/core.html#resources) 集成。这将让你把你的JavaScript文件放在文件系统、classpath、http服务器或任何其他Spring资源实现上，然后通过简单的URI风格的语法引用JavaScript资源，例如 `classpath:reduce.js;`。在文件中外部化JavaScript代码通常比在代码中作为Java字符串嵌入要好。请注意，如果你愿意，你仍然可以将JavaScript代码作为Java字符串传递。
 
-#### 10.11.1. 使用示例
+##### 10.11.1. 使用示例
 
 为了理解 group 操作是如何工作的，我们使用了下面的例子，这在一定程度上是有意而为之的。对于一个更真实的例子，请参考《MongoDB—权威指南》一书。创建了一个名为 `group_test_collection` 的集合，有以下几条记录。
 
@@ -4379,13 +4379,13 @@ GroupByResults<XObject> results = mongoTemplate.group(where("x").gt(0),
                                         keyFunction("classpath:keyFunction.js").initialDocument("{ count: 0 }").reduceFunction("classpath:groupReduce.js"), XObject.class);
 ```
 
-### 10.12. 聚合（Aggregation）框架的支持
+#### 10.12. 聚合（Aggregation）框架的支持
 
 Spring Data MongoDB 为 2.2 版本中引入 MongoDB 的聚合框架提供支持。
 
 更多信息，请参见聚合框架和 MongoDB 的其他数据聚合工具的 [完整参考文档](https://docs.mongodb.org/manual/aggregation/)。
 
-#### 10.12.1. 基本概念
+##### 10.12.1. 基本概念
 
 Spring Data MongoDB中的聚合框架支持是基于以下关键抽象。`Aggregation`、`AggregationDefinition` 和 `AggregationResults`。
 
@@ -4426,7 +4426,7 @@ Spring Data MongoDB中的聚合框架支持是基于以下关键抽象。`Aggreg
 
 请注意，如果你提供一个输入类作为 `newAggregation` 方法的第一个参数，`MongoTemplate` 会从这个类派生出输入集合的名称。否则，如果你没有指定一个输入类，你必须明确提供输入集合的名称。如果同时提供了一个输入类和一个输入集合，则后者优先考虑。
 
-#### 10.12.2. 支持的聚合操作
+##### 10.12.2. 支持的聚合操作
 
 MongoDB聚合框架提供以下类型的聚合操作。
 
@@ -4471,7 +4471,7 @@ MongoDB聚合框架提供以下类型的聚合操作。
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 10.12.3. 投影表达式
+##### 10.12.3. 投影表达式
 
 投射表达式用于定义作为特定聚合步骤结果的字段。投影表达式可以通过 `Aggregation` 类的 `project` 方法来定义，可以通过传递一个 `String` 对象的列表或聚合框架 `Fields` 对象。投影可以通过 fluent API，通过使用 `and(String)` 方法和使用 `as(String)` 方法的别名来扩展额外的字段。注意，你也可以通过使用聚合框架的 `Fields.field` 静态工厂方法来定义带有别名的字段，然后你可以用它来构造一个新的 `Fields` 实例。在以后的聚合阶段对投影字段的引用只对包含的字段或其别名（包括新定义的字段及其别名）的字段名有效。未包括在投影中的字段不能在以后的聚合阶段被引用。下面的列表显示了投射表达式的例子。
 
@@ -4503,7 +4503,7 @@ project().and("firstname").as("name"), sort(ASC, "firstname")
 
 关于项目操作的更多例子可以在 `AggregationTests` 类中找到。注意，关于投影表达式的进一步细节可以在MongoDB聚合框架参考文档的 [相应部分](https://docs.mongodb.org/manual/reference/operator/aggregation/project/#pipe._S_project) 找到。
 
-#### 10.12.4. 分面分类（faceted classification）
+##### 10.12.4. 分面分类（faceted classification）
 
 从3.4版本开始，MongoDB通过使用聚合框架支持分面分类。分面分类使用语义类别（一般或特定主题），这些类别被组合起来以创建完整的分类条目。流经聚合管道的文档被分类到桶（bucket）中。多面分类能够对同一组输入文档进行各种聚合，而不需要多次检索输入文档。
 
@@ -4901,7 +4901,7 @@ TypedAggregation<Book> agg = Aggregation.newAggregation(Book.class,
 |      | 然后使用 [`$$REMOVE`](https://docs.mongodb.com/manual/reference/aggregation-variables/#variable.REMOVE) 来排除该字段。 |
 |      | 否则，添加 `author.middle` 的字段值。                        |
 
-### 10.13. 索引和 Collection 管理
+#### 10.13. 索引和 Collection 管理
 
 `MongoTemplate` 为管理索引和集合提供了一些方法。这些方法被收集到一个名为 `IndexOperations` 的辅助接口中。你可以通过调用 `indexOps` 方法并传入集合名称或实体的 `java.lang.Class` 来访问这些操作（集合名称是由 `.class` 派生出来的，可以是名称，也可以是注解元数据）。
 
@@ -4922,7 +4922,7 @@ public interface IndexOperations {
 }
 ```
 
-#### 10.13.1. 创建索引的方法
+##### 10.13.1. 创建索引的方法
 
 你可以通过使用 `MongoTemplate` 类在一个集合上创建一个索引来提高查询性能，如下例所示。
 
@@ -4942,7 +4942,7 @@ mongoTemplate.indexOps(Venue.class).ensureIndex(new GeospatialIndex("location"))
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 10.13.2. 获取索引信息
+##### 10.13.2. 获取索引信息
 
 `IndexOperations` 接口有 `getIndexInfo` 方法，该方法返回一个 `IndexInfo` 对象的列表。这个列表包含在集合上定义的所有索引。下面的例子在 `Person` 类上定义了一个索引，该索引有一个 `age` 属性。
 
@@ -4956,7 +4956,7 @@ List<IndexInfo> indexInfoList = template.indexOps(Person.class).getIndexInfo();
 //  IndexInfo [fieldSpec={age=DESCENDING}, name=age_-1, unique=true, sparse=false]]
 ```
 
-#### 10.13.3. 使用 Collection 的方法
+##### 10.13.3. 使用 Collection 的方法
 
 下面的例子显示了如何创建一个 collection。
 
@@ -4981,17 +4981,17 @@ mongoTemplate.dropCollection("MyNewCollection");
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 10.14. 运行命令
+#### 10.14. 运行命令
 
 你可以通过使用 `MongoTemplate` 上的 `executeCommand(…)` 方法来获得MongoDB驱动程序的 `MongoDatabase.runCommand( )` 方法。这些方法还可以将异常转化为Spring的 `DataAccessException` 层次结构。
 
-#### 10.14.1. 运行命令的方法
+##### 10.14.1. 运行命令的方法
 
 - `Document` executeCommand `(Document command)`: 运行一个MongoDB命令。
 - `Document` executeCommand `(Document command, ReadPreference readPreference)`: 用给定的可忽略的MongoDB `ReadPreference` 运行一个MongoDB命令。
 - `Document` executeCommand `(String jsonCommand)`: 运行一个以JSON字符串表示的MongoDB命令。
 
-### 10.15. 生命周期事件
+#### 10.15. 生命周期事件
 
 MongoDB映射框架包括几个 `org.springframework.context.ApplicationEvent` 事件，你的应用程序可以通过在 `ApplicationContext` 中注册特殊的Bean来响应。基于Spring的 `ApplicationContext` 事件基础设施，其他产品（如Spring Integration）可以轻松接收这些事件，因为它们是基于Spring的应用程序中众所周知的事件机制。
 
@@ -5037,7 +5037,7 @@ public class BeforeSaveListener extends AbstractMongoEventListener<Person> {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 10.16. 实体（Entity）回调
+#### 10.16. 实体（Entity）回调
 
 Spring Data基础设施提供了钩子（hooks），用于在某些方法被调用之前和之后修改实体。这些所谓的 `EntityCallback` 实例提供了一种方便的方式，以回调的方式检查和潜在地修改一个实体。 `EntityCallback` 看起来很像一个专门的 `ApplicationListener`。一些Spring Data模块发布了 store 特定事件（如 `BeforeSaveEvent`），允许修改给定的实体。在某些情况下，例如在处理不可变类型时，这些事件会造成麻烦。另外，事件发布依赖于 `ApplicationEventMulticaster`。如果将其与异步 `TaskExecutor` 配置在一起，可能会导致不可预测的结果，因为事件处理可以 fork 到一个线程。
 
@@ -5049,7 +5049,7 @@ Spring Data基础设施提供了钩子（hooks），用于在某些方法被调�
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 10.16.1. 实现实体回调
+##### 10.16.1. 实现实体回调
 
 `EntityCallback` 通过其泛型类型参数与它的 domain 类型直接相关。每个Spring Data 模块通常都有一组预定义的 `EntityCallback` 接口，涵盖了实体的生命周期。
 
@@ -5127,7 +5127,7 @@ class DefaultingEntityCallback implements BeforeSaveCallback<Person>, Ordered {
 | ---- | ------------------------------------------------------------ |
 |      | 如果同一 domain 类型存在多个实体回调，则可能对其进行排序。排序遵循最低优先级。 |
 
-#### 10.16.2. 注册实体回调
+##### 10.16.2. 注册实体回调
 
 `EntityCallback` Bean 在 `ApplicationContext` 中注册的情况下被 store 的具体实现所接收。大多数模板API已经实现了 `ApplicationContextAware`，因此可以访问 `ApplicationContext`。
 
@@ -5192,7 +5192,7 @@ class UserCallbacks implements BeforeConvertCallback<User>,
 |      | `BeforeSaveCallback` 使用一个 lambda 表达式。默认情况下是无序的，最后调用。请注意，由lambda表达式实现的回调不暴露类型信息，因此用一个不可分配的实体调用这些回调会影响回调的吞吐量。使用一个 `class` 或 `enum` 来启用回调Bean的类型过滤。 |
 |      | 将多个实体回调接口合并到一个实现类中。                       |
 
-#### 10.16.3. Store 特定的实体回调（EntityCallback）
+##### 10.16.3. Store 特定的实体回调（EntityCallback）
 
 Spring Data MongoDB使用 `EntityCallback` API来支持审计，并对以下回调作出反应。
 
@@ -5204,7 +5204,7 @@ Spring Data MongoDB使用 `EntityCallback` API来支持审计，并对以下回�
 | Reactive/BeforeSaveCallback     | `onBeforeSave(T entity, org.bson.Document target, String collection)` | 在 domain 对象被保存之前调用。 可以修改目标，要持久化的，包含所有映射的实体信息的 `Document`。 | `Ordered.LOWEST_PRECEDENCE` |
 | Reactive/AfterSaveCallback      | `onAfterSave(T entity, org.bson.Document target, String collection)` | 在 domain 对象被保存之前调用。 可以修改目标，要持久化的，包含所有映射的实体信息的 `Document`。 | `Ordered.LOWEST_PRECEDENCE` |
 
-### 10.17. 异常（Exception）转换
+#### 10.17. 异常（Exception）转换
 
 Spring框架为各种各样的数据库和映射技术提供了异常转换。这在传统上是针对JDBC和JPA的。Spring对MongoDB的支持通过提供 `org.springframework.dao.support.PersistenceExceptionTranslator` 接口的实现，将该功能扩展到了MongoDB数据库。
 
@@ -5212,7 +5212,7 @@ Spring框架为各种各样的数据库和映射技术提供了异常转换。�
 
 `MongoExceptionTranslator` 执行的一些映射是 `com.mongodb.Network` 到 `DataAccessResourceFailureException` 和 `MongoException` 错误代码1003、1201、12010、12011和12012到 `InvalidDataAccessApiUsageException`。查看实现，了解更多关于映射的细节。
 
-### 10.18. execute 回调
+#### 10.18. execute 回调
 
 所有Spring template 类的一个共同设计特点是，所有的功能都被路由到模板的一个 `execute` 回调方法中。这样做有助于确保异常和任何可能需要的资源管理都得到一致执行。虽然JDBC和JMS比MongoDB更需要这个功能，但它仍然提供了一个发生异常转换和记录的单一地点。因此，使用这些 `execute` 回调是访问 MongoDB 驱动程序的 `MongoDatabase` 和 `MongoCollection` 对象的首选方式，以执行 `MongoTemplate` 上没有暴露为方法的不常见操作。
 
@@ -5240,7 +5240,7 @@ boolean hasIndex = template.execute("geolocation", new CollectionCallbackBoolean
 });
 ```
 
-### 10.19. 支持 GridFS
+#### 10.19. 支持 GridFS
 
 MongoDB支持在其文件系统GridFS中存储二进制文件。Spring Data MongoDB提供了一个 `GridFsOperations` 接口以及相应的实现，即 `GridFsTemplate`，让你与文件系统互动。你可以通过给它一个 `MongoDatabaseFactory` 以及一个 `MongoConverter` 来设置一个 `GridFsTemplate` 实例，如下例所示。
 
@@ -5324,7 +5324,7 @@ class GridFsClient {
 
 `GridFsOperations` 继承了 `ResourcePatternResolver`，并允许将 `GridFsTemplate`（例如）插入 `ApplicationContext`，以从 MongoDB 数据库读取Spring配置文件。
 
-### 10.20. 具有可追踪游标的无限流
+#### 10.20. 具有可追踪游标的无限流
 
 默认情况下，当客户端用完游标提供的所有结果时，MongoDB会自动关闭游标。在耗尽时关闭游标会使流变成一个有限的流。对于 [有上限的集合](https://docs.mongodb.com/manual/core/capped-collections/)，你可以使用一个 [Tailable Cursor](https://docs.mongodb.com/manual/core/tailable-cursors/)，它在客户端消耗了所有最初返回的数据后仍然保持开放。
 
@@ -5334,7 +5334,7 @@ class GridFsClient {
 
 可跟踪的游标可以通过强制性的和反应性的MongoDB API来使用。强烈建议使用响应式变体，因为它的资源密集度较低。然而，如果你不能使用响应式API，你仍然可以使用Spring生态系统中已经普遍存在的消息传递概念。
 
-#### 10.20.1. 使用 `MessageListener` 的可追踪游标
+##### 10.20.1. 使用 `MessageListener` 的可追踪游标
 
 使用同步驱动监听一个有上限的集合会产生一个长期运行的、阻塞的任务，需要委托给一个单独的组件。在这种情况下，我们需要首先创建一个 `MessageListenerContainer`，它将是运行特定的 `SubscriptionRequest` 的主要入口点。Spring Data MongoDB 已经提供了一个默认的实现，它在 `MongoTemplate` 上运行，能够为 `TailableCursorRequest` 创建和运行 `Task` 实例。
 
@@ -5370,7 +5370,7 @@ container.stop();
 |      | 注册该请求。返回的 `Subscription` 可以用来检查当前的 `Task` 状态，并取消它以释放资源。 |
 |      | 一旦你确定你不再需要这个容器，不要忘记停止它。这样做可以停止容器内所有正在运行的 `Task` 实例。 |
 
-#### 10.20.2. 响应式可跟踪游标
+##### 10.20.2. 响应式可跟踪游标
 
 使用具有响应式数据类型的可跟踪游标可以构建无限的流。一个可跟踪的游标保持开放，直到它被外部关闭。当新的文档到达一个封顶的集合时，它就会释放出数据。
 
@@ -5411,7 +5411,7 @@ Disposable subscription = stream.doOnNext(System.out::println).subscribe();
 subscription.dispose();
 ```
 
-### 10.21. 变更流（Change Streams）
+#### 10.21. 变更流（Change Streams）
 
 从 MongoDB 3.6 开始， [Change Streams](https://docs.mongodb.com/manual/changeStreams/) 可以让应用程序获得有关变化的通知，而不需要跟踪oplog。
 
@@ -5423,7 +5423,7 @@ Change Streams 可以用命令式和响应式的MongoDB Java驱动来消费。�
 
 可以在集合以及数据库级别上观察，而数据库级别的变体会发布来自数据库内所有集合的变化。当订阅数据库变化流时，确保为事件类型使用一个合适的类型，因为转换可能不会正确适用于不同的实体类型。如有疑问，请使用 `Document`。
 
-#### 10.21.1. 用 `MessageListener` 改变数据流
+##### 10.21.1. 用 `MessageListener` 改变数据流
 
 通过 [使用同步驱动来监听变化流](https://docs.mongodb.com/manual/tutorial/change-streams-example/) 会产生一个长期运行的、阻塞的任务，需要委托给一个单独的组件。在这种情况下，我们需要首先创建一个 `MessageListenerContainer`，它将是运行特定的 `SubscriptionRequest` 任务的主要入口点。Spring Data MongoDB已经提供了一个默认的实现，它在 `MongoTemplate` 上运行，能够为 `ChangeStreamRequest` 创建和运行 `Task` 实例。
 
@@ -5456,7 +5456,7 @@ container.stop();
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 10.21.2. 响应式变更流（Change Streams）
+##### 10.21.2. 响应式变更流（Change Streams）
 
 用响应式API订阅Change Streams是一种更自然的方法来处理流的工作。尽管如此，基本的构建模块，如 `ChangeStreamOptions`，仍然是相同的。下面的例子展示了如何使用发射 `ChangeStreamEvent` 的Change Streams。
 
@@ -5474,7 +5474,7 @@ Flux<ChangeStreamEvent<User>> flux = reactiveTemplate.changeStream(User.class)
 |      | 使用一个聚合管道或只是一个查询 `Criteria` 来过滤事件。       |
 |      | 获得一个变化流事件的 `Flux`。`ChangeStreamEvent#getBody()` 被转换为(2)中要求的 domain 类型。 |
 
-#### 10.21.3. 恢复变更流（Change Streams）
+##### 10.21.3. 恢复变更流（Change Streams）
 
 Change Streams 可以被恢复，并在你离开的地方恢复发射事件。要恢复流，你需要提供一个恢复令牌或最后已知的服务器时间（UTC）。使用 `ChangeStreamOptions` 来设置相应的值。
 
@@ -5497,7 +5497,7 @@ Flux<ChangeStreamEvent<User>> resumed = template.changeStream(User.class)
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 10.22. 时间序列
+#### 10.22. 时间序列
 
 MongoDB 5.0引入了 [时序](https://docs.mongodb.com/manual/core/timeseries-collections/) 集合，该集合被优化为有效地存储随时间变化的文档，如测量或事件。在插入任何数据之前，这些集合需要被创建成这样。可以通过运行 `createCollection` 命令、定义时序集合选项或从 `@TimeSeries` 注解中提取选项来创建集合，如下面的例子所示。
 
@@ -5538,7 +5538,7 @@ template.createCollection(Measurement.class);
 
 上面的片段可以很容易地转移到提供同样方法的响应式API。请确保正确 subscribe 返回的发布者（publisher）。
 
-### 10.23. 可观察性（Observability）
+#### 10.23. 可观察性（Observability）
 
 Spring Data MongoDB目前拥有最新的代码，以支持MongoDB应用程序中的可观察性。 然而，这些变化还没有被Spring Boot所接受。 在这些变化被应用之前，如果你希望使用 Spring Data MongoDB 的 Observability 特性，你必须执行以下步骤。
 
@@ -5581,7 +5581,7 @@ Unresolved directive in reference/observability.adoc - include::../../../../targ
 
 请参阅 [OpenTelemetry语义公约](https://opentelemetry.io/docs/reference/specification/trace/semantic_conventions/database/#mongodb) 以进一步参考。
 
-## 11. MongoDB 会话（Session）
+### 11. MongoDB 会话（Session）
 
 从3.6版本开始，MongoDB支持会话的概念。会话的使用实现了MongoDB的 [Causal Consistency（因果一致性）](https://docs.mongodb.com/manual/core/read-isolation-consistency-recency/#causal-consistency) 模型，它保证了以尊重其因果关系的顺序运行操作。这些会话被分成 `ServerSession` 实例和 `ClientSession` 实例。在本节中，当我们谈到会话时，我们指的是 `ClientSession`。
 
@@ -5595,7 +5595,7 @@ Unresolved directive in reference/observability.adoc - include::../../../../targ
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 11.1. 支持同步的 `ClientSession`
+#### 11.1. 支持同步的 `ClientSession`
 
 下面的例子显示了一个会话的用法。
 
@@ -5635,7 +5635,7 @@ session.close()
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 11.2. 支持响应式的 `ClientSession`
+#### 11.2. 支持响应式的 `ClientSession`
 
 如下面的例子所示，响应式的对应方法使用与命令式相同的构件。
 
@@ -5676,7 +5676,7 @@ template.withSession(session)
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-## 12. MongoDB 事务
+### 12. MongoDB 事务
 
 从版本4开始，MongoDB支持 [事务](https://www.mongodb.com/transactions)。事务是建立在 [会话](https://springdoc.cn/spring-data-mongodb/#mongo.sessions)之上的，因此，需要一个活跃的 `ClientSession`。
 
@@ -5724,7 +5724,7 @@ template.withSession(session)
 
 前面的例子让你完全控制事务行为，同时在回调中使用会话范围的 `MongoOperations` 实例，以确保会话被传递给每个服务器调用。为了避免这种方法带来的一些开销，你可以使用 `TransactionTemplate` 来消除手动事务流的一些噪音。
 
-### 12.1. 事务和 `TransactionTemplate`
+#### 12.1. 事务和 `TransactionTemplate`
 
 Spring Data MongoDB事务支持一个 `TransactionTemplate`。下面的例子展示了如何创建和使用 `TransactionTemplate`。
 
@@ -5759,7 +5759,7 @@ txTemplate.execute(new TransactionCallbackWithoutResult() {
 
 在运行期间改变 `MongoTemplate` 的状态（就像你可能认为在前面列表的第1项中可能发生的那样）会导致线程和可见性问题。
 
-### 12.2. 事务和 `MongoTransactionManager`
+#### 12.2. 事务和 `MongoTransactionManager`
 
 `MongoTransactionManager` 是通往众所周知的Spring事务支持的网关。它可以让应用程序使用 [Spring的事务托管功能](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/data-access.html#transaction)。`MongoTransactionManager` 将一个 `ClientSession` 绑定到线程上。`MongoTemplate` 会检测会话，并相应地对这些与事务相关的资源进行操作。`MongoTemplate` 也可以参与到其他正在进行的事务中。下面的例子展示了如何用 `MongoTransactionManager` 创建和使用事务。
 
@@ -5800,7 +5800,7 @@ public class StateService {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 12.3. 响应式事务
+#### 12.3. 响应式事务
 
 与支持响应式 `ClientSession` 一样，`ReactiveMongoTemplate` 提供了专门的方法，用于在事务中进行操作，而不必担心根据操作结果提交或停止操作。
 
@@ -5839,7 +5839,7 @@ Mono<DeleteResult> result = Mono
 
 上述操作的罪魁祸首是在保留 main flow `DeleteResult`，而不是通过 `commitTransaction()` 或 `abortTransaction()` 发布的事务结果，这导致了相当复杂的设置。
 
-### 12.4. 事务和 `TransactionalOperator`
+#### 12.4. 事务和 `TransactionalOperator`
 
 Spring Data MongoDB事务支持一个 `TransactionalOperator`。下面的例子展示了如何创建和使用一个 `TransactionalOperator`。
 
@@ -5868,7 +5868,7 @@ Mono<Void> process(step)
 |      | 使用提供的 `ReactiveTransactionManager` 创建 `TransactionalOperator`。 |
 |      | `TransactionalOperator.transactional(…)` 为所有上游操作提供事务管理。 |
 
-### 12.5. 事务和 `ReactiveMongoTransactionManager`
+#### 12.5. 事务和 `ReactiveMongoTransactionManager`
 
 `ReactiveMongoTransactionManager` 是通往众所周知的 [Spring事务支持](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/data-access.html#transaction) 的网关。它允许应用程序利用Spring的管理事务功能。`ReactiveMongoTransactionManager` 将 `ClientSession` 绑定到 subscriber `Context`。`ReactiveMongoTemplate` 会检测会话，并对这些与事务相关的资源进行相应操作。 `ReactiveMongoTemplate` 也可以参与其他正在进行的事务。下面的例子展示了如何用 `ReactiveMongoTransactionManager` 创建和使用事务。
 
@@ -5907,7 +5907,7 @@ public class StateService {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 12.6. 事务内部的特殊行为
+#### 12.6. 事务内部的特殊行为
 
 在事务内部，MongoDB服务器有一个稍微不同的行为。
 
@@ -5967,7 +5967,7 @@ db.collection.aggregate(
 db.collection.find( { state: "active" } ).count()
 ```
 
-## 13. 响应式 MongoDB 支持
+### 13. 响应式 MongoDB 支持
 
 响应式MongoDB支持包含以下基本功能集。
 
@@ -5982,7 +5982,7 @@ db.collection.find( { state: "active" } ).count()
 
 对于大多数任务，你应该使用 `ReactiveMongoTemplate` 或 repository 支持，它们都使用丰富的映射功能。`ReactiveMongoTemplate` 是访问功能的地方，如递增计数器（incrementing）或临时 CRUD 操作。`ReactiveMongoTemplate` 还提供了回调方法，这样你就可以使用低级别的API工件（如 `MongoDatabase`）来直接与MongoDB进行通信。在各种API工件上的命名约定的目的是复制基础MongoDB Java驱动中的命名约定，以便你可以将现有知识映射到Spring API上。
 
-### 13.1. 入门
+#### 13.1. 入门
 
 支持Spring MongoDB需要MongoDB 2.6或更高版本和Java SE 8或更高版本。
 
@@ -6100,11 +6100,11 @@ public class ReactiveMongoApp {
 
 有一个 [GitHub仓库，里面有几个例子](https://github.com/spring-projects/spring-data-examples)，你可以下载并玩一玩，感受一下这个库是如何工作的。
 
-### 13.2. 用Spring和Reactive Streams驱动连接到MongoDB
+#### 13.2. 用Spring和Reactive Streams驱动连接到MongoDB
 
 在使用MongoDB和Spring时，首要任务之一是通过使用IoC容器创建一个 `com.mongodb.reactivestreams.client.MongoClient` 对象。
 
-#### 13.2.1. 使用基于Java的元数据注册MongoClient实例
+##### 13.2.1. 使用基于Java的元数据注册MongoClient实例
 
 下面的例子展示了如何使用基于 Java 的 Bean 元数据来注册 `com.mongodb.reactivestreams.client.MongoClient` 的一个实例。
 
@@ -6150,7 +6150,7 @@ public class AppConfig {
 
 要访问由 `ReactiveMongoClientFactoryBean` 在其他 `@Configuration` 或你自己的类中创建的 `com.mongodb.reactivestreams.client.MongoClient` 对象，可从 context 中获取 `MongoClient`。
 
-#### 13.2.2. ReactiveMongoDatabaseFactory 接口
+##### 13.2.2. ReactiveMongoDatabaseFactory 接口
 
 虽然 `com.mongodb.reactivestreams.client.MongoClient` 是响应式 MongoDB 驱动程序 API 的入口，但连接到特定 MongoDB 数据库实例需要额外的信息，例如数据库名称。有了这些信息，你就可以获得 `com.mongodb.reactivestreams.client.MongoDatabase` 对象并访问特定MongoDB数据库实例的所有功能。Spring 提供了 `org.springframework.data.mongodb.core.ReactiveMongoDatabaseFactory` 接口来引导与数据库的连接。下面的列表显示了 `ReactiveMongoDatabaseFactory` 接口。
 
@@ -6207,7 +6207,7 @@ public class MongoApp {
 
 使用 `SimpleReactiveMongoDatabaseFactory` 是 [入门部分](https://springdoc.cn/spring-data-mongodb/#mongodb-reactive-getting-started) 所示清单的唯一区别。
 
-#### 13.2.3. 通过使用基于Java的元数据注册 ReactiveMongoDatabaseFactory 实例
+##### 13.2.3. 通过使用基于Java的元数据注册 ReactiveMongoDatabaseFactory 实例
 
 为了在容器中注册一个 `ReactiveMongoDatabaseFactory` 实例，你可以编写与前面代码清单中强调的差不多的代码，如下例所示。
 
@@ -6237,7 +6237,7 @@ public class MongoConfiguration {
 }
 ```
 
-### 13.3. `ReactiveMongoTemplate` 简介
+#### 13.3. `ReactiveMongoTemplate` 简介
 
 位于 `org.springframework.data.mongodb` 包中的 `ReactiveMongoTemplate` 类是Spring的Reactive MongoDB支持的中心类，它提供了丰富的功能集来与数据库交互。该模板提供了创建、更新、删除和查询MongoDB文档的便利操作，并提供了你的 domain 对象和MongoDB文档之间的映射。
 
@@ -6259,7 +6259,7 @@ MongoDB文档和domain类之间的映射是通过委托给 `MongoConverter` 接�
 
 `ReactiveMongoTemplate` 上有许多便利方法，可以帮助你轻松地执行常见的任务。然而，如果你需要直接访问 MongoDB 驱动程序 API，以访问 `MongoTemplate` 没有明确暴露的功能，你可以使用几个 `execute` 回调方法之一来访问底层驱动程序 API。`execute` 回调给你一个对 `com.mongodb.reactivestreams.client.MongoCollection` 或 `com.mongodb.reactivestreams.client.MongoDatabase` 对象的引用。参见 [Execution 回调](https://springdoc.cn/spring-data-mongodb/#mongo.reactive.executioncallback) 以了解更多信息。
 
-#### 13.3.1. 实例化 ReactiveMongoTemplate
+##### 13.3.1. 实例化 ReactiveMongoTemplate
 
 你可以使用Java来创建和注册 `ReactiveMongoTemplate` 的实例，如下所示。
 
@@ -6295,15 +6295,15 @@ public class AppConfig {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 13.3.2. `WriteResultChecking` 策略
+##### 13.3.2. `WriteResultChecking` 策略
 
 在开发过程中，如果从任何MongoDB操作返回的 `com.mongodb.WriteResult` 包含一个错误，那么记录或抛出一个异常是很方便的。在开发过程中，忘记这样做是很常见的，然后最终得到一个看起来运行成功的应用程序，而事实上，数据库并没有按照你的预期进行修改。将 `MongoTemplate` `WriteResultChecking` 属性设置为一个枚举，其值为：`LOG`、`EXCEPTION` 或 `NONE`，以记录错误、抛出异常或不做任何事情。默认是使用 `NONE` 的 `WriteResultChecking` 值。
 
-#### 13.3.3. `WriteConcern`
+##### 13.3.3. `WriteConcern`
 
 如果尚未通过驱动程序在更高层次（如 `MongoDatabase`）上指定，你可以设置 `ReactiveMongoTemplate` 用于写操作的 `com.mongodb.WriteConcern` 属性。如果 `ReactiveMongoTemplate` 的 `WriteConcern` 属性未被设置，则默认为 MongoDB 驱动程序的 `MongoDatabase` 或 `MongoCollection` 设置中的设置。
 
-#### 13.3.4. `WriteConcernResolver`
+##### 13.3.4. `WriteConcernResolver`
 
 对于更高级的情况，即你想在每个操作的基础上设置不同的 `WriteConcern` 值（对于删除、更新、插入和保存操作），可以在 `ReactiveMongoTemplate` 上配置一个叫做 `WriteConcernResolver` 的策略接口。由于 `ReactiveMongoTemplate` 是用来持久化POJO的，`WriteConcernResolver` 让你创建一个策略，可以将特定的POJO类映射到 `WriteConcern` 值。下面的列表显示了 `WriteConcernResolver` 的接口。
 
@@ -6329,7 +6329,7 @@ private class MyAppWriteConcernResolver implements WriteConcernResolver {
 }
 ```
 
-### 13.4. 保存、更新和删除文档
+#### 13.4. 保存、更新和删除文档
 
 `ReactiveMongoTemplate` 让你可以保存、更新和删除你的domain对象，并将这些对象映射到存储在MongoDB中的文档。
 
@@ -6403,7 +6403,7 @@ public class ReactiveMongoApp {
 
 “[Querying Documents](https://springdoc.cn/spring-data-mongodb/#mongo.query)” 更详细地解释了前面的例子中使用的查询语法。其他文档可以在 [阻塞式 `MongoTemplate`](https://springdoc.cn/spring-data-mongodb/#mongo-template)部分找到。
 
-### 13.5. Execution 回调
+#### 13.5. Execution 回调
 
 所有Spring template 类的一个共同设计特点是，所有功能都被路由到运行回调方法的模板之一。这有助于确保异常和任何可能需要的资源管理的执行一致性。虽然这在JDBC和JMS的情况下比在MongoDB的情况下更有必要，但它仍然提供了一个发生异常转换和记录的单一地点。因此，使用 `execute` 回调是访问 MongoDB 驱动程序的 `MongoDatabase` 和 `MongoCollection` 对象的首选方式，以执行未在 `ReactiveMongoTemplate` 上作为方法公开的不常见操作。
 
@@ -6423,7 +6423,7 @@ Flux<Boolean> hasIndex = operations.execute("geolocation",
       .defaultIfEmpty(false));
 ```
 
-### 13.6. 支持GridFS
+#### 13.6. 支持GridFS
 
 MongoDB支持在其文件系统GridFS内存储二进制文件。Spring Data MongoDB提供了一个 `ReactiveGridFsOperations` 接口以及相应的实现，即 `ReactiveGridFsTemplate`，让你与文件系统互动。你可以通过将 `ReactiveMongoDatabaseFactory` 以及 `MongoConverter` 交给它来设置一个 `ReactiveGridFsTemplate` 实例，如下例所示。
 
@@ -6507,11 +6507,11 @@ class ReactiveGridFsClient {
 }
 ```
 
-## 14. MongoDB Repository
+### 14. MongoDB Repository
 
 本章指出了 MongoDB 的 repository 支持的特殊性。本章建立在 [与 Spring Data Repository 一起工作](https://springdoc.cn/spring-data-mongodb/#repositories) 中解释的核心 repository 支持的基础上。你应该对那里解释的基本概念有一个正确的理解。
 
-### 14.1. 用法
+#### 14.1. 用法
 
 为了访问存储在MongoDB中的domain实体，你可以使用我们复杂的 repository 支持，这大大简化了实施。要做到这一点，为你的 repository 创建一个接口，如下例所示。
 
@@ -6592,7 +6592,7 @@ class PersonRepositoryTests {
 
 前面的例子用Spring的单元测试支持创建了一个 application context，它将基于注解的依赖注入到测试案例中。在测试方法中，我们使用 repository 来查询数据存储。我们交给 repository 一个 `PageRequest` 实例，请求页面大小为10的 `Person` 对象的第一页。
 
-### 14.2. Query 方法
+##### 14.2. Query 方法
 
 你通常在 repository 上触发的大多数数据访问操作都会导致对 MongoDB 数据库的查询被执行。定义这样的查询只需要在 repository 接口上声明一个方法，就像下面的例子所示。
 
@@ -7353,7 +7353,7 @@ interface PersonRepository extends CrudRepository<Person, String> {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 14.3. CDI 整合
+#### 14.3. CDI 整合
 
 repository 接口的实例通常由容器创建，而Spring是与Spring Data合作时最自然的选择。从1.3.0版本开始，Spring Data MongoDB带有一个自定义的CDI扩展，可以让你在CDI环境中使用 repository 抽象。该扩展是JAR的一部分。要激活它，请将Spring Data MongoDB JAR放入你的classpath。现在你可以通过为 `MongoTemplate` 实现CDI Producer来设置基础设施，如下面的例子所示。
 
@@ -7384,11 +7384,11 @@ class RepositoryClient {
 }
 ```
 
-## 15. 响应式 MongoDB Repository
+### 15. 响应式 MongoDB Repository
 
 本章描述了 MongoDB 的响应式 repository 支持的特性。本章建立在 [与 Spring Data Repository 一起工作](https://springdoc.cn/spring-data-mongodb/#repositories) 中解释的核心 repository 支持的基础上。你应该对那里解释的基本概念有一个正确的理解。
 
-### 15.1. 响应式组合库
+#### 15.1. 响应式组合库
 
 响应式空间提供了各种响应式组合库。最常见的库是 [RxJava](https://github.com/ReactiveX/RxJava) 和 [Project Reactor](https://projectreactor.io/)。
 
@@ -7405,7 +7405,7 @@ Spring Data 的 Repository 抽象是一个动态的API，主要由你和你的�
 
 Spring Data在幕后转换了响应式包装类型，因此你可以坚持使用你最喜欢的组合库。
 
-### 15.2. 用法
+#### 15.2. 用法
 
 要访问存储在MongoDB数据库中的domain实体，你可以使用我们复杂的repository支持，它可以大大缓解实现这些实体。要做到这一点，为你的repository创建一个类似的接口。不过在这之前，你需要一个实体，比如下面这个例子中定义的实体。
 
@@ -7515,7 +7515,7 @@ Pageable page = PageRequest.of(1, 10, Sort.by("lastname"));
 Flux<Person> persons = repository.findByFirstnameOrderByLastname("luke", page);
 ```
 
-### 15.3. 特性
+#### 15.3. 特性
 
 与阻塞式 [MongoDB Repository](https://springdoc.cn/spring-data-mongodb/#mongo.repositories) 相比，Spring Data的Reactive MongoDB支持的功能集有所减少。
 
@@ -7529,7 +7529,7 @@ Flux<Person> persons = repository.findByFirstnameOrderByLastname("luke", page);
 - [类型安全的查询方法](https://springdoc.cn/spring-data-mongodb/#mongodb.reactive.repositories.queries.type-safe)
 - [投影](https://springdoc.cn/spring-data-mongodb/#projections)
 
-#### 15.3.1. 地理空间 Repository 查询
+##### 15.3.1. 地理空间 Repository 查询
 
 正如你在前面的 “[地理空间 Repository 查询](https://springdoc.cn/spring-data-mongodb/#mongodb.reactive.repositories.queries.geo-spatial)” 中所看到的，一些关键字在MongoDB查询中会触发地理空间操作。 `Near` 关键字允许一些进一步的修改，正如接下来的几个例子所示。
 
@@ -7593,7 +7593,7 @@ interface PersonRepository extends ReactiveMongoRepository<Person, String>  {
 }
 ```
 
-#### 15.3.2. 类型安全的查询方法
+##### 15.3.2. 类型安全的查询方法
 
 响应式 MongoDB repository 支持与 [Querydsl](http://www.querydsl.com/) 项目集成，后者提供了一种执行类型安全查询的方法。
 
@@ -7659,9 +7659,9 @@ interface PersonRepository extends ReactiveMongoRepository<Person, String>, Reac
 | ---- | --------------------------------------------- |
 |      |                                               |
 
-## 16. 审计
+### 16. 审计
 
-### 16.1. 基础
+#### 16.1. 基础
 
 Spring Data提供了复杂的支持，可以透明地跟踪谁创建或更改了实体以及更改发生的时间。为了从该功能中获益，你必须为你的实体类配备审计元数据，这些元数据可以使用注解或实现接口来定义。此外，审计必须通过注解配置或XML配置来启用，以注册所需的基础设施组件。关于配置样本，请参考特定store部分。
 
@@ -7669,7 +7669,7 @@ Spring Data提供了复杂的支持，可以透明地跟踪谁创建或更改了
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 16.1.1. 基于注解的审计元数据
+##### 16.1.1. 基于注解的审计元数据
 
 我们提供 `@CreatedBy` 和 `@LastModifiedBy` 来捕获创建或修改实体的用户，以及 `@CreatedDate` 和 `@LastModifiedDate` 来捕获变化发生的时间。
 
@@ -7713,11 +7713,11 @@ class AuditMetadata {
 }
 ```
 
-#### 16.1.2. 基于接口的审计元数据
+##### 16.1.2. 基于接口的审计元数据
 
 如果你不想使用注解来定义审计元数据，你可以让你的domain类实现 `Auditable` 接口。它为所有的审计属性暴露了 `setter` 方法。
 
-#### 16.1.3. `AuditorAware`
+##### 16.1.3. `AuditorAware`
 
 如果你使用 `@CreatedBy` 或 `@LastModifiedBy`，审计基础设施需要以某种方式知道当前的principal。为此，我们提供了一个 `AuditorAware<T>` SPI接口，你必须实现这个接口来告诉基础设施谁是与应用程序交互的当前用户或系统。泛型 `T` 定义了用 `@CreatedBy` 或 `@LastModifiedBy` 注解的属性必须是什么类型。
 
@@ -7742,7 +7742,7 @@ class SpringSecurityAuditorAware implements AuditorAware<User> {
 
 该实现访问由Spring Security提供的 `Authentication` 对象，并查找你在 `UserDetailsService` 实现中创建的自定义 `UserDetails` 实例。我们在这里假设你是通过 `UserDetails` 实现来暴露domain用户的，但根据找到的 `Authentication`，你也可以从任何地方查到它。
 
-#### 16.1.4. `ReactiveAuditorAware`
+##### 16.1.4. `ReactiveAuditorAware`
 
 当使用响应式基础设施时，你可能想利用上下文（Context）信息来提供 `@CreatedBy` 或 `@LastModifiedBy` 信息。我们提供了一个 `ReactiveAuditorAware<T>` SPI接口，你必须实现这个接口来告诉基础设施谁是当前与应用程序交互的用户或系统。泛型 `T` 定义了用 `@CreatedBy` 或 `@LastModifiedBy` 注释的属性必须是什么类型。
 
@@ -7767,7 +7767,7 @@ class SpringSecurityAuditorAware implements ReactiveAuditorAware<User> {
 
 该实现访问由Spring Security提供的 `Authentication` 对象，并查找你在 `UserDetailsService` 实现中创建的自定义 `UserDetails` 实例。我们在这里假设你是通过 `UserDetails` 实现来暴露domain用户的，但根据找到的 `Authentication`，你也可以从任何地方查到它。
 
-### 16.2. MongoDB的一般审计配置
+#### 16.2. MongoDB的一般审计配置
 
 自Spring Data MongoDB 1.4以来，可以通过用 `@EnableMongoAuditing` 注解对配置类进行注解来启用审计，如下例所示。
 
@@ -7805,13 +7805,13 @@ class Config {
 }
 ```
 
-## 17. 映射（Mapping）
+### 17. 映射（Mapping）
 
 丰富的映射支持是由 `MappingMongoConverter` 提供的。`MappingMongoConverter` 有一个丰富的元数据模型，提供完整的功能集，将 domain 对象映射到MongoDB文档。映射元数据模型是通过在你的 domain 对象上使用注解来填充的。然而，该基础设施并不限于使用注解作为元数据信息的唯一来源。`MappingMongoConverter` 还可以让你在不提供任何额外元数据的情况下，通过遵循一组约定，将对象映射到文档。
 
 本节介绍了 `MappingMongoConverter` 的功能，包括基本原理，如何使用约定将对象映射到文档，以及如何用基于注解的映射元数据覆盖这些约定。
 
-### 17.1. 对象映射的基础知识
+#### 17.1. 对象映射的基础知识
 
 本节涵盖了Spring Data对象映射、对象创建、字段和属性访问、可变性和不可变性的基本原理。注意，本节只适用于不使用底层数据存储的对象映射的Spring Data模块（如JPA）。此外，请务必查阅特定于存储的对象映射部分，如索引、自定义列或字段名或类似内容。
 
@@ -7820,7 +7820,7 @@ Spring Data对象映射的核心职责是创建domain对象的实例，并将存
 1. 通过使用暴露的构造函数之一来创建实例。
 2. Instance population to materialize all exposed properties.
 
-#### 17.1.1. Object 创建
+##### 17.1.1. Object 创建
 
 Spring Data会自动尝试检测一个持久化实体的构造函数，以用于将该类型的对象具体化。该解析算法的工作原理如下。
 
@@ -7864,7 +7864,7 @@ class PersonObjectInstantiator implements ObjectInstantiator {
 
 如果这些标准中的任何一项不符合，Spring Data将回退到使用反射来进行实例化。
 
-#### 17.1.2. 属性填充
+##### 17.1.2. 属性填充
 
 一旦实体的实例被创建，Spring Data就会填充该类的所有剩余持久化属性。除非已经由实体的构造函数填充（即通过其构造函数参数列表设置），否则 identifier 属性将首先被填充，以允许解决循环对象引用。之后，所有尚未被构造函数填充的非瞬时（non-transient）属性都被设置在实体实例上。为此，我们使用以下算法。
 
@@ -7990,7 +7990,7 @@ class Person {
 |      | `remarks` 属性是可变的，通过调用setter方法来填充。           |
 |      | 该类暴露了一个工厂方法和一个用于创建对象的构造器。这里的核心思想是使用工厂方法而不是额外的构造函数，以避免通过 `@PersistenceCreator` 进行构造函数消歧义的需要。相反，属性的缺省是在工厂方法中处理的。如果你想让Spring Data使用工厂方法进行对象实例化，请用 `@PersistenceCreator` 来注解它。 |
 
-#### 17.1.3. 一般建议
+##### 17.1.3. 一般建议
 
 - 尽量坚持使用不可变的对象 --不可变的对象创建起来很简单，因为具体化一个对象只需要调用其构造函数即可。同时，这也避免了你的domain对象充满了允许客户端代码操纵对象状态的 setter 方法。如果你需要这些，最好使它们受到 `package` 的保护，这样它们就只能被有限的共存类型所调用。纯构造函数实例化属性比填充快30%。
 - 提供一个全参数构造函数 — 即使你不能或不想将你的实体建模为不可变的值，提供一个将实体的所有属性作为参数的构造函数仍有价值，包括可变的属性，因为这允许对象映射跳过属性填充以获得最佳性能。
@@ -8052,7 +8052,7 @@ Spring Data模块通常支持持有不同 value 的重写属性。从编程模�
 2. 如何在你的数据存储中表示属性？对不同的值使用相同的字段/列名通常会导致数据损坏，所以你应该至少使用一个明确的字段/列名来注解其中的一个属性。
 3. 不能使用 `@AccessType(PROPERTY)`，因为在不对 setter 实现做任何进一步假设的情况下，一般不能设置父类属性。
 
-#### 17.1.4. 对 Kotlin 的支持
+##### 17.1.4. 对 Kotlin 的支持
 
 Spring Data 适应了 Kotlin 的具体特性，允许对象的创建和变异（mutation）。
 
@@ -8163,7 +8163,7 @@ Spring Data模块通常支持持有不同value的重写属性。从编程模型�
 2. 如何在你的数据存储中表示属性？对不同的值使用相同的字段/列名通常会导致数据损坏，所以你应该至少使用一个明确的字段/列名来注解其中的一个属性。
 3. `@AccessType(PROPERTY)` 不能使用，因为不能设置父类属性。
 
-### 17.2. 基于常规的映射
+#### 17.2. 基于常规的映射
 
 当没有提供额外的映射元数据时，`MappingMongoConverter` 有一些惯例用于将对象映射到文档。这些约定如下：
 
@@ -8173,7 +8173,7 @@ Spring Data模块通常支持持有不同value的重写属性。从编程模型�
 - 一个对象的字段被用来转换为文档中的字段和从文档中转换。public `JavaBean` 属性不被使用。
 - 如果你有一个单一的非零参数构造器，其构造器参数名称与文档的顶级字段名称相匹配，则使用该构造器。否则，将使用零参数的构造函数。如果有一个以上的非零参数构造函数，将抛出一个异常。
 
-#### 17.2.1. 在映射层中如何处理 `_id` 字段
+##### 17.2.1. 在映射层中如何处理 `_id` 字段
 
 MongoDB要求你为所有文档提供一个 `_id` 字段。如果你没有提供一个，驱动程序将分配一个生成值的ObjectId。 "_id" 字段可以是任何类型，而不是数组，只要它是唯一的。驱动程序自然支持所有原始类型和日期。当使用 `MappingMongoConverter` 时，有一些规则规定了如何将Java类的属性映射到 `_id` 字段。
 
@@ -8201,7 +8201,7 @@ MongoDB要求你为所有文档提供一个 `_id` 字段。如果你没有提供
 
 当查询和更新时，`MongoTemplate` 将使用 converter 来处理 `Query` 和 `Update` 对象的转换，这些对象与上述保存文档的规则相对应，因此在你的查询中使用的字段名和类型将能够与你的domain类中的内容相匹配。
 
-### 17.3. 数据映射和类型转换
+#### 17.3. 数据映射和类型转换
 
 本节解释了如何将类型映射到 MongoDB 的表示方法，以及如何从 MongoDB 的表示方法中获取类型。Spring Data MongoDB支持所有可表示为BSON（MongoDB的内部文档格式）的类型。除了这些类型外，Spring Data MongoDB 还提供了一组内置的转换器来映射其他类型。你可以提供您自己的转换器来调整类型转换。请参阅 [[mapping-explicit-converters]](https://springdoc.cn/spring-data-mongodb/#mapping-explicit-converters) 以了解更多细节。
 
@@ -8250,7 +8250,7 @@ MongoDB要求你为所有文档提供一个 `_id` 字段。如果你没有提供
 | `GeoJsonLineString`                                          | converter                                                    | `{ "geoJsonLineString" : { "type" : "LineString", "coordinates" : [ [ 40 , 5 ], [ 41 , 6 ] ] }}` |
 | `GeoJsonMultiLineString`                                     | converter                                                    | `{"geoJsonLineString" : { "type" : "MultiLineString", coordinates: [     [ [ -73.97162 , 40.78205 ], [ -73.96374 , 40.77715 ] ],     [ [ -73.97880 , 40.77247 ], [ -73.97036 , 40.76811 ] ]  ] }}` |
 
-### 17.4. 映射配置
+#### 17.4. 映射配置
 
 除非明确配置，否则在你创建 `MongoTemplate` 时，默认会创建 `MappingMongoConverter` 的实例。你可以创建你自己的 `MappingMongoConverter` 的实例。这样做可以让你决定在 classpath 中找到你的 domain 类，以便Spring Data MongoDB能够提取元数据并构建索引。此外，通过创建自己的实例，你可以注册Spring converter，以便将特定的类映射到数据库中，或从数据库中提取。
 
@@ -8300,7 +8300,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
 `base-package` 属性告诉它在哪里扫描带有 `@org.springframework.data.mongodb.core.mapping.Document` 注解的类。
 
-### 17.5. 基于元数据的映射
+#### 17.5. 基于元数据的映射
 
 为了充分利用Spring Data MongoDB支持中的对象映射功能，你应该用 `@Document` 注解来注解你的映射对象。尽管映射框架没有必要拥有这个注解（即使没有任何注解，你的POJO也能正确映射），但它能让classpath扫描器找到并预处理你的领域对象，以提取必要的元数据。如果你不使用这个注解，你的应用程序在第一次存储 domain 对象时就会受到轻微的性能影响，因为映射框架需要建立其内部元数据模型，以便它知道你的 domain 对象的属性以及如何持久化它们。下面的例子显示了一个 domain 对象。
 
@@ -8333,7 +8333,7 @@ public class Person {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 17.5.1. 创建索引
+##### 17.5.1. 创建索引
 
 Spring Data MongoDB可以为用 `@Document` 注解的实体类型自动创建索引。自3.0版本以来，必须明确启用索引创建，以防止对集合生命周期和性能产生不希望看到的影响。在应用程序启动时以及在应用程序运行时首次访问实体类型时，会自动为初始实体集创建索引。
 
@@ -8398,7 +8398,7 @@ class MyListener{
 | ---- | --------------------------------------- |
 |      |                                         |
 
-#### 17.5.2. 映射注释概述
+##### 17.5.2. 映射注释概述
 
 `MappingMongoConverter` 可以使用元数据来驱动对象到文档的映射。以下注解是可用的。
 
@@ -8481,7 +8481,7 @@ public class Person<T extends Address> {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 17.5.3. 自定义 Object 构造
+##### 17.5.3. 自定义 Object 构造
 
 映射子系统允许通过用 `@PersistenceConstructor` 注解来定制对象的构造。用于构造器参数的值以下列方式解析。
 
@@ -8517,7 +8517,7 @@ OrderItem item = converter.read(OrderItem.class, input);
 
 在 [MappingMongoConverterUnitTests](https://github.com/spring-projects/spring-data-mongodb/blob/master/spring-data-mongodb/src/test/java/org/springframework/data/mongodb/core/convert/MappingMongoConverterUnitTests.java) 测试套件中可以找到使用 `@PersistenceConstructor` 注解的其他例子。
 
-#### 17.5.4. 复合索引
+##### 17.5.4. 复合索引
 
 复合索引也被支持。它们是在类的层面上定义的，而不是在单个属性上。
 
@@ -8549,7 +8549,7 @@ public class Person {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 17.5.5. 哈希索引
+##### 17.5.5. 哈希索引
 
 Hash索引允许在 sharded cluster 内进行基于hash的分片。使用hash字段值来分片的结果是一个更随机的分布。详情请参考 [MongoDB文档](https://docs.mongodb.com/manual/core/index-hashed/)。
 
@@ -8615,7 +8615,7 @@ public @interface IndexAndHash {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 17.5.6. 通配符索引
+##### 17.5.6. 通配符索引
 
 通配符索引（`WildcardIndex`）是一个索引，可以用来包括所有字段或基于给定（通配符）模式（pattern）的特定字段。详情请参考 [MongoDB文档](https://docs.mongodb.com/manual/core/index-wildcard/)。
 
@@ -8679,7 +8679,7 @@ public class User {
 db.user.createIndex({ "userMetadata.$" : 1 }, {})
 ```
 
-#### 17.5.7. 文本索引
+##### 17.5.7. 文本索引
 
 |      | 对于MongoDB v.2.4来说，文本索引功能默认是禁用的。 |
 | ---- | ------------------------------------------------- |
@@ -8707,7 +8707,7 @@ class Nested {
 }
 ```
 
-#### 17.5.8. 使用 DBRef
+##### 17.5.8. 使用 DBRef
 
 映射框架不一定要把子对象嵌入到文档中去存储。你也可以单独存储它们，并使用一个 `DBRef` 来引用该文档。当对象从MongoDB加载时，这些引用会被急切地解析，这样你得到的映射对象看起来就像它被嵌入到你的顶级文档中存储一样。
 
@@ -8750,7 +8750,7 @@ public class Person {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 17.5.9. 使用文档引用
+##### 17.5.9. 使用文档引用
 
 使用 `@DocumentReference` 提供了一种在MongoDB中引用实体的灵活方式。虽然目标与使用 [DBRef](https://springdoc.cn/spring-data-mongodb/#mapping-usage-references) 时相同，但存储的表示方法却不同。`DBRef` 解析到一个具有固定结构的文档，如 [MongoDB参考文档](https://docs.mongodb.com/manual/reference/database-references/)中所述。
 文档引用，不遵循特定的格式。它们实际上可以是任何东西，一个单一的值，整个文档，基本上所有可以存储在MongoDB中的东西。默认情况下，映射层将使用被引用实体的 id 值进行存储和检索，就像下面的例子。
@@ -9108,17 +9108,17 @@ class ToDocumentPointerConverter implements Converter<ReferencedObject, Document
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 17.5.10. 映射框架事件
+##### 17.5.10. 映射框架事件
 
 事件在映射过程的整个生命周期中被触发。这将在 [生命周期事件](https://springdoc.cn/spring-data-mongodb/#mongodb.mapping-usage.events) 部分进行描述。
 
 在你的 Spring ApplicationContext 中声明这些Bean会导致它们在事件被调度时被调用。
 
-### 17.6. 解构的类型
+#### 17.6. 解构的类型
 
 解构的实体用于在你的Java domain 模型中设计 value 对象，其属性被平铺到父方的MongoDB文档中。
 
-#### 17.6.1. 解构类型映射
+##### 17.6.1. 解构类型映射
 
 考虑以下domain模型，其中 `User.name` 被注解为 `@Unwrapped`。`@Unwrapped` 注解预示着 `UserName` 的所有属性应该被平铺到拥有 `name` 属性的 `user` 文档中。
 
@@ -9158,7 +9158,7 @@ class UserName {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 17.6.2. 解构的类型字段名
+##### 17.6.2. 解构的类型字段名
 
 通过使用 `@Unwrapped` 注解的可选 `prefix` 属性，一个值对象可以被多次解构。通过这样做，所选择的前缀会被前置到解构对象中的每个属性或 `@Field("…")` 名称上。请注意，如果多个属性渲染到相同的字段名，值将相互覆盖。
 
@@ -9229,7 +9229,7 @@ public class UserName {
 | ---- | ------------------------------------------------------------ |
 |      | 最终的字段名是 `@Unwrapped(prefix)` 和 `@Field(name)` 连接的结果。 |
 
-#### 17.6.3. 对解构的对象进行查询
+###### 17.6.3. 对解构的对象进行查询
 
 在类型和字段级别上可以定义对解构的属性的查询，因为提供的 `Criteria` 与domain类型相匹配。前缀和潜在的自定义字段名在渲染实际查询时将被考虑。使用解构对象的属性名称与所有包含的字段进行匹配，如下面的例子所示。
 
@@ -9343,7 +9343,7 @@ interface UserRepository extends CrudRepository<User, String> {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 17.6.4. 解构对象的更新
+##### 17.6.4. 解构对象的更新
 
 解构的对象可以像任何其他属于domain模型的对象一样被更新。映射层负责将结构平铺到其周围环境中。如下面的例子所示，可以更新解构对象的单个属性，也可以更新整个值。
 
@@ -9382,11 +9382,11 @@ db.collection.update({
 )
 ```
 
-#### 17.6.5. 对解构对象进行聚合
+##### 17.6.5. 对解构对象进行聚合
 
 [聚合框架](https://springdoc.cn/spring-data-mongodb/#mongo.aggregation) 将尝试映射类型聚合的解构值。在引用其中一个值时，请确保与包括 wrapper 对象在内的属性路径一起工作。除此以外，不需要特别的操作。
 
-#### 17.6.6. 解构对象的索引
+##### 17.6.6. 解构对象的索引
 
 我们可以将 `@Indexed` 注解附加到解构类型的属性上，就像对普通对象那样。不可能在拥有的属性上同时使用 `@Indexed` 和 `@Unwrapped` 注解。
 
@@ -9418,7 +9418,7 @@ public class UserName {
 | ---- | -------------------------------------------- |
 |      | 无效的 `@Indexed` 和 `@Unwrapped` 一起使用。 |
 
-### 17.7. 自定义转换 - 覆盖默认映射
+#### 17.7. 自定义转换 - 覆盖默认映射
 
 影响映射结果的最简单的方法是通过 `@Field` 注解指定所需的原生MongoDB目标类型。这允许在 domain 模型中使用非MongoDB类型，如 `BigDecimal`，同时以本地 `org.bson.types.Decimal128` 格式持久化数值。
 
@@ -9455,7 +9455,7 @@ public class Payment {
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 17.7.1. 通过使用注册的Spring Converter来节约成本
+###### 17.7.1. 通过使用注册的Spring Converter来节约成本
 
 下面的例子显示了一个 `Converter` 的实现，它将 `Person` 对象转换为 `org.bson.Document`。
 
@@ -9472,7 +9472,7 @@ public class PersonWriteConverter implements Converter<Person, Document> {
 }
 ```
 
-#### 17.7.2. 通过使用 Spring Converter 进行读取
+##### 17.7.2. 通过使用 Spring Converter 进行读取
 
 下面的例子显示了一个 `Converter` 的实现，它可以从 `Document` 转换为 `Person` 对象。
 
@@ -9487,7 +9487,7 @@ public class PersonReadConverter implements Converter<Document, Person> {
 }
 ```
 
-#### 17.7.3. 用 `MongoConverter` 注册 Spring Converter
+##### 17.7.3. 用 `MongoConverter` 注册 Spring Converter
 
 ```java
 class MyMongoConfiguration extends AbstractMongoClientConfiguration {
@@ -9541,7 +9541,7 @@ class MyConverter implements Converter<Person, String> { … }
 class MyConverter implements Converter<String, Person> { … }
 ```
 
-### 17.8. 属性转换器 - 映射特定字段
+#### 17.8. 属性转换器 - 映射特定字段
 
 虽然 [基于类型的转换](https://springdoc.cn/spring-data-mongodb/#mongo.custom-converters) 已经提供了影响目标 store 中某些类型的转换和表示的方法，但当只有特定类型的某些值或属性应被考虑转换时，它有局限性。基于属性的转换器允许在每个属性的基础上配置转换规则，无论是声明性的（通过 `@ValueConverter`）还是程序性的（通过为特定属性注册一个 `PropertyValueConverter`）。
 
@@ -9568,7 +9568,7 @@ class ReversingValueConverter implements PropertyValueConverter<String, String, 
 
 你可以通过 `ConverterConfiguration` 改变默认行为。
 
-#### 17.8.1. 声明性 Value Converter
+##### 17.8.1. 声明性 Value Converter
 
 `PropertyValueConverter` 最直接的用法是用定义转换器类型的 `@ValueConverter` 注解来注解属性。
 
@@ -9582,7 +9582,7 @@ class Person {
 }
 ```
 
-#### 17.8.2. 程序化 Value Converter 注册
+##### 17.8.2. 程序化 Value Converter 注册
 
 程序化注册通过使用 `PropertyValueConverterRegistrar` 为实体模型中的属性注册 `PropertyValueConverter` 实例，正如下面的例子所示。声明式注册和编程式注册的区别在于，编程式注册完全发生在实体模型之外。如果你不能或不想注解实体模型，这样的方法就很有用。
 
@@ -9607,7 +9607,7 @@ registrar.registerConverter(Person.class, Person::getSsn())
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-#### 17.8.3. MongoDB的属性值转换
+##### 17.8.3. MongoDB的属性值转换
 
 前面的章节概述了 `PropertyValueConverters` 的目的和整体结构。本节重点讨论MongoDB的具体方面。
 
@@ -9634,7 +9634,7 @@ MongoCustomConversions.create(configurationAdapter -> {
 });
 ```
 
-## 18. 分片
+### 18. 分片
 
 MongoDB通过分片支持大型数据集，这是一种将数据分布在多个数据库服务器上的方法。请参考 [MongoDB文档](https://docs.mongodb.com/manual/sharding/)，了解如何设置分片集群、其要求和限制。
 
@@ -9659,7 +9659,7 @@ public class User {
 | ---- | --------------------------------------- |
 |      |                                         |
 
-### 18.1. 集合的分片
+#### 18.1. 集合的分片
 
 Spring Data MongoDB 不会自动设置集合的分片，也不会设置所需的索引。下面的片段显示了如何使用MongoDB客户端API来实现这一目的。
 
@@ -9681,7 +9681,7 @@ adminDB.runCommand(shardCmd);
 |      | 分片是数据库中启用了分片的集合。             |
 |      | 指定分片key。这个例子使用基于 range 的分片。 |
 
-### 18.2. 分片 key 处理
+#### 18.2. 分片 key 处理
 
 分片key由一个或多个属性组成，这些属性必须存在于目标集合中的每个文档中。它被用来在不同的分片中分配文档。
 
@@ -9697,7 +9697,7 @@ adminDB.runCommand(shardCmd);
 - `(Reactive)CrudRepository.saveAll(…)`
 - `(Reactive)MongoTemplate.save(…)`
 
-## 19. Kotlin 的支持
+### 19. Kotlin 的支持
 
 [Kotlin](https://kotlinlang.org/) 是一种静态类型的语言，以JVM（和其他平台）为目标，可以编写简洁优雅的代码，同时与现有的Java编写的库有很好的 [互操作性](https://kotlinlang.org/docs/reference/java-interop.html)。
 
@@ -9705,11 +9705,11 @@ Spring Data为Kotlin提供了一流的支持，让开发者在编写Kotlin应用
 
 用Kotlin构建Spring应用程序的最简单方法是利用Spring Boot及其 [专门的Kotlin支持](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-kotlin.html)。本综合 [教程](https://spring.io/guides/tutorials/spring-boot-kotlin/)将教你如何使用 [start.springboot.io](https://start.springboot.io/#!language=kotlin&type=gradle-project) 用 Kotlin 构建 Spring Boot 应用程序。
 
-### 19.1. 要求
+#### 19.1. 要求
 
 Spring Data支持Kotlin 1.3，要求classpath上有 [`kotlin-stdlib`](https://bintray.com/bintray/jcenter/org.jetbrains.kotlin%3Akotlin-stdlib)（或其变体之一，如 [`kotlin-stdlib-jdk8`](https://bintray.com/bintray/jcenter/org.jetbrains.kotlin%3Akotlin-stdlib-jdk8)）和 [`kotlin-reflect`](https://bintray.com/bintray/jcenter/org.jetbrains.kotlin%3Akotlin-reflect)。如果你通过 [start.springboot.io](https://start.springboot.io/#!language=kotlin&type=gradle-project) 启动一个Kotlin项目，这些是默认提供的。
 
-### 19.2. 空值安全（Null Safety）
+#### 19.2. 空值安全（Null Safety）
 
 Kotlin的关键特性之一是 [null safety](https://kotlinlang.org/docs/reference/null-safety.html)，它在编译时干净地处理 `null` 值。这使得应用程序通过 nullability 声明和 "值或无值" 语义的表达更加安全，而不需要支付封装器的费用，比如 `Optional`。（Kotlin允许使用带有 nullable 值的功能结构。请看这个 [关于Kotlin空值安全的综合指南](https://www.baeldung.com/kotlin-null-safety)）。
 
@@ -9725,11 +9725,11 @@ Kotlin的关键特性之一是 [null safety](https://kotlinlang.org/docs/referen
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-### 19.3. 对象映射
+#### 19.3. 对象映射
 
 关于Kotlin对象如何被具体化的细节，请参见 [对 Kotlin 的支持](https://springdoc.cn/spring-data-mongodb/#mapping.kotlin)。
 
-### 19.4. 扩展
+#### 19.4. 扩展
 
 Kotlin [extensions](https://kotlinlang.org/docs/reference/extensions.html) 提供了用额外功能扩展现有类的能力。Spring Data Kotlin APIs使用这些扩展来为现有的Spring APIs添加新的Kotlin特定便利。
 
@@ -9761,7 +9761,7 @@ Spring Data MongoDB提供了以下扩展。
 - [Kotlin的类型安全的查询](https://springdoc.cn/spring-data-mongodb/#mongo.query.kotlin-support)
 - `ReactiveFluentMongoOperations` 的 [协程（Coroutine）](https://springdoc.cn/spring-data-mongodb/#kotlin.coroutines) 扩展。
 
-### 19.5. 协程（Coroutine）
+#### 19.5. 协程（Coroutine）
 
 Kotlin [Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) 是轻量级的线程，允许写非阻塞的代码。在语言方面，`suspend` 函数为异步操作提供了一个抽象，而在库方面， [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 提供了 [`async { }`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/async.html) 等函数和 [`Flow`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/index.html) 等类型。
 
@@ -9769,7 +9769,7 @@ Spring Data 模块在以下范围内提供对Coroutines的支持。
 
 - 在Kotlin扩展中支持 [Deferred](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-deferred/index.html) 和 [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/index.html) 返回值
 
-#### 19.5.1. 依赖
+##### 19.5.1. 依赖
 
 当 `kotlinx-coroutines-core`、`kotlinx-coroutines-reactive` 和 `kotlinx-coroutines-reactor` 依赖项在 classpath 中时，coroutines 支持被启用。
 
@@ -9796,7 +9796,7 @@ Example 208. Dependencies to add in Maven pom.xml
 | ---- | ------------------------- |
 |      |                           |
 
-#### 19.5.2. 响应式（Reactive）是如何转化为 Coroutine 的？
+##### 19.5.2. 响应式（Reactive）是如何转化为 Coroutine 的？
 
 对于返回值，从Reactive到 Coroutine APIs的转换如下。
 
@@ -9816,7 +9816,7 @@ Example 208. Dependencies to add in Maven pom.xml
 
 阅读这篇关于 [使用Spring、Coroutines和Kotlin Flow 实现响应式的博客](https://spring.io/blog/2019/04/12/going-reactive-with-spring-coroutines-and-kotlin-flow)，了解更多细节，包括如何使用 Coroutine 并发运行代码。
 
-#### 19.5.3. Repository
+##### 19.5.3. Repository
 
 下面是一个 Coroutine repository 的例子。
 
@@ -9843,11 +9843,11 @@ Coroutine repository 是建立在响应式repository上的，通过Kotlin的 Cor
 | ---- | ------------------------------------------------------------ |
 |      |                                                              |
 
-## 20. 支持 JMX
+### 20. 支持 JMX
 
 对MongoDB的JMX支持暴露了在单个MongoDB服务器实例的管理数据库上运行 "serverStatus" 命令的结果。它还公开了一个管理MBean，即 `MongoAdmin`，让你执行管理操作，如删除或创建一个数据库。JMX功能建立在Spring框架中可用的JMX功能集之上。更多细节见 [这里](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/integration.html#jmx)。
 
-### 20.1. MongoDB JMX 配置
+#### 20.1. MongoDB JMX 配置
 
 Spring的Mongo命名空间可以让你启用JMX功能，如下例所示。
 
@@ -9904,11 +9904,11 @@ Example 209. 配置MongoDB的XML schema
 
 ![jconsole](images/MongoDB笔记/jconsole.png)
 
-# 附录
+## 附录
 
-## Appendix A: 命名空间参考
+### Appendix A: 命名空间参考
 
-### `<repositories />` 元素
+#### `<repositories />` 元素
 
 `<repositories />` 元素触发了Spring Data资源库基础设施的设置。最重要的属性是 `base-package`，它定义了扫描 Spring Data Repository 接口的包。参见 “[XML 配置](https://springdoc.cn/spring-data-mongodb/#repositories.create-instances.xml)”。下表描述了 `<repositories />` 元素的属性。
 
@@ -9920,9 +9920,9 @@ Example 209. 配置MongoDB的XML schema
 | `named-queries-location`       | 定义了搜索包含外部定义的查询的属性（Properties）文件的位置。 |
 | `consider-nested-repositories` | 是否应该考虑嵌套的 repository 接口定义。默认为 `false`。     |
 
-## Appendix B: Populators 命名空间参考
+### Appendix B: Populators 命名空间参考
 
-### <populator /> 元素
+#### <populator /> 元素
 
 `<populator />` 元素允许通过Spring Data Repository 基础设施填充data store。[[4](https://springdoc.cn/spring-data-mongodb/#_footnotedef_4)]
 
@@ -9930,9 +9930,9 @@ Example 209. 配置MongoDB的XML schema
 | :---------- | :----------------------------------------------------------- |
 | `locations` | 在哪里可以找到从 repository 中读取对象的文件，应将其填充到 repository 中。 |
 
-## Appendix C: Repository query 关键字
+### Appendix C: Repository query 关键字
 
-### 支持的 query method subject 关键词
+##### 支持的 query method subject 关键词
 
 下表列出了Spring Data Repository 查询推导机制通常支持的subject关键字，以表达谓词。有关支持的关键字的确切列表，请查阅特定 store 的文档，因为这里列出的一些关键字可能在特定 store 中不被支持。
 
@@ -9945,7 +9945,7 @@ Example 209. 配置MongoDB的XML schema
 | `…First<number>…`, `…Top<number>…`                           | 将查询结果限制在第一个 `<number>` 的结果。这个关键词可以出现在主语中 `find`（以及其他关键词）和 `by` 之间的任何地方。 |
 | `…Distinct…`                                                 | 使用 distinct 查询，只返回唯一的结果。请咨询特定store的文档是否支持该功能。这个关键字可以出现在 `find`（和其他关键字）和 `by` 之间的任何地方。 |
 
-### 支持的查询方法 predicate 关键字和修饰语
+#### 支持的查询方法 predicate 关键字和修饰语
 
 下表列出了Spring Data Repository 查询推导机制通常支持的谓词（predicate）。但是，请查阅特定store的文档以了解支持的关键字的确切列表，因为这里列出的一些关键字可能在特定的store中不被支持。
 
@@ -9988,9 +9988,9 @@ Example 209. 配置MongoDB的XML schema
 | `AllIgnoreCase`, `AllIgnoringCase` | 忽略所有合适的属性的情况。在查询方法谓语的某处使用。         |
 | `OrderBy…`                         | 指定一个静态的排序顺序，后面是属性路径和方向（如 `OrderByFirstnameAscLastnameDesc`）。 |
 
-## Appendix D: Repository 查询返回类型
+### Appendix D: Repository 查询返回类型
 
-### 支持的查询返回类型
+#### 支持的查询返回类型
 
 下表列出了Spring Data Repository 通常支持的返回类型。但是，请查阅store的具体文档以了解支持的返回类型的确切列表，因为这里列出的一些类型可能不被特定的store所支持。
 
@@ -10043,7 +10043,7 @@ Last updated 2023-02-14 20:03:34 +0800
 
 
 
-# Spring Data MongoDB 简介
+# Spring Data MongoDB 快速入门
 
 ##  1. 概述
 
