@@ -134,3 +134,6 @@ addFontColor(color){
 }
 ```
 
+## 5. 插件
+
+https://www.cnblogs.com/xiaodaidaiPro/p/18253837
