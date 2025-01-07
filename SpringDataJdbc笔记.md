@@ -24,7 +24,7 @@ Spring Data JDBC 项目将 Spring 的核心概念应用于开发使用符合 [�
 
 ## 1. 学习Spring
 
-Spring Data使用Spring框架的 [核心](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/core.html)功能，包括。
+ffSpring Data使用Spring框架的 [核心](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/core.html)功能，包括。
 
 - [IoC](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/core.html#beans) 容器
 - [类型转换系统](https://docs.spring.io/spring-framework/docs/6.0.4/reference/html/core.html#validation)
