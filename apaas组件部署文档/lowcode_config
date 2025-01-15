@@ -1,0 +1,136 @@
+#!/bin/bash
+
+## 低代码平台相关配置信息
+# 管理员密码
+lowcode_admin_password=TIx4AptwtuF7jEl
+# 数据库名称
+lowcode_db_name=ctcode
+# 项目logo图片路径
+project_logo_path=apaas/apaas-system-images/2041965149172146186/icon-a-bianzu5.png
+# 登录logo图片路径
+login_logo_path=apaas/apaas-system-images/2041965149172146186/icon-a-bianzu5.png
+# 全称
+plat_name=elderlycare-20250104
+# 简称
+simply_name=elderlycare-20250104
+# 命名空间
+namespace=c02-u9ab
+# 域名
+domain=entry.ctapaas.cn
+# 服务器IP
+host_ip=192.168.11.2
+# 基座类型
+base_type=1
+# 组件个数
+component_num=0
+# 应用id
+app_id=2041965149172146186
+
+
+## MySQL数据库相关配置信息
+# 镜像名称
+lowcode_mysql_image_name=mysql:8.0.37
+# root密码
+mysql_root_password=g9HcVkspVX3DBr0
+# root密码密文
+mysql_root_password_encrypt=RirOvQl+bzTKHBLhEXR1Glup0Iy2CJvNC+znIa3/kB8=
+# 服务器端口
+mysql_host_port=13306
+
+
+## Redis相关配置信息
+# 镜像名称
+lowcode_redis_image_name=redis:6.2.6
+# 密码
+redis_password=8GY4aoAoqqOBb7h
+# 密码密文
+redis_password_encrypt=7AWu/9WMi/Uq/r2qWVMsbOcI1r9acdYjJgzYPcoSCdI=
+# 服务器端口
+redis_host_port=16379
+
+
+## Minio相关配置信息
+# 镜像名称
+lowcode_minio_image_name=minio/minio:RELEASE.2019-08-07T01-59-21Z
+# accessKey
+minio_access_key=pm8to0Yd3ztYSy2
+# secretKey
+minio_secret_key=pm8to0Yd3ztYSy2
+# secretKey密文
+minio_secret_key_encrypt=P+C1rH/Lx0taBdT46WptIGmUBk1IgzXeaNzDFIIdd9E=
+# 服务器端口-服务端
+minio_host_port_server=19000
+# 服务器端口-控制台
+minio_host_port_console=19900
+
+
+## 初始化相关配置信息
+# 镜像名称
+lowcode_data_sync_image_name=biyi/low-code-data-sync:1.0.0
+
+
+## Nacos相关配置信息
+# 镜像名称
+lowcode_nacos_image_name=nacos/nacos-server:v2.2.3
+# 服务器端口
+nacos_host_port=18848
+# 服务器监听端口
+nacos_listen_host_port=19848
+# 用户名
+nacos_username=nacos
+# 密码
+nacos_password=Yvt7yZLjjq2KuwD
+
+## lowcode_webui相关配置信息
+# 镜像名称
+lowcode_webui_image_name=xxx
+# 服务器端口
+lowcode_webui_host_port=23000
+
+
+## lowcode_boot相关配置信息
+# 镜像名称
+lowcode_boot_image_name=xxx
+# 服务器端口
+lowcode_boot_host_port=28080
+
+
+## lowcode_web相关配置信息
+# 镜像名称
+lowcode_web_image_name=xxx
+# 服务器端口
+lowcode_web_host_port=28081
+
+
+## lowcode_api相关配置信息
+# 镜像名称
+lowcode_api_image_name=open/biyi/lowcode/lowcode-api:24.12-1-v2.2.0-CTAPAAS-RELEASE
+# 服务器端口
+lowcode_api_host_port=29000
+
+
+## lowcode_oauth相关配置信息
+# 镜像名称
+lowcode_oauth_image_name=xxx
+# 服务器端口
+lowcode_oauth_host_port=29001
+
+
+## lowcode_magic相关配置信息
+# 镜像名称
+lowcode_magic_image_name=xxx
+# 服务器端口
+lowcode_magic_host_port=29002
+
+## zero_code_server相关配置信息
+# 镜像名称
+zero_code_server_image_name=apaas/zero-code-server:24.12-1-v2.2.0-CTAPAAS-RELEASE
+# 服务器端口
+zero_code_server_host_port=18080
+
+## zero_code_nginx相关配置信息
+# 镜像名称
+zero_code_nginx_image_name=nginx:stable-alpine
+# 服务器端口
+zero_code_nginx_host_port=18081
+
