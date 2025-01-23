@@ -1,63 +1,53 @@
-# SpringBoot Mockito使用指南
+# Mockito 使用指南
 
-在Spring Boot应用中，Mock是一种常用的测试手段，用于模拟对象的行为，以便在不依赖外部系统或服务的情况下进行单元测试。本指南将介绍如何在Spring Boot项目中使用Mock进行测试。我发现在知识库文档中尚缺少相关文档，故就此补充，深入的内容需要自行查阅相关文档，本人在此仅做抛砖引玉。
+在Spring Boot应用中，Mock是一种常用的测试手段，用于模拟对象的行为，以便在不依赖外部系统或服务的情况下进行单元测试。本指南将介绍如何在Spring Boot项目中使用Mock进行测试。深入的内容需要自行查阅相关文档，本人在此仅做抛砖引玉。
 
-[mockito中文文档](https://gitee.com/wnboy/mockito-doc-zh )
-[Mockito官方网站](https://site.mockito.org/ )
-[思否-Spring单元测试教程（JUnit5+Mockito）](https://segmentfault.com/a/1190000040803747 )
-[Baeldung-Mockito教程](https://www.baeldung-cn.com/mockito-series )
+## 资源链接
+
+- **[Mockito中文文档](https://gitee.com/wnboy/mockito-doc-zh)**  
+  提供了Mockito的中文翻译文档，适合中文用户快速入门。
+
+- **[Mockito官方网站](https://site.mockito.org/)**  
+  官方网站，包含最新的Mockito版本、文档和更新日志。
+
+- **[思否-Spring单元测试教程（JUnit5+Mockito）](https://segmentfault.com/a/1190000040803747)**  
+  详细介绍了如何在Spring项目中结合JUnit5和Mockito进行单元测试。
+
+- **[Baeldung-Mockito教程](https://www.baeldung-cn.com/mockito-series)**  
+  Baeldung网站提供的系列教程，涵盖了Mockito的各种使用场景和最佳实践。
 
 ## 1. 测试概述
 
-如果项目组有测试团队，最常接触的概念有：功能测试、回归测试、冒烟测试等，但这些都是由测试人员发起的。
-开发人员写的常常是“单元测试”，但其实可以细分成 单元测试 和 集成测试 两个。划分的原因拿常见的 Spring IoC 举例。Spring 不同Bean之间相互依赖，例如某API业务逻辑中会依赖不同模块的 Service，Service 方法中又可能依赖不同的 Dao 层方法，甚至还会通过 RPC、HTTP 调用外部服务方法。这给我们写测试用例带来了难度，本来只想测试某个方法的功能，却要考虑一连串的依赖关系。
+在项目中，开发人员通常编写单元测试和集成测试。单元测试聚焦于单个组件，Mock所有交互的依赖。集成测试则关注模块间的交互。
 
 ### 1.1. 单元测试
 
-单元测试：是指对软件中的最小可测试单元进行检查和验证。
-通常任何软件都会划分为不同的模块和组件。单独测试一个组件时，我们叫做单元测试。单元测试用于验证相关的一小段代码是否正常工作。单元测试不是用于发现应用程序范围内的 bug，或者回归测试的 bug，而是分别检测每个代码片段。
-单元测试不验证应用程序代码是否和外部依赖正常工作。它聚焦与单个组件并且 Mock 所有和它交互的依赖。例如，方法中调用发短信的服务，以及和数据库的交互，我们只需要 Mock 假执行即可，毕竟测试的焦点在当前方法上。
-单元测试的特点：
-
 - 不依赖任何模块。
 - 基于代码的测试，不需要在 ApplicationContext 中运行。
-- 方法执行快，500ms以内（也和不启动 Spring 有关）。
-- 同一单元测试可重复执行N次，并每次运行结果相同。
+- 方法执行快，500ms以内。
+- 可重复执行，结果一致。
 
 ### 1.2. 集成测试
 
-集成测试：在单元测试的基础上，将所有模块按照设计要求组装成为子系统或系统，进行集成测试。
-集成测试主要用于发现用户端到端请求时不同模块交互产生的问题。集成测试范围可以是整个应用程序，也可以是一个单独的模块，取决于要测试什么。
-在集成测试中，我们应该聚焦于从控制器层到持久层的完整请求。应用程序应该运行嵌入服务（例如：Tomcat）以创建应用程序上下文和所有 bean。这些 bean 有的可能会被 Mock 覆盖。
-集成测试的特点：
-
-- 集成测试的目的是测试不同的模块一共工作能否达到预期。
-- 应用程序应该在 ApplicationContext 中运行。Spring boot 提供 @SpringBootTest 注解创建运行上下文。
-
-- 使用 @TestConfiguration 等配置测试环境。
-
-  
+- 测试模块间的交互。
+- 应用程序在 ApplicationContext 中运行。
+- 使用 @SpringBootTest 注解创建运行上下文。
 
 ## 2. Mock实战
 
 ### 2.1 Mock依赖引入
 
-在Spring Boot项目中，通常会使用spring-boot-starter-test依赖，它包含了JUnit、Spring Test、Mockito等测试相关的库,为了方便模拟web层测试，我们还需要引入spring-boot-starter-web。
-示例：
+在Spring Boot项目中，使用 `spring-boot-starter-test` 依赖，它包含了JUnit、Spring Test、Mockito等测试相关的库。
 
 ```xml
-<!-- 在pom.xml中添加依赖 -->
-<dependencies>
- <dependency>
-     <groupId>org.springframework.boot</groupId>
-     <artifactId>spring-boot-starter-test</artifactId>
-     <scope>test</scope>
-     <version>2.7.10</version>    
- </dependency>
-</dependencies>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
 ```
 
-### 2.2 开启Mockito注解
+### 2.2 启用Mockito注解
 
 #### 2.2.1. *MockitoJUnitRunner*
 
