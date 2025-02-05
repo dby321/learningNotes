@@ -1,0 +1,338 @@
+/* 基础设置 */
+.container {
+    width: 1190px; 
+    margin: 0 auto;
+     
+ }
+ /* #region顶部单行条 start */
+ .topbar {
+    height: 30px;
+    background-color: #ececec;
+ }
+ .welcome {
+   height: 30px;
+   line-height: 30px;
+   font-size: 0;
+   color: #666666;
+ }
+ .welcome span,.welcome a {
+   font-size: 12px;
+ }
+ .welcome .hello{
+   margin-right: 28px;
+ }
+ .welcome .login{
+   padding-right: 10px;
+   border-right: 1px solid #000;
+ }
+ .welcome .register{
+   padding-left: 10px;
+ }
+ .topbar-nav .list{
+  height: 30px;
+  line-height: 30px;
+ }
+ .topbar-nav .list li{
+    float: left;
+ }
+ .topbar-nav .list a{
+    border-right:1px solid #666;
+    padding: 0 15px;
+ }
+ .topbar-nav .list li:first-child a{
+    padding-left: 0;
+ }
+ .topbar-nav .list li:last-child a{
+    padding-right: 0;
+    border: 0;
+ }
+  /* #endregion顶部单行条 end */ 
+
+  /* #region头部start */
+  .header{
+      height: 120px;
+  }
+  .header .search form{
+      margin-top: 42px;
+      font-size: 0;
+  }
+  .header .search input{
+      width: 508px;
+      height: 34px;
+      border: 1px solid #DD302D;
+  }
+  .header .search button{
+      width: 80px;
+      height: 36px;
+      background-color: #DD302D;
+      vertical-align: top;
+      background-image: url('../images/serch_icon.png');
+      background-repeat: no-repeat;
+      background-position: 28px 6px;
+  }
+  
+  /* #endregion头部end */
+
+  /* #region主导航start */
+  .main-nav{
+      height: 48px;
+      border-bottom: 1px solid #DD302D;
+  }
+  .main-nav .all-types{
+      height: 48px;
+      width: 190px;
+      background-color: #DD302D;
+      color: white;
+      text-align: center;
+      line-height: 48px;
+      font-size: 16px;
+  }
+  .main-nav .main-nav-list{
+      height: 48px;
+      line-height: 48px;
+  }
+  .main-nav .main-nav-list li{
+      float: left;
+      margin: 0 10px;
+      font-size: 16px;
+  }
+  /* #endregion主导航end */
+
+  /* #region主内容区 */
+  .main-content{
+    margin-top: 10px;
+  }
+  .main-content .slide-nav{
+      width: 190px;
+      height: 458px;
+      background-color: #F4F4F4;
+
+    position: relative;
+  }
+  .main-content .slide-nav li{
+    font-size: 14px;
+    height: 28px;
+    line-height: 28px;
+    padding-left: 16px;
+  }
+  .main-content .slide-nav li:hover{
+    background-color: #DD302D;
+  }
+  .main-content .slide-nav li:hover>a{
+    color: white;
+  }
+  
+  .second-menu{
+      width: 680px;
+      height: 458px;
+      background-color: #E3E3E3; 
+      position: absolute;
+      top: 0;
+      left: 190px;
+      padding-left:20px ;
+      display: none;
+  }
+  .main-content .slide-nav li:hover .second-menu{
+    display: block;
+  }
+  .second-menu dl {
+    height: 36px;
+    line-height: 36px;
+
+  }
+  .second-menu dl:first-child{
+    margin-top: 10px;
+  }
+  .second-menu dt{
+    float: left;
+    width: 70px;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  .second-menu dd{
+    float: left;
+  }
+  .second-menu dd a{ 
+    padding: 0 10px;
+    border-left: 1px solid #666;
+  }
+
+  .main-content .banner{
+    width: 690px;
+    height: 458px;
+    background-color: green;
+    margin: 0 10px;
+  }
+
+  .main-content .slide-other{
+    width: 290px;
+    height: 458px;
+  } 
+
+  .slide-other .message{
+    width: 260px;
+    height: 156px;
+    border: 1px solid #d9d9d9;
+    padding: 0 14px;
+  }
+  .slide-other .other-nav{
+    margin-top: 10px;
+    width: 290px;
+    height: 290px;
+  }
+  .slide-other .message .title{
+    height: 38px;
+    line-height: 38px;
+    border-bottom: 1px solid #d9d9d9;
+  }
+
+  .slide-other .message .title span{
+    font-size: 14px;
+  }
+  .slide-other .message .title a{
+    font-size: 12px;
+    color: #666;
+  }
+
+  .other-nav{
+    overflow: hidden;
+  }
+
+  .other-nav-list:first-child{
+    margin-top: 16px;
+  }
+  .other-nav-list:nth-child(2){
+    margin: 17px 0;
+  }
+
+  .other-nav-list li {
+    width: 48px;
+    height: 70px;
+    float: left;
+    margin: 0 11px;
+    text-align: center;
+  }
+
+  .other-nav-list li:first-child{
+    margin-left: 16px;
+  }
+
+  .other-nav-list .picture{
+    width: 48px;
+    height: 48px;
+    background-image: url(../images/精灵图-侧边功能.png);
+  }
+  .other-nav-list:nth-child(1) li:nth-child(1) .picture{
+    background-position: 0 0;
+  }
+  .other-nav-list:nth-child(1) li:nth-child(2) .picture{
+    background-position: -48px 0;
+  }
+  .other-nav-list:nth-child(1) li:nth-child(3) .picture{
+    background-position: -96px 0;
+  }
+  .other-nav-list:nth-child(1) li:nth-child(4) .picture{
+    background-position: -144px 0;
+  }
+  .other-nav-list:nth-child(2) li:nth-child(1) .picture{
+    background-position: 0 -48px;
+  }
+  .other-nav-list:nth-child(2) li:nth-child(2) .picture{
+    background-position: -48px -48px;
+  }
+  .other-nav-list:nth-child(2) li:nth-child(3) .picture{
+    background-position: -96px -48px;
+  }
+  .other-nav-list:nth-child(2) li:nth-child(4) .picture{
+    background-position: -144px -48px;
+  }
+  .other-nav-list:nth-child(3) li:nth-child(1) .picture{
+    background-position: 0 -96px;
+  }
+  .other-nav-list:nth-child(3) li:nth-child(2) .picture{
+    background-position: -48px -96px;
+  }
+  .other-nav-list:nth-child(3) li:nth-child(3) .picture{
+    background-position: -96px -96px;
+  }
+  .other-nav-list:nth-child(3) li:nth-child(4) .picture{
+    background-position: -144px -96px;
+  }
+  
+  /* #endregion主内容区 */
+
+  /* #region秒杀区 */
+  .seckill img{
+    float: left;
+    margin-right: 11px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  .seckill img:last-child{
+    margin-right: 0;
+  }
+  /* #endregion秒杀区 */
+
+  
+  /* #region楼层 */
+    .floor{
+      margin-top: 48px;
+      
+    }
+    .floor-name {
+      font-size: 20px;
+    }
+    .floor-nav{
+      height: 30px;
+      padding-bottom: 4px;
+      border-bottom: 2px solid #DD302D;
+      line-height: 30px;
+    }
+    .floor-nav-list li{
+      float: left;
+      font-size: 14px;
+    }
+    .floor-nav-list li a {
+      padding: 0 10px;
+      border-right: 1px solid #666;
+    }
+    .floor-nav-list li:first-child a{
+      padding-left: 0;
+    }
+    .floor-nav-list li:last-child a{
+      padding-right: 0;
+      border: 0;
+    }
+    .floor .item{
+      float: left;
+    }
+    .floor .item1{
+      width: 230px;
+      height: 432px;
+      background-color: skyblue;
+    }
+    .floor .item2{
+      width: 340px;
+      height: 432px;
+      background-color: green;
+    }
+    .floor .item3{
+      width: 206px;
+      height: 432px;
+      background-color: orange;
+      border-right: 1px solid #e2e2e2;
+    }
+    .floor .item4{
+      width: 206px;
+      height: 432px;
+      background-color: gray;
+      border-right: 1px solid #e2e2e2;
+    }
+    .floor .item5{
+      width: 206px;
+      height: 432px;
+      background-color: tomato;
+    }
+  /* #endregion秒杀区 */
+
+
