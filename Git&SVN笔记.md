@@ -1,9 +1,12 @@
-# Git 笔记
+# Git & SVN 使用指南
 
-## 参考资料
+## 资源链接
 
-* [Git 下载地址](https://git-for-windows.github.io/ )
-* [Git 中文手册](https://git-scm.com/book/zh/v2)
+- **[Git 下载地址](https://git-for-windows.github.io/)**  
+  提供Git的Windows版本下载，适合在Windows系统上安装和使用Git。
+
+- **[Git 中文手册](https://git-scm.com/book/zh/v2)**  
+  Git的官方中文手册，详细介绍了Git的使用方法和最佳实践。
 
 
 ```cmd
@@ -62,9 +65,9 @@ git reset --hard commit_id
 
 
 ### 文件名里有空格和()的情况
-Git 命令（或者所有的 shell 命令中）中出现括“（）”时系统把它看做一个有特殊意义的命令从而尝试去执行它。  
+Git 命令（或者所有的 shell 命令中）中出现括"（）"时系统把它看做一个有特殊意义的命令从而尝试去执行它。  
 因此如果文件名中出现括号，系统找不到括号里要执行的命令就会报错。  
-我们要让系统忽略括号的特殊意义，方法是用“”双引号把文件名括起来，或者用转义符将括号转义.  
+我们要让系统忽略括号的特殊意义，方法是用"双引号把文件名括起来，或者用转义符将括号转义.  
 例如文件名为 git (1).md  
 以下的写法都是可以的:  
 `git add "git (1).md"`
@@ -98,7 +101,7 @@ $ ssh-keygen -t rsa -C  "youremail@example.com"
 
 
 * 第 2 步：登陆 GitHub
->打开“Account settings”，“SSH Keys”页面：然后，点“Add SSH Key”，填上任意 Title，在 Key 文本框里粘贴 id_rsa.pub 文件的内容
+>打开"Account settings"，"SSH Keys"页面：然后，点"Add SSH Key"，填上任意 Title，在 Key 文本框里粘贴 id_rsa.pub 文件的内容
 
 ### 添加远程库
 
@@ -182,7 +185,7 @@ git clone git@github.com:HuChanghong/MarkdownStudy.git
 >当手头工作没有完成时，先把工作现场 `git stash` 一下，然后去修复 bug，修复后，再 `git stash pop`，回到工作现场。
 
 
-Git 提供了一个 `stash` 功能，可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作
+Git 提供了一个 `stash` 功能，可以把当前工作现场"储藏"起来，等以后恢复现场后继续工作
 ```
 git stash
 ```
@@ -225,7 +228,7 @@ git stash
 
 Figure 36. 通过合并操作来整合分叉的历史
 
-其实，还有一种方法：你可以提取在 `C4` 中引入的补丁和修改，然后在 `C3` 的基础上应用一次。 在 Git 中，这种操作就叫做 **变基（rebase）**。 你可以使用 `rebase` 命令将提交到某一分支上的所有修改都移至另一分支上，就好像“重新播放”一样。
+其实，还有一种方法：你可以提取在 `C4` 中引入的补丁和修改，然后在 `C3` 的基础上应用一次。 在 Git 中，这种操作就叫做 **变基（rebase）**。 你可以使用 `rebase` 命令将提交到某一分支上的所有修改都移至另一分支上，就好像"重新播放"一样。
 
 在这个例子中，你可以检出 `experiment` 分支，然后将它变基到 `master` 分支上：
 
@@ -324,8 +327,8 @@ git check-ignore -v file_name
 
 #### `Windows` 下创建 `.gitignore` 文件的常用方法
 1. 在 `git bash` 中 `cd` 切换到根目录 `touch .gitignore` 命令创建
-2. 在资源管理器创建文件时，文件命名“`.gitignore.`”，注意结尾有个.号，回车确认时系统会自动存成 `.gitignore`
-3. 打开文本编辑器，保存时文件名输入“`.gitignore`”，保存类型选“`所有文件`”
+2. 在资源管理器创建文件时，文件命名"`.gitignore.`"，注意结尾有个.号，回车确认时系统会自动存成 `.gitignore`
+3. 打开文本编辑器，保存时文件名输入"`.gitignore`"，保存类型选"`所有文件`"
 4. 进入 cmd 命令行，执行 `echo > .gitignore` 输入空内容并创建文件，或执行 `rename somefile .gitignore`、`copy somefile .gitignore` 从已有文件复制、重命名。
 
 ### 配置别名

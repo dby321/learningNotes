@@ -22,12 +22,37 @@
 
 从源代码，总结出Java线程的状态有以下几种：
 
-NEW：一个尚未启动的线程的状态。也称之为初始状态、开始状态。
-RUNNABLE：一个可以运行的线程的状态，可以运行是指这个线程已经在JVM中运行了，但是有可能正在等待其他的系统资源。也称之为就绪状态、可运行状态。
-BLOCKED：一个线程因为等待监视锁而被阻塞的状态。也称之为阻塞状态。
-WAITING：一个正在等待的线程的状态。也称之为等待状态。造成线程等待的原因有三种，分别是调用Object.wait()、join()以及LockSupport.park()方法。处于等待状态的线程，正在等待其他线程去执行一个特定的操作。例如：因为wait()而等待的线程正在等待另一个线程去调用notify()或notifyAll()；一个因为join()而等待的线程正在等待另一个线程结束。
-TIMED_WAITING：一个在限定时间内等待的线程的状态。也称之为限时等待状态。造成线程限时等待状态的原因有五种，分别是：Thread.sleep(long)、Object.wait(long)、join(long)、LockSupport.parkNanos(obj,long)和LockSupport.parkUntil(obj,long)。
-TERMINATED：一个完全运行完成的线程的状态。也称之为终止状态、结束状态。
+- **NEW**：尚未启动的线程状态。
+  - 也称为初始状态、开始状态。
+
+- **RUNNABLE**：可以运行的线程状态。
+  - 线程已在JVM中运行，但可能在等待其他系统资源。
+  - 也称为就绪状态、可运行状态。
+
+- **BLOCKED**：线程因等待监视锁而被阻塞的状态。
+  - 也称为阻塞状态。
+
+- **WAITING**：正在等待的线程状态。
+  - 也称为等待状态。
+  - 造成线程等待的原因有三种：
+    1. 调用 `Object.wait()`
+    2. 调用 `join()`
+    3. 调用 `LockSupport.park()`
+  - 处于等待状态的线程正在等待其他线程执行特定操作。
+    - 例如：因 `wait()` 而等待的线程正在等待另一个线程调用 `notify()` 或 `notifyAll()`。
+    - 因 `join()` 而等待的线程正在等待另一个线程结束。
+
+- **TIMED_WAITING**：在限定时间内等待的线程状态。
+  - 也称为限时等待状态。
+  - 造成线程限时等待状态的原因有五种：
+    1. `Thread.sleep(long)`
+    2. `Object.wait(long)`
+    3. `join(long)`
+    4. `LockSupport.parkNanos(obj, long)`
+    5. `LockSupport.parkUntil(obj, long)`
+
+- **TERMINATED**：完全运行完成的线程状态。
+  - 也称为终止状态、结束状态。
 
 ### 线程的同步[线程安全问题]
 
