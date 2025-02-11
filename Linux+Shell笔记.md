@@ -12,14 +12,32 @@ Ken Thompson 的 sh 是第一种 Unix Shell，Windows Explorer 是一个典型�
 
 ## 第一个shell脚本
 
-> `\#! `是一个约定的标记，它告诉系统这个脚本需要什么解释器来执行，即使用哪一种 Shell。
->
-> `echo `命令用于向窗口输出文本。 
+```
+#!/bin/bash
+echo "Hello World !"
+```
 
-> 注意，**一定要写成 ./test.sh**，而不是 **test.sh**，运行其它二进制的程序也一样，直接写
-> test.sh，linux 系统会去 PATH 里寻找有没有叫 test.sh 的，而只有 /bin, /sbin, 
-> /usr/bin，/usr/sbin 等在 PATH 里，你的当前目录通常不在 PATH 里，所以写成 test.sh 是会找不到命令的，要用 
-> ./test.sh 告诉系统说，就在当前目录找。
+**1、作为可执行程序**
+
+将上面的代码保存为 test.sh，并 cd 到相应目录：
+
+```
+chmod +x ./test.sh  #使脚本具有执行权限
+./test.sh  #执行脚本
+```
+
+注意，一定要写成 **./test.sh**，而不是 **test.sh**，运行其它二进制的程序也一样，直接写 test.sh，linux 系统会去 PATH 里寻找有没有叫 test.sh 的，而只有 /bin, /sbin, /usr/bin，/usr/sbin 等在 PATH 里，你的当前目录通常不在 PATH 里，所以写成 test.sh 是会找不到命令的，要用 ./test.sh 告诉系统说，就在当前目录找。
+
+**2、作为解释器参数**
+
+这种运行方式是，直接运行解释器，其参数就是 shell 脚本的文件名，如：
+
+```
+/bin/sh test.sh
+/bin/php test.php
+```
+
+这种方式运行的脚本，不需要在第一行指定解释器信息，写了也没用。
 
 ## Shell变量
 
@@ -33,7 +51,7 @@ echo $your_name
 echo ${your_name}
 ```
 
-只读变量
+只读变量:只读变量不能unset
 
 ```
 myUrl="http://www.google.com"
@@ -46,7 +64,18 @@ readonly myUrl
 unset variable_name
 ```
 
-## Shell字符串
+### 命令替换：``与$()
+
+```
+A=`date` # 将指令执行的结果赋给A
+A=$(date) # 将指令执行的结果赋给A
+```
+
+
+
+
+
+## Shell 字符串
 
 ### 单引号
 
@@ -116,7 +145,7 @@ string="runoob is a great site"
 echo `expr index "$string" io`  # 输出 4
 ```
 
-## Shell数组
+## Shell 数组
 
 ### 读取数组 
 
@@ -217,34 +246,242 @@ Shell 传递参数实例！
 
 ### 算数运算符
 
-> val=`expr $a \* $b`
-> echo "a*b:$val"
->
-> 乘法运算需要特别注意
+下表列出了常用的算术运算符，假定变量 a 为 10，变量 b 为 20：
 
-![1641700516153](images/1641700516153.png)
+| 运算符 | 说明                                          | 举例                          |
+| :----- | :-------------------------------------------- | :---------------------------- |
+| +      | 加法                                          | `expr $a + $b` 结果为 30。    |
+| -      | 减法                                          | `expr $a - $b` 结果为 -10。   |
+| *      | 乘法                                          | `expr $a \* $b` 结果为  200。 |
+| /      | 除法                                          | `expr $b / $a` 结果为 2。     |
+| %      | 取余                                          | `expr $b % $a` 结果为 0。     |
+| =      | 赋值                                          | a=$b 把变量 b 的值赋给 a。    |
+| ==     | 相等。用于比较两个数字，相同则返回 true。     | [ $a == $b ] 返回 false。     |
+| !=     | 不相等。用于比较两个数字，不相同则返回 true。 | [ $a != $b ] 返回 true。      |
+
+```
+#!/bin/bash
+# author:菜鸟教程
+# url:www.runoob.com
+
+a=10
+b=20
+
+val=`expr $a + $b`
+echo "a + b : $val"
+
+val=`expr $a - $b`
+echo "a - b : $val"
+
+val=`expr $a \* $b`
+echo "a * b : $val"
+
+val=`expr $b / $a`
+echo "b / a : $val"
+
+val=`expr $b % $a`
+echo "b % a : $val"
+
+if [ $a == $b ]
+then
+   echo "a 等于 b"
+fi
+if [ $a != $b ]
+then
+   echo "a 不等于 b"
+fi
+```
 
 ### 关系运算符
 
-> gt可以理解成greater than，le可以理解成less  equal
+关系运算符只支持数字，不支持字符串，除非字符串的值是数字。
 
-![1569490833431](.\images\1569490833431.png)
+下表列出了常用的关系运算符，假定变量 a 为 10，变量 b 为 20：
+
+| 运算符 | 说明                                                  | 举例                       |
+| :----- | :---------------------------------------------------- | :------------------------- |
+| -eq    | 检测两个数是否相等，相等返回 true。                   | [ $a -eq $b ] 返回 false。 |
+| -ne    | 检测两个数是否不相等，不相等返回 true。               | [ $a -ne $b ] 返回 true。  |
+| -gt    | 检测左边的数是否大于右边的，如果是，则返回 true。     | [ $a -gt $b ] 返回 false。 |
+| -lt    | 检测左边的数是否小于右边的，如果是，则返回 true。     | [ $a -lt $b ] 返回 true。  |
+| -ge    | 检测左边的数是否大于等于右边的，如果是，则返回 true。 | [ $a -ge $b ] 返回 false。 |
+| -le    | 检测左边的数是否小于等于右边的，如果是，则返回 true。 | [ $a -le $b ] 返回 true。  |
 
 ### 布尔运算符
 
-![1569490866401](.\images\1569490866401.png)
+下表列出了常用的布尔运算符，假定变量 a 为 10，变量 b 为 20：
+
+| 运算符 | 说明                                                | 举例                                     |
+| :----- | :-------------------------------------------------- | :--------------------------------------- |
+| !      | 非运算，表达式为 true 则返回 false，否则返回 true。 | [ ! false ] 返回 true。                  |
+| -o     | 或运算，有一个表达式为 true 则返回 true。           | [ $a -lt 20 -o $b -gt 100 ] 返回 true。  |
+| -a     | 与运算，两个表达式都为 true 才返回 true。           | [ $a -lt 20 -a $b -gt 100 ] 返回 false。 |
 
 ### 逻辑运算符
 
-![1569490888488](.\images\1569490888488.png)
+以下介绍 Shell 的逻辑运算符，假定变量 a 为 10，变量 b 为 20:
+
+| 运算符 | 说明       | 举例                                       |
+| :----- | :--------- | :----------------------------------------- |
+| &&     | 逻辑的 AND | [[ $a -lt 100 && $b -gt 100 ]] 返回 false  |
+| \|\|   | 逻辑的 OR  | [[ $a -lt 100 \|\| $b -gt 100 ]] 返回 true |
 
 ### 字符串运算符
 
-![1569490936429](.\images\1569490936429.png)
+下表列出了常用的字符串运算符，假定变量 a 为 "abc"，变量 b 为 "efg"：
+
+| 运算符 | 说明                                         | 举例                     |
+| :----- | :------------------------------------------- | :----------------------- |
+| =      | 检测两个字符串是否相等，相等返回 true。      | [ $a = $b ] 返回 false。 |
+| !=     | 检测两个字符串是否不相等，不相等返回 true。  | [ $a != $b ] 返回 true。 |
+| -z     | 检测字符串长度是否为0，为0返回 true。        | [ -z $a ] 返回 false。   |
+| -n     | 检测字符串长度是否不为 0，不为 0 返回 true。 | [ -n "$a" ] 返回 true。  |
+| $      | 检测字符串是否不为空，不为空返回 true。      | [ $a ] 返回 true。       |
 
 ### 文件测试运算符
 
-![1569490953169](.\images\1569490953169.png)
+文件测试运算符用于检测 Unix 文件的各种属性。
+
+属性检测描述如下：
+
+| 操作符  | 说明                                                         | 举例                      |
+| :------ | :----------------------------------------------------------- | :------------------------ |
+| -b file | 检测文件是否是块设备文件，如果是，则返回 true。              | [ -b $file ] 返回 false。 |
+| -c file | 检测文件是否是字符设备文件，如果是，则返回 true。            | [ -c $file ] 返回 false。 |
+| -d file | 检测文件是否是目录，如果是，则返回 true。                    | [ -d $file ] 返回 false。 |
+| -f file | 检测文件是否是普通文件（既不是目录，也不是设备文件），如果是，则返回 true。 | [ -f $file ] 返回 true。  |
+| -g file | 检测文件是否设置了 SGID 位，如果是，则返回 true。            | [ -g $file ] 返回 false。 |
+| -k file | 检测文件是否设置了粘着位(Sticky Bit)，如果是，则返回 true。  | [ -k $file ] 返回 false。 |
+| -p file | 检测文件是否是有名管道，如果是，则返回 true。                | [ -p $file ] 返回 false。 |
+| -u file | 检测文件是否设置了 SUID 位，如果是，则返回 true。            | [ -u $file ] 返回 false。 |
+| -r file | 检测文件是否可读，如果是，则返回 true。                      | [ -r $file ] 返回 true。  |
+| -w file | 检测文件是否可写，如果是，则返回 true。                      | [ -w $file ] 返回 true。  |
+| -x file | 检测文件是否可执行，如果是，则返回 true。                    | [ -x $file ] 返回 true。  |
+| -s file | 检测文件是否为空（文件大小是否大于0），不为空返回 true。     | [ -s $file ] 返回 true。  |
+| -e file | 检测文件（包括目录）是否存在，如果是，则返回 true。          | [ -e $file ] 返回 true。  |
+
+```
+#!/bin/bash
+# author:菜鸟教程
+# url:www.runoob.com
+
+file="/var/www/runoob/test.sh"
+if [ -r $file ]
+then
+   echo "文件可读"
+else
+   echo "文件不可读"
+fi
+if [ -w $file ]
+then
+   echo "文件可写"
+else
+   echo "文件不可写"
+fi
+if [ -x $file ]
+then
+   echo "文件可执行"
+else
+   echo "文件不可执行"
+fi
+if [ -f $file ]
+then
+   echo "文件为普通文件"
+else
+   echo "文件为特殊文件"
+fi
+if [ -d $file ]
+then
+   echo "文件是个目录"
+else
+   echo "文件不是个目录"
+fi
+if [ -s $file ]
+then
+   echo "文件不为空"
+else
+   echo "文件为空"
+fi
+if [ -e $file ]
+then
+   echo "文件存在"
+else
+   echo "文件不存在"
+fi
+```
+
+执行脚本，输出结果如下所示：
+
+```
+文件可读
+文件可写
+文件可执行
+文件为普通文件
+文件不是个目录
+文件不为空
+文件存在
+```
+
+### 使用 $(( )) 进行算术运算
+
+**$(( ))** 语法也是进行算术运算的一种方式。
+
+```
+*#!/bin/bash*
+
+*# 初始化变量*
+num=5
+
+*# 自增*
+num=$((num + 1))
+
+*# 自减*
+num=$**((**num - 1**))
+
+echo $num
+```
+
+### 使用 expr 命令
+
+expr 命令可以用于算术运算，但在现代脚本中不如 let 和 $(( )) 常用。
+
+```
+*#!/bin/bash*
+
+*# 初始化变量*
+num=5
+
+*# 自增*
+num=$(expr $num + 1)
+
+*# 自减*
+num=$(expr $num - 1)
+
+echo $num
+```
+
+### 使用 (( )) 进行算术运算
+
+与 $(( )) 类似，(( )) 语法也可以用于算术运算。
+
+```
+*#!/bin/bash*
+
+*# 初始化变量*
+num=5
+
+*# 自增*
+((num++))
+
+*# 自减*
+((num--))
+
+echo $num
+```
+
+### 使用 $[ ] 进行算术运算
+
+类似上面
 
 ## Shell echo命令
 
@@ -362,7 +599,7 @@ fi
 
 ## Shell 流程控制 
 
-#### if else-if else 
+### if else-if else 
 
 ```bash
 if condition1
@@ -427,6 +664,376 @@ case 值 in
 esac
 ```
 
+## Shell read命令
+
+**1、简单读取**
+
+```
+#!/bin/bash
+
+#这里默认会换行  
+echo "输入网站名: "  
+#读取从键盘的输入  
+read website  
+echo "你输入的网站名是 $website"  
+exit 0  #退出
+```
+
+测试结果为：
+
+```
+输入网站名: 
+www.runoob.com
+你输入的网站名是 www.runoob.com
+```
+
+**2、-p 参数，允许在 read 命令行中直接指定一个提示。**
+
+```
+#!/bin/bash
+
+read -p "输入网站名:" website
+echo "你输入的网站名是 $website" 
+exit 0
+```
+
+测试结果为：
+
+```
+输入网站名:www.runoob.com
+你输入的网站名是 www.runoob.com
+```
+
+**3、-t 参数指定 read 命令等待输入的秒数，当计时满时，read命令返回一个非零退出状态。**
+
+```
+#!/bin/bash
+
+if read -t 5 -p "输入网站名:" website
+then
+    echo "你输入的网站名是 $website"
+else
+    echo "\n抱歉，你输入超时了。"
+fi
+exit 0
+```
+
+执行程序不输入，等待 5 秒后：
+
+```
+输入网站名:
+抱歉，你输入超时了
+```
+
+4、除了输入时间计时，还可以使用 **-n** 参数设置 **read** 命令计数输入的字符。当输入的字符数目达到预定数目时，自动退出，并将输入的数据赋值给变量。
+
+```
+#!/bin/bash
+
+read -n1 -p "Do you want to continue [Y/N]?" answer
+case $answer in
+Y | y)
+      echo "fine ,continue";;
+N | n)
+      echo "ok,good bye";;
+*)
+     echo "error choice";;
+
+esac
+exit 0
+```
+
+该例子使用了-n 选项，后接数值 1，指示 read 命令只要接受到一个字符就退出。只要按下一个字符进行回答，read 命令立即接受输入并将其传给变量，无需按回车键。
+
+只接收 2 个输入就退出：
+
+```
+#!/bin/bash
+
+read -n2 -p "请随便输入两个字符: " any
+echo "\n您输入的两个字符是:$any"
+exit 0
+```
+
+执行程序输入两个字符：
+
+```
+请随便输入两个字符: 12
+您输入的两个字符是:12
+```
+
+5、**-s** 选项能够使 **read** 命令中输入的数据不显示在命令终端上（实际上，数据是显示的，只是 **read** 命令将文本颜色设置成与背景相同的颜色）。输入密码常用这个选项。
+
+```
+#!/bin/bash
+
+read  -s  -p "请输入您的密码:" pass
+echo "\n您输入的密码是 $pass"
+exit 0
+```
+
+执行程序输入密码后是不显示的：
+
+```
+请输入您的密码:
+您输入的密码是 runoob
+```
+
+**6.读取文件**
+
+每次调用 read 命令都会读取文件中的 "一行" 文本。当文件没有可读的行时，read 命令将以非零状态退出。
+
+通过什么样的方法将文件中的数据传给 read 呢？使用 cat 命令并通过管道将结果直接传送给包含 read 命令的 while 命令。
+
+测试文件 test.txt 内容如下：
+
+```
+123
+456
+runoob
+```
+
+测试代码：
+
+```
+#!/bin/bash
+  
+count=1    # 赋值语句，不加空格
+cat test.txt | while read line      # cat 命令的输出作为read命令的输入,read读到>的值放在line中
+do
+   echo "Line $count:$line"
+   count=$[ $count + 1 ]          # 注意中括号中的空格。
+done
+echo "finish"
+exit 0
+```
+
+执行结果为：
+
+```
+Line 1:123
+Line 2:456
+Line 3:runoob
+finish
+```
+
+使用 **-e** 参数，以下实例输入字符 **a** 后按下 **Tab** 键就会输出相关的文件名(该目录存在的)：
+
+```
+$ read -e -p "输入文件名:" str 
+输入文件名:a
+a.out    a.py     a.pyc    abc.txt  
+输入文件名:a
+```
+
+## Shell date命令
+
+Linux **date** 命令可以用来显示或设定系统的日期与时间。
+
+### 语法
+
+```
+date [OPTION]... [+FORMAT]
+date [-u] [-d datestr] [-s datestr] [--utc] [--universal] [--date=datestr] [--set=datestr] [--help] [--version] [+FORMAT] [MMDDhhmm[[CC]YY][.ss]]
+```
+
+#### 可选参数
+
+- **-d, --date=STRING**：通过字符串显示时间格式，字符串不能是'now'。
+- **-f, --file=DATEFILE**：类似于--date; 一次从DATEFILE处理一行。
+- **-I[FMT], --iso-8601[=FMT]**：按照 ISO 8601 格式输出时间，FMT 可以为'date'(默认)，'hours'，'minutes'，'seconds'，'ns'。 可用于设置日期和时间的精度，例如：2006-08-14T02:34:56-0600。
+- **-R, --rfc-2822** ： 按照 RFC 5322 格式输出时间和日期，例如: Mon, 14 Aug 2006 02:34:56 -0600。
+- **--rfc-3339=FMT**：按照 RFC 3339 格式输出，FMT 可以为'date', 'seconds','ns'中的一个，可用于设置日期和时间的精度， 例如：2006-08-14 02:34:56-06:00。
+- **-r, --reference=FILE**：显示文件的上次修改时间。
+- **-s, --set=STRING**：根据字符串设置系统时间。
+- **-u, --utc, --universal**：显示或设置协调世界时(UTC)。
+- **--help**：显示帮助信息。
+- **--version**：输出版本信息。
+
+#### FORMAT 参数
+
+在显示方面，使用者可以设定欲显示的格式 ，格式设定为一个加号后接数个标记，其中可用的标记列表如下：
+
+```
+%%   输出字符 %
+%a   星期几的缩写 (Sun..Sat)
+%A   星期的完整名称(Sunday..Saturday)。 
+%b   缩写的月份名称（例如，Jan）
+%B   完整的月份名称（例如，January）
+%c   本地日期和时间（例如，Thu Mar  3 23:05:25 2005）
+%C   世纪，和%Y类似，但是省略后两位（例如，20）
+%d   日 (01..31)
+%D   日期，等价于%m/%d/%y
+%e   一月中的一天，格式使用空格填充，等价于%_d
+%F   完整的日期；等价于 %Y-%m-%d
+%g   ISO 标准计数周的年份的最后两位数字
+%G   ISO 标准计数周的年份，通常只对%V有用
+%h   等价于 %b
+%H   小时 (00..23)
+%I   小时 (01..12)
+%j   一年中的第几天 (001..366)
+%k   小时，使用空格填充 ( 0..23); 等价于 %_H
+%l   小时, 使用空格填充 ( 1..12); 等价于 %_I
+%m   月份 (01..12)
+%M   分钟 (00..59)
+%n   新的一行，换行符
+%N   纳秒 (000000000..999999999)
+%p   用于表示当地的AM或PM，如果未知则为空白
+%P   类似 %p, 但是是小写的
+%r   本地的 12 小时制时间(例如 11:11:04 PM)
+%R   24 小时制 的小时与分钟; 等价于 %H:%M
+%s   自 1970-01-01 00:00:00 UTC 到现在的秒数
+%S   秒 (00..60)
+%t   插入水平制表符 tab
+%T   时间; 等价于 %H:%M:%S
+%u   一周中的一天 (1..7); 1 表示星期一
+%U   一年中的第几周，周日作为一周的起始 (00..53)
+%V   ISO 标准计数周，该方法将周一作为一周的起始 (01..53)
+%w   一周中的一天（0..6），0代表星期天
+%W   一年中的第几周，周一作为一周的起始（00..53）
+%x   本地的日期格式（例如，12/31/99）
+%X   本地的日期格式（例如，23:13:48）
+%y   年份后两位数字 (00..99)
+%Y   年
+%z   +hhmm 格式的数值化时区格式（例如，-0400）
+%:z  +hh:mm 格式的数值化时区格式（例如，-04:00）
+%::z  +hh:mm:ss格式的数值化时区格式（例如，-04:00:00）
+%:::z  数值化时区格式，相比上一个格式增加':'以显示必要的精度（例如，-04，+05:30）
+%Z  时区缩写 （如 EDT）
+```
+
+若是不以加号作为开头，则表示要设定时间，而时间格式为 **MMDDhhmm[[CC]YY][.ss]**，其中 **MM** 为月份，**DD** 为日，**hh** 为小时，**mm** 为分钟，**CC** 为年份前两位数字，**YY** 为年份后两位数字，**ss** 为秒数。
+
+使用权限：所有使用者。
+
+当您不希望出现无意义的 0 时(比如说 1999/03/07)，则可以在标记中插入 - 符号，比如说 **date '+%-H:%-M:%-S'** 会把时分秒中无意义的 0 给去掉，像是原本的 08:09:04 会变为 8:9:4。另外，只有取得权限者(比如说 root)才能设定系统时间。
+
+当您以 root 身分更改了系统时间之后，请记得以 **clock -w** 来将系统时间写入 **CMOS** 中，这样下次重新开机时系统时间才会持续保持最新的正确值。
+
+### 实例
+
+显示当前时间
+
+```
+# date
+Tue May 24 09:29:43 CST 2022
+# date '+%c' 
+Tue 24 May 2022 09:30:03 AM CST
+# date '+%D' //显示完整的时间
+05/24/22
+# date '+%x' //显示数字日期
+05/24/2022
+# date '+%T' //显示日期，年份用四位数表示
+14:09:31
+# date '+%X' //显示24小时的格式
+09:31:31 AM
+```
+
+格式化输出：
+
+```
+# date +"%Y-%m-%d"
+2009-12-07
+```
+
+输出昨天日期：
+
+```
+# date -d "1 day ago" +"%Y-%m-%d"
+2012-11-19
+```
+
+输出 2 秒后的时间：
+
+```
+# date -d "2 second" +"%Y-%m-%d %H:%M.%S"
+2012-11-20 14:21.31
+```
+
+传说中的 1234567890 秒：
+
+```
+# date -d "1970-01-01 1234567890 seconds" +"%Y-%m-%d %H:%M:%S"
+2009-02-13 23:02:30
+```
+
+或者:
+
+```
+# date -d@1234567890 +"%F %T"
+2009-02-13 23:02:30
+```
+
+时间格式转换：
+
+```
+# date -d "2009-12-12" +"%Y/%m/%d %H:%M.%S"
+2009/12/12 00:00.00
+```
+
+apache 格式转换：
+
+```
+# date -d "Dec 5, 2009 12:00:37 AM" +"%Y-%m-%d %H:%M.%S"
+2009-12-05 00:00.37
+```
+
+格式转换后时间游走：
+
+```
+# date -d "Dec 5, 2009 12:00:37 AM 2 year ago" +"%Y-%m-%d %H:%M.%S"
+2007-12-05 00:00.37
+```
+
+按自己的格式输出
+
+```
+# date '+usr_time: $1:%M %P -hey'
+usr_time: $1:16 下午 -hey
+```
+
+显示时间后跳行，再显示目前日期
+
+```
+date '+%T%n%D'
+```
+
+显示月份与日数
+
+```
+date '+%B %d'
+```
+
+显示日期与设定时间(12:34:56)
+
+```
+date --date '12:34:56'
+```
+
+时间加减操作：
+
+```
+date +%Y%m%d                   # 显示年月日
+date -d "+1 day" +%Y%m%d       # 显示后一天的日期
+date -d "-1 day" +%Y%m%d       # 显示前一天的日期
+date -d "-1 month" +%Y%m%d     # 显示上一月的日期
+date -d "+1 month" +%Y%m%d     # 显示下一月的日期
+date -d "-1 year" +%Y%m%d      # 显示前一年的日期
+date -d "+1 year" +%Y%m%d      # 显示下一年的日期
+```
+
+设定时间：
+
+```
+date -s                         # 设置当前时间，只有root权限才能设置，其他只能查看
+date -s 20120523                # 设置成20120523，这样会把具体时间设置成00:00:00
+date -s 01:01:01                # 设置具体时间，不会对日期做更改
+date -s "01:01:01 2012-05-23"   # 这样可以设置全部时间
+date -s "01:01:01 20120523"     # 这样可以设置全部时间
+date -s "2012-05-23 01:01:01"   # 这样可以设置全部时间
+date -s "20120523 01:01:01"     # 这样可以设置全部时间
+```
+
 ## Shell 函数
 
 > 在Shell中，调用函数时可以向其传递参数
@@ -464,15 +1071,205 @@ funWithParam 1 2 3 4 5 6 7 8 9 34 73
 作为一个字符串输出所有参数 1 2 3 4 5 6 7 8 9 34 73 !
 ```
 
-### 有几个特殊字符用来处理参数
+### 常见系统函数
 
-![1569491770557](.\images\1569491770557.png)
+1. basename 基本语法
+
+功能：返回路径中最后一个'/'后的部分内容，常用于获取文件名。
+
+basename NAME \[SUFFIX\]
+
+如果指定 SUFFIX 参数，且它和字符串中所有字符都不相同，但和字符串的后缀相同，则除去指定后缀。
+
+可用的参数：
+
+\-z  ： 使用NUL而不是换行符来分隔输出
+
+\-s,--suffix=SUFFIX  ： 效果和指定SUFFIX参数相同
+
+\-a  ： 支持多个参数并将每个参数视为一个NAME，如：
+
+```
+[root@study ~]# basename -a any/str1 any/str2
+str1
+str2
+```
+
+2. dirname 基本语法
+
+功能：返回完整路径最后，常用于返回文件路径。
+
+实例1：返回 /root/fileName.txt 的 fileName.txt  ；返回 /root/fileName.txt 的 fileName。
+
+```
+#返回fileName.txt
+basename /root/fileName.txt
+
+#返回fileName
+basename /root/fileName.txt .txt
+```
+
+实例2：返回 /root/fileName.txt的路径（不包含文件名），即/root
+
+```
+dirname /root/fileName.txt
+```
+
+## Shell 脚本实战分析-数据库定时备份
+
+```
+#！/bin/bash
+#完成数据库的定时备份
+#备份的路径
+BACKUP=/mnt/backup/db
+#当前的时间作为文件名
+DATETIME=$(date +%Y_%m_%d_%H%M%S)
+#可以输出变量调试
+#echo ${DATETIME}
+echo "==========开始备份==========="
+echo "备份的路径是 $BACKUP/$DATETIME.tar.gz"
+
+#主机
+HOST=localhost
+#用户名
+DB_USER=root
+#密码
+DB_PWD=root
+#备份数据库名
+DATABASE=yuanchangliang
+#创建备份的路径
+#如果备份的路径文件夹存在就使用，否则创建
+[ ! -d "$BACKUP/$DATETIME"  ]  && mkdir -p "$BACKUP/$DATETIME" 
+#执行mysql的备份数据库的指令
+mysqldump -u${DB_USER} -p${DB_PWD} --host=$HOST  $DATABASE | gzip  > $BACKUP/$DATETIME/$DATETIME.sql.gz
+#打包备份文件
+cd $BACKUP
+tar -zcvf  $DATETIME.tar.gz  $DATETIME
+#删除临时目录
+rm -rf  $BACKUP/$DATETIME
+
+#删除10天前的备份文件(-exec rm -rf {} \是固定写法，删除查询出来的数据)
+find $BACKUP -mtime +10 -name  "*.tar.gz" -exec rm -rf {} \;
+echo "==========备份完成==========="
+```
+
+![在这里插入图片描述](/Users/dongbinyu/learningNotes/images/Linux+Shell笔记/cfc0b9dd99c8da1d25f95c47fffd190c-20250211211317462.png)
+
+
+通过以上几步，就可以实现在Linux中**定时**备份mysql数据库中的数据
+
+如果想要立刻执行数据备份，可以直接执行以下命令：
+
+```bash
+[root@localhost mnt]# ./mysql_backup.sh 
+```
 
 ## Shell 输入/输出重定向
 
-> https://www.runoob.com/linux/linux-shell-io-redirections.html
+| 命令            | 说明                                               |
+| :-------------- | :------------------------------------------------- |
+| command > file  | 将输出重定向到 file。                              |
+| command < file  | 将输入重定向到 file。                              |
+| command >> file | 将输出以追加的方式重定向到 file。                  |
+| n > file        | 将文件描述符为 n 的文件重定向到 file。             |
+| n >> file       | 将文件描述符为 n 的文件以追加的方式重定向到 file。 |
+| n >& m          | 将输出文件 m 和 n 合并。                           |
+| n <& m          | 将输入文件 m 和 n 合并。                           |
+| << tag          | 将开始标记 tag 和结束标记 tag 之间的内容作为输入。 |
 
-![1569491972555](.\images\1569491972555.png)
+> 需要注意的是文件描述符 0 通常是标准输入（STDIN），1 是标准输出（STDOUT），2 是标准错误输出（STDERR）。
+
+------
+
+### 输出重定向
+
+重定向一般通过在命令间插入特定的符号来实现。特别的，这些符号的语法如下所示:
+
+```
+command1 > file1
+```
+
+上面这个命令执行command1然后将输出的内容存入file1。
+
+注意任何file1内的已经存在的内容将被新内容替代。如果要将新内容添加在文件末尾，请使用>>操作符。
+
+#### 实例
+
+执行下面的 who 命令，它将命令的完整的输出重定向在用户文件中(users):
+
+```
+$ who > users
+```
+
+执行后，并没有在终端输出信息，这是因为输出已被从默认的标准输出设备（终端）重定向到指定的文件。
+
+你可以使用 cat 命令查看文件内容：
+
+```
+$ cat users
+_mbsetupuser console  Oct 31 17:35 
+tianqixin    console  Oct 31 17:35 
+tianqixin    ttys000  Dec  1 11:33 
+```
+
+输出重定向会覆盖文件内容，请看下面的例子：
+
+```
+$ echo "菜鸟教程：www.runoob.com" > users
+$ cat users
+菜鸟教程：www.runoob.com
+$
+```
+
+如果不希望文件内容被覆盖，可以使用 >> 追加到文件末尾，例如：
+
+```
+$ echo "菜鸟教程：www.runoob.com" >> users
+$ cat users
+菜鸟教程：www.runoob.com
+菜鸟教程：www.runoob.com
+$
+```
+
+------
+
+### 输入重定向
+
+和输出重定向一样，Unix 命令也可以从文件获取输入，语法为：
+
+```
+command1 < file1
+```
+
+这样，本来需要从键盘获取输入的命令会转移到文件读取内容。
+
+注意：输出重定向是大于号(>)，输入重定向是小于号(<)。
+
+#### 实例
+
+接着以上实例，我们需要统计 users 文件的行数,执行以下命令：
+
+```
+$ wc -l users
+       2 users
+```
+
+也可以将输入重定向到 users 文件：
+
+```
+$  wc -l < users
+       2 
+```
+
+注意：上面两个例子的结果不同：第一个例子，会输出文件名；第二个不会，因为它仅仅知道从标准输入读取内容。
+
+```
+command1 < infile > outfile
+```
+
+同时替换输入和输出，执行command1，从文件infile读取内容，然后将输出写入到outfile中。
+
+### 重定向深入讲解
 
 一般情况下，每个 Unix/Linux 命令运行时都会打开三个文件：
 
@@ -513,6 +1310,86 @@ $ command < file1 >file2
 ```
 
 command 命令将 stdin 重定向到 file1，将 stdout 重定向到 file2。
+
+------
+
+### Here Document
+
+Here Document 是 Shell 中的一种特殊的重定向方式，用来将输入重定向到一个交互式 Shell 脚本或程序。
+
+它的基本的形式如下：
+
+```
+command << delimiter
+    document
+delimiter
+```
+
+它的作用是将两个 delimiter 之间的内容(document) 作为输入传递给 command。
+
+> 注意：
+>
+> - 结尾的delimiter 一定要顶格写，前面不能有任何字符，后面也不能有任何字符，包括空格和 tab 缩进。
+> - 开始的delimiter前后的空格会被忽略掉。
+
+#### 实例
+
+在命令行中通过 **wc -l** 命令计算 Here Document 的行数：
+
+```
+(base) dongbinyu@dongbinyudeMacBook-Pro ~ % wc -l <<EOF
+欢迎来到
+菜鸟教程
+heredoc> 欢迎来到
+heredoc> 菜鸟教程
+heredoc> www.runoob.com
+heredoc> EOF
+       5
+```
+
+我们也可以将 Here Document 用在脚本中，例如：
+
+```
+#!/bin/bash
+# author:菜鸟教程
+# url:www.runoob.com
+
+cat << EOF
+欢迎来到
+菜鸟教程
+www.runoob.com
+EOF
+```
+
+执行以上脚本，输出结果：
+
+```
+欢迎来到
+菜鸟教程
+www.runoob.com
+```
+
+------
+
+### /dev/null 文件
+
+如果希望执行某个命令，但又不希望在屏幕上显示输出结果，那么可以将输出重定向到 /dev/null：
+
+```
+$ command > /dev/null
+```
+
+/dev/null 是一个特殊的文件，写入到它的内容都会被丢弃；如果尝试从该文件读取内容，那么什么也读不到。但是 /dev/null 文件非常有用，**将命令的输出重定向到它，会起到"禁止输出"的效果。**
+
+**如果希望屏蔽 stdout 和 stderr，可以这样写：**
+
+```
+$ command > /dev/null 2>&1
+```
+
+> **注意：**0 是标准输入（STDIN），1 是标准输出（STDOUT），2 是标准错误输出（STDERR）。
+>
+> 这里的 **2** 和 **>** 之间不可以有空格，**2>** 是一体的时候才表示错误输出。
 
 ## Shell 文件包含 	
 
