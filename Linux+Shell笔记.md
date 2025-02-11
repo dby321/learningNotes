@@ -2620,3 +2620,35 @@ prerotate 和 postrotate 主要用于在日志轮替的同时执行指定的脚�
 ### 2.18.Linux备份与恢复
 
 [博客园-linux数据备份、复原 | dump restore指令](https://www.cnblogs.com/CrispyCandy/p/17586360.html)
+
+### 2.19.可视化管理Linux
+
+[CSDN-Linux 可视化管理（webmin 和 bt(宝塔)运维工具的详细安装教程：webmin 安装配置和使用，bt 宝塔 的安装配置和使用）](https://blog.csdn.net/weixin_57558097/article/details/127730188)
+
+#### **Webmin**
+
+[Webmin官网](https://webmin.com/)
+
+Webmin是一个基于Web的管理工具，可以使用它在服务器上执行几乎所有系统管理任务，包括创建用户帐户和数据库，以及配置和管理磁盘配额，PHP，MySQL和其他开源应用。它的功能也可以使用在线提供的众多第三方模块中的任何一个进行扩展。
+
+[![img](/Users/dongbinyu/learningNotes/images/Linux+Shell笔记/8a5367cb099078110fc19ee68bf5acef.jpg)](https://s4.51cto.com/oss/201907/17/8a5367cb099078110fc19ee68bf5acef.jpg)
+
+#### **Cockpit**
+
+[Cockpit官网](https://cockpit-project.org/)
+
+Cockpit是一个开源的，易于使用的基于Web的服务器管理器，由红帽开发，可以在不受任何干扰的情况下有效监控和管理多台服务器。
+
+[![img](/Users/dongbinyu/learningNotes/images/Linux+Shell笔记/85f2eccbfa55cf67b1200bac12e79dbc.jpg)](https://s5.51cto.com/oss/201907/17/85f2eccbfa55cf67b1200bac12e79dbc.jpg)
+
+#### 宝塔工具
+
+[宝塔官网](https://www.bt.cn/new/index.html)
+
+bt 宝塔 Linux 面板是提升运维效率的服务器管理软件，支持一键 [LAMP](https://so.csdn.net/so/search?q=LAMP&spm=1001.2101.3001.7020)/LNMP/集群/监控/网站/FTP/数据库/JAVA 等多项服务器管理功能。
+
+### 2.20.Linux面试题
+
+P142后面，哥们学不下去了，太长了
+
+https://www.bilibili.com/video/BV1Sv411r7vd?vd_source=f58f2e2144be4e99a8cf800afeecbbcb&spm_id_from=333.788.videopod.episodes&p=142
