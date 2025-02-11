@@ -2,11 +2,13 @@
 
 [TOC]
 
+[韩顺平-一周学会Linux+Shell](https://www.bilibili.com/video/BV1Sv411r7vd/)
+
 # Shell教程
 
-**Shell 是一个用 C 语言编写的程序**，它是用户使用 Linux 的桥梁。Shell 既是一种命令语言，又是一种程序设计语言。
+Shell 是一个用 C 语言编写的程序，它是用户使用 Linux 的桥梁。Shell 既是一种命令语言，又是一种程序设计语言。
 
-**Shell 是指一种应用程序，这个应用程序提供了一个界面，用户通过这个界面访问操作系统内核的服务**。（ 在计算机科学中，Shell俗称壳（用来区别于核），是指“为使用者提供操作界面”的[软件](https://baike.baidu.com/item/软件/12053)（command interpreter，命令解析器）。它类似于[DOS](https://baike.baidu.com/item/DOS/32025)下的[COMMAND.COM](https://baike.baidu.com/item/COMMAND.COM/8063418)和后来的[cmd.exe](https://baike.baidu.com/item/cmd.exe/8192925)。它接收用户命令，然后调用相应的[应用程序](https://baike.baidu.com/item/应用程序/5985445)。 ）
+Shell 是指一种应用程序，这个应用程序提供了一个界面，用户通过这个界面访问操作系统内核的服务。（ 在计算机科学中，Shell俗称壳（用来区别于核），是指“为使用者提供操作界面”的[软件](https://baike.baidu.com/item/软件/12053)（command interpreter，命令解析器）。它类似于[DOS](https://baike.baidu.com/item/DOS/32025)下的[COMMAND.COM](https://baike.baidu.com/item/COMMAND.COM/8063418)和后来的[cmd.exe](https://baike.baidu.com/item/cmd.exe/8192925)。它接收用户命令，然后调用相应的[应用程序](https://baike.baidu.com/item/应用程序/5985445)。 ）
 
 Ken Thompson 的 sh 是第一种 Unix Shell，Windows Explorer 是一个典型的图形界面 Shell。
 
@@ -1391,9 +1393,7 @@ $ command > /dev/null 2>&1
 >
 > 这里的 **2** 和 **>** 之间不可以有空格，**2>** 是一体的时候才表示错误输出。
 
-## Shell 文件包含 	
-
-> 类似vue的mixin
+## Shell 文件包含
 
 ```bash
 . filename   # 注意点号(.)和文件名中间有一空格
@@ -2051,3 +2051,572 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 
 [CSDN-Linux 防火墙配置（iptables和firewalld）](https://blog.csdn.net/m0_49864110/article/details/129150960)
 
+### 2.14.Linux 日志
+
+[博客园-【Linux日志】系统日志及分析](https://www.cnblogs.com/yingsong/p/6022181.html)
+
+[CSDN-一文带你看懂Linux日志分析（非常详细）零基础入门到精通，收藏这一篇就够了](https://blog.csdn.net/leah126/article/details/140314144)
+
+[博客园-Rsyslog 详解](https://www.cnblogs.com/shu-sheng/p/13275474.html)
+
+[C语言中文网-Linux日志轮替（日志转储）及logrotate配置文件分析](https://c.biancheng.net/view/1106.html)
+
+ 
+
+日志文件是Linux系统中极为重要的一部分，它们记录了系统和应用程序的各种活动信息。通过日志文件，系统管理员可以监控系统的运行状态、发现潜在的问题，并进行故障排除。
+
+在这篇文章中，我将详细介绍一些常用的Linux日志分析命令和工具，帮助您更好地管理和分析系统日志。
+
+####  2.14.1.日志类型
+
+下面是常见的日志类型，但并不是所有的Linux发行版都包含这些类型：
+
+ 
+
+| 类型          | 说明                                                         |
+| ------------- | ------------------------------------------------------------ |
+| auth          | 用户认证时产生的日志，如login命令、su命令。                  |
+| authpriv      | 与 auth 类似，但是只能被特定用户查看。                       |
+| console       | 针对系统控制台的消息。                                       |
+| cron          | 系统定期执行计划任务时产生的日志。                           |
+| daemon        | 某些守护进程产生的日志。                                     |
+| ftp           | FTP服务。                                                    |
+| kern          | 系统内核消息。                                               |
+| local0.local7 | 由自定义程序使用。                                           |
+| lpr           | 与打印机活动有关。                                           |
+| mail          | 邮件日志。                                                   |
+| mark          | 产生时间戳。系统每隔一段时间向日志文件中输出当前时间，每行的格式类似于 May 26 11:17:09 rs2 -- MARK --，可以由此推断系统发生故障的大概时间。 |
+| news          | 网络新闻传输协议(nntp)产生的消息。                           |
+| ntp           | 网络时间协议(ntp)产生的消息。                                |
+| user          | 用户进程。                                                   |
+| uucp          | UUCP子系统。                                                 |
+
+#### 2.14.2.日志优先级
+
+常见的日志优先级请见下标：
+
+ 
+
+| 优先级  | 说明                                                       |
+| ------- | ---------------------------------------------------------- |
+| emerg   | 紧急情况，系统不可用（例如系统崩溃），一般会通知所有用户。 |
+| alert   | 需要立即修复，例如系统数据库损坏。                         |
+| crit    | 危险情况，例如硬盘错误，可能会阻碍程序的部分功能。         |
+| err     | 一般错误消息。                                             |
+| warning | 警告。                                                     |
+| notice  | 不是错误，但是可能需要处理。                               |
+| info    | 通用性消息，一般用来提供有用信息。                         |
+| debug   | 调试程序产生的信息。                                       |
+| none    | 没有优先级，不记录任何日志消息。                           |
+
+#### 2.14.3.常见的日志文件
+
+在介绍具体的日志分析命令之前，首先了解一下Linux系统中常见的日志文件。它们通常位于`/var/log`目录下，包括：
+
+*   `/var/log/syslog`：记录系统的通用日志信息，适用于大多数Linux发行版。
+    
+*   `/var/log/messages`：记录系统的通用日志信息，通常在Red Hat系的发行版中使用。
+    
+*   `/var/log/auth.log`：记录身份验证相关的日志信息，如登录尝试、sudo命令使用等。
+    
+*   `/var/log/kern.log`：记录内核相关的日志信息。
+    
+*   `/var/log/dmesg`：记录系统启动时的内核消息。
+    
+*   `/var/log/boot.log`：记录系统启动过程中的消息。
+    
+*   `/var/log/cron.log`：记录定时任务相关的日志信息。
+    
+*   `/var/log/mail.log`：记录邮件系统相关的日志信息。
+    
+*   `/var/log/apache2/access.log`和`/var/log/apache2/error.log`：记录Apache服务器的访问日志和错误日志。
+    
+*   `/var/log/nginx/access.log`和`/var/log/nginx/error.log`：记录Nginx服务器的访问日志和错误日志。
+    
+
+#### 2.14.4.查看日志文件的命令
+
+1\. cat
+
+cat命令用于查看文件的内容，适用于查看较短的日志文件。
+
+示例：
+
+```
+cat /var/log/syslog
+
+```
+
+2\. less
+
+less命令用于分页查看文件内容，可以方便地向上或向下滚动，适用于查看较长的日志文件。
+
+示例：
+
+```
+less /var/log/syslog
+
+```
+
+3\. tail
+
+tail命令用于查看文件的末尾部分，默认显示最后10行。常用选项包括-n指定行数和-f用于实时跟踪日志文件的更新。
+
+示例：
+
+```
+tail -n 20 /var/log/syslog``tail -f /var/log/syslog
+
+```
+
+4\. head
+
+head命令用于查看文件的开头部分，默认显示前10行。
+
+示例：
+
+```
+head -n 20 /var/log/syslog
+
+```
+
+5\. grep
+
+grep命令用于在文件中搜索匹配特定模式的行，适用于从日志文件中提取特定信息。
+
+示例：
+
+```
+grep "error" /var/log/syslog``grep -i "fail" /var/log/auth.log
+
+```
+
+选项-i表示忽略大小写。
+
+6\. awk
+
+awk是一种强大的文本处理工具，适用于从日志文件中提取和处理结构化信息。
+
+示例：
+
+```
+awk '{print $1, $2, $3}' /var/log/syslog
+
+```
+
+上述命令提取并显示日志文件的前三列。
+
+7.sed
+
+sed是一种流编辑器，适用于对日志文件进行搜索、替换和过滤。
+
+示例：
+
+sed -n ‘/error/p’ /var/log/syslog
+
+上述命令显示包含“error”的行。
+
+#### 2.14.5 分析日志文件的工具
+
+1. logrotate
+
+logrotate命令用于管理和轮转日志文件，防止日志文件过大。配置文件通常位于/etc/logrotate.conf和/etc/logrotate.d/目录下。
+
+示例配置：
+
+```
+/var/log/syslog {`    `daily`    `rotate 7`    `compress`    `missingok`    `notifempty``}
+
+```
+
+上述配置表示对/var/log/syslog进行每日轮转，保留7个历史日志文件，并进行压缩。
+
+2. journalctl
+
+journalctl命令用于查看和分析systemd的日志信息。
+
+示例：
+
+```
+journalctl -xe``journalctl -u nginx.service
+
+```
+
+选项-xe用于显示最近的日志并详细解释错误，-u用于查看特定服务的日志。
+
+3. logwatch
+
+logwatch是一款日志分析工具，可以生成易读的日志报告。
+
+安装并使用示例：
+
+```
+sudo apt-get install logwatch``sudo logwatch --detail High --mailto admin@example.com --service all --range today
+
+```
+
+上述命令生成详细的日志报告，并通过邮件发送给管理员
+
+4. goaccess
+
+goaccess是一款实时的Web日志分析工具，适用于分析Apache和Nginx日志。
+
+安装并使用示例：
+
+sudo apt-get install goaccess\`\`goaccess /var/log/nginx/access.log -o report.html --log-format=COMBINED
+
+上述命令生成一份HTML格式的访问日志报告。
+
+#### 2.14.6.Rsyslog 详解
+
+ 日常工作中，常遇到些问题，会查看Linux的系统日志，日志多种多样，boot.log, messages, auth.log, syslog等等，但每次出现问题总是凭借直觉和经验去一个一个翻，是下下策。搭建ELK，或者Graylog等日志分析系统也是极好的，但是体积太大了，需要考虑和维护的东西也就更多。故而通过一些更轻量级的配置，加上自己的一些理解分析，想实现一套日志分析系统。而针对系统模块的日志，首当其冲的是要搞定rsyslog。
+
+ 以下主要是针对rsyslog配置的讲解。
+
+##### **日志整理**
+
+对日志进行分析，首先第一步要规整日志。
+
+- `/etc/rsyslog.conf` 是rsyslog服务的总配置文件
+- `/etc/rsyslog.d` 该目录是单独配置的rsyslog配置文件
+
+```bash
+vim /etc/rsyslog.conf
+
+# Include all config files in /etc/rsyslog.d/
+#
+$IncludeConfig /etc/rsyslog.d/*.conf
+
+# 个人建议，将所有的rule都配置在该目录下，在/etc/rsyslog.conf中不写rule
+```
+
+##### **结合使用的 rule 示例**（懒人福利，CV大法，即粘即用）
+
+```bash
+# 记录mail日志等级为error及以上日志
+mail.err							/var/log/mail_err.log
+
+# 记录mail所有等级为warn级别的日志（仅记录warn级别）
+mail.=warn							/var/log/mail_err.log
+
+# 记录kern所有日志
+kern.*								/var/log/kern.log
+
+# 将mail的所有信息，除了info以外，其他的都写入/var/adm/mail
+mail.*;mail.!=info   /var/adm/mail
+
+# 将日志等级为crit或更高的内核消息定向到远程主机finlandia
+# 如果主机崩溃，磁盘出现不可修复的错误，可能无法读取存储的消息。如果有日志在远程主机上，可以尝试找出崩溃的原因。
+kern.crit    						 @finlandia
+
+# 记录所有类型的warning等级及以上日志
+*.warning							/var/log/syslog_warn.log
+
+# 记录mail的warning日志和kern的error日志,其他所有的info日志
+*.info;mail.warning;kern.error		/var/log/messages
+
+# 记录kernel的info到warning日志
+kern.info;kern.!err   /var/adm/kernel-info
+
+# 将mail和news的info级别日志写入/var/adminfo
+mail,news.=info    /var/adm/info
+
+# 将所有系统中所有类型的info日志和notice日志存入/var/log/massages,mail的所有日志除外。
+*.=info;*.=notice;\
+mail.none /var/log/messages
+
+# 紧急消息（emerg级别）将使用wall显示给当前所有登录的用户
+*.=emerg   		*
+
+# 该规则将所有alert以及更高级别的消息定向到操作员的终端，即登录的用户“root”和“joey”的终端。
+*.alert      root,joey
+```
+
+##### **注意事项**
+
+单独把这个拎出来写。
+
+上面的大概就是所有能用到的规则了，而这些规则有时候还是有些问题的
+
+For example?
+
+Exapmple A
+
+```bash
+mail.crit,*.err					/var/log/syslog_err.log
+
+# 这样的情况，最终的结果还是会把mail的err级别日志输出到syslog_err.log
+```
+
+Exapmple B
+
+```bash
+mail.!warn						/var/log/mail.log
+
+# 看起来是将mail的warn以下级别的日志输出到/var/log/mail.log，其实不然，你会发现你什么也得不到。
+# 官方的解释是，感叹号(就是形似这个的符号 ==> !) 就是个过滤器,你得先有东西，才能去过去，比如：
+mail.*;mail.!warn						/var/log/mail.log
+```
+
+Exapmple C
+
+如果在规则结束后立即使用反斜杠，而中间没有空格，那么使用反斜杠将行一分为二是无效的。
+
+以上都是官方建议
+
+以下是个人建议
+
+ 既然是规整日志，不管是出于什么原因，那一定是为了用起来更方便，看起来更简洁。别整太多花里胡哨的，实用就行。想明白自己要啥效果，捡自己用得着的看就行。莫要本末倒置，化简为繁。
+
+- 修改系统日志的输出格式
+
+##### **rsyslog Properties**
+
+**模板元素属性**
+
+| 属性                    | 释义\|                                                       |
+| ----------------------- | ------------------------------------------------------------ |
+| **msg**                 | 日志的信息内容，message。                                    |
+| **rawmsg**              | 不转义的日志内容。转义是默认开启的(EscapecontrolCharactersOnReceive),所以它有可能与socket中接收到的内容不同。 |
+| **rawmsg-after-pri**    | 几乎与rawmsg相同，但是删除了syslog PRI。                     |
+| **hostname**            | 打印该日志的主机名。                                         |
+| **source**              | hostname属性的别名。                                         |
+| **fromhost**            | 接收的信息来自于哪个节点。这里是DNS解析的名字。              |
+| **fromhost-ip**         | 接收的信息来自于哪个节点，这里是IP，本地的是127.0.0.1。      |
+| **syslogtag**           | 信息标签。大致形如 programed[14321] 。                       |
+| **programname**         | tag的一部分，就是上面的programed那个位置。                   |
+| **pri**                 | 消息的PRI部分-未解码(单值)                                   |
+| **pri-text**            | 文本形式的消息的PRI部分，并在括号中添加数值PRI(例如“local0.err<133>”) |
+| **iut**                 | InfoUnitType 一款监视器软件，在与监视器后端通信的时候使用    |
+| **syslogfacility**      | 设备信息，数字形式表示                                       |
+| **syslogfacility-text** | 设备信息，文本形式表示                                       |
+| **syslogseverity**      | 日志严重性等级，数字形式表示                                 |
+| **syslogseverity-text** | 日志严重性等级，文本形式表示                                 |
+| **syslogpriority**      | 同 syslogseverity                                            |
+| **syslogpriority-text** | 同 syslogseverity-text                                       |
+| **timegenerated**       | 高精度时间戳                                                 |
+| **timereported**        | 日志中的时间戳。精度取决于日志中提供的内容(在大多数情况下，为秒级) |
+| **timestamp**           | 同 timereported                                              |
+| **protocol-version**    | IETF draft draft-ietf-syslog-protocol 中的 PROTOCOL-VERSION 字段的内容 |
+| **structured-data**     | IETF draft draft-ietf-syslog-protocol 中的 STRUCTURED-DATA 字段的内容 |
+| **app-name**            | IETF draft draft-ietf-syslog-protocol 中的 APP-NAME 字段的内容 |
+| **procid**              | IETF draft draft-ietf-syslog-protocol 中的 PROCID 字段的内容 |
+| **msgid**               | IETF draft draft-ietf-syslog-protocol 中的 MSGID 字段的内容  |
+| **inputname**           | 生成日志的输入模块的名称(如“imuxsock”、“imudp”)              |
+| **jsonmesg**            | 整个日志对象作为json表示。可能出现数据重复，譬如syslogtag包含着programname，但两者都会分别表示。所以这个属性有一些额外开销，建议只有在实际需要的时候再用。 |
+
+------
+
+##### **Time-Related System Properties**
+
+**与时间相关的系统属性**（以 `2020-07-08 16:57:36` 为例）
+
+| 属性        | 释义                                            |
+| ----------- | ----------------------------------------------- |
+| **$now**    | 当前日期时间戳，格式为YYYY-MM-DD (2020-07-08)   |
+| **$year**   | 当前年份， 四位数 (2020)                        |
+| **$month**  | 当前月份， 两位数 (07)                          |
+| **$day**    | 当前月份的日期，两位数 (08)                     |
+| **$wday**   | 当前天数周几 ：0=Sunday,...6=Saturday           |
+| **$hour**   | 当前小时（24小时机制），两位数(16)              |
+| **$hhour**  | 半小时机值，就是0-29分钟显示0，30-59分钟显示1。 |
+| **$qhour**  | 一刻钟机值，通过0-3显示，每15分钟一截。         |
+| **$minute** | 当前分钟数，两位数(57)                          |
+
+通过模板修改日志
+
+```bash
+vim /etc/rsyslog.conf
+
+# 创建一个名为cky_format的模板，其中 TIMESTAMP:8:15 表示timestamp属性值切片第八位到第十五位。
+$template cky_format, "%$NOW% %TIMESTAMP:8:15% %hostname% %syslogseverity-text% %syslogtag% %msg%\n"
+$ActionFileDefaultTemplate cky_format
+
+#重启rsyslog
+systemctl restart rsyslog
+```
+
+日志格式效果样例
+
+```bash
+# NOW | timestamp:8:15| hostname| syslogseverity-text | syslogtag | msg
+2020-07-09 09:59:54 mycomputer    info    systemd:  Started System Logging Service.
+#    时间戳         | 	 主机名   | 日志等级 | 服务进程 |   日志内容
+```
+
+#### 2.14.7.Linux日志轮替（日志转储）及logrotate配置文件分析
+
+日志是重要的系统文件，记录和保存了系统中所有的重要事件。但是日志文件也需要进行定期的维护，因为日志文件是不断增长的，如果完全不进行日志维护，而任由其随意递增，那么用不了多久，我们的硬盘就会被写满。  
+
+**日志维护的最主要的工作就是把旧的日志文件删除，从而腾出空间保存新的日志文件。**这项工作如果靠管理员手工来完成，那其实是非常烦琐的，而且也容易忘记。那么 Linux 系统是否可以自动完成日志的轮替工作呢？  
+
+logrotate 就是用来进行日志轮替（也叫日志转储）的，也就是把旧的日志文件移动并改名，同时创建一个新的空日志文件用来记录新日志，当旧日志文件超出保存的范围时就删除。  
+
+##### 日志文件的命名规则
+
+日志轮替最主要的作用就是把旧的日志文件移动并改名，同时建立新的空日志文件，当旧日志文件超出保存的范围时就删除。那么，旧的日志文件改名之后，如何命名呢？主要依靠 /etc/logrotate.conf 配置文件中的“dateext”参数。  
+
+如果配置文件中有“dateext”参数，那么日志会用日期来作为日志文件的后缀，如“secure-20130605”。这样日志文件名不会重叠，也就不需要对日志文件进行改名，只需要保存指定的日志个数，删除多余的日志文件即可。  
+
+如果配置文件中没有“dateext”参数，那么日志文件就需要进行改名了。当第一次进行日志轮替时，当前的“secure”日志会自动改名为“secure.1”，然后新建“secure”日志，用来保存新的日志；当第二次进行日志轮替时，“secure.1”会自动改名为“secure.2”，当前的“secure”日志会自动改名为“secure.1”，然后也会新建“secure”日志，用来保存新的日志；以此类推。  
+
+##### logrotate配置文件
+
+我们来查看一下 logrotate 的配置文件 /etc/logrotate.conf 的默认内容。  
+
+\[root@localhost ~\]# vi /etc/logrotate.conf  
+```
+#see "man logrotate" for details  
+#rotate log files weekly  
+weekly  
+#每周对日志文件进行一次轮替  
+#keep 4 weeks worth of backlogs rotate 4  
+#保存4个日志文件,也就是说,如果进行了5次日志轮替，就会删除第一个备份曰志  
+#create new (empty) log files after rotating old ones create  
+#在日志轮替时,自动创建新的日志文件  
+#use date as a suffix of the rotated file dateext  
+#使用日期作为日志轮替文件的后缀  
+#uncomment this if you want your log files compressed #compress  
+#日志文件是否压缩。如果取消注释,则日志会在转储的同时进行压缩  
+#以上日志配置为默认配置,如果需要轮替的日志没有设定独立的参数,那么都会遵循以上参数  
+#如果轮替曰志配置了独立参数,那么独立参数的优先级更高  
+#RPM packages drop log rotation information into this directory include /etc/logrotate.d  
+#包含/etc/logrotate.d/目录中所有的子配置文件。也就是说,会把这个目录中所有的子配置文件读取进来，进行日志轮替  
+#no packages own wtmp and btmp -- we'11 rotate them here  
+#以下两个轮替曰志有自己的独立参数，如果和默认的参数冲突，则独立参数生效  
+/var/log/wtmp {  
+#以下参数仅对此目录有效  
+monthly  
+#每月对日志文件进行一次轮替  
+create 0664 root utmp  
+#建立的新日志文件,权限是0664,所有者是root,所属组是utmp组  
+minsize 1M  
+#日志文件最小轮替大小是1MB。也就是日志一定要超过1MB才会轮替，否则就算时间达到一个月，也不进行曰志轮替  
+rotate 1  
+#仅保留一个曰志备份。也就是只保留wtmp和wtmp.1曰志)  
+/var/log/btmp {  
+#以下参数只对/var/log/btmp生效  
+missingok  
+#如果日志不存在,则忽略该日志的警告信患  
+monthly  
+create 0600 root utmp  
+rotate 1  
+}  
+# system-specific logs may be also be configured here.
+```
+
+
+
+在这个配置文件中，主要分为三部分：
+
+*   第一部分是默认设置，如果需要转储的日志文件没有特殊配置，则遵循默认设置的参数；
+*   第二部分是读取 /etc/logrotate.d/ 目录中的日志轮替的子配置文件，也就是说，在 /etc/logrotate.d/ 目录中的所有符合语法规则的子配置文件也会进行日志轮替；
+*   第三部分是对 wtmp 和 btmp 日志文件的轮替进行设定，如果此设定和默认参数冲突，则当前设定生效（如 wtmp 的当前参数设定的轮替时间是每月，而默认参数的轮替时间是每周，则对 wtmp 这个日志文件来说，轮替时间是每月，当前的设定参数生效）。
+
+
+logrotate 配置文件的主要参数如表 1 所示。  
+
+
+<table><caption>表 1 logrotate配置文件的主要参数</caption><tbody><tr><th>参&nbsp;致</th><th>参数说明</th></tr><tr><td>daily</td><td>日志的轮替周期是毎天</td></tr><tr><td>weekly</td><td>日志的轮替周期是每周</td></tr><tr><td>monthly</td><td>日志的轮控周期是每月</td></tr><tr><td>rotate数宇</td><td>保留的日志文件的个数。0指没有备份</td></tr><tr><td>compress</td><td>当进行日志轮替时，对旧的日志进行压缩</td></tr><tr><td>create mode owner group</td><td>建立新日志，同时指定新日志的权限与所有者和所属组.如create 0600 root utmp</td></tr><tr><td>mail address</td><td>当进行日志轮替时.输出内存通过邮件发送到指定的邮件地址</td></tr><tr><td>missingok</td><td>如果日志不存在，则忽略该日志的警告信息</td></tr><tr><td>nolifempty</td><td>如果曰志为空文件，則不进行日志轮替</td></tr><tr><td>minsize&nbsp;大小</td><td>日志轮替的最小值。也就是日志一定要达到这个最小值才会进行轮持，否则就算时间达到也不进行轮替</td></tr><tr><td>size大小</td><td>日志只有大于指定大小才进行日志轮替，而不是按照时间轮替，如size&nbsp;100k</td></tr><tr><td>dateext</td><td>使用日期作为日志轮替文件的后缀，如secure-20130605</td></tr><tr><td>sharedscripts</td><td>在此关键宇之后的脚本只执行一次</td></tr><tr><td>prerotate/cndscript</td><td>在曰志轮替之前执行脚本命令。endscript标识prerotate脚本结束</td></tr><tr><td>postrolaie/endscripl</td><td>在日志轮替之后执行脚本命令。endscripi标识postrotate脚本结束</td></tr></tbody></table>
+
+
+这些参数中较为难理解的应该是 prerotate/endscript 和 postrotate/endscript，我们利用“man logrotate”中的例子来解释一下这两个参数。例如：  
+
+```
+"/var/log/httpd/access.log" /var/log/httpd/error.log {  
+#日志轮替的是/var/log/httpd/中RPM包默认安装的apache正确访问日志和错误日志  
+    rotate 5  
+    #轮替5次  
+    mail www@my.org  
+    #把信息发送到指定邮箱  
+    size 100k  
+    #日志大于100KB时才进行日志轮替,不再按照时间轮替  
+    sharedscripts  
+    #以下脚本只执行一次  
+    postrotate  
+    #在日志轮替结束之后,执行以下脚本  
+    /usr/bin/killall -HUP httpd  
+    #重启apache 服务  
+endscript  
+#脚本结束  
+}
+```
+
+
+
+prerotate 和 postrotate 主要用于在日志轮替的同时执行指定的脚本，一般用于日志轮替之后重启服务。这里强调一下，如果你的日志是写入 rsyslog 服务的配置文件的，那么把新日志加入 logrotate 后，一定要重启 rsyslog 服务，否则你会发现，虽然新日志建立了，但数据还是写入了旧的日志当中。那是因为虽然 logrotate 知道日志轮替了，但是 rsyslog 服务并不知道。  
+
+同理，如果采用源码包安装了 apache、Nginx 等服务，则需要重启 apache 或 Nginx 服务，同时还要重启 rsyslog 服务，否则日志也不能正常轮替。  
+
+不过，这里有一个典型应用就是给予特定的日志加入 chattr 的 a 属性。如果系统文件加入了 a 属性，那么这个文件就只能增加数据，而不能删除和修改已有的数据，root 用户也不例外。  
+
+因此，我们会给重要的日志文件加入 a 属性，这样就可以保护日志文件不被恶意修改。不过，一旦加入了 a 属性，那么在进行日志轮替时，这个日志文件是不能被改名的，当然也就不能进行日志轮替了。我们可以利用 prerotate 和 postrotate 参数来修改日志文件的 chattr 的 a 属性。  
+
+##### 把自己的日志加入日志轮替
+
+如果有些日志默认没有加入日志轮替（比如源码包安装的服务的日志，或者自己添加的日志），那么这些日志默认是不会进行日志轮替的，这样当然不符合我们对日志的管理要求。如果需要把这些日志也加入日志轮替，那该如何操作呢？  
+
+这里有两种方法：
+
+*   第一种方法是直接在 /etc/logrotate.conf 配置文件中写入该日志的轮替策略，从而把日志加入轮替；
+*   第二种方法是在 /etc/logrotate.d/ 目录中新建立该日志的轮替文件，在该轮替文件中写入正确的轮替策略，因为该目录中的文件都会被包含到主配置文件中，所以也可以把日志加入轮替。
+
+
+我们推荐第二种方法，因为系统中需要轮替的日志非常多，如果全部直接写入 /etc/logrotate.conf 配置文件，那么这个文件的可管理性就会非常差，不利于此文件的维护。  
+
+说起来很复杂，我们举个例子。还记得我们自己生成的 /var/log/alert.log 日志吗？这个日志不是系统默认日志，而是我们通过 /etc/rsyslog.conf 配置文件自己生成的日志，所以默认这个日志是不会进行轮替的。如果我们需要把这个日志加入日志轮替策略，那该怎么实现呢？我们采用第二种方法，也就是在 /etc/logrotate.d/ 目录中建立此日志的轮替文件。  
+
+具体步骤如下：  
+
+```
+[root@localhost ~]# chattr +a /var/log/alert.log #先给日志文件赋予chattr的a属性，保证日志的安全  
+[root@localhost ~]# vi /etc/logrotate.d/alter  
+#创建alter轮替文件,把/var/log/alert.log加入轮替  
+/var/log/alert.log {  
+    weekly  
+    #每周轮替一次  
+    rotate 6  
+    #保留6个轮替曰志  
+    sharedscripts  
+    #以下命令只执行一次  
+    prerotate  
+    #在日志轮替之前执行  
+        /usr/bin/chattr -a /var/log/alert.log  
+        #在日志轮替之前取消a属性,以便让日志可以轮替  
+    endscript  
+    #脚本结朿  
+    sharedscripts  
+    postrotate  
+    #在日志轮替之后执行  
+        /usr/bin/chattr +a /var/log/alert.log  
+        #在日志轮替之后,重新加入a属性  
+    endscript  
+    sharedscripts  
+    postrotate  
+    /bin/kill -HUP $(/bin/cat /var/run/syslogd.pid 2>/dev/null) fi>/dev/null  
+    endscript  
+    #重启rsyslog服务，保证日志轮替正常进行  
+}
+```
+
+
+
+这样我们自己生成的日志 /var/log/alert.log 也就可以进行日志轮替了，当然这些配置信息也是可以直接写入 /etc/logrotate.conf 这个配置文件的。
+
+### 2.15.定制自己的linux系统
+
+[CSDN-Linux操作系统——定制自己的 Linux 系统](https://blog.csdn.net/m0_61163395/article/details/126044857)
+
+### 2.16.Linux内核阅读
+
+[腾讯云开发者社区-好多网友都不知道怎么阅读Linux内核源码，这篇让你快速理解](https://cloud.tencent.com/developer/article/2137779)
+
+### 2.17.Linux内核升级
+
+[CSDN-centos内核升级](https://blog.csdn.net/MssGuo/article/details/127184206)
+
+[CSDN-ubuntu内核升级](https://blog.csdn.net/Long_xu/article/details/126710992)
+
+### 2.18.Linux备份与恢复
+
+[博客园-linux数据备份、复原 | dump restore指令](https://www.cnblogs.com/CrispyCandy/p/17586360.html)
