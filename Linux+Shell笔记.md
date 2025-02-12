@@ -1242,7 +1242,13 @@ find $BACKUP -mtime +10 -name  "*.tar.gz" -exec rm -rf {} \;
 echo "==========备份完成==========="
 ```
 
-![在这里插入图片描述](/Users/dongbinyu/learningNotes/images/Linux+Shell笔记/cfc0b9dd99c8da1d25f95c47fffd190c-20250211211317462.png)
+使用Crontab添加定时任务，确保脚本在指定时间自动执行。编辑Crontab任务列表`crontab -e`
+
+添加以下行，设置每天凌晨1点执行备份任务：
+
+```
+0 1 * * * sh /app/mysql_backup.sh
+```
 
 
 通过以上几步，就可以实现在Linux中**定时**备份mysql数据库中的数据
@@ -1504,7 +1510,7 @@ source filename
 
 #### 1.2.1.虚拟机网络连接的三种方式
 
-![1601381592051](.\images\1601381592051.png)
+[CSDN-VMware虚拟机三种网络模式：桥接模式，NAT模式，仅主机模式](https://blog.csdn.net/qq_39192827/article/details/85872025)
 
 
 
@@ -1529,30 +1535,20 @@ source filename
 - **/bin**：
    bin 是 Binaries (二进制文件) 的缩写, 这个目录存放着最经常使用的命令。
 
-![1641783246503](images/1641783246503.png)
-
 - **/boot：**
   这里存放的是启动 Linux 时使用的一些核心文件，包括一些连接文件以及镜像文件。
-
-![1641783231762](images/1641783231762.png)
 
 - **/dev ：**
   dev 是 Device(设备) 的缩写, 该目录下存放的是 Linux 的外部设备，在 Linux 中访问设备的方式和访问文件的方式是相同的。
 
-  ![1641783276034](images/1641783276034.png)
-  
 - **/etc：**
   etc 是 Etcetera(等等) 的缩写,这个目录用来存放所有的系统管理所需要的配置文件和子目录。
 
-  ![1641783314872](images/1641783314872.png)
-  
 - **/home**：
   用户的主目录，在 Linux 中，每个用户都有一个自己的目录，一般该目录名是以用户的账号命名的。
 
 - **/lib**：
   lib 是 Library(库) 的缩写这个目录里存放着系统最基本的动态连接共享库，其作用类似于 Windows 里的 DLL 文件。几乎所有的应用程序都需要用到这些共享库。
-
-![1641783350606](images/1641783350606.png)
 
 - **/lost+found**：
   这个目录一般情况下是空的，当系统非法关机后，这里就存放了一些文件。
@@ -1967,9 +1963,17 @@ $ sudo telinit 1
 
 #### 2.7.2.权限详情
 
-![img](images/Linux+Shell笔记/file-llls22.jpg)
+[CSDN-Linux权限详解（chmod、600、644、700、711、755、777、4755、6755、7755）「建议收藏」](https://cloud.tencent.com/developer/article/2069886)
 
-
+```
+-rw------- (600)    只有拥有者有读写权限。
+-rw-r--r-- (644)    只有拥有者有读写权限；而属组用户和其他用户只有读权限。
+-rwx------ (700)    只有拥有者有读、写、执行权限。
+-rwxr-xr-x (755)    拥有者有读、写、执行权限；而属组用户和其他用户只有读、执行权限。
+-rwx--x--x (711)    拥有者有读、写、执行权限；而属组用户和其他用户只有执行权限。
+-rw-rw-rw- (666)    所有用户都有文件读、写权限。
+-rwxrwxrwx (777)    所有用户都有读、写、执行权限。
+```
 
 Linux文件属性有两种设置方法，一种是数字，一种是符号。
 
@@ -1989,19 +1993,21 @@ Linux 文件的基本权限就有九个，分别是 **owner/group/others(拥有�
 
 **第0位代表文件的类型**，它可以是：
 
-- 当为[ d ]则是目录；
-- 当为[ - ]则是普通文件；
-- 若是[ l ]则表示为软连接；
-- 若是[ b ]则表示为装置文件里面的可供储存的接口设备(可随机存取装置)；在dev目录下能看到
-- 若是[ c ]则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)；在dev目录下能看到
+- [ d ]则是目录；
+- [ - ]则是普通文件；
+- [ s ]则是套接字文件；
+- [ p ]则是管道文件
+- [ l ]则表示为软连接；
+- [ b ]则表示为装置文件里面的可供储存的接口设备(可随机存取装置)；在dev目录下能看到
+- [ c ]则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)；在dev目录下能看到
 
 
 
 ### 2.8.任务调度
 
-![img](images/Linux+Shell笔记/EfG2i-BUMAAp_C1.jpeg)
-
 #### 2.8.1.定时任务详解
+
+[菜鸟教程-Crontab命令](https://www.runoob.com/linux/linux-comm-crontab.html)
 
 **cron定时任务**
 
@@ -2045,10 +2051,6 @@ Linux 文件的基本权限就有九个，分别是 **owner/group/others(拥有�
 
 - `lsblk -f`老师不离开 查看当前系统分区情况
 
-  ![1601696945005](.\images\1601696945005.png)
-
-  ![1601697135108](.\images\1601697135108.png)
-
 #### 2.9.3.给Linux增加一个硬盘
 
 [CSDN-Linux磁盘扩容三种方式](https://blog.csdn.net/Hlroliu/article/details/109764269)
@@ -2080,8 +2082,6 @@ Linux在使用过程中由于数据量不断增大，导致磁盘空间不足，
 
 `netstat -anp` 查看系统网络情况
 
-![1601798250140](.\images\1601798250140.png)
-
 **主机名解析过程的分析**：
 
 1. 当用户在浏览器中输入百度的域名（www.baidu.com），浏览器会首先检查本地hosts文件中是否存在对应的映射关系。
@@ -2112,8 +2112,6 @@ Linux在使用过程中由于数据量不断增大，导致磁盘空间不足，
 
 `pstree -u`以树状展示进程的用户ID
 
-![1601711359546](.\images\1601711359546.png)
-
 #### 2.11.3.终止进程
 
 [CSDN-linux上杀死进程命令：kill、pkill、killall杀死进程](https://blog.csdn.net/weixin_41010198/article/details/122370405)
@@ -2121,11 +2119,6 @@ Linux在使用过程中由于数据量不断增大，导致磁盘空间不足，
 `kill [选项] 进程号`通过进程号杀死进程
 
 `killall 进程名称` 通过进程名杀死进程，也支持通配符，这在系统因负载过大而变慢时很有用
-
-1. 踢掉某个非法登录的用户![1601712121241](.\images\1601712121241.png)
-2. 终止远程登录服务sshd，在适当时候再重启sshd服务![1601712176210](.\images\1601712176210.png)
-3. 终止多个gedit编辑器【killall】![1601712302072](.\images\1601712302072.png)
-4. 强制杀掉一个终端【甚至可以自杀！！！】![1601712419874](.\images\1601712419874.png)
 
 #### 2.11.4.服务管理
 
@@ -2166,10 +2159,6 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 
 [CSDN-linux top命令详解（看这一篇就够了）](https://blog.csdn.net/weixin_45465395/article/details/115728520)
 
-![在这里插入图片描述](images/Linux+Shell笔记/1219762540438ff06ca61dcfffc435b2.png)
-
-
-
 ### 2.12.RPM和YUM
 
 #### 2.12.1.RPM
@@ -2177,8 +2166,6 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 > RPM 是RedHat Package Manager(红帽软件包管理工具)，它生成`.rpm`拓展名的文件，类似于windows的`setup.exe`。
 
 `rpm -qa|grep xx`查询已安装的RPM软件列表
-
-![1601798605828](.\images\1601798605828.png)
 
 `rpm -e RPM软件包名称`卸载某个软件
 
@@ -2193,8 +2180,6 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 `yum list|grep xxx`查看软件列表
 
 `yum install xxx`下载安装某软件，默认安装最新版本
-
-![1601799521307](.\images\1601799521307.png)
 
 > Ubuntu使用apt来安装软件。
 >
@@ -2491,7 +2476,7 @@ mail.none /var/log/messages
 
 上面的大概就是所有能用到的规则了，而这些规则有时候还是有些问题的
 
-For example?
+For example:
 
 Exapmple A
 
@@ -2782,15 +2767,11 @@ prerotate 和 postrotate 主要用于在日志轮替的同时执行指定的脚�
 
 Webmin是一个基于Web的管理工具，可以使用它在服务器上执行几乎所有系统管理任务，包括创建用户帐户和数据库，以及配置和管理磁盘配额，PHP，MySQL和其他开源应用。它的功能也可以使用在线提供的众多第三方模块中的任何一个进行扩展。
 
-[![img](./images/Linux+Shell笔记/8a5367cb099078110fc19ee68bf5acef.jpg)](https://s4.51cto.com/oss/201907/17/8a5367cb099078110fc19ee68bf5acef.jpg)
-
 #### Cockpit
 
 [Cockpit官网](https://cockpit-project.org/)
 
 Cockpit是一个开源的，易于使用的基于Web的服务器管理器，由红帽开发，可以在不受任何干扰的情况下有效监控和管理多台服务器。
-
-[![img](./images/Linux+Shell笔记/85f2eccbfa55cf67b1200bac12e79dbc.jpg)](https://s5.51cto.com/oss/201907/17/85f2eccbfa55cf67b1200bac12e79dbc.jpg)
 
 #### 宝塔工具
 
