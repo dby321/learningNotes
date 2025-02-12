@@ -44,8 +44,7 @@ git reset --hard commit_id
 
 #### 掌握仓库当前的状态 ` git status`
 #### 查看修改内容
-下面是关于 `git diff` 的一些使用区别  
-![git_diff.png](img/git_diff.png)  
+下面是关于 `git diff` 的一些使用区别    
 另外可以使用 `git diff commit_id_1 commit_id_2` 比较两个不同版本的区别  
 
 `cat file_name` 命令，其功能是显示在工作区、暂存区和分支里同名文档的 **最新修改版本的内容**
