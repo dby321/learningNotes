@@ -2782,7 +2782,7 @@ prerotate 和 postrotate 主要用于在日志轮替的同时执行指定的脚�
 
 Webmin是一个基于Web的管理工具，可以使用它在服务器上执行几乎所有系统管理任务，包括创建用户帐户和数据库，以及配置和管理磁盘配额，PHP，MySQL和其他开源应用。它的功能也可以使用在线提供的众多第三方模块中的任何一个进行扩展。
 
-[![img](/Users/dongbinyu/learningNotes/images/Linux+Shell笔记/8a5367cb099078110fc19ee68bf5acef.jpg)](https://s4.51cto.com/oss/201907/17/8a5367cb099078110fc19ee68bf5acef.jpg)
+[![img](./images/Linux+Shell笔记/8a5367cb099078110fc19ee68bf5acef.jpg)](https://s4.51cto.com/oss/201907/17/8a5367cb099078110fc19ee68bf5acef.jpg)
 
 #### Cockpit
 
@@ -2790,7 +2790,7 @@ Webmin是一个基于Web的管理工具，可以使用它在服务器上执行�
 
 Cockpit是一个开源的，易于使用的基于Web的服务器管理器，由红帽开发，可以在不受任何干扰的情况下有效监控和管理多台服务器。
 
-[![img](/Users/dongbinyu/learningNotes/images/Linux+Shell笔记/85f2eccbfa55cf67b1200bac12e79dbc.jpg)](https://s5.51cto.com/oss/201907/17/85f2eccbfa55cf67b1200bac12e79dbc.jpg)
+[![img](./images/Linux+Shell笔记/85f2eccbfa55cf67b1200bac12e79dbc.jpg)](https://s5.51cto.com/oss/201907/17/85f2eccbfa55cf67b1200bac12e79dbc.jpg)
 
 #### 宝塔工具
 
