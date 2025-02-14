@@ -997,11 +997,48 @@ virtual_server 10.10.10.2 1358 {
 }
 
 ```
-## 15. Nginx原理
-- 一个master进程管理与监控多个worker进程
-- worker进程采用争抢方式得到任务
-- 得到任务后进行负载均衡等处理
-- 一个worker挂掉之后不会影响整个nginx（如果有多个worker）
-- Nginx也采用了IO多路复用模式
-- worker数和CPU数相等最为适宜
+## 15. Nginx架构原理与优化
 
+### 进程模型
+- Master-Worker架构
+  - Master进程：负责配置文件解析、worker进程管理（启动/终止/信号处理）
+  - Worker进程：实际处理网络请求（默认数量=CPU核心数，通过worker_processes auto自动检测）
+  - 热升级机制：通过新旧worker共存实现无缝升级
+
+### 事件驱动模型
+1. 多路复用I/O（epoll/kqueue）
+   - 单线程异步非阻塞处理上万并发连接
+   - 通过事件分发器监控socket状态变化
+2. 请求处理流程：
+   ┌─────────────┐       ┌──────────────┐
+   │ 新连接到达   │───►│ 加入epoll监控 │
+   └─────────────┘       └──────────────┘
+           ▼
+   ┌────────────────┐
+   │ 数据可读/可写时  │
+   │ 触发事件回调处理 │
+   └────────────────┘
+
+### 高可用设计
+- Worker隔离性：单个worker崩溃不影响整体服务
+- 零停机重载配置：
+  ```nginx
+  nginx -s reload  # 平滑加载新配置
+  ```
+- 连接限流机制：限制单个worker的最大连接数（worker_connections 1024）
+
+### 性能优化建议
+1. CPU亲和性配置（减少上下文切换）：
+   ```nginx
+   worker_cpu_affinity auto;
+   ```
+2. 文件描述符优化：
+   ```nginx
+   worker_rlimit_nofile 65535; # 突破系统限制
+   ```
+3. 事件处理优化：
+   ```nginx
+   use epoll; # Linux环境推荐
+   multi_accept on; # 一次性接受所有新连接
+   ```
+4. 负载均衡策略：支持加权轮询/IP哈希等算法
