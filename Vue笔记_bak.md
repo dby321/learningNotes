@@ -1,4 +1,4 @@
-# Vue.js - Day1
+# Vue.js 
 
 [黑马-Vue教程](https://www.bilibili.com/video/BV11s411A7h6/?spm_id_from=333.337.search-card.all.click&vd_source=f58f2e2144be4e99a8cf800afeecbbcb)
 
@@ -191,7 +191,7 @@
 
 1. HTML 代码结构
 
-```
+```html
 
   <div id="app">
 
@@ -221,7 +221,7 @@
 
 2. Vue实例代码：
 
-```
+```js
 
 	// 创建 Vue 实例，得到 ViewModel
 
@@ -298,22 +298,22 @@
 > 绑定样式要加“ ”   使用变量不用加“ ”
 
 1. 数组
-```
+```html
 <h1 :class="['red', 'thin']">这是一个邪恶的H1</h1>
 ```
 
 2. 数组中使用三元表达式
-```
+```html
 <h1 :class="['red', 'thin', isactive?'active':'']">这是一个邪恶的H1</h1>
 ```
 
 3. 数组中嵌套对象
-```
+```html
 <h1 :class="['red', 'thin', {'active': isactive}]">这是一个邪恶的H1</h1>
 ```
 
 4. 直接使用对象【推荐使用】
-```
+```html
 <h1 :class="{red:true, italic:true, active:true, thin:true}">这是一个邪恶的H1</h1>
 ```
 
@@ -322,32 +322,32 @@
 ### 使用内联样式
 
 1. 直接在元素上通过 `:style` 的形式，书写样式对象【如果属性名包含 - 则需加上'  '】
-```
+```html
 <h1 :style="{color: 'red', 'font-size': '40px'}">这是一个善良的H1</h1>
 ```
 
 2. 将样式对象，定义到 `data` 中，并直接引用到 `:style` 中
  + 在data上定义样式：
-```
+```js
 data: {
         h1StyleObj: { color: 'red', 'font-size': '40px', 'font-weight': '200' }
 }
 ```
  + 在元素中，通过属性绑定的形式，将样式对象应用到元素中：
-```
+```html
 <h1 :style="h1StyleObj">这是一个善良的H1</h1>
 ```
 
 3. 在 `:style` 中通过数组，引用多个 `data` 上的样式对象
  + 在data上定义样式：
-```
+```js
 data: {
         h1StyleObj: { color: 'red', 'font-size': '40px', 'font-weight': '200' },
         h1StyleObj2: { fontStyle: 'italic' }
 }
 ```
  + 在元素中，通过属性绑定的形式，将样式对象应用到元素中：
-```
+```html
 <h1 :style="[h1StyleObj, h1StyleObj2]">这是一个善良的H1</h1>
 ```
 
@@ -359,7 +359,7 @@ data: {
 
 1. 迭代数组
 
-```
+```html
 <ul>
   <li v-for="(item, i) in list">索引：{{i}} --- 姓名：{{item.name}} --- 年龄：{{item.age}}</li>
 </ul>
@@ -367,7 +367,7 @@ data: {
 
 2. 迭代对象中的属性
 
-```
+```html
 	<!-- 循环遍历对象身上的属性 -->
 
     <div v-for="(val, key, i) in userInfo">{{val}} --- {{key}} --- {{i}}</div>
@@ -375,7 +375,7 @@ data: {
 
 3. 迭代数字
 
-```
+```html
 <p v-for="i in 10">这是第 {{i}} 个P标签</p>
 ```
 
@@ -431,7 +431,7 @@ data: {
 
 + 筛选框绑定到 VM 实例中的 `searchName` 属性：
 
-```
+```html
 
 <hr> 输入筛选名称：
 
@@ -441,7 +441,7 @@ data: {
 
 + 在使用 `v-for` 指令循环每一行数据的时候，不再直接 `item in list`，而是 `in` 一个 过滤的methods 方法，同时，把过滤条件`searchName`传递进去：
 
-```
+```html
 
 <tbody>
 
@@ -467,7 +467,7 @@ data: {
 
 + `search` 过滤方法中，使用 数组的 `filter` 方法进行过滤：
 
-```
+```js
 
 search(name) {
 
@@ -573,7 +573,7 @@ filters: { // 私有局部过滤器，只能在 当前 VM 对象所控制的 Vie
 
 ### 全局过滤器
 
-```
+```js
 
 // 定义一个全局过滤器
 
@@ -633,7 +633,7 @@ Vue.filter('dataFormat', function (input, pattern = '') {
 >
 > [js 里面的键盘事件对应的键码](http://www.cnblogs.com/wuhua1/p/6686237.html)
 
-```
+```html
 @keyup.enter="add"
 <input type="text" v-model="name" @keyup.113="add">
 ```
@@ -646,7 +646,7 @@ Vue.filter('dataFormat', function (input, pattern = '') {
 
 1. 通过`Vue.config.keyCodes.名称 = 按键值`来自定义案件修饰符的别名：
 
-```
+```js
 
 Vue.config.keyCodes.f2 = 113;
 
@@ -654,7 +654,7 @@ Vue.config.keyCodes.f2 = 113;
 
 2. 使用自定义的按键修饰符：
 
-```
+```html
 
 <input type="text" v-model="name" @keyup.f2="add">
 
@@ -676,7 +676,7 @@ Vue.config.keyCodes.f2 = 113;
 >
 > [Vue官网 自定义指令 钩子函数](https://cn.vuejs.org/v2/guide/custom-directive.html#%E9%92%A9%E5%AD%90%E5%87%BD%E6%95%B0)
 
-```
+```js
 
     // 自定义全局指令 v-focus，为绑定的元素自动获取焦点：
   
@@ -719,17 +719,13 @@ Vue.config.keyCodes.f2 = 113;
 
 2. 自定义指令的使用方式：
 
-```
+```html
 
 <input type="text" v-model="searchName" v-focus v-color="'red'" v-font-weight="900">
 
 ```
 
 
-
-
-
-# Vue.js - Day2
 
 ## [vue实例的生命周期](https://cn.vuejs.org/v2/guide/instance.html#实例生命周期)
 
@@ -782,45 +778,7 @@ Vue.config.keyCodes.f2 = 113;
 
 ## Vue中的动画
 
-> [Vue官网-动画](https://cn.vuejs.org/v2/guide/transitions.html)
-
-### 使用v-if和v-show来实现动画
-
-`02.动画-不使用动画.html`
-
-### 使用过渡类名
-
-`03.动画-使用过渡类名实现动画.html`
-
-> [Vue官网-过渡类名](https://cn.vuejs.org/v2/guide/transitions.html#%E8%BF%87%E6%B8%A1%E7%9A%84%E7%B1%BB%E5%90%8D)
-
-### 使用自定义过渡类名
-
-`04.动画-修改v-前缀.html`
-
-> [Vue官网-自定义过渡类名](https://cn.vuejs.org/v2/guide/transitions.html#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%87%E6%B8%A1%E7%9A%84%E7%B1%BB%E5%90%8D)
-
-### 使用第三方 CSS 动画库
-
-`05.动画-使用第三方类实现动画.html`
-
-> [Animate.css官网](https://daneden.github.io/animate.css/)
-
-### 使用动画钩子函数
-
-`06.动画-使用钩子函数模拟小球半场动画.html`
-
-> [Vue官网-JavaScript钩子(动画生命周期函数)](https://cn.vuejs.org/v2/guide/transitions.html#JavaScript-%E9%92%A9%E5%AD%90)
-
-### 使用transition-group实现列表v-for的动画
-
-`07.动画-列表动画.html`
-
-> [Vue官网-列表过渡](https://cn.vuejs.org/v2/guide/transitions.html#%E5%88%97%E8%A1%A8%E8%BF%87%E6%B8%A1)
-
-
-
-# Vue.js - Day3
+> [Vue官网-动画](https://v2.cn.vuejs.org/v2/guide/transitions.html#CSS-%E5%8A%A8%E7%94%BB)
 
 ## Vue组件的定义
 
@@ -842,18 +800,18 @@ Vue.config.keyCodes.f2 = 113;
 
 
 
-```
+```js
 var login = Vue.extend({
       template: '<h1>登录</h1>'
     });
-    Vue.component('login', login);
+Vue.component('login', login);
 ```
 
 #### 直接使用 Vue.component
 
 `08.组件-创建组件的方式1.html`
 
-```
+```js
 Vue.component('register', {
       template: '<h1>注册</h1>'
     });
@@ -863,7 +821,7 @@ Vue.component('register', {
 
 `09.组件-创建组件的方式2.html`
 
-```
+```html
 <script id="tmpl">
       <div><a href="#">登录</a> | <a href="#">注册</a></div>
 </script>
@@ -871,7 +829,7 @@ Vue.component('register', {
 
 同时，需要使用 Vue.component 来定义组件：
 
-```
+```js
 Vue.component('account', {
       template: '#tmpl'
     });
@@ -883,7 +841,7 @@ Vue.component('account', {
 
 1. 组件实例定义方式：
 
-```
+```html
 <script>
     // 创建 Vue 实例，得到 ViewModel
     var vm = new Vue({
@@ -906,7 +864,7 @@ Vue.component('account', {
 
 2. 引用组件：
 
-```
+```js
 <div id="app">
     <account></account>
   </div>
@@ -918,7 +876,7 @@ Vue.component('account', {
 
 1. 在组件中，`data`需要被定义为一个方法，例如：
 
-```
+```js
 Vue.component('account', {
       template: '#tmpl',
       data() {//组件中的data必须是一个方法，返回一个对象
@@ -948,7 +906,7 @@ Vue.component('account', {
 
 1. 页面结构：
 
-```
+```html
 <div id="app">
     <input type="button" value="toggle" @click="flag=!flag">
     <my-com1 v-if="flag"></my-com1>
@@ -958,7 +916,7 @@ Vue.component('account', {
 
 2. Vue实例定义：
 
-```
+```js
 <script>
     Vue.component('myCom1', {
       template: '<h3>奔波霸</h3>'
@@ -985,7 +943,7 @@ Vue.component('account', {
 
 1. 组件实例定义方式：
 
-```
+```js
   // 登录组件
     const login = Vue.extend({
       template: `<div>
@@ -1012,7 +970,7 @@ Vue.component('account', {
 
 2. 使用`component`标签，来引用组件，并通过`:is`属性来指定要加载的组件：
 
-```
+```html
   <div id="app">
     <a href="#" @click.prevent="comName='login'">登录</a>
     <a href="#" @click.prevent="comName='register'">注册</a>
@@ -1025,7 +983,7 @@ Vue.component('account', {
 
 3. 添加切换样式：
 
-```
+```css
   <style>
     .v-enter,
     .v-leave-to {
@@ -1049,7 +1007,7 @@ Vue.component('account', {
 
 ### 父组件向子组件传值
 
-```
+```js
 <script>
     // 创建 Vue 实例，得到 ViewModel
     var vm = new Vue({
@@ -1066,10 +1024,10 @@ Vue.component('account', {
         }
       }
     });
-  </script>
+ </script>
 ```
 
-```
+```html
 <div id="app">
 	// 1. 可以在引用子组件<son></son>的时候，可以用 属性绑定:xxx="父组件中的data"的形式传递到子组件内部
     <son v-bind:finfo="msg"></son>
@@ -1080,7 +1038,7 @@ Vue.component('account', {
 
 `04.组件-父组件把方法传递给子组件.html`
 
-```
+```js
 <script>
 	var com2={
 		template:'#tmp1',
@@ -1118,12 +1076,12 @@ Vue.component('account', {
 </script>
 ```
 
-```
+```html
 <template id="tmp1">
 	<div>
 		<h1>这是子组件</h1>
 		// 3.在子组件中定义一个按钮来测试 父组件传递过来的方法
-		<input type="button" value="子组件的按钮，点击触发父组件传递过来的方法" 							@click="myclick">
+		<input type="button" value="子组件的按钮，点击触发父组件传递过来的方法" 		@click="myclick">
 	</div>
 </template>
 
@@ -1141,7 +1099,7 @@ Vue.component('account', {
 
 ## 使用 `this.$refs` 来获取DOM元素和组件
 
-```
+```html
   <div id="app">
     <div>
       <input type="button" value="获取元素内容" @click="getElement" />
@@ -1192,14 +1150,14 @@ Vue.component('account', {
 
 1. 导入 vue-router 组件类库：
 
-```
+```html
 <!-- 1. 导入 vue-router 组件类库 -->
   <script src="./lib/vue-router-2.7.0.js"></script>
 ```
 
 2. 使用 router-link 组件来导航
 
-```
+```html
 <!-- 2. 使用 router-link 组件来导航 -->
 <router-link to="/login">登录</router-link>
 <router-link to="/register">注册</router-link>
@@ -1207,50 +1165,50 @@ Vue.component('account', {
 
 3. 使用 router-view 组件来显示匹配到的组件
 
-```
+```html
 <!-- 3. 使用 router-view 组件来显示匹配到的组件 -->
 <router-view></router-view>
 ```
 
 4. 创建使用`Vue.extend`创建组件 也可以从其他文件import进来
 
-```
-    // 4.1 使用 Vue.extend 来创建登录组件
-    var login = Vue.extend({
-      template: '<h1>登录组件</h1>'
-    });
+```js
+// 4.1 使用 Vue.extend 来创建登录组件
+var login = Vue.extend({
+  template: '<h1>登录组件</h1>'
+});
 
-    // 4.2 使用 Vue.extend 来创建注册组件
-    var register = Vue.extend({
-      template: '<h1>注册组件</h1>'
-    });
-    
-    const Foo = { template: '<div>foo</div>' }
-	const Bar = { template: '<div>bar</div>' }
+// 4.2 使用 Vue.extend 来创建注册组件
+var register = Vue.extend({
+  template: '<h1>注册组件</h1>'
+});
+
+const Foo = { template: '<div>foo</div>' }
+const Bar = { template: '<div>bar</div>' }
 ```
 
 5. 创建一个路由 router 实例，通过 routers 属性来定义路由匹配规则
 
-```
+```js
 // 5. 创建一个路由 router 实例，通过 routers 属性来定义路由匹配规则
-    var router = new VueRouter({
-      routes: [
-        //路由的重定向
-      	{ path:'/',redirect:'/login' }
-        { path: '/login', component: login },
-        { path: '/register', component: register }
-      ]
-    });
+var router = new VueRouter({
+routes: [
+//路由的重定向
+{ path:'/',redirect:'/login' }
+{ path: '/login', component: login },
+{ path: '/register', component: register }
+]
+});
 ```
 
 6. 使用 router 属性来使用路由规则
 
-```
+```js
 // 6. 创建 Vue 实例，得到 ViewModel
-    var vm = new Vue({
-      el: '#app',
-      router: router // 使用 router 属性来使用路由规则，也可简写为router
-    });
+var vm = new Vue({
+el: '#app',
+router: router // 使用 router 属性来使用路由规则，也可简写为router
+});
 ```
 
 ### 设置路由高亮

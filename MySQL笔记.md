@@ -1,5 +1,106 @@
 # MySQL笔记
 
+## 重新设置密码
+
+
+![img](https://gips2.baidu.com/it/u=2966009234,1030202078&fm=3028&app=3028&f=PNG&fmt=auto&q=100&size=f174_42)
+
+mac mysql跳过密码后怎么重新设置密码
+
+在Mac上使用MySQL时，如果你已经跳过了初始密码（通常在安装过程中），并且现在想要重新设置密码，你可以按照以下步骤操作。这里假设你正在使用的是MySQL社区版或者MariaDB，因为它们在很多情况下可以互换使用。
+
+### 1. 停止MySQL服务
+
+首先，你需要停止MySQL服务。打开终端并执行以下命令：
+
+```
+sudo /usr/local/mysql/support-files/mysql.server stop
+```
+
+或者，如果你使用的是Homebrew安装的MySQL，可以使用：
+
+```
+brew services stop mysql
+```
+
+### 2. 安全模式启动MySQL
+
+接下来，以安全模式启动MySQL服务，这样可以不需要密码即可访问：
+
+```
+sudo /usr/local/mysql/bin/mysqld_safe --skip-grant-tables &
+```
+
+或者，对于Homebrew安装的MySQL：
+
+```
+mysqld_safe --skip-grant-tables &
+```
+
+### 3. 登录MySQL
+
+由于我们跳过了权限表，现在可以无需密码登录MySQL：
+
+```
+mysql -u root
+```
+
+### 4. 选择MySQL数据库
+
+在MySQL提示符下，选择`mysql`数据库：
+
+```
+USE mysql;
+```
+
+### 5. 更新root用户的密码
+
+现在可以更新root用户的密码了。执行以下命令来设置新密码（将`your_new_password`替换为你想要设置的新密码）：
+
+```
+UPDATE user SET authentication_string=PASSWORD('your_new_password') WHERE User='root';
+```
+
+或者，对于MySQL 5.7.6及以上版本，使用：
+
+```
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'your_new_password';
+```
+
+### 6. 刷新权限并退出
+
+刷新权限表，然后退出MySQL：
+
+```
+FLUSH PRIVILEGES;EXIT;
+```
+
+### 7. 正常停止MySQL服务并重启
+
+现在，停止之前以跳过权限表启动的MySQL服务，并正常重启它：
+
+```
+sudo /usr/local/mysql/support-files/mysql.server stopsudo /usr/local/mysql/support-files/mysql.server start
+```
+
+或者，对于Homebrew安装的MySQL：
+
+```
+brew services stop mysqlbrew services start mysql
+```
+
+### 8. 使用新密码登录
+
+最后，使用新设置的密码登录MySQL：
+
+```
+mysql -u root -p
+```
+
+然后输入你的新密码。
+
+以上步骤应该可以帮助你重新设置MySQL的root密码。如果你使用的是MariaDB而不是MySQL，步骤大致相同，只是路径和命令可能会稍有不同。例如，MariaDB通常位于`/usr/local/mariadb`目录下。
+
 ## SQL分类
 
 DQL语言：SELECT
@@ -1707,3 +1808,4 @@ show status like 'innodb_row_lock';
 
 
 
+cd "$(brew --repo)/Library/Taps/homebrew/homebrew-cask" && git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-cask.git
