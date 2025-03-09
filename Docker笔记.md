@@ -186,8 +186,6 @@ ff1c7e546a13   elasticsearch   0.35%     1.25GiB / 1.796GiB    69.61%    0B / 0B
 
 > 保证通过服务名互相能ping通
 
-![image-20240424145438709](/Users/dongbinyu/Library/Application Support/typora-user-images/image-20240424145438709.png)
-
 ## Docker可视化工具Portainer
 
 [Docker可视化工具Portainer启动教程](https://earthly.dev/blog/portainer-for-docker-container-management/)

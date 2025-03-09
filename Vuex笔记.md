@@ -4,8 +4,6 @@
 
 > Vuex是实现组件全局状态（数据）管理的一种机制
 
-![1599558693669](C:\Users\dby\AppData\Roaming\Typora\typora-user-images\1599558693669.png)
-
 - 集中管理，易于开发和后期维护
 - Vuex的数据是响应式的，实时保持数据与页面的同步
 
@@ -49,10 +47,6 @@ computed:{
     ...mapState(['count'])
 }
 ```
-
-
-
-
 
 ## Mutation
 
@@ -141,8 +135,6 @@ export default {
 }
 ```
 
-
-
 ## Getter
 
 > 用于对Store中的数据进行加工处理形成新的数据，但Store原数据不变
@@ -156,10 +148,6 @@ getters:{
 ```
 
 `this.$store.getters.showNum`
-
-
-
-
 
 ```js
 import { mapGetters } from 'vuex'
