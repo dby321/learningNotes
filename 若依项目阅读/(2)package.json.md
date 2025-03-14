@@ -1,4 +1,4 @@
-# Package.json依赖的开始
+# Package.json
 
 ## 1. Husky 和 lint-staged 配置解析
 
