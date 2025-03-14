@@ -4,7 +4,7 @@
 
 ### 问题描述
 
-> ```vue
+> ```js
 > $route: {
 >   handler: function (route) {
 >     this.redirect = route.query && route.query.redirect;
@@ -19,13 +19,9 @@
 
 ### 代码解析
 
-javascript
-
-深色版本
 
 
-
-```
+```js
 $route: {
   handler: function (route) {
     this.redirect = route.query && route.query.redirect;
@@ -62,13 +58,9 @@ $route: {
 
 以下是一个完整的示例，展示了如何在 Vue 组件中使用上述代码片段来处理重定向逻辑：
 
-vue
-
-深色版本
 
 
-
-```
+```html
 <template>
   <div>
     <!-- 登录表单 -->
@@ -141,13 +133,11 @@ export default {
 
 在 Spring Boot 应用中，你可以通过配置类来设置全局的 `ObjectMapper`，使其默认使用 ISO 8601 格式并包含时区信息。
 
-java
-
-深色版本
 
 
 
-```
+
+```java
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
@@ -176,13 +166,9 @@ public class JacksonConfig {
 
 创建一个自定义的 `DateFormat` 来确保日期时间包含时区信息。
 
-java
-
-深色版本
 
 
-
-```
+```java
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
@@ -249,13 +235,9 @@ public class TimeResponse {
 
 #### 控制器示例
 
-java
-
-深色版本
 
 
-
-```
+```java
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
@@ -274,13 +256,9 @@ public class TimeController {
 
 #### Feign 客户端接口
 
-java
-
-深色版本
 
 
-
-```
+```java
 import feign.Headers;
 import feign.RequestLine;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -296,13 +274,9 @@ public interface TimeServiceClient {
 
 #### 时间响应类
 
-java
-
-深色版本
 
 
-
-```
+```java
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
