@@ -1,6 +1,7 @@
 # babel.config.js
 
-
+> - 全程代码由`TONGYI LINGMA`、`MarsCode`分析
+> - 面向项目实践学习，忽略不涉及的部分
 
 ```js
 module.exports = {
@@ -33,7 +34,7 @@ module.exports = {
     3. 自动处理 Vue 单文件组件（`.vue` 文件）中的 `<script>` 部分。
 
 3. **参考链接**：  
-  [Vue CLI Babel Preset](https://github.com/vuejs/vue-cli/tree/master/packages/@vue/babel-preset-app)
+    [Vue CLI Babel Preset](https://github.com/vuejs/vue-cli/tree/master/packages/@vue/babel-preset-app)
 
 ## 3. **`env` 字段**
 

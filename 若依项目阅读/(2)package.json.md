@@ -1,5 +1,8 @@
 # Package.json
 
+> - 全程代码由`TONGYI LINGMA`、`MarsCode`分析
+> - 面向项目实践学习，忽略不涉及的部分
+
 ## 1. Husky 和 lint-staged 配置解析
 
 #### 1. **Husky 配置**

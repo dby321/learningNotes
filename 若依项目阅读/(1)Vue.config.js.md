@@ -221,7 +221,7 @@ false.true = ""; // TypeError
 
 ```
 
-## 2. __dirname是啥？
+## 2. __dirname是啥？require("path")是啥？
 
 [菜鸟教程-Node.js 全局对象](https://www.runoob.com/nodejs/nodejs-global-object.html)
 
@@ -235,7 +235,35 @@ function resolve(dir) {
   - 与`__dirname`类似的一个全局变量是`__filename`，它表示当前正在执行的脚本的文件名
 - `resolve()`：`__dirname` 与传入的相对路径 dir 拼接，生成绝对路径。这有助于避免路径拼接时出现错误，并确保路径的正确性
 
+- `resolve()`和`join()`的区别：
 
+  | 特性             | `path.resolve([...paths])`     | `path.join([...paths])`      |
+  | ---------------- | ------------------------------ | ---------------------------- |
+  | **返回类型**     | 总是返回绝对路径               | 可能返回相对路径或绝对路径   |
+  | **路径解析方式** | 从右到左解析，基于当前工作目录 | 简单拼接路径，不做复杂的解析 |
+  | **处理相对路径** | 根据当前工作目录解析           | 直接拼接，不考虑当前工作目录 |
+  | **使用场景**     | 当你需要确保路径是绝对路径时   | 当你只需要简单的路径拼接时   |
+
+```js
+// 假设当前工作目录是 /Users/username/project
+console.log(path.resolve('src', 'components')); 
+// 输出: /Users/username/project/src/components
+
+console.log(path.resolve('/home', 'user', 'docs')); 
+// 输出: /home/user/docs （因为 '/home' 是绝对路径，所以从这里开始）
+
+console.log(path.join('src', 'components')); 
+// 输出: src/components （只是一个相对路径）
+
+console.log(path.join('/home', 'user', '..', 'docs')); 
+```
+
+- `require("path")`下常用方法：
+  - `path.join(...paths)`：用于连接路径。
+  - `path.resolve(...paths)`：将相对路径解析为绝对路径。
+  - `path.basename(path[, ext])`：获取路径中的文件名部分。
+  - `path.dirname(path)`：获取路径中的目录名部分。
+  - `path.extname(path)`：获取路径中的文件扩展名。
 
 ## 3. compression-webpack-plugin怎么使用
 
