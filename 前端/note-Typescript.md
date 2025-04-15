@@ -4,6 +4,8 @@
 [阮一峰-TS教程](https://wangdoc.com/typescript/)
 [Quick Reference-TypeScript 备忘清单](https://quickref.cn/docs/typescript.html)
 
+[TypeScript入门教程](https://ts.xcatliu.com/introduction/index.html)
+
 
 ## 1. 基础类型
 
@@ -40,7 +42,7 @@ a={name:"hello"};
 let b:{name:string,[propName:string]:any};
 b={name:"hello",age:18};
 b={name:"hello",age:18,sex:"男"};
-``` 
+```
 - `function`函数类型 
 ```ts
 let a:(x:number,y:number)=>number;

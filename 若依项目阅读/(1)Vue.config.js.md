@@ -302,19 +302,11 @@ module.exports = {
 
 ```
 
-## 4. process.env在哪定义？
-
-[菜鸟教程-Node.js 全局对象](https://www.runoob.com/nodejs/nodejs-global-object.html)
-
-process也是一个Node.js全局对象，process.env.VUE_APP_TITLE被定义在.env.development、.env.production等文件中
 
 
 
-## 5. vue.config.js为什么要modules.export?
 
-`vue.config.js` 文件是一个普通的 JavaScript 文件，但它必须导出一个对象，该对象包含了各种配置选项。通过 `module.exports`，你可以将这个配置对象暴露给 Vue CLI 进行处理。
-
-## 6. process.env.NODE_ENV是啥？publicPath、outputDir、assetsDir等是啥？
+## 4. process.env.NODE_ENV是啥？publicPath、outputDir、assetsDir等是啥？
 
 [Vue-cli官网-vue.config.js](https://cli.vuejs.org/zh/config/#publicpath)
 
@@ -342,13 +334,13 @@ process也是一个Node.js全局对象，process.env.VUE_APP_TITLE被定义在.e
   - 设置为 `error` 将会使得 `eslint-loader` 把 lint 警告也输出为编译错误，这意味着 lint 警告将会导致编译失败。
    ![image-20250304105500606](images/（一）从Vue.config.js开始/image-20250304105500606.png)
 
-##  7. productionSourceMap是啥？
+##  5. productionSourceMap是啥？
 
 - 生产环境中启用 productionSourceMap 有助于开发者调试代码，可以在浏览器的[调试工具](https://so.csdn.net/so/search?q=调试工具&spm=1001.2101.3001.7020)中查看到源文件中错误的代码位置，而不是编译后的代码位置。这对于定位线上问题十分有帮助。
 
 - 配置为false有助于减小线上代码体积。
 
-## 8. devServer{}要重点关注！
+## 6. devServer{}要重点关注！
 
 - `host: '0.0.0.0'`：指定开发服务器监听的主机地址。`'0.0.0.0'` 表示服务器将监听所有网络接口，这意味着你可以通过任何 IP 地址访问开发服务器（例如，`http://localhost:8080` 或 `http://<你的IP>:8080`）。
 - `port: port`：**经检查，我这个项目使用80端口**
@@ -372,7 +364,7 @@ process也是一个Node.js全局对象，process.env.VUE_APP_TITLE被定义在.e
 
 
 
-## 9. css.loaderOptions
+## 7. css.loaderOptions
 
 提供的配置片段是用于 Vue CLI 项目中，用于自定义 Sass 加载器的选项
 
@@ -395,7 +387,7 @@ css: {
     - `"compact"`: 紧凑格式，每条规则占用一行。
     - `"expanded"`: 扩展格式，每个声明都在单独的一行上，并且有适当的缩进。
 
-## 10. `configureWebpack` 自定义 Webpack 配置
+## 8. `configureWebpack` 自定义 Webpack 配置
 
 ```js
 configureWebpack: {
@@ -463,7 +455,7 @@ configureWebpack: {
       });
       ```
 
-## 11. chainWebpack
+## 9. chainWebpack
 
 [ webpack-chain常用配置](https://metaatem.cn/javascript/webpack/webpack-chain%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE.html)
 

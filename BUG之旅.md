@@ -5,14 +5,16 @@
 ### 问题描述
 
 > ```js
-> $route: {
->   handler: function (route) {
->     this.redirect = route.query && route.query.redirect;
+>  watch: {
+>     $route: {
+>       handler: function (route) {
+>         this.redirect = route.query && route.query.redirect;
+>       },
+>       immediate: true,
+>     },
 >   },
->   immediate: true,
-> }
 > ```
-> 
+>
 > 请问这是在干嘛？
 
 你提到的代码片段是 Vue.js 中用于路由导航守卫（navigation guards）的一个配置项，具体来说是 Vue Router 的一个 `watch` 监听器。这个监听器用于在路由发生变化时执行某些操作。下面是对这段代码的详细解释：
@@ -22,12 +24,14 @@
 
 
 ```js
-$route: {
-  handler: function (route) {
-    this.redirect = route.query && route.query.redirect;
+ watch: {
+    $route: {
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect;
+      },
+      immediate: true,
+    },
   },
-  immediate: true,
-}
 ```
 
 #### 1. `this.$route`
