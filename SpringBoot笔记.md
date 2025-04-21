@@ -2096,11 +2096,7 @@ InternalResourceView：
 
 暴露模型作为请求域属性
 // Expose the model object as request attributes.
-        exposeModelAsRequestAttributes(model, request);
-
-
-
-#  
+        exposeModelAsRequestAttributes(model, request); 
 
 ```
 protected void exposeModelAsRequestAttributes(Map<String, Object> model,
@@ -2665,10 +2661,8 @@ th:if="${not #lists.isEmpty(prod.comments)}">view</a>
 @EnableConfigurationProperties(ThymeleafProperties.class)
 @ConditionalOnClass({ TemplateMode.class, SpringTemplateEngine.class })
 @AutoConfigureAfter({ WebMvcAutoConfiguration.class, WebFluxAutoConfiguration.class })
-public class ThymeleafAutoConfiguration { }
+public class ThymeleafAutoConfiguratio { } 
 ```
-
-#  
 
 自动配好的策略
 
@@ -4799,7 +4793,7 @@ spring.profiles.group.production[1]=prodmq
 
 https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config
 
-##  
+ 
 
 1. Default properties (specified by setting `SpringApplication.setDefaultProperties`).
 2. [`@PropertySource`](https://docs.spring.io/spring/docs/5.3.1/javadoc-api/org/springframework/context/annotation/PropertySource.html) annotations on your `@Configuration` classes. Please note that such property sources are not added to the `Environment` until the application context is being refreshed. This is too late to configure certain properties such as `logging.*` and `spring.main.*` which are read before refresh begins.
@@ -5026,7 +5020,7 @@ public interface CommandLineRunner {
 }
 ```
 
-##  
+
 
 #### 2、Application Events and Listeners
 

@@ -1502,6 +1502,8 @@ source filename
 
 [菜鸟教程-Linux命令](https://www.runoob.com/linux/linux-command-manual.html)
 
+[freeCodeCamp-Linux 命令完全手册](https://www.freecodecamp.org/chinese/news/the-linux-commands-handbook/)
+
 ## 1.Linux基础
 
 ### 1.1.前言
@@ -2027,7 +2029,7 @@ Linux 文件的基本权限就有九个，分别是 **owner/group/others(拥有�
 
 [博客园-at命令详解](https://www.cnblogs.com/yychuyu/p/15483186.html)
 
-### 2.9.磁盘分区和挂载
+### 2.9.磁盘分区和挂载[重点]
 
 [CSDN-Linux磁盘分区详解（新建分区，现有分区扩容，分区减容）](https://blog.csdn.net/zhanhjxxx/article/details/123232402)
 
@@ -2038,7 +2040,7 @@ Linux 文件的基本权限就有九个，分别是 **owner/group/others(拥有�
 - MBR分区
   - 最多支持四个主分区
   - 系统只能安装在主分区
-  - 拓展分区要站一个主分区
+  - 拓展分区要占一个主分区
   - MBR最大只支持2TB，但拥有最好的兼容性
 - GTP分区
   - 支持无限多个主分区（但操作系统可能限制，比如windows下最多128个分区）
@@ -2070,7 +2072,7 @@ Linux在使用过程中由于数据量不断增大，导致磁盘空间不足，
 - `du -h /目录` 查询指定目录的磁盘占用情况
 - `tree`树形展示目录结构
 
-### 2.10.网络配置
+### 2.10.网络配置[重点]
 
 目前网络配置采用的是NAT模式
 
@@ -2185,11 +2187,11 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 >
 > APT是Advance Packaging Tool（高级包装工具）的缩写，APT可以自动下载，配置，安装二进制或者源代码格式的软件包。
 
-### 2.13.防火墙
+### 2.13.防火墙[重点]
 
 [CSDN-Linux 防火墙配置（iptables和firewalld）](https://blog.csdn.net/m0_49864110/article/details/129150960)
 
-### 2.14.Linux 日志
+### 2.14.Linux 日志[重点]
 
 [博客园-【Linux日志】系统日志及分析](https://www.cnblogs.com/yingsong/p/6022181.html)
 
@@ -2356,7 +2358,7 @@ sed -n ‘/error/p’ /var/log/syslog
 
 #### 2.14.5 分析日志文件的工具
 
-1. logrotate
+1. `logrotate`
 
 logrotate命令用于管理和轮转日志文件，防止日志文件过大。配置文件通常位于/etc/logrotate.conf和/etc/logrotate.d/目录下。
 
@@ -2369,7 +2371,7 @@ logrotate命令用于管理和轮转日志文件，防止日志文件过大。�
 
 上述配置表示对/var/log/syslog进行每日轮转，保留7个历史日志文件，并进行压缩。
 
-2. journalctl
+2. `journalctl`
 
 journalctl命令用于查看和分析systemd的日志信息。
 
@@ -2382,7 +2384,7 @@ journalctl -xe``journalctl -u nginx.service
 
 选项-xe用于显示最近的日志并详细解释错误，-u用于查看特定服务的日志。
 
-3. logwatch
+3. `logwatch`
 
 logwatch是一款日志分析工具，可以生成易读的日志报告。
 
@@ -2395,7 +2397,7 @@ sudo apt-get install logwatch``sudo logwatch --detail High --mailto admin@exampl
 
 上述命令生成详细的日志报告，并通过邮件发送给管理员
 
-4. goaccess
+4. `goaccess`
 
 goaccess是一款实时的Web日志分析工具，适用于分析Apache和Nginx日志。
 
