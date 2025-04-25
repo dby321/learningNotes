@@ -2069,7 +2069,7 @@ Linux在使用过程中由于数据量不断增大，导致磁盘空间不足，
 - `mkfs -t ext3 /dev/hdc6`: 将分区 /dev/hdc6（可指定你自己的分区） 格式化为 ext3 文件系统
 - `fsck -C -f -t ext3 /dev/hdc6 `:强制检测 /dev/hdc6 分区
 
-### 2.10.网络配置[重点]
+### 2.10.网络配置
 
 目前网络配置采用的是NAT模式
 
@@ -2896,7 +2896,7 @@ https://www.bilibili.com/video/BV1Sv411r7vd?vd_source=f58f2e2144be4e99a8cf800afe
 
 ![局部截取_20250423_145751](images/Linux+Shell笔记/局部截取_20250423_145751.png)
 
-## 2.2 磁盘分区
+### 2.2 磁盘分区
 
 > 使用`df`查看我的阿里云云服务器磁盘分布
 >
