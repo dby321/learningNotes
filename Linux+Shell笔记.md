@@ -1530,8 +1530,6 @@ source filename
 
 ### 1.3.Linux目录结构 
 
-[菜鸟教程-Linux  系统目录结构](https://www.runoob.com/linux/linux-system-contents.html)
-
 以下是对这些目录的解释：
 
 - **/bin**：
@@ -1641,11 +1639,12 @@ source filename
 
 ### 2.4.开机，重启，用户登录注销
 
-- shutdown
+- `shutdown`
   - `shutdown -h now `立即关机
   - `shutdown -h 1 `一分钟后关机
   - `shutdown -r now`立即重启
-- `halt` 停止使用，等效于关机
+- `halt` 关闭电源
+- `poweroff` 关闭电源
 - `reboot`重启 
 - `sync`把内存的数据保存到磁盘【关机和重启前为了安全需要使用这个指令，防止数据丢失】
 
@@ -1655,28 +1654,22 @@ source filename
 
 #### 2.5.1.添加用户
 
-[Could not chdir to home directory /home/tom: No such file or directory](https://blog.csdn.net/qq_42479695/article/details/120545317)
+- `useradd –d  /home/sam -m sam` 此命令创建了一个用户sam，其中-d和-m选项用来为登录名sam产生一个主目录 /home/sam（/home为默认的用户主目录所在的父目录）。
 
-[Linux下用户的创建与删除](https://blog.csdn.net/yychuyu/article/details/84190390)
+- `useradd -s /bin/sh -g group –G adm,root gem`此命令新建了一个用户gem，该用户的登录Shell是 `/bin/sh`，它属于group用户组，同时又属于adm和root用户组，其中group用户组是其主组。
 
-`useradd 用户名` 创建用户
+  - 这里可能新建组：`#groupadd group及groupadd adm`
 
-1. 当创建用户成功后，会自动创建和用户同名的家目录
-2. 也可以通过`useradd -d 指定目录 新的用户名`给新创建的用户指定家目录
-3. `useradd -g 组名 用户名`新增用户到指定用户组
+  - 增加用户账号就是在/etc/passwd文件中为新用户增加一条记录，同时更新其他系统文件如/etc/shadow, /etc/group等。
 
-`passwd 用户名` 给用户指定或修改密码
+  - Linux提供了集成的系统管理工具userconf，它可以用来对用户账号进行统一管理。
+
+- `passwd 用户名` 给用户指定或修改密码
 
 #### 2.5.2.删除用户
 
-> 一般删除用户，不会删除该用户的家目录
-
-- 删除用户，保存该用户的家目录 `userdel 用户名`
-- 删除用户，以及用户的的家目录 `userdel -r 用户名`
-
-> 报错：userdel: user xm is currently used by process 62520
->
-> 解决：第一次使用ctrl+d退出root用户，回到user1用户；第二次使用ctrl+d退出user1用户，此时会返回到root用户（再按ctrl+d退出登陆连接），此时使用userdel user1正常删除。
+- `userdel 用户名`:删除用户，保存该用户的家目录 
+- `userdel -r 用户名`:删除用户，以及用户的的家目录
 
 #### 2.5.3.查询用户信息
 
@@ -1696,8 +1689,6 @@ uid=1000(waterplants) gid=1000(waterplants) 组=1000(waterplants),10(wheel)
 
 `exit` 回退到原先的用户
 
-> 从权限高的用户切换到权限低的用户不需要输入密码
-
 `whoami`查看当前用户
 
 #### 2.5.5.用户组
@@ -1711,6 +1702,8 @@ uid=1000(waterplants) gid=1000(waterplants) 组=1000(waterplants),10(wheel)
 `usermod -g 用户组 用户名`修改用户对应的用户组
 
 #### 2.5.6.用户和组相关的文件
+
+> 所有的系统上的帐号与一般身份使用者，还有那个root的相关信息， 都是记录在/etc/passwd这个文件内的。至于个人的密码则是记录在/etc/shadow这个文件下。 此外，Linux所有的群组名称都纪录在/etc/group内！这三个文件可以说是Linux系统里面帐号、密码、群组信息的集中地啰！ 不要随便删除这三个文件啊！
 
 `/etc/passwd`用户的配置文件，记录用户的各种信息。
 
@@ -1726,7 +1719,7 @@ uid=1000(waterplants) gid=1000(waterplants) 组=1000(waterplants),10(wheel)
 
 ### 2.6.实用指令
 
-#### 2.6.1.指定运行级别
+#### 2.6.1.系统运行级别介绍
 
 | 运行级别 | 描述                |
 | -------- | ------------------- |
@@ -1743,37 +1736,20 @@ uid=1000(waterplants) gid=1000(waterplants) 组=1000(waterplants),10(wheel)
 *   运行级别 2-5：多用户模式。这些级别下，系统中的各项服务和用户界面都可用，通常情况下我们会将系统设置在运行级别3或5中。
 *   运行级别 6：重启。在此级别下，系统会重新启动。
 
-#### 2.6.2.切换系统运行级别
+#### 2.6.2.系统运行级别查看与切换
 
 ##### 如何查看当前系统运行级别
 
-我们可以运行以下命令来查看当前系统的运行级别：
+- `runlevel`:查看当前系统的运行级别
 
-```
-$ runlevel
-```
+  - 该命令将会输出当前和上一次的运行级别。
 
-该命令将会输出当前和上一次的运行级别。例如：
-
-```
-N 5
-```
-
-这个输出表示当前运行级别为5，上一个运行级别为未知（“N”）。
+  - 这个输出表示当前运行级别为5，上一个运行级别为未知（“N”）。
 
 ##### 如何切换到其他运行级别
 
-我们可以使用以下命令来切换到系统的其他运行级别：
-
-```
-$ telinit <运行级别>
-```
-
-例如，如果我们想把系统切换到单用户模式，我们可以运行以下命令：
-
-```
-$ sudo telinit 1
-```
+- `telinit <运行级别>`:切换到系统的其他运行级别
+  - `telinit 1`:系统切换到单用户模式
 
 ##### 切换运行级别时需要注意的事项
 
@@ -1783,7 +1759,7 @@ $ sudo telinit 1
 *   切勿直接使用kill命令杀死进程，这可能会导致数据丢失或破坏文件系统。
 *   在进入单用户模式之前，请确保您知道root用户的密码。
 
-#### 2.6.3.运行级别相关的服务和进程
+#### 2.6.3.系统运行级别相关的服务和进程
 
 ##### 每个运行级别默认启动哪些服务和进程
 
@@ -1800,11 +1776,11 @@ $ sudo telinit 1
 
 以下是一些常见的Linux服务和进程及其作用和介绍：
 
-*   sshd：远程登录服务，允许用户通过SSH协议远程登录到系统上。
-*   httpd（Apache）：Web服务器，提供HTTP服务，可以将网页文件发送到浏览器上。
-*   mysqld：MySQL数据库服务器，提供关系型数据库服务，用于存储和管理数据。
-*   crond：计划任务服务，可以让用户在指定时间自动运行某些命令或脚本。
-*   udevd：设备管理服务，可以在系统启动时自动检测硬件设备并加载相应的驱动程序。
+*   `sshd`：远程登录服务，允许用户通过SSH协议远程登录到系统上。
+*   `httpd（Apache）`：Web服务器，提供HTTP服务，可以将网页文件发送到浏览器上。
+*   `mysqld`：MySQL数据库服务器，提供关系型数据库服务，用于存储和管理数据。
+*   `crond`：计划任务服务，可以让用户在指定时间自动运行某些命令或脚本。
+*   `udevd`：设备管理服务，可以在系统启动时自动检测硬件设备并加载相应的驱动程序。
 
 #### 2.6.2.帮助相关指令
 
@@ -1815,6 +1791,8 @@ $ sudo telinit 1
 #### 2.6.3.文件目录类
 
 `pwd` 显示当前目录的绝对路径
+
+- `pwd -P`显示出确实的路径，而非使用链接 (link) 路径
 
 `ls` 显示当前目录下所有内容（包括文件和目录）
 
@@ -1830,6 +1808,7 @@ $ sudo telinit 1
 `mkdir 目录名` 创建目录
 
 - `mkdir -p 多级目录名` 创建多级目录
+- `mkdir -m 711 test2` 创建权限为 **rwx--x--x** 的目录
 
 `rmdir 目录名` 只能删除空目录
 
@@ -1838,7 +1817,11 @@ $ sudo telinit 1
 `cp 来源地文件 目的地目录`复制来源地文件到目的地目录
 
 - `cp -r 来源地目录 目的地目录` 递归复制整个文件夹
-- `\cp -r 来源地目录 目的地目录` 递归复制整个文件夹,并强制覆盖
+- `cp -r 来源地目录 目的地目录` 递归复制整个文件夹,并强制覆盖
+- `cp -s bashrc bashrc_slink` 复制出软链接
+- `cp -l bashrc bashrc_hlink` 复制出硬链接
+- `cp bashrc_slink bashrc_slink_1` 从链接文件复制原文件
+  `cp -d bashrc_slink bashrc_slink_2` 从链接文件复制链接文件
 
 `rm 文件名`删除文件
 
@@ -1858,6 +1841,8 @@ $ sudo telinit 1
 `more 文件名`分页查看文件内容【按空格切换下一页 按回车切换下一行 ctrl+b切换上一页】
 
 `less 文件名` 分页查看文件内容【会根据显示需要加载内容，对于显示大型文件有较高效率】
+
+`nl` 显示的时候，顺道输出行号！
 
 `>`输出重定向，即覆盖写
 
@@ -1949,23 +1934,20 @@ $ sudo telinit 1
 - 解压：`tar -zxvf a.tar.gz `解压`a.tar.gz`到当前目录
 - 解压到指定目录：`tar -zxvf a.tar.gz -C /opt/tmp `解压`a.tar.gz`到`/opt/tmp`【指定解压的目录必须存在】
 
-### 2.7.组管理和权限管理
+### 2.7.群组管理和权限管理
 
-[菜鸟教程-Linux 文件基本属性](https://www.runoob.com/linux/linux-file-attr-permission.html)
+#### 2.7.1.群组管理
 
-#### 2.7.1.组管理
+> -R 代表递归操作
 
 - `chown [–R] 所有者 文件名`更改文件所有者（owner），也可以同时更改文件所属组。
   `chown [-R] 所有者:属组名 文件名`更改文件所有者（owner），也可以同时更改文件所属组。
-- `chgrp [-R] 属组名 文件名`更改文件属组
+- `chgrp [-R] 群组名 文件名`更改文件群组
 - `usermod`修改用户所在组
   - `usermod -g 组名 用户名`改变用户所在组
   - `usermod -d 目录名 用户名`改变该用户登录的初始目录
--  `chmod [-R] xyz 文件或目录`
 
-#### 2.7.2.权限详情
-
-[CSDN-Linux权限详解（chmod、600、644、700、711、755、777、4755、6755、7755）「建议收藏」](https://cloud.tencent.com/developer/article/2069886)
+#### 2.7.2.权限管理
 
 ```
 -rw------- (600)    只有拥有者有读写权限。
@@ -2003,13 +1985,14 @@ Linux 文件的基本权限就有九个，分别是 **owner/group/others(拥有�
 - [ b ]则表示为装置文件里面的可供储存的接口设备(可随机存取装置)；在dev目录下能看到
 - [ c ]则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)；在dev目录下能看到
 
+`chmod | u g o a | +（加入） -（除去） =（设置） | r w x | 文件或目录`
 
+- `chmod a-x .bashrc`
+- `chmod 777 文件名` 赋予最高权限
 
 ### 2.8.任务调度
 
 #### 2.8.1.定时任务详解
-
-[菜鸟教程-Crontab命令](https://www.runoob.com/linux/linux-comm-crontab.html)
 
 **cron定时任务**
 
@@ -2025,13 +2008,17 @@ Linux 文件的基本权限就有九个，分别是 **owner/group/others(拥有�
 
 **at定时任务**
 
-使用 `at` 命令，你可以在特定时间自动完成你所设定的任务，也可以实现自动化，非常方便快捷！
+[Linux at命令教程：如何在指定时间执行一次任务（附实例详解和注意事项）](https://bashcommandnotfound.cn/article/linux-at-command)
 
-[博客园-at命令详解](https://www.cnblogs.com/yychuyu/p/15483186.html)
+`at` 是一个用来在指定时间执行一次任务的命令
 
-### 2.9.磁盘分区和挂载[重点]
+### 2.9.磁盘分区和挂载
 
 [CSDN-Linux磁盘分区详解（新建分区，现有分区扩容，分区减容）](https://blog.csdn.net/zhanhjxxx/article/details/123232402)
+
+[CSDN-Linux基础篇——Linux磁盘操作（磁盘基础知识、分类、分区、挂载、卸载、扩容）详解](https://blog.csdn.net/LXWalaz1s1s/article/details/115841831)
+
+[CSDN-Linux磁盘扩容三种方式](https://blog.csdn.net/Hlroliu/article/details/109764269)
 
 #### 2.9.1.分区的方式
 
@@ -2049,13 +2036,9 @@ Linux 文件的基本权限就有九个，分别是 **owner/group/others(拥有�
 
 #### 2.9.2.Linux分区
 
-[CSDN-Linux基础篇——Linux磁盘操作（磁盘基础知识、分类、分区、挂载、卸载、扩容）详解](https://blog.csdn.net/LXWalaz1s1s/article/details/115841831)
-
 - `lsblk -f`老师不离开 查看当前系统分区情况
 
 #### 2.9.3.给Linux增加一个硬盘
-
-[CSDN-Linux磁盘扩容三种方式](https://blog.csdn.net/Hlroliu/article/details/109764269)
 
 Linux在使用过程中由于数据量不断增大，导致磁盘空间不足，需要增加磁盘空间，主要有以下三种方式
 1、直接给 / 分区（或者某一分区）扩容，直接在原有磁盘上增大空间
@@ -2064,13 +2047,25 @@ Linux在使用过程中由于数据量不断增大，导致磁盘空间不足，
 
 #### 2.9.4.磁盘查询指令
 
-[菜鸟教程-du命令](https://www.runoob.com/linux/linux-comm-du.html)
-
 [CSDN-磁盘情况查询与磁盘实用指令](https://blog.csdn.net/wish_you_luck/article/details/125502718)
 
-- `df -l` 查询系统整体磁盘使用情况
-- `du -h /目录` 查询指定目录的磁盘占用情况
+- `df` 查询系统整体磁盘使用情况
+- `df -h /目录` 查询指定目录的磁盘占用情况，将容量结果以易读的容量格式显示出来
+- `df -aT` 将系统内的所有特殊文件格式及名称都列出来
+- `du -hac --max-depth=1 /opt` :查询 /opt 目录下的文件情况，深度为1
 - `tree`树形展示目录结构
+- `tree /opt`:以树状显示目录结构 /opt 目录
+
+- `ls -l /opt | grep "^-" | wc -l`:统计/opt 文件夹下文件的个数
+
+- `ls -l /opt | grep "^d" | wc -l`:统计/opt 文件夹下目录的个数
+
+- `ls -lR /opt | grep "^-" |wc -l`:统计/opt文件夹下文件的个数，包括子文件夹里的
+
+- `ls -lR /opt | grep "^d" | wc -l`:统计/opt文件夹下目录的个数，包括子文件夹里的
+- `fdisk -l`列出所有分区信息
+- `mkfs -t ext3 /dev/hdc6`: 将分区 /dev/hdc6（可指定你自己的分区） 格式化为 ext3 文件系统
+- `fsck -C -f -t ext3 /dev/hdc6 `:强制检测 /dev/hdc6 分区
 
 ### 2.10.网络配置[重点]
 
@@ -2106,25 +2101,23 @@ Linux在使用过程中由于数据量不断增大，导致磁盘空间不足，
 
 #### 2.11.2.查看进程
 
-`ps -aux`
+- `ps -aux`
 
-`ps -ef`
+- `ps -ef`
 
-`pstree -p`以树状展示进程ID
+- `pstree -p`以树状展示进程ID
 
-`pstree -u`以树状展示进程的用户ID
+- `pstree -u`以树状展示进程的用户ID
 
 #### 2.11.3.终止进程
 
-[CSDN-linux上杀死进程命令：kill、pkill、killall杀死进程](https://blog.csdn.net/weixin_41010198/article/details/122370405)
+- `kill [选项] 进程号`通过进程号杀死进程
 
-`kill [选项] 进程号`通过进程号杀死进程
+- `killall 进程名称` 通过进程名杀死进程，也支持通配符，这在系统因负载过大而变慢时很有用
 
-`killall 进程名称` 通过进程名杀死进程，也支持通配符，这在系统因负载过大而变慢时很有用
+- `pkill  进程名称`通过进程名称中的关键字去杀进程，可以批量杀死
 
 #### 2.11.4.服务管理
-
-[博客园-CentOS7服务管理（一）](https://www.cnblogs.com/tkqasn/p/9379242.html)
 
 > 服务本质就是进程，但是是运行在后台的，通常会监听某个端口，等待其他进程的请求，比如（mysql,sshd,防火墙等），因此我们又称为**守护进程**
 
@@ -2132,24 +2125,25 @@ CentOS7之前：`service 服务名 [start|stop|restart|reload|status]`
 
 CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 
+- `systemctl list-units` # 列出正在运行的 Unit 
+
+- `systemctl list-units --all` # 列出所有Unit，包括没有找到配置文件的或者启动失败的 
+
+- `systemctl list-units --all` --state=inactive # 列出所有没有运行的 Unit 
+
+- `systemctl list-units --failed` # 列出所有加载失败的 Unit 
+
+- `systemctl list-units --type=service` # 列出所有正在运行的、类型为 service 的 Unit
+- `systemctl list-dependencies [unit]` #列出unit依赖 
+- `systemctl list-dependencies --all [unit]` #展开显示依赖关系 
+- `systemctl list-dependencies [unit] [--reverse]` #反向查询依赖，unit被谁依赖
+
 > 注意：这种方式只是**临时生效**，重启系统后，回归以前对服务的配置。
-
-------
-
-> 在windows启动Telnet功能后，
->
-> 使用`telnet 10.0.0.102 22 `可以连接上虚拟机上的CentOS7系统的sshd服务
-
-------
 
 查看服务名几种方式：
 
 - `setup`图形化界面查看服务
-- 到`/etc/init.d`下查看
-- `systemctl list-unit-files`列出所有服务
-- `systemctl list-dependencies`查看所有服务 
-
-服务的运行级别：见 **2.6.1.指定运行级别**
+- 到`/etc/init.d`下查看 
 
 `chkconfig`给某个服务的某个运行级别设置自启动/不自启动
 
@@ -2173,7 +2167,7 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 
 `rpm -e -nodeps RPM软件包名称 `强制卸载某个软件，不管有没有依赖
 
-`rpm -ivh RPM软件包名称`
+`rpm -ivh RPM软件包名称`:*-i*表示安装，*-v*表示显示详细信息，*-h*表示显示安装进度
 
 #### 2.12.2.YUM
 
@@ -2187,11 +2181,11 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 >
 > APT是Advance Packaging Tool（高级包装工具）的缩写，APT可以自动下载，配置，安装二进制或者源代码格式的软件包。
 
-### 2.13.防火墙[重点]
+### 2.13.防火墙
 
 [CSDN-Linux 防火墙配置（iptables和firewalld）](https://blog.csdn.net/m0_49864110/article/details/129150960)
 
-### 2.14.Linux 日志[重点]
+### 2.14.Linux 日志
 
 [博客园-【Linux日志】系统日志及分析](https://www.cnblogs.com/yingsong/p/6022181.html)
 
@@ -2819,8 +2813,6 @@ https://www.bilibili.com/video/BV1Sv411r7vd?vd_source=f58f2e2144be4e99a8cf800afe
     微指令集？（仅供参考）答：
     多媒体微指令集：MMX, SSE, SSE2, SSE3, SSE4, AMD-3DNow!
     虚拟化微指令集：Intel-VT, AMD-SVM
-    鸟哥的 Linux 私房菜：基础学习篇 第四版
-    0.1 电脑：辅助人脑的好工具 36
     省电功能：Intel-SpeedStep, AMD-PowerNow!
     64/32位相容技术：AMD-AMD64, Intel-EM64T
 
@@ -2876,6 +2868,11 @@ https://www.bilibili.com/video/BV1Sv411r7vd?vd_source=f58f2e2144be4e99a8cf800afe
 
   ![局部截取_20250415_110533](images/Linux+Shell笔记/局部截取_20250415_110533.png)
 
+### 0.6 本章习题
+
+- 利用软件：假设你不想要拆开主机机箱，但想了解你的主机内部各元件的信息时，该如何是好？ 如果使用的是Windows操作系统，可使用CPUZ（
+  http://www.cpuid.com/cpuz.php）这套软件，如果是Linux环境下，可以使用“cat/proc/cpuinfo” 及使用“lspci”来查阅各项元件的型号；
+
 ## 第一章 Linux是什么与如何学习
 
 - linux发行版
@@ -2890,3 +2887,18 @@ https://www.bilibili.com/video/BV1Sv411r7vd?vd_source=f58f2e2144be4e99a8cf800afe
     Gentoo: http://www.gentoo.org/
 
   ![局部截取_20250415_122758](images/Linux+Shell笔记/局部截取_20250415_122758.png)
+
+## 第二章 主机规划与磁盘分区
+
+### 2.1.3 各硬件设备在linux中的文件名
+
+![局部截取_20250423_145751](images/Linux+Shell笔记/局部截取_20250423_145751.png)
+
+## 2.2 磁盘分区
+
+> 使用`df`查看我的阿里云云服务器磁盘分布
+>
+> 早期磁盘第一个扇区里面含有的重要信息我们称为MBR （Master BootRecord） 格式，但是由于近年来磁盘的容量不断扩大，造成读写上的一些困扰， 甚至有些大于 2TB 以上的磁盘分区已经让某些操作系统无法存取。因此后来又多了一个新的磁盘分区格式，称为 GPT （GUID partition table）！ 这两种分区格式与限制不太相同啦！
+
+![局部截取_20250423_150113](images/Linux+Shell笔记/局部截取_20250423_150113.png)
+
