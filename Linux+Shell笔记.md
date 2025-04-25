@@ -1504,6 +1504,8 @@ source filename
 
 [freeCodeCamp-Linux 命令完全手册](https://www.freecodecamp.org/chinese/news/the-linux-commands-handbook/)
 
+[macrozheng- 还在百度Linux命令？推荐一套我用起来特顺手的命令](https://gitee.com/macrozheng/mall-learning/blob/master/docs/reference/linux_command.md)
+
 ## 1.Linux基础
 
 ### 1.1.前言
@@ -2183,7 +2185,7 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 
 ### 2.13.防火墙
 
-[CSDN-Linux 防火墙配置（iptables和firewalld）](https://blog.csdn.net/m0_49864110/article/details/129150960)
+[macrozheng- Linux防火墙Firewall和Iptables的使用](https://gitee.com/macrozheng/mall-learning/blob/master/docs/reference/linux_firewall.md)
 
 ### 2.14.Linux 日志
 
