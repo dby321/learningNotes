@@ -2753,7 +2753,6 @@ journalctl命令用于查看和分析systemd的日志信息。
 
 ```
 journalctl -xe``journalctl -u nginx.service
-
 ```
 
 选项-xe用于显示最近的日志并详细解释错误，-u用于查看特定服务的日志。
@@ -2766,7 +2765,6 @@ logwatch是一款日志分析工具，可以生成易读的日志报告。
 
 ```
 sudo apt-get install logwatch``sudo logwatch --detail High --mailto admin@example.com --service all --range today
-
 ```
 
 上述命令生成详细的日志报告，并通过邮件发送给管理员
