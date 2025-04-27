@@ -19,7 +19,7 @@ Ken Thompson 的 sh 是第一种 Unix Shell，Windows Explorer 是一个典型�
 echo "Hello World !"
 ```
 
-**1、作为可执行程序**
+1、作为可执行程序
 
 将上面的代码保存为 test.sh，并 cd 到相应目录：
 
@@ -28,9 +28,9 @@ chmod +x ./test.sh  #使脚本具有执行权限
 ./test.sh  #执行脚本
 ```
 
-注意，一定要写成 **./test.sh**，而不是 **test.sh**，运行其它二进制的程序也一样，直接写 test.sh，linux 系统会去 PATH 里寻找有没有叫 test.sh 的，而只有 /bin, /sbin, /usr/bin，/usr/sbin 等在 PATH 里，你的当前目录通常不在 PATH 里，所以写成 test.sh 是会找不到命令的，要用 ./test.sh 告诉系统说，就在当前目录找。
+注意，一定要写成 ./test.sh，而不是 test.sh，运行其它二进制的程序也一样，直接写 test.sh，linux 系统会去 PATH 里寻找有没有叫 test.sh 的，而只有 /bin, /sbin, /usr/bin，/usr/sbin 等在 PATH 里，你的当前目录通常不在 PATH 里，所以写成 test.sh 是会找不到命令的，要用 ./test.sh 告诉系统说，就在当前目录找。
 
-**2、作为解释器参数**
+2、作为解释器参数
 
 这种运行方式是，直接运行解释器，其参数就是 shell 脚本的文件名，如：
 
@@ -66,7 +66,7 @@ readonly myUrl
 unset variable_name
 ```
 
-### 命令替换：``与$()
+### ``与$()
 
 ```
 A=`date` # 将指令执行的结果赋给A
@@ -131,7 +131,7 @@ echo ${#string} #输出 4
 
 ###  提取子字符串 
 
-以下实例从字符串第 **2** 个字符开始截取 **4** 个字符：
+以下实例从字符串第 2 个字符开始截取 4 个字符：
 
 ```
 string="runoob is a great site"
@@ -140,7 +140,7 @@ echo ${string:1:4} # 输出 unoo
 
 ###  查找子字符串 
 
-查找字符 **i** 或 **o** 的位置(哪个字母先出现就计算哪个)：
+查找字符 i 或 o 的位置(哪个字母先出现就计算哪个)：
 
 ```
 string="runoob is a great site"
@@ -426,7 +426,7 @@ fi
 
 ### 使用 $(( )) 进行算术运算
 
-**$(( ))** 语法也是进行算术运算的一种方式。
+$(( )) 语法也是进行算术运算的一种方式。
 
 ```
 *#!/bin/bash*
@@ -438,7 +438,7 @@ num=5
 num=$((num + 1))
 
 *# 自减*
-num=$**((**num - 1**))
+num=$((num - 1))
 
 echo $num
 ```
@@ -513,7 +513,7 @@ echo "It is a test" > myfile
 echo `date`
 ```
 
-**注意：** 这里使用的是反引号 `, 而不是单引号 '。
+注意： 这里使用的是反引号 `, 而不是单引号 '。
 
  结果将显示当前日期
 
@@ -755,7 +755,7 @@ esac
 
 ## Shell read命令
 
-**1、简单读取**
+1、简单读取
 
 ```
 #!/bin/bash
@@ -776,7 +776,7 @@ www.runoob.com
 你输入的网站名是 www.runoob.com
 ```
 
-**2、-p 参数，允许在 read 命令行中直接指定一个提示。**
+2、-p 参数，允许在 read 命令行中直接指定一个提示。
 
 ```
 #!/bin/bash
@@ -793,7 +793,7 @@ exit 0
 你输入的网站名是 www.runoob.com
 ```
 
-**3、-t 参数指定 read 命令等待输入的秒数，当计时满时，read命令返回一个非零退出状态。**
+3、-t 参数指定 read 命令等待输入的秒数，当计时满时，read命令返回一个非零退出状态。
 
 ```
 #!/bin/bash
@@ -814,7 +814,7 @@ exit 0
 抱歉，你输入超时了
 ```
 
-4、除了输入时间计时，还可以使用 **-n** 参数设置 **read** 命令计数输入的字符。当输入的字符数目达到预定数目时，自动退出，并将输入的数据赋值给变量。
+4、除了输入时间计时，还可以使用 -n 参数设置 read 命令计数输入的字符。当输入的字符数目达到预定数目时，自动退出，并将输入的数据赋值给变量。
 
 ```
 #!/bin/bash
@@ -851,7 +851,7 @@ exit 0
 您输入的两个字符是:12
 ```
 
-5、**-s** 选项能够使 **read** 命令中输入的数据不显示在命令终端上（实际上，数据是显示的，只是 **read** 命令将文本颜色设置成与背景相同的颜色）。输入密码常用这个选项。
+5、-s 选项能够使 read 命令中输入的数据不显示在命令终端上（实际上，数据是显示的，只是 read 命令将文本颜色设置成与背景相同的颜色）。输入密码常用这个选项。
 
 ```
 #!/bin/bash
@@ -868,7 +868,7 @@ exit 0
 您输入的密码是 runoob
 ```
 
-**6.读取文件**
+6.读取文件
 
 每次调用 read 命令都会读取文件中的 "一行" 文本。当文件没有可读的行时，read 命令将以非零状态退出。
 
@@ -906,7 +906,7 @@ Line 3:runoob
 finish
 ```
 
-使用 **-e** 参数，以下实例输入字符 **a** 后按下 **Tab** 键就会输出相关的文件名(该目录存在的)：
+使用 -e 参数，以下实例输入字符 a 后按下 Tab 键就会输出相关的文件名(该目录存在的)：
 
 ```
 $ read -e -p "输入文件名:" str 
@@ -917,7 +917,7 @@ a.out    a.py     a.pyc    abc.txt
 
 ## Shell date命令
 
-Linux **date** 命令可以用来显示或设定系统的日期与时间。
+Linux date 命令可以用来显示或设定系统的日期与时间。
 
 ### 语法
 
@@ -928,16 +928,16 @@ date [-u] [-d datestr] [-s datestr] [--utc] [--universal] [--date=datestr] [--se
 
 #### 可选参数
 
-- **-d, --date=STRING**：通过字符串显示时间格式，字符串不能是'now'。
-- **-f, --file=DATEFILE**：类似于--date; 一次从DATEFILE处理一行。
-- **-I[FMT], --iso-8601[=FMT]**：按照 ISO 8601 格式输出时间，FMT 可以为'date'(默认)，'hours'，'minutes'，'seconds'，'ns'。 可用于设置日期和时间的精度，例如：2006-08-14T02:34:56-0600。
-- **-R, --rfc-2822** ： 按照 RFC 5322 格式输出时间和日期，例如: Mon, 14 Aug 2006 02:34:56 -0600。
-- **--rfc-3339=FMT**：按照 RFC 3339 格式输出，FMT 可以为'date', 'seconds','ns'中的一个，可用于设置日期和时间的精度， 例如：2006-08-14 02:34:56-06:00。
-- **-r, --reference=FILE**：显示文件的上次修改时间。
-- **-s, --set=STRING**：根据字符串设置系统时间。
-- **-u, --utc, --universal**：显示或设置协调世界时(UTC)。
-- **--help**：显示帮助信息。
-- **--version**：输出版本信息。
+- -d, --date=STRING：通过字符串显示时间格式，字符串不能是'now'。
+- -f, --file=DATEFILE：类似于--date; 一次从DATEFILE处理一行。
+- -I[FMT], --iso-8601[=FMT]：按照 ISO 8601 格式输出时间，FMT 可以为'date'(默认)，'hours'，'minutes'，'seconds'，'ns'。 可用于设置日期和时间的精度，例如：2006-08-14T02:34:56-0600。
+- -R, --rfc-2822 ： 按照 RFC 5322 格式输出时间和日期，例如: Mon, 14 Aug 2006 02:34:56 -0600。
+- --rfc-3339=FMT：按照 RFC 3339 格式输出，FMT 可以为'date', 'seconds','ns'中的一个，可用于设置日期和时间的精度， 例如：2006-08-14 02:34:56-06:00。
+- -r, --reference=FILE：显示文件的上次修改时间。
+- -s, --set=STRING：根据字符串设置系统时间。
+- -u, --utc, --universal：显示或设置协调世界时(UTC)。
+- --help：显示帮助信息。
+- --version：输出版本信息。
 
 #### FORMAT 参数
 
@@ -991,13 +991,13 @@ date [-u] [-d datestr] [-s datestr] [--utc] [--universal] [--date=datestr] [--se
 %Z  时区缩写 （如 EDT）
 ```
 
-若是不以加号作为开头，则表示要设定时间，而时间格式为 **MMDDhhmm[[CC]YY][.ss]**，其中 **MM** 为月份，**DD** 为日，**hh** 为小时，**mm** 为分钟，**CC** 为年份前两位数字，**YY** 为年份后两位数字，**ss** 为秒数。
+若是不以加号作为开头，则表示要设定时间，而时间格式为 MMDDhhmm[[CC]YY][.ss]，其中 MM 为月份，DD 为日，hh 为小时，mm 为分钟，CC 为年份前两位数字，YY 为年份后两位数字，ss 为秒数。
 
 使用权限：所有使用者。
 
-当您不希望出现无意义的 0 时(比如说 1999/03/07)，则可以在标记中插入 - 符号，比如说 **date '+%-H:%-M:%-S'** 会把时分秒中无意义的 0 给去掉，像是原本的 08:09:04 会变为 8:9:4。另外，只有取得权限者(比如说 root)才能设定系统时间。
+当您不希望出现无意义的 0 时(比如说 1999/03/07)，则可以在标记中插入 - 符号，比如说 date '+%-H:%-M:%-S' 会把时分秒中无意义的 0 给去掉，像是原本的 08:09:04 会变为 8:9:4。另外，只有取得权限者(比如说 root)才能设定系统时间。
 
-当您以 root 身分更改了系统时间之后，请记得以 **clock -w** 来将系统时间写入 **CMOS** 中，这样下次重新开机时系统时间才会持续保持最新的正确值。
+当您以 root 身分更改了系统时间之后，请记得以 clock -w 来将系统时间写入 CMOS 中，这样下次重新开机时系统时间才会持续保持最新的正确值。
 
 ### 实例
 
@@ -1251,7 +1251,7 @@ echo "==========备份完成==========="
 ```
 
 
-通过以上几步，就可以实现在Linux中**定时**备份mysql数据库中的数据
+通过以上几步，就可以实现在Linux中定时备份mysql数据库中的数据
 
 如果想要立刻执行数据备份，可以直接执行以下命令：
 
@@ -1386,7 +1386,7 @@ $ command 2>file
 $ command 2>>file
 ```
 
-**2** 表示标准错误文件(stderr)。
+2 表示标准错误文件(stderr)。
 
 如果希望将 stdout 和 stderr 合并后重定向到 file，可以这样写：
 
@@ -1429,7 +1429,7 @@ delimiter
 
 #### 实例
 
-在命令行中通过 **wc -l** 命令计算 Here Document 的行数：
+在命令行中通过 wc -l 命令计算 Here Document 的行数：
 
 ```
 (base) dongbinyu@dongbinyudeMacBook-Pro ~ % wc -l <<EOF
@@ -1474,17 +1474,17 @@ www.runoob.com
 $ command > /dev/null
 ```
 
-/dev/null 是一个特殊的文件，写入到它的内容都会被丢弃；如果尝试从该文件读取内容，那么什么也读不到。但是 /dev/null 文件非常有用，**将命令的输出重定向到它，会起到"禁止输出"的效果。**
+/dev/null 是一个特殊的文件，写入到它的内容都会被丢弃；如果尝试从该文件读取内容，那么什么也读不到。但是 /dev/null 文件非常有用，将命令的输出重定向到它，会起到"禁止输出"的效果。
 
-**如果希望屏蔽 stdout 和 stderr，可以这样写：**
+如果希望屏蔽 stdout 和 stderr，可以这样写：
 
 ```
 $ command > /dev/null 2>&1
 ```
 
-> **注意：**0 是标准输入（STDIN），1 是标准输出（STDOUT），2 是标准错误输出（STDERR）。
+> 注意：0 是标准输入（STDIN），1 是标准输出（STDOUT），2 是标准错误输出（STDERR）。
 >
-> 这里的 **2** 和 **>** 之间不可以有空格，**2>** 是一体的时候才表示错误输出。
+> 这里的 2 和 > 之间不可以有空格，2> 是一体的时候才表示错误输出。
 
 ## Shell 文件包含
 
@@ -1506,6 +1506,16 @@ source filename
 
 [macrozheng- 还在百度Linux命令？推荐一套我用起来特顺手的命令](https://gitee.com/macrozheng/mall-learning/blob/master/docs/reference/linux_command.md)
 
+
+
+Red Hat: http://www.redhat.com
+SuSE: https://www.suse.com
+Fedora: https://getfedora.org/
+CentOS: http://www.centos.org/
+Debian: http://www.debian.org/
+Ubuntu: http://www.ubuntu.com/
+Gentoo: http://www.gentoo.org/
+
 ## 1.Linux基础
 
 ### 1.1.前言
@@ -1526,7 +1536,7 @@ source filename
 >
 > 为了能够在centOS中粘贴windows下的复制.
 >
-> 需要安装**VMtools**
+> 需要安装VMtools
 
 [CSDN-VMtools重新安装 灰色问题](https://blog.csdn.net/l979951191/article/details/50596986/)
 
@@ -1534,37 +1544,37 @@ source filename
 
 以下是对这些目录的解释：
 
-- **/bin**：
+- /bin：
    bin 是 Binaries (二进制文件) 的缩写, 这个目录存放着最经常使用的命令。
 
-- **/boot：**
+- /boot：
   这里存放的是启动 Linux 时使用的一些核心文件，包括一些连接文件以及镜像文件。
 
-- **/dev ：**
+- /dev ：
   dev 是 Device(设备) 的缩写, 该目录下存放的是 Linux 的外部设备，在 Linux 中访问设备的方式和访问文件的方式是相同的。
 
-- **/etc：**
+- /etc：
   etc 是 Etcetera(等等) 的缩写,这个目录用来存放所有的系统管理所需要的配置文件和子目录。
 
-- **/home**：
+- /home：
   用户的主目录，在 Linux 中，每个用户都有一个自己的目录，一般该目录名是以用户的账号命名的。
 
-- **/lib**：
+- /lib：
   lib 是 Library(库) 的缩写这个目录里存放着系统最基本的动态连接共享库，其作用类似于 Windows 里的 DLL 文件。几乎所有的应用程序都需要用到这些共享库。
 
-- **/lost+found**：
+- /lost+found：
   这个目录一般情况下是空的，当系统非法关机后，这里就存放了一些文件。
 
-- **/media**：
+- /media：
    linux 系统会自动识别一些设备，例如U盘、光驱等等，当识别后，Linux 会把识别的设备挂载到这个目录下。
 
-- **/mnt**：
+- /mnt：
   系统提供该目录是为了让用户临时挂载别的文件系统的，我们可以将光驱挂载在 /mnt/ 上，然后进入该目录就可以查看光驱里的内容了。
 
-- **/opt**：
+- /opt：
   opt 是 optional(可选) 的缩写，这是给主机额外安装软件所摆放的目录。比如你安装一个ORACLE数据库则就可以放到这个目录下。默认是空的。
 
-- **/proc**：
+- /proc：
   proc 是 Processes(进程) 的缩写，/proc 是一种伪文件系统（也即虚拟文件系统），存储的是当前内核运行状态的一系列特殊文件，这个目录是一个虚拟的目录，它是系统内存的映射，我们可以通过直接访问这个目录来获取系统信息。
   这个目录的内容不在硬盘上而是在内存里，我们也可以直接修改里面的某些文件，比如可以通过下面的命令来屏蔽主机的ping命令，使别人无法ping你的机器：
 
@@ -1572,19 +1582,19 @@ source filename
   echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_all
   ```
 
-- **/root**：
+- /root：
   该目录为系统管理员，也称作超级权限者的用户主目录。
 
-- **/sbin**：
+- /sbin：
    s 就是 Super User 的意思，是 Superuser Binaries (超级用户的二进制文件) 的缩写，这里存放的是系统管理员使用的系统管理程序。
 
-- **/selinux**：
+- /selinux：
    这个目录是 Redhat/CentOS 所特有的目录，Selinux 是一个安全机制，类似于 windows 的防火墙，但是这套机制比较复杂，这个目录就是存放selinux相关的文件的。
 
-- **/srv**：
+- /srv：
    该目录存放一些服务启动之后需要提取的数据。
 
-- **/sys**：
+- /sys：
 
   这是 Linux2.6 内核的一个很大的变化。该目录下安装了 2.6 内核中新出现的一个文件系统 sysfs 。
 
@@ -1594,36 +1604,54 @@ source filename
 
   当一个内核对象被创建的时候，对应的文件和目录也在内核对象子系统中被创建。
 
-- **/tmp**：
+- /tmp：
    tmp 是 temporary(临时) 的缩写这个目录是用来存放一些临时文件的。
 
-- **/usr**：
+- /usr：
    usr 是 unix shared resources(共享资源) 的缩写，这是一个非常重要的目录，用户的很多应用程序和文件都放在这个目录下，类似于 windows 下的 program files 目录。
 
-- **/usr/bin：**
+- /usr/bin：
   系统用户使用的应用程序。
 
-- **/usr/sbin：**
+- /usr/sbin：
   超级用户使用的比较高级的管理程序和系统守护程序。
 
-- **/usr/src：**
+- /usr/src：
   内核源代码默认的放置目录。
 
-- **/var**：
+- /var：
    var 是 variable(变量) 的缩写，这个目录中存放着在不断扩充着的东西，我们习惯将那些经常被修改的目录放在这个目录下。包括各种日志文件。
 
-- **/run**：
+- /run：
   是一个临时文件系统，存储系统启动以来的信息。当系统重启时，这个目录下的文件应该被删掉或清除。如果你的系统上有 /var/run 目录，应该让它指向 run。
 
 在 Linux 系统中，有几个目录是比较重要的，平时需要注意不要误删除或者随意更改内部文件。
 
-**/etc**： 上边也提到了，这个是系统中的配置文件，如果你更改了该目录下的某个文件可能会导致系统不能启动。
+/etc： 上边也提到了，这个是系统中的配置文件，如果你更改了该目录下的某个文件可能会导致系统不能启动。
 
-**/bin, /sbin, /usr/bin, /usr/sbin**: 这是系统预设的执行文件的放置目录，比如 ls 就是在 /bin/ls 目录下的。
+/bin, /sbin, /usr/bin, /usr/sbin: 这是系统预设的执行文件的放置目录，比如 ls 就是在 /bin/ls 目录下的。
 
 值得提出的是，/bin, /usr/bin 是给系统用户使用的指令（除root外的通用户），而/sbin, /usr/sbin 则是给 root 使用的指令。 
 
-**/var**： 这是一个非常重要的目录，系统上跑了很多程序，那么每个程序都会有相应的日志产生，而这些日志就被记录到这个目录下，具体在 /var/log 目录下，另外 mail 的预设放置也是在这里。
+/var： 这是一个非常重要的目录，系统上跑了很多程序，那么每个程序都会有相应的日志产生，而这些日志就被记录到这个目录下，具体在 /var/log 目录下，另外 mail 的预设放置也是在这里。
+
+### 1.4 CPU架构
+
+| 类别               | 架构/技术                    | 主要代表厂商             | 典型应用                                                | 备注                                                         |
+| ------------------ | ---------------------------- | ------------------------ | ------------------------------------------------------- | ------------------------------------------------------------ |
+| 精简指令集（RISC） | SPARC                        | 甲骨文（Oracle）         | 学术领域的大型工作站、银行金融体系的主要服务器          | 常用于高性能计算环境                                         |
+|                    | Power Architecture (PowerPC) | IBM                      | 索尼PlayStation 3等游戏主机                             | 例如索尼PS3使用的是基于PowerPC架构的Cell处理器               |
+|                    | ARM                          | 安谋公司（ARM Holdings） | 各厂牌手机、PDA、导航系统、网络设备（交换器、路由器等） | 使用范围最广，适用于多种嵌入式系统及移动设备                 |
+| 复杂指令集（CISC） | x86架构                      | AMD、Intel、VIA          | 个人电脑（Personal Computer）                           | 最初从8086开始，逐步发展到80286, 80386等，称为x86架构        |
+|                    |                              |                          |                                                         | 64位架构被称为`x86_64`，由AMD首先推出，随后Intel也采用了类似的EM64T技术 |
+| 多媒体微指令集     | MMX, SSE, SSE2, SSE3, SSE4   | Intel                    | 提升图像和视频处理能力                                  | 随着时间的发展，SSE系列不断扩展以支持更复杂的多媒体操作      |
+|                    | AMD-3DNow!                   | AMD                      | 类似于SSE，但由AMD开发                                  | 已逐渐被SSE取代                                              |
+| 虚拟化微指令集     | Intel-VT                     | Intel                    | 支持硬件级别的虚拟化功能                                | 允许多个操作系统在同一物理机上运行而无需修改操作系统内核     |
+|                    | AMD-SVM                      | AMD                      | 类似于Intel-VT                                          | Secure Virtual Machine模式，提供类似的功能                   |
+| 省电功能           | Intel-SpeedStep              | Intel                    | 动态调整CPU的工作频率和电压以节省电力                   | 根据负载自动调整性能                                         |
+|                    | AMD-PowerNow!                | AMD                      | 类似于Intel-SpeedStep                                   | 动态管理功耗，提高笔记本电脑电池寿命                         |
+| 64/32位兼容技术    | AMD64                        | AMD                      | 允许在64位平台上运行32位应用程序                        | 首先提出的64位扩展技术，为现代64位计算铺平了道路             |
+|                    | EM64T                        | Intel                    | 类似于AMD64，但由Intel开发                              | Intel的64位扩展技术，与AMD64兼容                             |
 
 ## 2.Linux实操
 
@@ -1648,7 +1676,7 @@ source filename
 - `halt` 关闭电源
 - `poweroff` 关闭电源
 - `reboot`重启 
-- `sync`把内存的数据保存到磁盘【关机和重启前为了安全需要使用这个指令，防止数据丢失】
+- `sync`把内存的数据保存到磁盘,关机和重启前为了安全需要使用这个指令，防止数据丢失
 
 - `logout`注销用户
 
@@ -1656,15 +1684,23 @@ source filename
 
 #### 2.5.1.添加用户
 
-- `useradd –d  /home/sam -m sam` 此命令创建了一个用户sam，其中-d和-m选项用来为登录名sam产生一个主目录 /home/sam（/home为默认的用户主目录所在的父目录）。
+- `useradd [选项] 用户名` :用于创建新用户，并可指定用户的主目录、登录Shell、所属组等信息。
 
-- `useradd -s /bin/sh -g group –G adm,root gem`此命令新建了一个用户gem，该用户的登录Shell是 `/bin/sh`，它属于group用户组，同时又属于adm和root用户组，其中group用户组是其主组。
+  - 选项：
 
-  - 这里可能新建组：`#groupadd group及groupadd adm`
+    - `-d <目录>`：指定用户的主目录。
 
-  - 增加用户账号就是在/etc/passwd文件中为新用户增加一条记录，同时更新其他系统文件如/etc/shadow, /etc/group等。
+    - `-m`：如果主目录不存在，则自动创建。
 
-  - Linux提供了集成的系统管理工具userconf，它可以用来对用户账号进行统一管理。
+    - `-s <Shell>`：指定用户的登录Shell。
+
+    - `-g <组名>`：指定用户的主组（必须已存在）。
+
+    - `-G <组名列表>`：指定用户所属的附加组（多个组用逗号分隔）。
+
+  - 例子：
+    - `useradd –d  /home/sam -m sam` 
+    - `useradd -s /bin/sh -g group –G adm,root gem`
 
 - `passwd 用户名` 给用户指定或修改密码
 
@@ -1675,15 +1711,29 @@ source filename
 
 #### 2.5.3.查询用户信息
 
-`id 用户名`
+`id 用户名`：`id` 命令用于显示指定用户或当前用户的 UID（用户 ID）、GID（主组 ID）以及所属的附加组信息。
 
 ```
-uid=1000(waterplants) gid=1000(waterplants) 组=1000(waterplants),10(wheel)
+uid=1001(alice) gid=1001(alice) groups=1001(alice),27(sudo),30(docker)
 ```
 
-- uid 组名
-- gid 所在组ID号
-- 组 组名
+- `uid=1000(alice)`：
+
+  - `uid`：用户 ID（User ID），唯一标识系统中的每个用户。
+
+  - `waterplants`：用户名，括号内显示与 UID 对应的用户名。
+
+- `gid=1000(alice)`：
+
+  - `gid`：主组 ID（Group ID），表示用户所属的主组。
+
+  - `waterplants`：主组名，括号内显示与 GID 对应的组名。
+
+- `groups=1001(alice),27(sudo),30(docker)`：
+
+  - 列出用户所属的所有组（包括主组和附加组）。
+
+  - 每个组以 `组ID(组名)` 的形式显示。
 
 #### 2.5.4.切换用户
 
@@ -1810,7 +1860,7 @@ uid=1000(waterplants) gid=1000(waterplants) 组=1000(waterplants),10(wheel)
 `mkdir 目录名` 创建目录
 
 - `mkdir -p 多级目录名` 创建多级目录
-- `mkdir -m 711 test2` 创建权限为 **rwx--x--x** 的目录
+- `mkdir -m 711 test2` 创建权限为 rwx--x--x 的目录
 
 `rmdir 目录名` 只能删除空目录
 
@@ -1880,7 +1930,7 @@ uid=1000(waterplants) gid=1000(waterplants) 组=1000(waterplants),10(wheel)
 `date`显示时间
 
 - `date +%Y`显示年
-- `date “+%Y-%m-%d %H:%M:%S”`显示年月日时分秒【2020-09-30 15:41:39】
+- `date “+%Y-%m-%d %H:%M:%S”`显示年月日时分秒，2020-09-30 15:41:39
 - `date -s 字符串时间` 设置时间
 
 `cal` 显示当前月日历
@@ -1891,17 +1941,17 @@ uid=1000(waterplants) gid=1000(waterplants) 组=1000(waterplants),10(wheel)
 
 `find 搜索范围 选项`查找
 
-- `find /home -name hello.txt `【在`/home`下按文件名查找`hello.txt`文件】
-- `find /opt -user root`【在`/opt`下按文件拥有者查找文件】
-- `find / -size +[-,=]20M`【在`/`下查找大于20M的文件】
-- `find / -name *.txt`【在`/home`下按文件名查找`txt`后缀的文件】
+- `find /home -name hello.txt `：在`/home`下按文件名查找`hello.txt`文件
+- `find /opt -user root`：在`/opt`下按文件拥有者查找文件
+- `find / -size +[-,=]20M`：在`/`下查找大于20M的文件
+- `find / -name *.txt`：在`/home`下按文件名查找`txt`后缀的文件
 
 `locate`快速定位文件
 
-- `updatedb`【使用`locate`前先要初始化locate数据库】
+- `updatedb`：使用`locate`前先要初始化locate数据库
 - `locate hello.txt `定位`hello.txt`的位置
 
-`grep`文件内查找【通常和`|`管道符结合使用】
+`grep`文件内查找，通常和`|`管道符结合使用
 
 - `cat hello.txt |grep -n yes`查看`hello.txt`然后文件内查找所有`yes`并显示它的行号
 - `cat hello.txt |grep -ni yes`查看`hello.txt`然后文件内不区分大小写的查找所有`yes`并显示它的行号
@@ -1922,7 +1972,7 @@ uid=1000(waterplants) gid=1000(waterplants) 组=1000(waterplants),10(wheel)
 
 - 解压：`gunzip 文件名.gz` 解压文件
 
-**注意：`gzip`和`gunzip`不会保留原文件**
+注意：`gzip`和`gunzip`不会保留原文件
 
 
 
@@ -1963,21 +2013,21 @@ uid=1000(waterplants) gid=1000(waterplants) 组=1000(waterplants),10(wheel)
 
 Linux文件属性有两种设置方法，一种是数字，一种是符号。
 
-Linux 文件的基本权限就有九个，分别是 **owner/group/others(拥有者/组/其他)** 三种身份各有自己的 **read/write/execute** 权限。
+Linux 文件的基本权限就有九个，分别是 owner/group/others(拥有者/组/其他) 三种身份各有自己的 read/write/execute 权限。
 
-先复习一下刚刚上面提到的数据：文件的权限字符为： **-rwxrwxrwx** ， 这九个权限是三个三个一组的！其中，我们可以使用数字来代表各个权限，各权限的分数对照表如下：
+先复习一下刚刚上面提到的数据：文件的权限字符为： -rwxrwxrwx ， 这九个权限是三个三个一组的！其中，我们可以使用数字来代表各个权限，各权限的分数对照表如下：
 
 - r:4
 - w:2
 - x:1
 
-每种身份(owner/group/others)各自的三个权限(r/w/x)分数是需要累加的，例如当权限为： **-rwxrwx---** 分数则是：
+每种身份(owner/group/others)各自的三个权限(r/w/x)分数是需要累加的，例如当权限为： -rwxrwx--- 分数则是：
 
 - owner = rwx = 4+2+1 = 7
 - group = rwx = 4+2+1 = 7
 - others= --- = 0+0+0 = 0
 
-**第0位代表文件的类型**，它可以是：
+第0位代表文件的类型，它可以是：
 
 - [ d ]则是目录；
 - [ - ]则是普通文件；
@@ -1992,23 +2042,21 @@ Linux 文件的基本权限就有九个，分别是 **owner/group/others(拥有�
 - `chmod a-x .bashrc`
 - `chmod 777 文件名` 赋予最高权限
 
-### 2.8.任务调度
+### 2.8.定时任务
 
-#### 2.8.1.定时任务详解
-
-**cron定时任务**
+#### cron定时任务
 
 - `crontab -e`进入定时任务编辑
 - `*/1 * * * * ls -l /etc >> /tmp/to.txt`每隔一分钟执行`ls -l /etc`并将结果追加输出到`/tmp/to.txt`
 
-**cron相关指令**
+cron相关指令
 
 - `crontab -r` 终止任务调度
 - `crontab -l` 列出当前有哪些任务调度
 - `service crond restart` 重启任务调度
 - `crontab -e`时删除某行，来去除某个定时任务
 
-**at定时任务**
+#### at定时任务
 
 [Linux at命令教程：如何在指定时间执行一次任务（附实例详解和注意事项）](https://bashcommandnotfound.cn/article/linux-at-command)
 
@@ -2081,7 +2129,7 @@ Linux在使用过程中由于数据量不断增大，导致磁盘空间不足，
 
 `netstat -anp` 查看系统网络情况
 
-**主机名解析过程的分析**：
+主机名解析过程的分析：
 
 1. 当用户在浏览器中输入百度的域名（www.baidu.com），浏览器会首先检查本地hosts文件中是否存在对应的映射关系。
 2. 如果在hosts文件中找到了对应的映射关系，浏览器会将主机名解析为对应的IP地址，并直接向该IP地址发送请求。
@@ -2113,19 +2161,120 @@ Linux在使用过程中由于数据量不断增大，导致磁盘空间不足，
 
 #### 2.11.3.终止进程
 
-- `kill [选项] 进程号`通过进程号杀死进程
+#####  `kill` 命令
+- 功能：通过进程号（PID）终止指定进程。
+- 语法：
+  ```bash
+  kill [选项] 进程号
+  ```
+- 常用选项：
+  - `-9` 或 `-KILL`：强制终止进程。
+  - `-15` 或 `-TERM`（默认）：正常终止进程，允许进程进行清理操作。
+  - `-l`：列出所有信号及其编号。
+- 示例：
+  ```bash
+  kill 1234          # 正常终止 PID 为 1234 的进程
+  kill -9 1234       # 强制终止 PID 为 1234 的进程
+  ```
 
-- `killall 进程名称` 通过进程名杀死进程，也支持通配符，这在系统因负载过大而变慢时很有用
+> 注意：强制终止（`-9`）可能会导致数据丢失或资源未释放，建议优先使用默认信号（`-15`）。
 
-- `pkill  进程名称`通过进程名称中的关键字去杀进程，可以批量杀死
+---
+
+##### `killall` 命令
+- 功能：通过进程名称终止所有匹配的进程，支持通配符。
+- 语法：
+  ```bash
+  killall [选项] 进程名称
+  ```
+- 常用选项：
+  - `-i`：交互模式，提示用户确认。
+  - `-u 用户名`：仅终止指定用户的进程。
+  - `-o 时间`：仅终止运行时间超过指定时间的进程（如 `-o 5m` 表示超过 5 分钟）。
+  - `-y 时间`：仅终止运行时间少于指定时间的进程。
+- 示例：
+  ```bash
+  killall nginx      # 终止所有名为 "nginx" 的进程
+  killall -9 nginx   # 强制终止所有名为 "nginx" 的进程
+  killall -u root    # 终止所有属于 root 用户的进程
+  ```
+
+> 场景应用：当系统因负载过高而变慢时，可以通过 `killall` 快速批量终止特定服务的所有实例。
+
+##### `pkill` 命令
+- 功能：通过进程名称中的关键字或条件终止进程，支持更灵活的匹配方式。
+- 语法：
+  ```bash
+  pkill [选项] 关键字
+  ```
+- 常用选项：
+  - `-f`：匹配完整的命令行，而不仅仅是进程名称。
+  - `-u 用户名`：仅匹配指定用户的进程。
+  - `-x`：精确匹配进程名称。
+  - `-t 终端号`：仅匹配指定终端上的进程。
+- 示例：
+  ```bash
+  pkill nginx        # 终止所有包含 "nginx" 的进程
+  pkill -f "config.conf" # 终止命令行中包含 "config.conf" 的进程
+  pkill -u root      # 终止所有属于 root 用户的进程
+  ```
+
+> 灵活性：相比 `killall`，`pkill` 支持更复杂的匹配条件，适合处理复杂的进程管理需求。
+
+---
+
+##### 对比总结
+
+| 命令      | 特点                                                         | 适用场景                                                     |
+| --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `kill`    | 通过 PID 精确控制单个进程的终止。                            | 需要精确杀死某个特定进程时使用。                             |
+| `killall` | 通过进程名称批量终止所有匹配的进程，支持通配符和部分高级选项。 | 需要快速终止某个服务的所有实例，或按用户/运行时间筛选时使用。 |
+| `pkill`   | 通过关键字或条件匹配进程，支持命令行匹配和复杂筛选条件。     | 需要根据命令行参数、用户、终端等条件灵活终止进程时使用。     |
+
+| 命令      | 特点                                                         | 适用场景                                                     |
+| --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `kill`    | 通过 PID 精确控制单个进程的终止。                            | 需要精确杀死某个特定进程时使用。                             |
+| `killall` | 通过进程名称批量终止所有匹配的进程，支持通配符和部分高级选项。 | 需要快速终止某个服务的所有实例，或按用户/运行时间筛选时使用。 |
+| `pkill`   | 通过关键字或条件匹配进程，支持命令行匹配和复杂筛选条件。     | 需要根据命令行参数、用户、终端等条件灵活终止进程时使用。     |
+
+---
+
+##### 注意事项
+1. 谨慎操作：终止关键系统进程可能导致系统不稳定或崩溃，请务必确认目标进程后再执行。
+2. 权限要求：终止其他用户的进程通常需要管理员权限（使用 `sudo`）。
+3. 信号选择：
+   - 默认信号（`-15`）允许进程进行清理操作，推荐优先使用。
+   - 强制信号（`-9`）会立即终止进程，但可能导致资源未释放或文件损坏。
+
+---
+
+##### 扩展知识
+- 查看进程信息：
+  
+  - 使用 `ps aux` 查看所有进程及其 PID。
+  - 使用 `top` 或 `htop` 动态监控系统进程。
+- 查找特定进程：
+  - 使用 `pgrep` 查找匹配的进程并返回其 PID：
+    ```bash
+    pgrep nginx
+    ```
+  - 结合 `pkill` 和 `pgrep` 可以实现更精准的进程管理。
+
+---
+
+优化后的笔记结构清晰，内容简洁且实用，同时补充了常见用法和注意事项，方便日常运维参考。
 
 #### 2.11.4.服务管理
 
-> 服务本质就是进程，但是是运行在后台的，通常会监听某个端口，等待其他进程的请求，比如（mysql,sshd,防火墙等），因此我们又称为**守护进程**
+> 服务本质就是进程，但是是运行在后台的，通常会监听某个端口，等待其他进程的请求，比如（mysql,sshd,防火墙等），因此我们又称为守护进程
 
-CentOS7之前：`service 服务名 [start|stop|restart|reload|status]` 
+##### CentOS 服务管理命令对比
 
-CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
+`service 服务名 [start|stop|restart|reload|status]` :CentOS7之前,使用 `service` 命令管理服务
+
+`systemctl [start|stop|restart|reload|status] 服务名`:CentOS7之后,使用 `systemctl` 命令管理服务
+
+##### 常用 `systemctl` 命令
 
 - `systemctl list-units` # 列出正在运行的 Unit 
 
@@ -2140,74 +2289,336 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 - `systemctl list-dependencies --all [unit]` #展开显示依赖关系 
 - `systemctl list-dependencies [unit] [--reverse]` #反向查询依赖，unit被谁依赖
 
-> 注意：这种方式只是**临时生效**，重启系统后，回归以前对服务的配置。
+> 注意：这种方式只是临时生效，重启系统后，回归以前对服务的配置。
 
-查看服务名几种方式：
+##### 查看服务名称的方法
 
-- `setup`图形化界面查看服务
-- 到`/etc/init.d`下查看 
+- 图形化界面
+  - 使用 `setup` 图形化工具查看服务列表。
 
-`chkconfig`给某个服务的某个运行级别设置自启动/不自启动
+- 命令行方式
+  - `ls /etc/init.d`:查看 `/etc/init.d` 目录下的脚本文件
+  - `systemctl list-unit-files --type=service`:通过 `systemctl` 列出所有服务
 
-- `chkconfig --list|grep xxx`查看某个服务
-- `chkconfig 服务名 --list`查看某个服务
-- `chkconfig --level 5 服务名 on/off`设置某个服务在运行级别5情况下自启动/不自启动
+##### `chkconfig` 命令详解
 
-`top`显示正在执行的进程
+`chkconfig` 是 CentOS 7 之前用于管理系统服务在不同运行级别下是否自启动的工具。
 
-[CSDN-linux top命令详解（看这一篇就够了）](https://blog.csdn.net/weixin_45465395/article/details/115728520)
+---
 
-### 2.12.RPM和YUM
+###### 1. 查看服务状态
+
+- 查看所有服务的状态：
+  ```bash
+  chkconfig --list
+  ```
+- 过滤查看某个服务的状态：
+  ```bash
+  chkconfig --list | grep 服务名
+  ```
+- 查看某个服务的具体运行级别配置：
+  ```bash
+  chkconfig 服务名 --list
+  ```
+
+> 输出示例：
+```
+服务名      0:off   1:off   2:on    3:on    4:on    5:on    6:off
+```
+- 数字 `0-6` 表示运行级别。
+- `on` 表示该运行级别下服务会自动启动，`off` 表示不会自动启动。
+
+---
+
+###### 2. 设置服务自启动/关闭
+
+- 设置某个服务在指定运行级别下的自启动状态：
+  ```bash
+  chkconfig --level 运行级别 服务名 on/off
+  ```
+  - 示例：设置服务在运行级别 5 下自启动：
+    ```bash
+    chkconfig --level 5 服务名 on
+    ```
+  - 示例：设置服务在运行级别 3 和 5 下不自启动：
+    ```bash
+    chkconfig --level 35 服务名 off
+    ```
+
+---
+
+###### 3. 添加/删除服务
+
+- 将新服务添加到 `chkconfig` 管理：
+  
+  ```bash
+  chkconfig --add 服务名
+  ```
+  > 注意：服务脚本必须存放在 `/etc/init.d/` 目录下，且符合 `chkconfig` 的规范。
+  
+- 从 `chkconfig` 管理中移除服务：
+  ```bash
+  chkconfig --del 服务名
+  ```
+
+---
+
+###### 注意事项
+1. 运行级别说明：
+   - `0`：关机。
+   - `1`：单用户模式（无网络）。
+   - `2`：多用户模式（无网络）。
+   - `3`：多用户模式（有网络，文本界面）。
+   - `4`：保留未使用。
+   - `5`：图形化界面模式。
+   - `6`：重启。
+
+2. 服务脚本要求：
+   - 被管理的服务脚本需位于 `/etc/init.d/` 目录下。
+   - 脚本文件头部需要包含类似以下内容的注释块，定义服务的运行级别和启动顺序：
+     ```bash
+     # chkconfig: 2345 90 10
+     # description: This is a sample service script.
+     ```
+     - `2345`：表示服务默认启用的运行级别。
+     - `90`：启动优先级。
+     - `10`：关闭优先级。
+
+3. CentOS 7 及之后：
+   - `chkconfig` 已被 `systemctl` 替代。如果需要管理服务自启动，建议使用以下命令：
+     ```bash
+     systemctl enable/disable 服务名
+     ```
+
+#### 2.11.5 top命令详解
+
+##### 基本介绍
+
+- 功能：`top` 提供了一个动态更新的交互式界面，显示了系统的整体状态以及各个进程的资源消耗情况。
+- 默认排序：按 CPU 使用率降序排列。
+
+##### 输出解释
+
+当执行 `top` 命令后，你会看到类似以下的输出：
+
+```
+top - 15:31:02 up  2 days,  4:17,  1 user,  load average: 0.15, 0.05, 0.01
+Tasks: 120 total,   1 running, 119 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  1.2 us,  0.7 sy,  0.0 ni, 98.1 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :   3926.4 total,    324.2 free,   1548.7 used,   2053.5 buff/cache
+MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   2132.4 avail Mem
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+    1234 root      20   0  456789  23456  12345 S   5.0   0.6   0:01.23 process_name
+    ...
+```
+
+###### 第一行（系统时间与负载）
+
+- `15:31:02`: 当前时间。
+- `up  2 days,  4:17`: 系统已运行的时间。
+- `1 user`: 当前登录用户的数量。
+- `load average: 0.15, 0.05, 0.01`: 过去 1 分钟、5 分钟和 15 分钟的平均负载。
+
+###### 第二行（任务摘要）
+
+- `Tasks: 120 total`: 总共的任务数。
+- `1 running`: 正在运行的任务数。
+- `119 sleeping`: 处于睡眠状态的任务数。
+- `0 stopped`: 已停止的任务数。
+- `0 zombie`: 僵尸进程的数量。
+
+###### 第三行（CPU使用情况）
+
+- `%Cpu(s):  1.2 us`: 用户空间占用 CPU 的百分比。
+- `0.7 sy`: 内核空间占用 CPU 的百分比。
+- `0.0 ni`: 改变过优先级的进程占用 CPU 的百分比。
+- `98.1 id`: 空闲 CPU 百分比。
+- `0.0 wa`: 等待 I/O 完成操作所花费的时间百分比。
+- 其他字段包括硬件中断 (`hi`)、软件中断 (`si`) 和虚拟化偷取时间 (`st`)。
+
+###### 第四行和第五行（内存使用情况）
+
+- 显示物理内存(`Mem`)和交换空间(`Swap`)的总量、已用、空闲及缓冲/缓存的内存大小。
+
+###### 进程列表
+
+- `PID`: 进程ID。
+- `USER`: 进程所有者的用户名。
+- `PR`: 进程的优先级。
+- `NI`: nice值，负值表示高优先级，正值表示低优先级。
+- `VIRT`, `RES`, `SHR`: 虚拟内存、常驻内存、共享内存大小。
+- `S`: 进程状态（如 R=运行, S=睡眠, T=停止, Z=僵尸）。
+- `%CPU`, `%MEM`: 占用的CPU和内存百分比。
+- `TIME+`: 进程启动以来占用的总CPU时间。
+- `COMMAND`: 启动该进程的命令名称或路径。
+
+##### 交互式命令
+
+在 `top` 运行时，你可以输入不同的按键来调整显示内容或进行特定操作：
+
+- h: 显示帮助屏幕。
+- k: 杀死一个进程（会提示输入PID）。
+- r: 更改进程优先级（nice值）。
+- s: 修改刷新间隔时间。
+- f: 添加或移除显示字段。
+- o: 对进程列表进行排序。
+- P: 按CPU使用率排序。
+- M: 按内存使用量排序。
+- T: 按累计时间排序。
+
+### 2.12.RPM、YUM、APT
+
+![局部截取_20250415_122758](images/Linux+Shell笔记/局部截取_20250415_122758.png)
+
+| 特性/功能          | RPM (Red Hat Package Manager)                                | YUM (Yellowdog Updater Modified)                             | APT (Advanced Package Tool)                                  |
+| ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 作用               | 用于安装、卸载、查询和验证 `.rpm` 软件包的基础工具。         | 基于 RPM 的高级包管理器，提供依赖关系解决、在线更新等功能。  | 适用于 Debian 及其衍生发行版的高级包管理器，提供依赖管理和更丰富的功能。 |
+| 软件包格式         | `.rpm` 文件格式。                                            | 使用 `.rpm` 文件格式，但通过仓库进行管理。                   | `.deb` 文件格式。                                            |
+| 依赖关系处理       | 不直接支持自动解决依赖关系，需要手动解决。                   | 自动解决并安装所需的依赖项。                                 | 自动解决并安装所需的依赖项。                                 |
+| 更新软件包         | 不直接支持从互联网资源获取软件包更新。                       | 支持从配置好的仓库中搜索、安装和更新软件包。                 | 支持从配置好的仓库中搜索、安装和更新软件包。                 |
+| 适用操作系统       | Red Hat Enterprise Linux (RHEL), CentOS, Fedora, SUSE 等基于 Red Hat 的 Linux 发行版。 | 主要用于 RHEL, CentOS, Fedora 等基于 Red Hat 的 Linux 发行版。 | Debian, Ubuntu, Linux Mint 等基于 Debian 的 Linux 发行版。   |
+| 常用命令示例       | - 安装: `rpm -ivh package.rpm`<br>- 卸载: `rpm -e package`<br>- 查询已安装: `rpm -qa` | - 安装: `yum install package`<br>- 卸载: `yum remove package`<br>- 更新: `yum update` | - 安装: `apt-get install package` 或 `apt install package`<br>- 卸载: `apt-get remove package`<br>- 更新: `apt-get update && apt-get upgrade` |
+| 用户友好性         | 较低，更适合有经验的用户或脚本使用。                         | 提供了更好的用户体验，自动化了许多常见的包管理任务。         | 提供了良好的用户体验，尤其是 `apt` 比 `apt-get` 更直观。     |
+| 网络资源访问       | 不直接支持从互联网资源获取软件包。                           | 直接支持通过配置好的仓库在线获取最新版本的软件包。           | 直接支持通过配置好的仓库在线获取最新版本的软件包。           |
+| 脚本兼容性和稳定性 | 广泛使用于各种脚本中，非常稳定。                             | 适合编写脚本进行批量软件包管理，但不如 `apt-get` 在脚本中的流行度高。 | 广泛应用于各种脚本中，尤其适合服务器环境下的自动化任务。     |
+| 替代工具           | 在较新的 Fedora 版本中被 DNF 所取代。                        | -                                                            | 在某些情况下，可以使用 `aptitude` 作为图形化前端或其他高级操作。 |
+| 社区和支持         | 由 Red Hat 维护，拥有强大的企业级支持。                      | 同上，广泛支持于 Red Hat 生态圈。                            | 由 Debian 社区维护，广泛应用于开源项目和个人开发者中。       |
 
 #### 2.12.1.RPM
 
-> RPM 是RedHat Package Manager(红帽软件包管理工具)，它生成`.rpm`拓展名的文件，类似于windows的`setup.exe`。
+> RPM是`Red-Hat Package Manager`的缩写，一种Linux下通用的软件包管理方式，可用于安装和管理`.rpm`结尾的软件包。
 
-`rpm -qa|grep xx`查询已安装的RPM软件列表
+- `rpm -ivh nginx-1.12.2-2.el7.x86_64.rpm`:安装软件包
 
-`rpm -e RPM软件包名称`卸载某个软件
+- `rpm -qa | grep nginx`:模糊搜索软件包
 
-`rpm -e -nodeps RPM软件包名称 `强制卸载某个软件，不管有没有依赖
+- `rpm -qa nginx`:精确查找软件包
+- `rpm -ql nginx-1.12.2-2.el7.x86_64`:查询软件包的安装路径
 
-`rpm -ivh RPM软件包名称`:*-i*表示安装，*-v*表示显示详细信息，*-h*表示显示安装进度
+- `rpm -qi nginx-1.12.2-2.el7.x86_64`:查看软件包的概要信息
+
+- `rpm -V nginx-1.12.2-2.el7.x86_64`:验证软件包内容和安装文件是否一致
+
+- `rpm -Uvh nginx-1.12.2-2.el7.x86_64`:更新软件包
+
+- `rpm -e nginx-1.12.2-2.el7.x86_64`:删除软件包
 
 #### 2.12.2.YUM
 
-> YUM是一个Shell前端软件包管理器。基于RPM包管理，能够从指定服务器自动下载RPM包并安装。而且自动处理依赖性关系，并以此安装所有依赖的软件包。
+> Yum是`Yellow dog Updater, Modified`的缩写，能够在线自动下载RPM包并安装，可以自动处理依赖性关系，并且一次安装所有依赖的软件包，非常方便！
 
-`yum list|grep xxx`查看软件列表
+- `yum install nginx`:安装软件包
 
-`yum install xxx`下载安装某软件，默认安装最新版本
+- `yum check-update`:检查可以更新的软件包
 
-> Ubuntu使用apt来安装软件。
->
-> APT是Advance Packaging Tool（高级包装工具）的缩写，APT可以自动下载，配置，安装二进制或者源代码格式的软件包。
+- `yum update nginx`:更新指定的软件包
+
+- `yum info nginx*`:在资源库中查找软件包信息
+
+- `yum info installed`:列出已经安装的所有软件包
+
+- `yum list nginx*`:列出软件包名称
+
+- `yum search nginx`:模糊搜索软件包
+
+#### 2.12.3.apt
+
+> apt`Advanced Package Tool`是 Debian 及其衍生发行版（如 Ubuntu）中用于管理软件包的工具。它简化了软件包的安装、更新、删除等操作，类似于 Red Hat 系列发行版中的 yum
+
+- `apt-get install nginx`/`apt install nginx`:安装软件包
+- `apt-get update`后`apt list --upgradable`:检查可以更新的软件包
+- ` apt-get upgrade nginx`/`apt upgrade nginx`:更新指定的软件包
+- `apt show nginx`:在资源库中查找软件包信息
+- `dpkg -l`/`apt list --installed`:列出已经安装的所有软件包
+- `apt list nginx*`:列出软件包名称
+- `apt-cache search nginx`:根据关键词搜索相关软件包
+
+| 功能/特性            | `apt`                                                        | `apt-get`                                                    |
+| -------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 用户友好性           | 更加用户友好，输出简洁、易读，支持彩色输出和进度条。         | 面向脚本和自动化任务，输出较为技术化，没有彩色输出或进度条。 |
+| 命令集简化           | 包含了最常用的包管理命令，适合日常使用。                     | 提供更多底层命令，适合高级用户和脚本编写。                   |
+| 常用命令示例         | `apt install <package>``apt remove <package>``apt update``apt upgrade``apt full-upgrade` | `apt-get install <package>``apt-get remove <package>``apt-get update``apt-get upgrade``apt-get dist-upgrade` |
+| 新增命令             | 提供了一些新的便捷命令，如：`apt list`：列出软件包。`apt search`：搜索软件包。`apt edit-sources`：编辑源列表文件。 | 没有这些新命令，需要使用其他工具（如 `apt-cache`）来完成类似功能。 |
+| 输出格式             | 支持彩色输出和进度条，信息更直观。                           | 输出为纯文本，没有颜色或进度条，适合脚本解析。               |
+| 错误处理             | 提供更清晰的错误消息，并给出可能的解决方案建议。             | 错误信息较技术化，适合熟悉系统的技术用户。                   |
+| 适用场景             | 适合普通用户和桌面环境，用于日常软件包管理任务。             | 适合高级用户、服务器管理员以及需要编写脚本进行自动化的场景。 |
+| 稳定性与兼容性       | 较新工具，虽然功能强大，但在某些旧系统上可能不够稳定。       | 存在时间较长，非常稳定且广泛测试过，兼容性更好。             |
+| 是否推荐作为默认工具 | 推荐作为默认工具，因为它更现代且易于使用。                   | 不再推荐作为默认工具，但仍可用于特定场景或脚本中。           |
 
 ### 2.13.防火墙
 
-[macrozheng- Linux防火墙Firewall和Iptables的使用](https://gitee.com/macrozheng/mall-learning/blob/master/docs/reference/linux_firewall.md)
+> Linux中有两种防火墙软件，ConterOS7.0以上使用的是firewall，ConterOS7.0以下使用的是iptables
+
+#### Firewall
+
+- `systemctl start/stop/status/enable/disable firewalld`:防火墙启动/停止/状态/开机自启/禁用开机自启
+- `firewall-cmd --reload`:重启防火墙
+
+- `firewall-cmd --zone=public --add-port=8080/tcp --permanent`:开放端口（修改后需要重启防火墙方可生效）
+
+![img](images/Linux+Shell笔记/refer_screen_31.png)
+
+- `firewall-cmd --list-ports`:查看开放的端口
+
+![img](images/Linux+Shell笔记/refer_screen_32.png)
+
+- `firewall-cmd --zone=public --remove-port=8080/tcp --permanent`:关闭端口
+
+![img](images/Linux+Shell笔记/refer_screen_33.png)
+
+#### Iptables
+
+##### 安装
+
+> 由于CenterOS7.0以上版本并没有预装Iptables,我们需要自行装。
+
+- 安装前先关闭firewall防火墙 ![img](images/Linux+Shell笔记/refer_screen_34.png)
+- `yum install iptables`:安装iptables
+
+- `yum install iptables-services`:安装iptables-services
+
+##### 使用
+
+- `systemctl start/stop/status/enable/disable iptables.service`:防火墙启动/停止/状态/开机自启/禁用开机自启
+
+![img](images/Linux+Shell笔记/refer_screen_35.png)
+
+- `iptables -L -n`:查看filter表的几条链规则(INPUT链可以看出开放了哪些端口)
+
+![img](images/Linux+Shell笔记/refer_screen_36.png)
+
+- `iptables -t nat -L -n`:查看NAT表的链规则
+
+![img](images/Linux+Shell笔记/refer_screen_37.png)
+
+- 清除防火墙所有规则：
+
+```
+iptables -F
+iptables -X
+iptables -Z
+```
+
+- `iptables -I INPUT -p tcp --dport 8080 -j ACCEPT`:给INPUT链添加规则（开放8080端口）
+
+![img](images/Linux+Shell笔记/refer_screen_38.png)
+
+- `iptables -L INPUT --line-numbers -n`:查找规则所在行号：
+
+![img](images/Linux+Shell笔记/refer_screen_39.png)
+
+- `iptables -D INPUT 1`:根据行号删除过滤规则（关闭8080端口）
+
+![img](images/Linux+Shell笔记/refer_screen_40.png)
 
 ### 2.14.Linux 日志
 
-[博客园-【Linux日志】系统日志及分析](https://www.cnblogs.com/yingsong/p/6022181.html)
-
-[CSDN-一文带你看懂Linux日志分析（非常详细）零基础入门到精通，收藏这一篇就够了](https://blog.csdn.net/leah126/article/details/140314144)
-
-[博客园-Rsyslog 详解](https://www.cnblogs.com/shu-sheng/p/13275474.html)
-
-[C语言中文网-Linux日志轮替（日志转储）及logrotate配置文件分析](https://c.biancheng.net/view/1106.html)
-
- 
-
 日志文件是Linux系统中极为重要的一部分，它们记录了系统和应用程序的各种活动信息。通过日志文件，系统管理员可以监控系统的运行状态、发现潜在的问题，并进行故障排除。
-
-在这篇文章中，我将详细介绍一些常用的Linux日志分析命令和工具，帮助您更好地管理和分析系统日志。
 
 ####  2.14.1.日志类型
 
 下面是常见的日志类型，但并不是所有的Linux发行版都包含这些类型：
-
- 
 
 | 类型          | 说明                                                         |
 | ------------- | ------------------------------------------------------------ |
@@ -2231,8 +2642,6 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 
 常见的日志优先级请见下标：
 
- 
-
 | 优先级  | 说明                                                       |
 | ------- | ---------------------------------------------------------- |
 | emerg   | 紧急情况，系统不可用（例如系统崩溃），一般会通知所有用户。 |
@@ -2246,6 +2655,8 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 | none    | 没有优先级，不记录任何日志消息。                           |
 
 #### 2.14.3.常见的日志文件
+
+[博客园-【Linux日志】系统日志及分析](https://www.cnblogs.com/yingsong/p/6022181.html)
 
 在介绍具体的日志分析命令之前，首先了解一下Linux系统中常见的日志文件。它们通常位于`/var/log`目录下，包括：
 
@@ -2276,45 +2687,28 @@ CentOS7之后:`systemctl [start|stop|restart|reload|status] 服务名`
 
 cat命令用于查看文件的内容，适用于查看较短的日志文件。
 
-示例：
-
-```
-cat /var/log/syslog
-
-```
+`cat /var/log/syslog`
 
 2\. less
 
 less命令用于分页查看文件内容，可以方便地向上或向下滚动，适用于查看较长的日志文件。
 
-示例：
-
-```
-less /var/log/syslog
-
-```
+`less /var/log/syslog`
 
 3\. tail
 
 tail命令用于查看文件的末尾部分，默认显示最后10行。常用选项包括-n指定行数和-f用于实时跟踪日志文件的更新。
 
-示例：
+- `tail -n 20 /var/log/syslog`
 
-```
-tail -n 20 /var/log/syslog``tail -f /var/log/syslog
-
-```
+- `tail -f /var/log/syslog`
+  - `-f`表示“follow”（跟踪）模式,在跟踪模式下，`tail` 不会退出，而是持续监控文件的变化，并实时输出新增加的内容。
 
 4\. head
 
 head命令用于查看文件的开头部分，默认显示前10行。
 
-示例：
-
-```
-head -n 20 /var/log/syslog
-
-```
+`head -n 20 /var/log/syslog`
 
 5\. grep
 
@@ -2322,50 +2716,34 @@ grep命令用于在文件中搜索匹配特定模式的行，适用于从日志�
 
 示例：
 
-```
-grep "error" /var/log/syslog``grep -i "fail" /var/log/auth.log
+- `grep "error" /var/log/syslog`
 
-```
-
-选项-i表示忽略大小写。
+- `grep -i "fail" /var/log/auth.log`
+  - `-i`忽略大小写。例如，`fail`、`Fail` 和 `FAIL` 都会被匹配。
 
 6\. awk
 
 awk是一种强大的文本处理工具，适用于从日志文件中提取和处理结构化信息。
 
-示例：
-
-```
-awk '{print $1, $2, $3}' /var/log/syslog
-
-```
-
-上述命令提取并显示日志文件的前三列。
+- `awk '{print $1, $2, $3}' /var/log/syslog`:上述命令提取并显示日志文件的前三列。
 
 7.sed
 
 sed是一种流编辑器，适用于对日志文件进行搜索、替换和过滤。
 
-示例：
+- `sed -n ''/error/p' /var/log/syslog`:匹配包含error的行
+- `sed -n -e '/error/p' -e '/fail/p' /var/log/syslog`:匹配包含error 或fail的行
+- `sed -n '/error/Ip' /var/log/syslog`:上述命令显示包含“error”的行,不区分大小写
+- `sed -n '/error/p' /var/log/syslog | awk '{print $1, $2, $3}'`:可以将 `sed` 与其他工具（如 `grep` 或 `awk`）结合使用。例如，先用 `grep` 过滤出包含 `"error"` 的行，再用 `awk` 提取字段
+- `tail -f /var/log/syslog | sed -n '/error/p'`:结合 `tail -f` 实时监控日志并过滤特定内容
 
-sed -n ‘/error/p’ /var/log/syslog
-
-上述命令显示包含“error”的行。
+- `sed 's/error/WARNING/g' /var/log/syslog`:如果需要替换匹配的内容，可以使用 `s` 命令。例如，将 `"error"` 替换为 `"WARNING"`
 
 #### 2.14.5 分析日志文件的工具
 
-1. `logrotate`
+1. `logrotate`：用于管理和轮转日志文件，防止日志文件过大。配置文件通常位于/etc/logrotate.conf和/etc/logrotate.d/目录下。
 
-logrotate命令用于管理和轮转日志文件，防止日志文件过大。配置文件通常位于/etc/logrotate.conf和/etc/logrotate.d/目录下。
-
-示例配置：
-
-```
-/var/log/syslog {`    `daily`    `rotate 7`    `compress`    `missingok`    `notifempty``}
-
-```
-
-上述配置表示对/var/log/syslog进行每日轮转，保留7个历史日志文件，并进行压缩。
+[C语言中文网-Linux日志轮替（日志转储）及logrotate配置文件分析](https://c.biancheng.net/view/1106.html)
 
 2. `journalctl`
 
@@ -2397,345 +2775,9 @@ sudo apt-get install logwatch``sudo logwatch --detail High --mailto admin@exampl
 
 goaccess是一款实时的Web日志分析工具，适用于分析Apache和Nginx日志。
 
-安装并使用示例：
-
-sudo apt-get install goaccess\`\`goaccess /var/log/nginx/access.log -o report.html --log-format=COMBINED
-
-上述命令生成一份HTML格式的访问日志报告。
-
 #### 2.14.6.Rsyslog 详解
 
- 日常工作中，常遇到些问题，会查看Linux的系统日志，日志多种多样，boot.log, messages, auth.log, syslog等等，但每次出现问题总是凭借直觉和经验去一个一个翻，是下下策。搭建ELK，或者Graylog等日志分析系统也是极好的，但是体积太大了，需要考虑和维护的东西也就更多。故而通过一些更轻量级的配置，加上自己的一些理解分析，想实现一套日志分析系统。而针对系统模块的日志，首当其冲的是要搞定rsyslog。
-
- 以下主要是针对rsyslog配置的讲解。
-
-##### 日志整理
-
-对日志进行分析，首先第一步要规整日志。
-
-- `/etc/rsyslog.conf` 是rsyslog服务的总配置文件
-- `/etc/rsyslog.d` 该目录是单独配置的rsyslog配置文件
-
-```bash
-vim /etc/rsyslog.conf
-
-# Include all config files in /etc/rsyslog.d/
-#
-$IncludeConfig /etc/rsyslog.d/*.conf
-
-# 个人建议，将所有的rule都配置在该目录下，在/etc/rsyslog.conf中不写rule
-```
-
-##### 结合使用的 rule 示例（懒人福利，CV大法，即粘即用）
-
-```bash
-# 记录mail日志等级为error及以上日志
-mail.err							/var/log/mail_err.log
-
-# 记录mail所有等级为warn级别的日志（仅记录warn级别）
-mail.=warn							/var/log/mail_err.log
-
-# 记录kern所有日志
-kern.*								/var/log/kern.log
-
-# 将mail的所有信息，除了info以外，其他的都写入/var/adm/mail
-mail.*;mail.!=info   /var/adm/mail
-
-# 将日志等级为crit或更高的内核消息定向到远程主机finlandia
-# 如果主机崩溃，磁盘出现不可修复的错误，可能无法读取存储的消息。如果有日志在远程主机上，可以尝试找出崩溃的原因。
-kern.crit    						 @finlandia
-
-# 记录所有类型的warning等级及以上日志
-*.warning							/var/log/syslog_warn.log
-
-# 记录mail的warning日志和kern的error日志,其他所有的info日志
-*.info;mail.warning;kern.error		/var/log/messages
-
-# 记录kernel的info到warning日志
-kern.info;kern.!err   /var/adm/kernel-info
-
-# 将mail和news的info级别日志写入/var/adminfo
-mail,news.=info    /var/adm/info
-
-# 将所有系统中所有类型的info日志和notice日志存入/var/log/massages,mail的所有日志除外。
-*.=info;*.=notice;\
-mail.none /var/log/messages
-
-# 紧急消息（emerg级别）将使用wall显示给当前所有登录的用户
-*.=emerg   		*
-
-# 该规则将所有alert以及更高级别的消息定向到操作员的终端，即登录的用户“root”和“joey”的终端。
-*.alert      root,joey
-```
-
-##### 注意事项
-
-单独把这个拎出来写。
-
-上面的大概就是所有能用到的规则了，而这些规则有时候还是有些问题的
-
-For example:
-
-Exapmple A
-
-```bash
-mail.crit,*.err					/var/log/syslog_err.log
-
-# 这样的情况，最终的结果还是会把mail的err级别日志输出到syslog_err.log
-```
-
-Exapmple B
-
-```bash
-mail.!warn						/var/log/mail.log
-
-# 看起来是将mail的warn以下级别的日志输出到/var/log/mail.log，其实不然，你会发现你什么也得不到。
-# 官方的解释是，感叹号(就是形似这个的符号 ==> !) 就是个过滤器,你得先有东西，才能去过去，比如：
-mail.*;mail.!warn						/var/log/mail.log
-```
-
-Exapmple C
-
-如果在规则结束后立即使用反斜杠，而中间没有空格，那么使用反斜杠将行一分为二是无效的。
-
-以上都是官方建议
-
-以下是个人建议
-
- 既然是规整日志，不管是出于什么原因，那一定是为了用起来更方便，看起来更简洁。别整太多花里胡哨的，实用就行。想明白自己要啥效果，捡自己用得着的看就行。莫要本末倒置，化简为繁。
-
-- 修改系统日志的输出格式
-
-##### rsyslog Properties
-
-**模板元素属性**
-
-| 属性                    | 释义\|                                                       |
-| ----------------------- | ------------------------------------------------------------ |
-| **msg**                 | 日志的信息内容，message。                                    |
-| **rawmsg**              | 不转义的日志内容。转义是默认开启的(EscapecontrolCharactersOnReceive),所以它有可能与socket中接收到的内容不同。 |
-| **rawmsg-after-pri**    | 几乎与rawmsg相同，但是删除了syslog PRI。                     |
-| **hostname**            | 打印该日志的主机名。                                         |
-| **source**              | hostname属性的别名。                                         |
-| **fromhost**            | 接收的信息来自于哪个节点。这里是DNS解析的名字。              |
-| **fromhost-ip**         | 接收的信息来自于哪个节点，这里是IP，本地的是127.0.0.1。      |
-| **syslogtag**           | 信息标签。大致形如 programed[14321] 。                       |
-| **programname**         | tag的一部分，就是上面的programed那个位置。                   |
-| **pri**                 | 消息的PRI部分-未解码(单值)                                   |
-| **pri-text**            | 文本形式的消息的PRI部分，并在括号中添加数值PRI(例如“local0.err<133>”) |
-| **iut**                 | InfoUnitType 一款监视器软件，在与监视器后端通信的时候使用    |
-| **syslogfacility**      | 设备信息，数字形式表示                                       |
-| **syslogfacility-text** | 设备信息，文本形式表示                                       |
-| **syslogseverity**      | 日志严重性等级，数字形式表示                                 |
-| **syslogseverity-text** | 日志严重性等级，文本形式表示                                 |
-| **syslogpriority**      | 同 syslogseverity                                            |
-| **syslogpriority-text** | 同 syslogseverity-text                                       |
-| **timegenerated**       | 高精度时间戳                                                 |
-| **timereported**        | 日志中的时间戳。精度取决于日志中提供的内容(在大多数情况下，为秒级) |
-| **timestamp**           | 同 timereported                                              |
-| **protocol-version**    | IETF draft draft-ietf-syslog-protocol 中的 PROTOCOL-VERSION 字段的内容 |
-| **structured-data**     | IETF draft draft-ietf-syslog-protocol 中的 STRUCTURED-DATA 字段的内容 |
-| **app-name**            | IETF draft draft-ietf-syslog-protocol 中的 APP-NAME 字段的内容 |
-| **procid**              | IETF draft draft-ietf-syslog-protocol 中的 PROCID 字段的内容 |
-| **msgid**               | IETF draft draft-ietf-syslog-protocol 中的 MSGID 字段的内容  |
-| **inputname**           | 生成日志的输入模块的名称(如“imuxsock”、“imudp”)              |
-| **jsonmesg**            | 整个日志对象作为json表示。可能出现数据重复，譬如syslogtag包含着programname，但两者都会分别表示。所以这个属性有一些额外开销，建议只有在实际需要的时候再用。 |
-
-##### Time-Related System Properties
-
-**与时间相关的系统属性**（以 `2020-07-08 16:57:36` 为例）
-
-| 属性        | 释义                                            |
-| ----------- | ----------------------------------------------- |
-| **$now**    | 当前日期时间戳，格式为YYYY-MM-DD (2020-07-08)   |
-| **$year**   | 当前年份， 四位数 (2020)                        |
-| **$month**  | 当前月份， 两位数 (07)                          |
-| **$day**    | 当前月份的日期，两位数 (08)                     |
-| **$wday**   | 当前天数周几 ：0=Sunday,...6=Saturday           |
-| **$hour**   | 当前小时（24小时机制），两位数(16)              |
-| **$hhour**  | 半小时机值，就是0-29分钟显示0，30-59分钟显示1。 |
-| **$qhour**  | 一刻钟机值，通过0-3显示，每15分钟一截。         |
-| **$minute** | 当前分钟数，两位数(57)                          |
-
-通过模板修改日志
-
-```bash
-vim /etc/rsyslog.conf
-
-# 创建一个名为cky_format的模板，其中 TIMESTAMP:8:15 表示timestamp属性值切片第八位到第十五位。
-$template cky_format, "%$NOW% %TIMESTAMP:8:15% %hostname% %syslogseverity-text% %syslogtag% %msg%\n"
-$ActionFileDefaultTemplate cky_format
-
-#重启rsyslog
-systemctl restart rsyslog
-```
-
-日志格式效果样例
-
-```bash
-# NOW | timestamp:8:15| hostname| syslogseverity-text | syslogtag | msg
-2020-07-09 09:59:54 mycomputer    info    systemd:  Started System Logging Service.
-#    时间戳         | 	 主机名   | 日志等级 | 服务进程 |   日志内容
-```
-
-#### 2.14.7.Linux日志轮替（日志转储）及logrotate配置文件分析
-
-日志是重要的系统文件，记录和保存了系统中所有的重要事件。但是日志文件也需要进行定期的维护，因为日志文件是不断增长的，如果完全不进行日志维护，而任由其随意递增，那么用不了多久，我们的硬盘就会被写满。  
-
-**日志维护的最主要的工作就是把旧的日志文件删除，从而腾出空间保存新的日志文件。**这项工作如果靠管理员手工来完成，那其实是非常烦琐的，而且也容易忘记。那么 Linux 系统是否可以自动完成日志的轮替工作呢？  
-
-logrotate 就是用来进行日志轮替（也叫日志转储）的，也就是把旧的日志文件移动并改名，同时创建一个新的空日志文件用来记录新日志，当旧日志文件超出保存的范围时就删除。  
-
-##### 日志文件的命名规则
-
-日志轮替最主要的作用就是把旧的日志文件移动并改名，同时建立新的空日志文件，当旧日志文件超出保存的范围时就删除。那么，旧的日志文件改名之后，如何命名呢？主要依靠 /etc/logrotate.conf 配置文件中的“dateext”参数。  
-
-如果配置文件中有“dateext”参数，那么日志会用日期来作为日志文件的后缀，如“secure-20130605”。这样日志文件名不会重叠，也就不需要对日志文件进行改名，只需要保存指定的日志个数，删除多余的日志文件即可。  
-
-如果配置文件中没有“dateext”参数，那么日志文件就需要进行改名了。当第一次进行日志轮替时，当前的“secure”日志会自动改名为“secure.1”，然后新建“secure”日志，用来保存新的日志；当第二次进行日志轮替时，“secure.1”会自动改名为“secure.2”，当前的“secure”日志会自动改名为“secure.1”，然后也会新建“secure”日志，用来保存新的日志；以此类推。  
-
-##### logrotate配置文件
-
-我们来查看一下 logrotate 的配置文件 /etc/logrotate.conf 的默认内容。  
-
-\[root@localhost ~\]# vi /etc/logrotate.conf  
-```
-#see "man logrotate" for details  
-#rotate log files weekly  
-weekly  
-#每周对日志文件进行一次轮替  
-#keep 4 weeks worth of backlogs rotate 4  
-#保存4个日志文件,也就是说,如果进行了5次日志轮替，就会删除第一个备份曰志  
-#create new (empty) log files after rotating old ones create  
-#在日志轮替时,自动创建新的日志文件  
-#use date as a suffix of the rotated file dateext  
-#使用日期作为日志轮替文件的后缀  
-#uncomment this if you want your log files compressed #compress  
-#日志文件是否压缩。如果取消注释,则日志会在转储的同时进行压缩  
-#以上日志配置为默认配置,如果需要轮替的日志没有设定独立的参数,那么都会遵循以上参数  
-#如果轮替曰志配置了独立参数,那么独立参数的优先级更高  
-#RPM packages drop log rotation information into this directory include /etc/logrotate.d  
-#包含/etc/logrotate.d/目录中所有的子配置文件。也就是说,会把这个目录中所有的子配置文件读取进来，进行日志轮替  
-#no packages own wtmp and btmp -- we'11 rotate them here  
-#以下两个轮替曰志有自己的独立参数，如果和默认的参数冲突，则独立参数生效  
-/var/log/wtmp {  
-#以下参数仅对此目录有效  
-monthly  
-#每月对日志文件进行一次轮替  
-create 0664 root utmp  
-#建立的新日志文件,权限是0664,所有者是root,所属组是utmp组  
-minsize 1M  
-#日志文件最小轮替大小是1MB。也就是日志一定要超过1MB才会轮替，否则就算时间达到一个月，也不进行曰志轮替  
-rotate 1  
-#仅保留一个曰志备份。也就是只保留wtmp和wtmp.1曰志)  
-/var/log/btmp {  
-#以下参数只对/var/log/btmp生效  
-missingok  
-#如果日志不存在,则忽略该日志的警告信患  
-monthly  
-create 0600 root utmp  
-rotate 1  
-}  
-# system-specific logs may be also be configured here.
-```
-
-
-
-在这个配置文件中，主要分为三部分：
-
-*   第一部分是默认设置，如果需要转储的日志文件没有特殊配置，则遵循默认设置的参数；
-*   第二部分是读取 /etc/logrotate.d/ 目录中的日志轮替的子配置文件，也就是说，在 /etc/logrotate.d/ 目录中的所有符合语法规则的子配置文件也会进行日志轮替；
-*   第三部分是对 wtmp 和 btmp 日志文件的轮替进行设定，如果此设定和默认参数冲突，则当前设定生效（如 wtmp 的当前参数设定的轮替时间是每月，而默认参数的轮替时间是每周，则对 wtmp 这个日志文件来说，轮替时间是每月，当前的设定参数生效）。
-
-
-logrotate 配置文件的主要参数如表 1 所示。  
-
-
-<table><caption>表 1 logrotate配置文件的主要参数</caption><tbody><tr><th>参&nbsp;致</th><th>参数说明</th></tr><tr><td>daily</td><td>日志的轮替周期是毎天</td></tr><tr><td>weekly</td><td>日志的轮替周期是每周</td></tr><tr><td>monthly</td><td>日志的轮控周期是每月</td></tr><tr><td>rotate数宇</td><td>保留的日志文件的个数。0指没有备份</td></tr><tr><td>compress</td><td>当进行日志轮替时，对旧的日志进行压缩</td></tr><tr><td>create mode owner group</td><td>建立新日志，同时指定新日志的权限与所有者和所属组.如create 0600 root utmp</td></tr><tr><td>mail address</td><td>当进行日志轮替时.输出内存通过邮件发送到指定的邮件地址</td></tr><tr><td>missingok</td><td>如果日志不存在，则忽略该日志的警告信息</td></tr><tr><td>nolifempty</td><td>如果曰志为空文件，則不进行日志轮替</td></tr><tr><td>minsize&nbsp;大小</td><td>日志轮替的最小值。也就是日志一定要达到这个最小值才会进行轮持，否则就算时间达到也不进行轮替</td></tr><tr><td>size大小</td><td>日志只有大于指定大小才进行日志轮替，而不是按照时间轮替，如size&nbsp;100k</td></tr><tr><td>dateext</td><td>使用日期作为日志轮替文件的后缀，如secure-20130605</td></tr><tr><td>sharedscripts</td><td>在此关键宇之后的脚本只执行一次</td></tr><tr><td>prerotate/cndscript</td><td>在曰志轮替之前执行脚本命令。endscript标识prerotate脚本结束</td></tr><tr><td>postrolaie/endscripl</td><td>在日志轮替之后执行脚本命令。endscripi标识postrotate脚本结束</td></tr></tbody></table>
-
-
-这些参数中较为难理解的应该是 prerotate/endscript 和 postrotate/endscript，我们利用“man logrotate”中的例子来解释一下这两个参数。例如：  
-
-```
-"/var/log/httpd/access.log" /var/log/httpd/error.log {  
-#日志轮替的是/var/log/httpd/中RPM包默认安装的apache正确访问日志和错误日志  
-    rotate 5  
-    #轮替5次  
-    mail www@my.org  
-    #把信息发送到指定邮箱  
-    size 100k  
-    #日志大于100KB时才进行日志轮替,不再按照时间轮替  
-    sharedscripts  
-    #以下脚本只执行一次  
-    postrotate  
-    #在日志轮替结束之后,执行以下脚本  
-    /usr/bin/killall -HUP httpd  
-    #重启apache 服务  
-endscript  
-#脚本结束  
-}
-```
-
-
-
-prerotate 和 postrotate 主要用于在日志轮替的同时执行指定的脚本，一般用于日志轮替之后重启服务。这里强调一下，如果你的日志是写入 rsyslog 服务的配置文件的，那么把新日志加入 logrotate 后，一定要重启 rsyslog 服务，否则你会发现，虽然新日志建立了，但数据还是写入了旧的日志当中。那是因为虽然 logrotate 知道日志轮替了，但是 rsyslog 服务并不知道。  
-
-同理，如果采用源码包安装了 apache、Nginx 等服务，则需要重启 apache 或 Nginx 服务，同时还要重启 rsyslog 服务，否则日志也不能正常轮替。  
-
-不过，这里有一个典型应用就是给予特定的日志加入 chattr 的 a 属性。如果系统文件加入了 a 属性，那么这个文件就只能增加数据，而不能删除和修改已有的数据，root 用户也不例外。  
-
-因此，我们会给重要的日志文件加入 a 属性，这样就可以保护日志文件不被恶意修改。不过，一旦加入了 a 属性，那么在进行日志轮替时，这个日志文件是不能被改名的，当然也就不能进行日志轮替了。我们可以利用 prerotate 和 postrotate 参数来修改日志文件的 chattr 的 a 属性。  
-
-##### 把自己的日志加入日志轮替
-
-如果有些日志默认没有加入日志轮替（比如源码包安装的服务的日志，或者自己添加的日志），那么这些日志默认是不会进行日志轮替的，这样当然不符合我们对日志的管理要求。如果需要把这些日志也加入日志轮替，那该如何操作呢？  
-
-这里有两种方法：
-
-*   第一种方法是直接在 /etc/logrotate.conf 配置文件中写入该日志的轮替策略，从而把日志加入轮替；
-*   第二种方法是在 /etc/logrotate.d/ 目录中新建立该日志的轮替文件，在该轮替文件中写入正确的轮替策略，因为该目录中的文件都会被包含到主配置文件中，所以也可以把日志加入轮替。
-
-
-我们推荐第二种方法，因为系统中需要轮替的日志非常多，如果全部直接写入 /etc/logrotate.conf 配置文件，那么这个文件的可管理性就会非常差，不利于此文件的维护。  
-
-说起来很复杂，我们举个例子。还记得我们自己生成的 /var/log/alert.log 日志吗？这个日志不是系统默认日志，而是我们通过 /etc/rsyslog.conf 配置文件自己生成的日志，所以默认这个日志是不会进行轮替的。如果我们需要把这个日志加入日志轮替策略，那该怎么实现呢？我们采用第二种方法，也就是在 /etc/logrotate.d/ 目录中建立此日志的轮替文件。  
-
-具体步骤如下：  
-
-```
-[root@localhost ~]# chattr +a /var/log/alert.log #先给日志文件赋予chattr的a属性，保证日志的安全  
-[root@localhost ~]# vi /etc/logrotate.d/alter  
-#创建alter轮替文件,把/var/log/alert.log加入轮替  
-/var/log/alert.log {  
-    weekly  
-    #每周轮替一次  
-    rotate 6  
-    #保留6个轮替曰志  
-    sharedscripts  
-    #以下命令只执行一次  
-    prerotate  
-    #在日志轮替之前执行  
-        /usr/bin/chattr -a /var/log/alert.log  
-        #在日志轮替之前取消a属性,以便让日志可以轮替  
-    endscript  
-    #脚本结朿  
-    sharedscripts  
-    postrotate  
-    #在日志轮替之后执行  
-        /usr/bin/chattr +a /var/log/alert.log  
-        #在日志轮替之后,重新加入a属性  
-    endscript  
-    sharedscripts  
-    postrotate  
-    /bin/kill -HUP $(/bin/cat /var/run/syslogd.pid 2>/dev/null) fi>/dev/null  
-    endscript  
-    #重启rsyslog服务，保证日志轮替正常进行  
-}
-```
-
-
-
-这样我们自己生成的日志 /var/log/alert.log 也就可以进行日志轮替了，当然这些配置信息也是可以直接写入 /etc/logrotate.conf 这个配置文件的。
+[华为云-日志系统详解：配置与使用rsyslog和journald](https://bbs.huaweicloud.com/blogs/440051)
 
 ### 2.15.定制自己的linux系统
 
@@ -2783,124 +2825,9 @@ P142后面，哥们学不下去了，太长了
 
 https://www.bilibili.com/video/BV1Sv411r7vd?vd_source=f58f2e2144be4e99a8cf800afeecbbcb&spm_id_from=333.788.videopod.episodes&p=142
 
-# 《鸟哥的Linux私房菜》笔记
 
-## 第零章、计算机概论
 
-### 0.1. 电脑：辅助人脑的好工具
+### 
 
-#### 0.1.1 计算机硬件的五大单元
-
-![局部截取_20250415_102429](images/Linux+Shell笔记/局部截取_20250415_102429.png)
-
-#### 0.1.2 CPU的架构
-
-- 精简指令集（RISC）:甲骨文 （Oracle） 公司的 SPARC 系列、 IBM 公司的 Power
-  Architecture （包括 PowerPC） 系列、与安谋公司 （ARM Holdings） 的 ARM CPU 系列
-  等。
-  - 在应用方面，SPARC CPU 的电脑常用于学术领域的大型工作站中，包括银行金融体系的主
-    要服务器也都有这类的电脑架构； 至于PowerPC架构的应用上，例如索尼（Sony）公司出产
-    的Play Station 3（PS3）就是使用PowerPC架构的Cell处理器； 那安谋的 ARM 呢？你常使
-    用的各厂牌手机、PDA、导航系统、网络设备（交换器、路由器等）等，几乎都是使用 ARM
-    架构的 CPU 喔！ 老实说，目前世界上使用范围最广的 CPU 可能就是 ARM 这种架构的呢！
-- 复杂指令集（CISC）:常见的CISC微指令集CPU主要有AMD、Intel、VIA等的x86架构的CPU
-  - 由于AMD、Intel、VIA所开发出来的x86架构CPU被大量使用于个人电脑（Personal
-    computer）用途上面， 因此，个人电脑常被称为x86架构的电脑！那为何称为x86架构[8]呢？
-    这是因为最早的那颗Intel发展出来的CPU代号称为8086，后来依此架构又开发出80286,
-    80386...， 因此这种架构的CPU就被称为`x86架构`了。
-  - 在2003年以前由Intel所开发的x86架构CPU由8位升级到16、32位，后来AMD依此架构修改新
-    一代的CPU为64位， 为了区别两者的差异，因此64位的个人电脑CPU又被统称为`x86_64`的
-    架构喔！
-  - 例题：最新的Intel/AMD的x86架构中，请查询出多媒体、虚拟化、省电功能各有哪些重要的
-    微指令集？（仅供参考）答：
-    多媒体微指令集：MMX, SSE, SSE2, SSE3, SSE4, AMD-3DNow!
-    虚拟化微指令集：Intel-VT, AMD-SVM
-    省电功能：Intel-SpeedStep, AMD-PowerNow!
-    64/32位相容技术：AMD-AMD64, Intel-EM64T
-
-### 0.2 个人电脑架构与相关设备元件
-
-- 南桥与北桥：
-  - 北桥：负责链接速度较快的CPU、内存与显卡接口等元件；
-    - 为了解决这个问题，新的 CPU 设计中， 已经将内存控制器整合到 CPU 内部，而链接 CPU 与内存、显卡的控制器的设计，在Intel部份使用 QPI （Quick PathInterconnect） 与 DMI 技术，而 AMD 部份则使用 Hyper Transport 了，这些技术都可以让CPU 直接与内存、显卡等设备分别进行沟通，而不需要通过外部的链接芯片了
-    - 因为现在没有所谓的北桥了 （整合到 CPU 内），因此，CPU 的频率设计就无须考虑得要同步的外频，只需要考虑整体的频率即可。 所以，如果你经常有查阅自己 CPU 频率的习惯，当使用 cpu-z [9] 这个软件时，应该会很惊讶的发现到，怎么外频变成 100MHz 而倍频可以到达 30 以上！相当有趣呢！
-  - 南桥：负责连接速度较慢的设备接口， 包括硬盘、USB、网卡等等
-- CPU脚位
-  - 不同的CPU型号大多具有不同的脚位（CPU上面的插脚），能够搭配的主板芯片组也不同，所以当你想要将你的主机升级时，不能只考虑CPU，你还得要留意你的主板上面所支持的CPU型号喔！ 不然买了最新的CPU也不能够安插在你的旧主板上头的！目前主流的CPU有Intel的 i3/i5/i7 系列产品中，甚至先后期出厂的类似型号的脚位也不同， 例如 i7-2600 使用LGA1155 脚位而 i7-4790 则使用 FCLGA1150 脚位，挑选时必须要很小心喔！
-- CPU的工作频率：外频与倍频
-  - 在早期的 CPU 设计中，所谓的外频指的是CPU与外部元件进行数据传输时的速度，倍频则是 CPU 内部用来加速工作性能的一个倍数， 两者相乘才是CPU的频率速度。例如 Intel Core 2 E8400 的内频为 3.0GHz，而外频是333MHz，因此倍频就是9倍啰！
-- 超频
-  - 将CPU的倍频或者是外频通过主板的设置功能更改成较高频率的一种方式。但因为CPU的倍频通常在出厂时已经被锁定而无法修改， 因此较常被超频的为外频。
-- 内存
-
-![局部截取_20250415_104844](images/Linux+Shell笔记/局部截取_20250415_104844.png)
-
-- 多通道内存
-
-  - 要启用双通道的功能你必须要安插两支（或四支）内存，这两支内存最好连型号都一模一样比较好， 这是因为启动双通道内存功能时，数据是同步写入/读出这一对内存中，如此才能够提升整体的带宽啊！ 所以当然除了容量大小要一致之外，型号也最好相同啦！
-
-- DRAM与SRAM：
-
-  - 因为第二层高速缓存（L2 cache）整合到CPU内部，因此这个L2内存的速度必须要CPU频率相同。 使用DRAM是无法达到这个频率速度的，此时就需要静态随机存取内存（Static Random Access Memory, SRAM）的帮忙了
-
-- 只读存储器（ROM）
-
-  - 主板上面如果有内置的网卡或者是显卡时，该功能是否要启动与该功能的各项参数， 是被记录到主板上头的一个称为`CMOS`的芯片上，这个芯片需要借着额外的电源来发挥记录功能， 这也是为什么你的主板上面会有一颗电池的缘故。那CMOS内的数据如何读取与更新呢？还记得你的电脑在开机的时候可以按下[Del]按键来进入一个名为BIOS的画面吧？ BIOS（Basic Input Output System）是一套程序，这套程序是写死到主板上面的一个内存芯片中， 这个内存芯片在没有通电时也能够将数据记录下来，那就是只读存储器（Read Only Memory, ROM）。 ROM是一种非挥发性的内存。另外，`BIOS`对于个人电脑来说是非常重要的， 因为他是系统在开机的时候首先会去读取的一个小程序喔！
-  - 现在的 BIOS 通常是写入类似闪存 （flash） 或EEPROM
-  - `固件（firmware）`[12]很多也是使用ROM来进行软件的写入的。 固件像软件一样也是一个被电脑所执行的程序，然而他是对于硬件内部而言更加重要的部分。例如BIOS就是一个固件
-
-- 显卡（GPU）
-
-  ![局部截取_20250415_105827](images/Linux+Shell笔记/局部截取_20250415_105827.png)
-
-![局部截取_20250415_105925](images/Linux+Shell笔记/局部截取_20250415_105925.png)
-
-- 显卡接口：
-
-  - D-Sub （VGA端子）：为较早之前的连接接口，主要为 15 针的连接，为模拟讯号的传输，当初设计是针对传统图像管屏幕而来。 主要的规格有标准的 640x350px @70Hz、1280x1024px @85Hz 及 2048x1536px @85Hz 等。
-  - DVI：共有四种以上的接头，不过台湾市面上比较常见的为仅提供数码讯号的 DVI-D，以及整合数码与模拟讯号的 DVI-I 两种。DVI 常见于液晶屏幕的链接， 标准规格主要有：1920x1200px @60Hz、 2560x1600px @60Hz 等。
-  - HDMI：相对于 D-sub 与 DVI 仅能传送影像数据，HDMI 可以同时传送影像与声音，因此被广泛的使用于电视屏幕中！电脑屏幕目前也经常都有支持 HDMI 格式！
-  - Display port：与 HDMI 相似的，可以同时传输声音与影像。不过这种接口目前在台湾还是比较少屏幕的支持！
-
-- SATA接口
-
-  ![局部截取_20250415_110408](images/Linux+Shell笔记/局部截取_20250415_110408.png)
-
-- USB接口
-
-  ![局部截取_20250415_110533](images/Linux+Shell笔记/局部截取_20250415_110533.png)
-
-### 0.6 本章习题
-
-- 利用软件：假设你不想要拆开主机机箱，但想了解你的主机内部各元件的信息时，该如何是好？ 如果使用的是Windows操作系统，可使用CPUZ（
-  http://www.cpuid.com/cpuz.php）这套软件，如果是Linux环境下，可以使用“cat/proc/cpuinfo” 及使用“lspci”来查阅各项元件的型号；
-
-## 第一章 Linux是什么与如何学习
-
-- linux发行版
-
-  - 下面列出几个主要的Linux distributions发行者网址：
-    Red Hat: http://www.redhat.com
-    SuSE: https://www.suse.com
-    Fedora: https://getfedora.org/
-    CentOS: http://www.centos.org/
-    Debian: http://www.debian.org/
-    Ubuntu: http://www.ubuntu.com/
-    Gentoo: http://www.gentoo.org/
-
-  ![局部截取_20250415_122758](images/Linux+Shell笔记/局部截取_20250415_122758.png)
-
-## 第二章 主机规划与磁盘分区
-
-### 2.1.3 各硬件设备在linux中的文件名
-
-![局部截取_20250423_145751](images/Linux+Shell笔记/局部截取_20250423_145751.png)
-
-### 2.2 磁盘分区
-
-> 使用`df`查看我的阿里云云服务器磁盘分布
->
-> 早期磁盘第一个扇区里面含有的重要信息我们称为MBR （Master BootRecord） 格式，但是由于近年来磁盘的容量不断扩大，造成读写上的一些困扰， 甚至有些大于 2TB 以上的磁盘分区已经让某些操作系统无法存取。因此后来又多了一个新的磁盘分区格式，称为 GPT （GUID partition table）！ 这两种分区格式与限制不太相同啦！
-
-![局部截取_20250423_150113](images/Linux+Shell笔记/局部截取_20250423_150113.png)
+### 
 
