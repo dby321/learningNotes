@@ -1,13 +1,195 @@
 # MySQL笔记
 
-## 重新设置密码
+[MySQL官网-MYSQL8.0新特性](https://dev.mysql.com/doc/refman/8.0/en/mysql-nutshell.html)
+
+## [重新认识MySQL](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=第1章-装作自己是个小白-重新认识mysql)
+
+>  类UNIX操作系统非常多，比如FreeBSD、Linux、macOS、Solaris等都属于UNIX操作系统的范畴
+
+### [启动MySQL服务器程序](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=启动mysql服务器程序)
+
+#### [UNIX里启动服务器程序](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=unix里启动服务器程序)
+
+  在类`UNIX`系统中用来启动`MySQL`服务器程序的可执行文件有很多，大多在`MySQL`安装目录的`bin`目录下，我们一起来看看。
+
+#### [mysqld](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=mysqld)
+
+  `mysqld`这个可执行文件就代表着`MySQL`服务器程序，运行这个可执行文件就可以直接启动一个服务器进程。但这个命令不常用，我们继续往下看更牛逼的启动命令。
+
+#### [mysqld_safe](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=mysqld_safe)
+
+  `mysqld_safe`是一个启动脚本，它会间接的调用`mysqld`，而且还顺便启动了另外一个监控进程，这个监控进程在服务器进程挂了的时候，可以帮助重启它。另外，使用`mysqld_safe`启动服务器程序时，它会将服务器程序的出错信息和其他诊断信息重定向到某个文件中，产生出错日志，这样可以方便我们找出发生错误的原因。
+
+#### [mysql.server](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=mysqlserver)
+
+  `mysql.server`也是一个启动脚本，它会间接的调用`mysqld_safe`，在调用`mysql.server`时在后边指定`start`参数就可以启动服务器程序了，就像这样：
+
+```
+mysql.server start
+```
+
+  需要注意的是，这个 ***mysql.server\*** 文件其实是一个链接文件，它的实际文件是 ***../support-files/mysql.server\***。我使用的`macOS`操作系统会在`bin`目录下自动创建一个指向实际文件的链接文件，如果你的操作系统没有帮你自动创建这个链接文件，那就自己创建一个呗～ 别告诉我你不会创建链接文件，上网搜搜呗～
+
+  另外，我们还可以使用`mysql.server`命令来关闭正在运行的服务器程序，只要把`start`参数换成`stop`就好了：
+
+```
+mysql.server stop
+```
+
+#### [mysqld_multi](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=mysqld_multi)
+
+  其实我们一台计算机上也可以运行多个服务器实例，也就是运行多个`MySQL`服务器进程。`mysql_multi`可执行文件可以对每一个服务器进程的启动或停止进行监控。这个命令的使用比较复杂，本书主要是为了讲清楚`MySQL`服务器和客户端运行的过程，不会对启动多个服务器程序进行过多介绍。
+
+#### [Windows里启动服务器程序](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=windows里启动服务器程序)
+
+  `Windows`里没有像类`UNIX`系统中那么多的启动脚本，但是也提供了手动启动和以服务的形式启动这两种方式，下面我们详细看。
+
+#### [mysqld](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=mysqld-1)
+
+  同样的，在`MySQL`安装目录下的`bin`目录下有一个`mysqld`可执行文件，在命令行里输入`mysqld`，或者直接双击运行它就算启动了`MySQL`服务器程序了。
+
+#### [以服务的方式运行服务器程序](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=以服务的方式运行服务器程序)
+
+  首先看看什么是个`Windows` 服务？如果无论是谁正在使用这台计算机，我们都需要长时间的运行某个程序，而且需要在计算机启动的时候便启动它，一般我们都会把它注册为一个`Windows 服务`，操作系统会帮我们管理它。把某个程序注册为`Windows`服务的方式挺简单，如下：
+
+```
+"完整的可执行文件路径" --install [-manual] [服务名]
+```
+
+  其中的`-manual`可以省略，加上它的话，表示在`Windows`系统启动的时候不自动启动该服务，否则会自动启动。`服务名`也可以省略，默认的服务名就是`MySQL`。比如我的`Windows`计算机上`mysqld`的完整路径是：
+
+```
+C:\Program Files\MySQL\MySQL Server 5.7\bin\mysqld
+```
+
+  所以如果我们想把它注册为服务的话可以在命令行里这么写：
+
+```
+"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysqld" --install
+```
+
+  在把`mysqld`注册为`Windows`服务之后，我们就可以通过下面这个命令来启动`MySQL`服务器程序了：
+
+```
+net start MySQL
+```
+
+  当然，如果你喜欢图形界面的话，你可以通过`Windows`的服务管理器通过用鼠标点点点的方式来启动和停止服务（作为一个程序猿，还是用黑框框吧～）。
+
+  关闭这个服务也非常简单，只要把上面的`start`换成`stop`就行了，就像这样：
+
+```
+net stop MySQL
+```
+
+### [客户端与服务器连接的过程](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=客户端与服务器连接的过程)
+
+- TCP/IP:`mysql -h127.0.0.1 -uroot -P3307 -p`
+
+- windows系统
+
+  - 命名管道：需要在启动服务器程序的命令中加上`--enable-named-pipe`参数，然后在启动客户端程序的命令中加入`--pipe`或者`--protocol=pipe`参数。
+  - 共享内存：需要在启动服务器程序的命令中加上`--shared-memory`参数，在成功启动服务器后，`共享内存`便成为本地客户端程序的默认连接方式，不过我们也可以在启动客户端程序的命令中加入`--protocol=memory`参数来显式的指定使用共享内存进行通信。不过需要注意的是，使用`共享内存`的方式进行通信的服务器进程和客户端进程必须在同一台`Windows`主机中。
+
+- 类UNIX系统
+
+  - UNIX套接字：如果我们在启动客户端程序的时候指定的主机名为`localhost`，或者指定了`--protocol=socket`的启动参数，那服务器程序和客户端程序之间就可以通过`Unix`域套接字文件来进行通信了。`MySQL`服务器程序默认监听的`Unix`域套接字文件路径为`/tmp/mysql.sock`，客户端程序也默认连接到这个`Unix`域套接字文件。如果我们想改变这个默认路径，可以在启动服务器程序时指定`socket`参数，就像这样：
+
+    ```
+    mysqld --socket=/tmp/a.txt
+    ```
+
+      这样服务器启动后便会监听`/tmp/a.txt`。在服务器改变了默认的`UNIX`域套接字文件后，如果客户端程序想通过`UNIX`域套接字文件进行通信的话，也需要显式的指定连接到的`UNIX`域套接字文件路径，就像这样：
+
+    ```
+    mysql -hlocalhost -uroot --socket=/tmp/a.txt -p
+    ```
+
+      这样该客户端进程和服务器进程就可以通过路径为`/tmp/a.txt`的`Unix`域套接字文件进行通信了。
+
+### [服务器处理客户端请求](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=服务器处理客户端请求)
+
+![img](images/MySQL笔记/01-01.png)
+
+从图中我们可以看出，服务器程序处理来自客户端的查询请求大致需要经过三个部分，分别是`连接管理`、`解析与优化`、`存储引擎`
+
+#### [连接管理](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=连接管理)
+
+  - 客户端进程可以采用我们上面介绍的`TCP/IP`、`命名管道或共享内存`、`Unix域套接字`这几种方式之一来与服务器进程建立连接
+  - 每当有一个客户端进程连接到服务器进程时，服务器进程都会创建一个线程来专门处理与这个客户端的交互，当该客户端退出时会与服务器断开连接，服务器并不会立即把与该客户端交互的线程销毁掉，而是把它缓存起来，在另一个新的客户端再进行连接时，把这个缓存的线程分配给该新客户端。这样就起到了不频繁创建和销毁线程的效果，从而节省开销。
+
+- 在客户端程序发起连接的时候，需要携带主机信息、用户名、密码，服务器程序会对客户端程序提供的这些信息进行认证，如果认证失败，服务器程序会拒绝连接。另外，如果客户端程序和服务器程序不运行在一台计算机上，我们还可以采用使用了`SSL`（安全套接字）的网络连接进行通信，来保证数据传输的安全性。
+
+- 当连接建立后，与该客户端关联的服务器线程会一直等待客户端发送过来的请求，`MySQL`服务器接收到的请求只是一个文本消息，该文本消息还要经过各种处理
+
+##### [查询缓存](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=查询缓存)
+
+- `MySQL`服务器并没有人聪明，如果两个查询请求在任何字符上的不同（例如：空格、注释、大小写），都会导致缓存不会命中。另外，如果查询请求中包含某些系统函数、用户自定义变量和函数、一些系统表，如 mysql 、information_schema、 performance_schema 数据库中的表，那这个请求就不会被缓存。
+- MySQL的缓存系统会监测涉及到的每张表，只要该表的结构或者数据被修改，如对该表使用了`INSERT`、 `UPDATE`、`DELETE`、`TRUNCATE TABLE`、`ALTER TABLE`、`DROP TABLE`或 `DROP DATABASE`语句，那使用该表的所有高速缓存查询都将变为无效并从高速缓存中删除！
+
+- 虽然查询缓存有时可以提升系统性能，但也不得不因维护这块缓存而造成一些开销，比如每次都要去查询缓存中检索，查询请求处理完需要更新查询缓存，维护该查询缓存对应的内存区域。从MySQL 5.7.20开始，不推荐使用查询缓存，并在MySQL 8.0中删除。
+
+##### [语法解析](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=语法解析)
+
+- 如果查询缓存没有命中，接下来就需要进入正式的查询阶段了。因为客户端程序发送过来的请求只是一段文本而已，所以`MySQL`服务器程序首先要对这段文本做分析，判断请求的语法是否正确，然后从文本中将要查询的表、各种查询条件都提取出来放到`MySQL`服务器内部使用的一些数据结构上来。
+- 这个从指定的文本中提取出我们需要的信息本质上算是一个编译过程，涉及词法解析、语法分析、语义分析等阶段
+
+##### [查询优化](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=查询优化)
+
+- 语法解析之后，服务器程序获得到了需要的信息，比如要查询的列是哪些，表是哪个，搜索条件是什么等等，但光有这些是不够的，因为我们写的`MySQL`语句执行起来效率可能并不是很高，`MySQL`的优化程序会对我们的语句做一些优化，如外连接转换为内连接、表达式简化、子查询转为连接等等的一堆东西。
+- 优化的结果就是生成一个执行计划，这个执行计划表明了应该使用哪些索引进行查询，表之间的连接顺序是什么样的。我们可以使用`EXPLAIN`语句来查看某个语句的执行计划，关于查询优化这部分的详细内容我们后边会仔细介绍，现在你只需要知道在`MySQL`服务器程序处理请求的过程中有这么一个步骤就好了。
+
+#### [存储引擎](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=存储引擎)
+
+- 截止到服务器程序完成了查询优化为止，还没有真正的去访问真实的数据表，`MySQL`服务器把数据的存储和提取操作都封装到了一个叫`存储引擎`（`表处理器`）的模块里。我们知道`表`是由一行一行的记录组成的，但这只是一个逻辑上的概念，物理上如何表示记录，怎么从表中读取数据，怎么把数据写入具体的物理存储器上，这都是`存储引擎`负责的事情。为了实现不同的功能，`MySQL`提供了各式各样的`存储引擎`，不同`存储引擎`管理的表具体的存储结构可能不同，采用的存取算法也可能不同。
+
+- 为了管理方便，人们把`连接管理`、`查询缓存`、`语法解析`、`查询优化`这些并不涉及真实数据存储的功能划分为`MySQL server`的功能，把真实存取数据的功能划分为`存储引擎`的功能。各种不同的存储引擎向上面的`MySQL server`层提供统一的调用接口（也就是存储引擎API），包含了几十个底层函数，像"读取索引第一条内容"、"读取索引下一条内容"、"插入记录"等等。
+
+### [常用存储引擎](https://relph1119.github.io/mysql-learning-notes/#/mysql/01-装作自己是个小白-重新认识MySQL?id=常用存储引擎)
+
+  `MySQL`支持非常多种存储引擎，我这先列举一些：
+
+| 存储引擎    | 描述                                 |
+| ----------- | ------------------------------------ |
+| `ARCHIVE`   | 用于数据存档（行被插入后不能再修改） |
+| `BLACKHOLE` | 丢弃写操作，读操作会返回空内容       |
+| `CSV`       | 在存储数据时，以逗号分隔各个数据项   |
+| `FEDERATED` | 用来访问远程表                       |
+| `InnoDB`    | 具备外键支持功能的事务存储引擎       |
+| `MEMORY`    | 置于内存的表                         |
+| `MERGE`     | 用来管理多个MyISAM表构成的表集合     |
+| `MyISAM`    | 主要的非事务处理存储引擎             |
+| `NDB`       | MySQL集群专用存储引擎                |
+
+| Feature                               | MyISAM | Memory  | InnoDB | Archive | NDB   |
+| ------------------------------------- | ------ | ------- | ------ | ------- | ----- |
+| B-tree indexes                        | yes    | yes     | yes    | no      | no    |
+| Backup/point-in-time recovery         | yes    | yes     | yes    | yes     | yes   |
+| Cluster database support              | no     | no      | no     | no      | yes   |
+| Clustered indexes                     | no     | no      | yes    | no      | no    |
+| Compressed data                       | yes    | no      | yes    | yes     | no    |
+| Data caches                           | no     | N/A     | yes    | no      | yes   |
+| Encrypted data                        | yes    | yes     | yes    | yes     | yes   |
+| Foreign key support                   | no     | no      | yes    | no      | yes   |
+| Full-text search indexes              | yes    | no      | yes    | no      | no    |
+| Geospatial data type support          | yes    | no      | yes    | yes     | yes   |
+| Geospatial indexing support           | yes    | no      | yes    | no      | no    |
+| Hash indexes                          | no     | yes     | no     | no      | yes   |
+| Index caches                          | yes    | N/A     | yes    | no      | yes   |
+| Locking granularity                   | Table  | Table   | Row    | Row     | Row   |
+| MVCC                                  | no     | no      | yes    | no      | no    |
+| Query cache support                   | yes    | yes     | yes    | yes     | yes   |
+| Replication support                   | yes    | Limited | yes    | yes     | yes   |
+| Storage limits                        | 256TB  | RAM     | 64TB   | None    | 384EB |
+| T-tree indexes                        | no     | no      | no     | no      | yes   |
+| Transactions                          | no     | no      | yes    | no      | yes   |
+| Update statistics for data dictionary | yes    | yes     | yes    | yes     | yes   |
 
 
-![img](https://gips2.baidu.com/it/u=2966009234,1030202078&fm=3028&app=3028&f=PNG&fmt=auto&q=100&size=f174_42)
 
-mac mysql跳过密码后怎么重新设置密码
 
-在Mac上使用MySQL时，如果你已经跳过了初始密码（通常在安装过程中），并且现在想要重新设置密码，你可以按照以下步骤操作。这里假设你正在使用的是MySQL社区版或者MariaDB，因为它们在很多情况下可以互换使用。
+
+## MYSQL重新设置密码
 
 ### 1. 停止MySQL服务
 
@@ -120,7 +302,7 @@ TCL语言/DCL语言：COMMIT/ROLLBACK/SAVEPOINT/GRANT
 > 下面这句外连接，MYSQL执行错误，不支持该语法。
 
 ```SQL
-SELECT employee_id,department_name FROM employees e,departments d WHERE e.`department_id`=d.`department_id`(+);https://ucc.alicdn.com/pic/developer-ecology/fe174a78a9434374a60039c09003cfe2.png)
+SELECT employee_id,department_name FROM employees e,departments d WHERE e.`department_id`=d.`department_id`;
 ```
 
 ## MYSQL大小写规范和SQL MODE支持
@@ -240,6 +422,12 @@ mysql> SELECT name FROM person_tbl WHERE name REGEXP '^[aeiou]|ok$';
 
 > 需要where限制，不然多表会出现错误
 
+```sql
+SELECT * FROM t1
+CROSS JOIN t2
+WHERE t1.id = t2.id;
+```
+
 ### 等值连接和非等值连接
 
 > 限制条件是等于号就是等值连接
@@ -250,13 +438,15 @@ mysql> SELECT name FROM person_tbl WHERE name REGEXP '^[aeiou]|ok$';
 
 ### 内连接和外连接
 
-> 内连接 就是cross join
+> - 内连接
 >
-> 外连接
+> - 外连接
 >
-> - 左外连接
-> - 右外连接
-> - 全外连接
+>   - 左外连接
+>
+>   - 右外连接
+>
+>   - 全外连接
 
 ### UNION和UNION ALL
 
@@ -269,10 +459,6 @@ mysql> SELECT name FROM person_tbl WHERE name REGEXP '^[aeiou]|ok$';
 | [Functions - Alphabetical](https://www.techonthenet.com/mysql/functions/index_alpha.php) | MySQL Functions listed alphabetically |
 | ------------------------------------------------------------ | ------------------------------------- |
 | [Functions - Category](https://www.techonthenet.com/mysql/functions/index.php) | MySQL Functions listed by category    |
-
-> 分为内置函数和自定义函数
->
-> 不同DBMS的函数差别很大，不建议死记
 
 ### MYSQL聚合函数
 
@@ -371,11 +557,20 @@ select day(date)
 
 ## SQL的执行顺序，WHERE和HAVING效率对比
 
-> FROM …,….->ON->(LEFT/RIGHT JOIN)->WHERE->GROUP BY->HAVING->SELECT->DICTINCT->ORDER BY->LIMIT
->
-> 在SELECT渔具执行这些步骤时，每个步骤会生成虚拟表，然后将这个虚拟表传入下一个步骤作为输入。这些隐含在SQL执行过程中，对于我们是不可见的
+正确的标准SQL查询逻辑处理顺序大致如下：
 
-> WHERE效率高于HAVING
+1. **FROM**：确定查询的数据来源表。
+2. **ON**：对连接的表应用ON条件（如果存在JOIN语句）。
+3. **JOIN**：根据指定的连接类型（LEFT, RIGHT, INNER等）进行表的连接。
+4. **WHERE**：过滤从FROM和JOIN操作得到的数据行。
+5. **GROUP BY**：将结果集按指定列分组，通常用于与聚合函数一起使用。
+6. **HAVING**：过滤由GROUP BY生成的分组，类似于WHERE但作用于分组。
+7. **SELECT**：选择需要显示的列或表达式。
+8. **DISTINCT**：去除重复的行（如果指定了DISTINCT关键字）。
+9. **ORDER BY**：排序最终的结果集。
+10. **LIMIT/OFFSET**：限制返回的行数或跳过指定数量的行（如果指定了的话）。
+
+关于优化方面，确实**WHERE**子句在大多数情况下比**HAVING**更高效。这是因为WHERE在分组和聚合之前就过滤掉了不符合条件的数据行，从而减少了后续需要处理的数据量。而HAVING子句则是在数据经过GROUP BY之后才开始过滤，这意味着它可能需要处理更多的数据行。因此，在能够使用WHERE过滤的情况下，优先考虑使用WHERE可以提高查询性能。不过，HAVING对于基于聚合结果的过滤是必不可少的，因为它允许我们基于计算出的汇总值来筛选分组。
 
 ## MYSQL子查询
 
@@ -397,29 +592,73 @@ SELECT MIN(avg_sal) FROM (SELECT AVG(salary) avg_sal FROM employees GROUP BY dep
 
 ### 相关子查询
 
-> 子查询引用了父查询的数据，而且父子查询不是一个表，就是相关子查询
+相关子查询（Correlated Subquery），也称为关联子查询，是一种在外部查询中引用了外部表的列的子查询。这意味着子查询不是独立的——它依赖于外部查询提供的值。因此，对于外部查询返回的每一行，相关子查询都会执行一次。
+
+相关子查询通常用于WHERE或HAVING子句中，用来过滤数据。它们也可以出现在SELECT或FROM子句中，但是这种情况比较少见。相关子查询的一个典型用途是当你需要基于某一行的数据来计算或者判断另一行的数据时。
+
+以下是使用相关子查询的一些示例：
+
+1. **查找每个部门工资最高的员工：**
+
+```sql
+SELECT e.name, e.salary, e.department_id 
+FROM employees e 
+WHERE e.salary = (
+    SELECT MAX(sub.salary) 
+    FROM employees sub 
+    WHERE sub.department_id = e.department_id
+);
+```
+
+2. **查找选修了所有课程的学生：**
+
+```sql
+SELECT s.name 
+FROM students s 
+WHERE NOT EXISTS (
+    SELECT c.course_id 
+    FROM courses c 
+    WHERE NOT EXISTS (
+        SELECT 1 
+        FROM enrollments e 
+        WHERE e.student_id = s.student_id AND e.course_id = c.course_id
+    )
+);
+```
+
+3. **找出销售额超过该销售员平均销售额的记录：**
+
+```sql
+SELECT s.salesperson_id, s.sale_amount 
+FROM sales s 
+WHERE s.sale_amount > (
+    SELECT AVG(sub.sale_amount) 
+    FROM sales sub 
+    WHERE sub.salesperson_id = s.salesperson_id
+);
+```
+
+尽管相关子查询非常有用，但需要注意的是，由于每次外部查询迭代时都需要重新执行一次子查询，所以它们可能会导致性能问题，特别是在处理大数据集时。为了提高效率，可以考虑以下几种方法：
+
+- 使用JOIN替代。
+- 尝试使用窗口函数(Window Functions)，比如`ROW_NUMBER()`、`RANK()`等。
+- 确保子查询能够有效地利用索引。
+- 对于某些数据库系统，可能还可以使用其他优化技术，如物化视图(Materialized Views)等。
+
+总之，在编写SQL查询时，应根据具体情况评估是否使用相关子查询，并且考虑到潜在的性能影响。
 
 ## MYSQL表和数据库的增删改查
 
 > 阿里巴巴开发规范：TRUNCATE TABLE 比DELETE速度快，且使用的系统和事务日志资源少，但TRUNCATE无事务且不触发TRIGGER，有可能造成事故，故不建议在开发代码中使用此语句
 >
-> `DROP DATEBASE dbName;`
->
-> `DROP DATEBASE IF EXISTS dbName;`
->
-> `DROP TABLE tableName;`
->
-> `DROP TABLE IF EXISTS tableName;`不能回滚
->
-> `TRUNCATE TABLE tableName;`清空表，不能回滚，占用资源少，开发中不要用
->
-> `DELETE FROM tableName WHERE condition`删除表数据，可以回滚，占用资源多，开发中建议用
 
-## MYSQL8.0新特性（必须掌握）
+| 操作             | 是否可回滚          | 是否删除结构 | 是否记录日志 | 是否重置自增 | 推荐开发环境使用 |
+| ---------------- | ------------------- | ------------ | ------------ | ------------ | ---------------- |
+| `DROP TABLE`     | ❌                   | ✅            | ❌            | -            | ❌（慎用）        |
+| `TRUNCATE TABLE` | ❌（MySQL）✅（PG等） | ❌            | ❌            | ✅            | ❌（慎用）        |
+| `DELETE FROM`    | ✅（事务内）         | ❌            | ✅            | ❌            | ✅（推荐）        |
 
-### MYSQL8.0的原子化
-
-> MYSQL8.0 的一条DROP操作是原子化的，要么成功，要么失败，不会成功一部分
+## MYSQL8.0新特性
 
 ### MYSQL8.0的计算列
 
@@ -429,6 +668,20 @@ a int,
 b int,
 c int GENERATED ALWAYS AS (a+b) VIRTUAL); # 字段c即为计算列
 ```
+
+- `GENERATED ALWAYS AS (...)`
+   表示这是一个 **计算列**，其值由括号内的表达式自动生成。
+- `VIRTUAL`
+   表示该列是一个 **虚拟列（Virtual Generated Column）**，即它的值不会实际存储在磁盘上，而是在查询时动态计算出来。
+
+
+| 特性         | `VIRTUAL`            | `STORED`             |
+| ------------ | -------------------- | -------------------- |
+| 是否物理存储 | ❌ 不存储             | ✅ 存储               |
+| 占用空间     | ❌ 几乎不占空间       | ✅ 占用磁盘空间       |
+| 查询性能     | ⬇ 动态计算           | ⬆ 直接读取           |
+| 更新开销     | ⬆ 小（无需更新）     | ⬇ 需要重新计算并写入 |
+| 是否可被索引 | ✅（隐式转为 STORED） | ✅                    |
 
 ## MYSQL数据类型Data type
 
@@ -441,7 +694,12 @@ f2 int(5),
 f3 int(5) ZEROFILL)# 1.显示宽度为5，当insert值不足5位时，用0填充 2.当使用ZEROFILL时，自动添加UNSIGNED
 ```
 
-> 从MYSQL8.0.17之后，整数数据类型不推荐使用显示宽度属性
+| 场景                                 | 建议                                                         |
+| ------------------------------------ | ------------------------------------------------------------ |
+| 需要格式化输出（如发票号、订单号等） | 不推荐用 `ZEROFILL`，建议在应用层格式化（如 Python 的 `.zfill()`） |
+| 存储正整数（如 ID、计数器）          | 推荐使用 `UNSIGNED`                                          |
+| 需要控制数据显示格式                 | 在应用层处理更灵活                                           |
+| 简单了解数据长度（用于文档目的）     | 可以保留 `INT(5)` 这类写法，但不要依赖其行为                 |
 
 ### 浮点型和定点型
 
@@ -460,7 +718,7 @@ f3 int(5) ZEROFILL)# 1.显示宽度为5，当insert值不足5位时，用0填充
 > CHAR和VARCHAR的选择：
 >
 > 1. 存储很短且位数相对固定的数据，用CHAR
-> 2. 十分频繁改变的column，用CHAR
+> 2. 十分频繁改变的column，用VARCHAR
 > 3. 在MYISAM存储引擎中，用CHAR;在MEMORY存储引擎中都可以；在INNODB存储引擎中，主要影响性能的因素是数据行使用的数据总量，多用VARCHAR
 
 > TEXT文本类型：可以存储比较大的文本段，由于TEXT和BLOB类型的数据删除后容易导致“空洞”，使得文件碎片比较多，所以频繁使用的表不建议包含TEXT类型字段，建议单独分出去一个表
@@ -474,10 +732,6 @@ f3 int(5) ZEROFILL)# 1.显示宽度为5，当insert值不足5位时，用0填充
 ### JSON类型【了解】
 
 ## MYSQL约束Conditions
-
-> 为什么需要约束？ 为了保证数据的完整性
->
-> 什么叫约束？对表中字段的限制
 
 ### 查询某个表的约束
 
@@ -566,17 +820,65 @@ alter table empl
 drop index fk_empl_dept_id;
 ```
 
-> ==在mysql中，外键约束是有成本的，需要消耗系统资源。对于大并发的sql操作，有可能会不适合==
-
-![image-20220928215516418](images/image-20220928215516418.png)
+> 在mysql中，外键约束是有成本的，需要消耗系统资源。对于大并发的sql操作，有可能会不适合
+>
+> 阿里巴巴规范强制不能使用外键
 
 ### 检查约束和默认值约束
 
-> 检查约束在mysql5.7不支持
+>  在 MySQL 8.0 及以上版本中使用 `CHECK` 约束,MYSQL 5.7虽然支持`CHECK`语法，但它并不会实际执行这些约束
+
+```sql
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    salary DECIMAL(10,2),
+    CHECK (salary > 0)
+);
+```
+
+在这个例子中，`CHECK (salary > 0)` 确保了任何试图插入或更新 `salary` 字段使其值小于等于 0 的操作都会失败。
+
+
+
+如果你需要更复杂的约束条件，可以结合多个字段进行检查。例如，假设我们希望确保员工的入职日期不能晚于当前日期：
+
+```sql
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    hire_date DATE,
+    CHECK (hire_date <= CURDATE())
+);
+```
+
+不过需要注意的是，`CURDATE()` 函数在这种情况下可能不会按照预期工作（因为它是动态计算的），所以更好的做法是让应用程序层处理这种类型的验证或者使用触发器来实现类似的功能。
+
+
+
+你也可以在一个表上定义多个 `CHECK` 约束：
+
+```sql
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    age INT,
+    salary DECIMAL(10,2),
+    CHECK (age >= 18 AND age <= 65),
+    CHECK (salary > 0)
+);
+```
 
 ## MYSQL视图View
 
-> [数据库](https://www.huaweicloud.com/product/dbs.html)对象包括：用户（对数据库有权限访问的人）、视图（显示用户需要的数据项）、索引（给用户提供快速访问数据的途径）、触发器（用户定义的SQL事务命令集合）、序列（提供了唯一数值的顺序表）、图表（数据库表之间的一种关系示意图）。
+> [数据库](https://www.huaweicloud.com/product/dbs.html)对象包括：
+>
+> - 用户（对数据库有权限访问的人）
+> - 视图（显示用户需要的数据项）
+> - 索引（给用户提供快速访问数据的途径）
+> - 触发器（用户定义的SQL事务命令集合）
+> - 序列（提供了唯一数值的顺序表）
+> - 图表（数据库表之间的一种关系示意图）。
 
 > 视图和表之间是双向绑定的，视图就可以看做存储起来的select语句
 
@@ -898,41 +1200,93 @@ DELIMITER ;
 >
 > `CREATE TABLE copyDbName AS SELECT * FROM dbName WHERE 1=2`复制表结构
 
-## MYSQL8.0新特性
-
-[MySQL官网-MYSQL8.0新特性](https://dev.mysql.com/doc/refman/8.0/en/mysql-nutshell.html)
-
-> 可能需要专门新看视频
-
-
-
 ## 字符集、归类、Unicode
 
-> [MYSQL8.0参考手册-字符集、归类、Unicode](https://dev.mysql.com/doc/refman/8.0/en/charset.html)
->
-> 在MYSQL8.0之前，默认字符集为latin1，utf8字符集指向的时utfmb3.
->
-> 从MYSQL8.0开始，数据库的默认编码将改为utf8mb4,从而解决中文乱码问题
->
-> Linux解决乱码可以修改它的配置文件
->
-> 字符集分为四个级别：
->
-> - 服务器级别
-> - 数据库级别
-> - 表级别
-> - 列级别
->
-> **字符集与比较规则：**
->
-> `UTF8mb4`是`UTF8mb3`的超集，用于存储`emoji`
+[MYSQL8.0参考手册-字符集、归类、Unicode](https://dev.mysql.com/doc/refman/8.0/en/charset.html)
 
-```mysql
-show variables like '%character%';-- 查看字符集变量
-show charset;-- 显示所有字符集
-```
+1. `字符集`指的是某个字符范围的编码规则，`UTF8mb4`是`UTF8mb3`的超集，用于存储`emoji`
 
+   1. 在MYSQL8.0之前，默认字符集为latin1，utf8字符集指向的时utfmb3
 
+   2. 从MYSQL8.0开始，数据库的默认编码将改为utf8mb4,从而解决中文乱码问题
+
+2. `比较规则`是针对某个字符集中的字符比较大小的一种规则。
+
+3. 在`MySQL`中，一个字符集可以有若干种比较规则，其中有一个默认的比较规则，一个比较规则必须对应一个字符集。
+
+4. 查看`MySQL`中查看支持的字符集和比较规则的语句如下：
+
+   ```SQL
+   SHOW (CHARACTER SET|CHARSET) [LIKE 匹配的模式];
+   SHOW COLLATION [LIKE 匹配的模式];
+   ```
+
+5. MySQL有四个级别的字符集和比较规则
+
+- 服务器级别
+
+  `character_set_server`表示服务器级别的字符集，`collation_server`表示服务器级别的比较规则。
+
+- 数据库级别
+
+  创建和修改数据库时可以指定字符集和比较规则：
+
+  ```SQL
+  CREATE DATABASE 数据库名
+      [[DEFAULT] CHARACTER SET 字符集名称]
+      [[DEFAULT] COLLATE 比较规则名称];
+  
+  ALTER DATABASE 数据库名
+      [[DEFAULT] CHARACTER SET 字符集名称]
+      [[DEFAULT] COLLATE 比较规则名称];
+  ```
+
+    `character_set_database`表示当前数据库的字符集，`collation_database`表示当前默认数据库的比较规则，这两个系统变量是只读的，不能修改。如果没有指定当前默认数据库，则变量与相应的服务器级系统变量具有相同的值。
+
+- 表级别
+
+  创建和修改表的时候指定表的字符集和比较规则：
+
+  ```SQL
+  CREATE TABLE 表名 (列的信息)
+      [[DEFAULT] CHARACTER SET 字符集名称]
+      [COLLATE 比较规则名称]];
+  
+  ALTER TABLE 表名
+      [[DEFAULT] CHARACTER SET 字符集名称]
+      [COLLATE 比较规则名称];
+  ```
+
+- 列级别
+
+  创建和修改列定义的时候可以指定该列的字符集和比较规则：
+
+  ```SQL
+  CREATE TABLE 表名(
+      列名 字符串类型 [CHARACTER SET 字符集名称] [COLLATE 比较规则名称],
+      其他列...
+  );
+  
+  ALTER TABLE 表名 MODIFY 列名 字符串类型 [CHARACTER SET 字符集名称] [COLLATE 比较规则名称];
+  ```
+
+6. 从发送请求到接收结果过程中发生的字符集转换：
+
+- 客户端使用操作系统的字符集编码请求字符串，向服务器发送的是经过编码的一个字节串。
+- 服务器将客户端发送来的字节串采用`character_set_client`代表的字符集进行解码，将解码后的字符串再按照`character_set_connection`代表的字符集进行编码。
+- 如果`character_set_connection`代表的字符集和具体操作的列使用的字符集一致，则直接进行相应操作，否则的话需要将请求中的字符串从`character_set_connection`代表的字符集转换为具体操作的列使用的字符集之后再进行操作。
+- 将从某个列获取到的字节串从该列使用的字符集转换为`character_set_results`代表的字符集后发送到客户端。
+- 客户端使用操作系统的字符集解析收到的结果集字节串。
+
+  在这个过程中各个系统变量的含义如下：
+
+| 系统变量                   | 描述                                                         |
+| -------------------------- | ------------------------------------------------------------ |
+| `character_set_client`     | 服务器解码请求时使用的字符集                                 |
+| `character_set_connection` | 服务器处理请求时会把请求字符串从`character_set_client`转为`character_set_connection` |
+| `character_set_results`    | 服务器向客户端返回数据时使用的字符集                         |
+
+  一般情况下要使用保持这三个变量的值和客户端使用的字符集相同。
 
 
 
@@ -1110,7 +1464,7 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 ### MyISAM：主要的非事务处理存储引擎
 
 > - 优点：
->  - 访问速度快，适合对事务完整性没有要求或者以select\insert为主的应用
+>   - 访问速度快，适合对事务完整性没有要求或者以select\insert为主的应用
 >   - count(*)查询效率很高
 > 
 >- 缺点：
@@ -1119,7 +1473,7 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 ### Archive（归档）：用于数据存档
 
 > - 优点：
->  - 仅仅支持select\insert两种操作，适合日志和数据采集（档案）类应用
+>   - 仅仅支持select\insert两种操作，适合日志和数据采集（档案）类应用
 
 ### Blackhole：丢弃写操作，读操作会返回空内容
 
@@ -1128,7 +1482,7 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 ### Memory：置于内存的表数据，置于磁盘的表结构
 
 > - 优点：
->  - 响应速度快，比MyISAM快一个数量级
+>   - 响应速度快，比MyISAM快一个数量级
 
 ## 索引Index
 
@@ -1853,4 +2207,4 @@ show status like 'innodb_row_lock';
 
 
 
-cd "$(brew --repo)/Library/Taps/homebrew/homebrew-cask" && git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-cask.git
+## 
