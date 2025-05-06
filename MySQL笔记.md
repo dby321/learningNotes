@@ -1593,10 +1593,21 @@ show variables like '%storage_engine%';-- 查看当前使用的存储引擎
 >
 > InnoDB行格式row_format：
 >
-> - `Compact`
-> - `Dynamic`
-> - `Compressed`
-> - `Redundant`
+> - COMPACT行格式
+>
+>   具体组成如图： ![img](https://relph1119.github.io/mysql-learning-notes/images/04-19.png)
+>
+> - Redundant行格式
+>
+>   具体组成如图： ![img](https://relph1119.github.io/mysql-learning-notes/images/04-20.png)
+>
+> - Dynamic和Compressed行格式
+>
+>     这两种行格式类似于`COMPACT行格式`，只不过在处理行溢出数据时有点儿分歧，它们不会在记录的真实数据处存储字符串的前768个字节，而是把所有的字节都存储到其他页面中，只在记录的真实数据处存储其他页面的地址。
+>
+>     另外，`Compressed`行格式会采用压缩算法对页面进行压缩。
+>
+> - 一个页一般是`16KB`，当记录中的数据太多，当前页放不下的时候，会把多余的数据存储到其他页中，这种现象称为`行溢出`。
 >
 > 碎片区：有些页能用于段A，有些页能用于段B，碎片去直属于表空间
 >

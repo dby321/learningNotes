@@ -10,18 +10,6 @@
 
 ## 4 如何学习SpringBoot
 
-### 4.1官网文档架构
-
-![1619945764976](.\images\1619945764976.png)
-
-![1619945774243](.\images\1619945774243.png)
-
-查看版本新特性；
-
-https://github.com/spring-projects/spring-boot/wiki#release-notes
-
-![1619945907338](.\images\1619945907338.png)
-
 ## 5 SpringBoot2入门
 
 ### 5.1 maven的setings.xml设置
