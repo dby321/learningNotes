@@ -3,3 +3,11 @@
 HTML+CSS+JS+ES6+JSON+Webpack-尚硅谷版/.idea/
 电子书/
 /.obsidian/
+# LaTeX build files
+*.fls
+*.aux
+*.fdb_latexmk
+*.log
+*.synctex.gz
+*.xdv
+
