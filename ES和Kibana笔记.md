@@ -1,4 +1,4 @@
-# ES和Kibana
+# ES和Kibana旧版笔记
 
 [ES官网](https://www.elastic.co/cn/downloads/elasticsearch) 
 
@@ -176,7 +176,7 @@ elasticsearch在后台把**每个索引划分成多个分片**，每分分片可
 
 类型是文档的逻辑容器，就像关系型数据库一样，表格是行的容器。类型中对于字段的定义称为映射，比如name映射为字符串类型。我们说文档是无模式的，它们不需要拥有映射中所定义的所有字段，比如新增一个字段，那么elasticsearch是怎么做的呢?
 
-- elasticsearch会自动的将新字段加入映射，但是这个字段的不确定它是什么类型，elasticsearch就开始猜，如果这个值是18，那么elasticsearch会认为它是整形。但是elasticsearch也可能猜不对，所以最安全的方式就是提前定义好所需要的映射，这点跟关系型数据库殊途同归了，先定义好字段，然后再使用，别整什么幺蛾子。
+- elasticsearch会自动的将新字段加入映射，但是这个字段的不确定它是什么类型，elasticsearch就开始猜，如果这个值是18，那么elasticsearch会认为它是整型。但是elasticsearch也可能猜不对，所以最安全的方式就是提前定义好所需要的映射，这点跟关系型数据库殊途同归了，先定义好字段，然后再使用。
 
 #### 索引（“库”）
 
@@ -938,3 +938,6 @@ import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestCli
 
 
 
+# Elasticsearch核心指南（中文版）
+
+[](https://github.com/looly/elasticsearch-definitive-guide-cn)
