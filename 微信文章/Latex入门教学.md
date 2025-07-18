@@ -1,4 +1,4 @@
-# Latex入门教学
+# Latex教学（入门篇）
 
 > 相信大家进行科研写作时候，难免会被`word`的公式格式插入所烦恼，`Latex`就是来解决这个问题的，它和`Markdown`都在各自的领域发光发热。下面就是我粗浅的Latex入门教学啦~
 
@@ -31,15 +31,39 @@
 
 测试命令行是否可用：
 
-```
-(base) dongbinyu@dongbinyudeMacBook-Pro ~ % pdflatex
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex)
- restricted \write18 enabled.
-```
+![image-20250616233243077](/Users/dongbinyu/learningNotes/微信文章/images/Latex入门教学/image-20250616233243077.png)
 
 
 
-### 2.2 Latex编辑器安装
+### 2.2 Latex编辑器与插件安装
 
 > 无脑推荐Vscode或支持Vscode生态编辑器（Trae、Cursor、Tongyi IDE）
 
+1. 安装Vscode https://code.visualstudio.com/
+
+2. 安装Vscode插件 LaTeX Workshop https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop
+
+![image-20250616233312341](/Users/dongbinyu/learningNotes/微信文章/images/Latex入门教学/image-20250616233312341.png)
+
+## 3. HelloWorld
+
+1. 新建文件`01-helloworld.tex`编写文件
+
+```tex
+\documentclass[UTF8]{ctexart}
+\begin{document}
+你好，世界！
+\end{document}
+```
+
+
+
+![image-20250616233408724](/Users/dongbinyu/learningNotes/微信文章/images/Latex入门教学/image-20250616233408724.png)
+
+2. 使用xelatex渲染pdf文件
+
+![image-20250616233441112](/Users/dongbinyu/learningNotes/微信文章/images/Latex入门教学/image-20250616233441112.png)
+
+3. (可选)根据情况设置.gitignore文件内容
+
+   ![image-20250616233625165](/Users/dongbinyu/learningNotes/微信文章/images/Latex入门教学/image-20250616233625165.png)
