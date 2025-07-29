@@ -16,12 +16,12 @@
 - **[Baeldung-Mockito教程](https://www.baeldung-cn.com/mockito-series)**  
   Baeldung网站提供的系列教程，涵盖了Mockito的各种使用场景和最佳实践。
 
-## 1. 测试概述
+## 测试概述
 
 如果项目组有测试团队，最常接触的概念有：功能测试、回归测试、冒烟测试等，但这些都是由测试人员发起的。
 开发人员写的常常是"单元测试"，但其实可以细分成 单元测试 和 集成测试 两个。划分的原因拿常见的 Spring IoC 举例。Spring 不同Bean之间相互依赖，例如某API业务逻辑中会依赖不同模块的 Service，Service 方法中又可能依赖不同的 Dao 层方法，甚至还会通过 RPC、HTTP 调用外部服务方法。这给我们写测试用例带来了难度，本来只想测试某个方法的功能，却要考虑一连串的依赖关系。
 
-### 1.1. 单元测试
+### 单元测试
 
 单元测试：是指对软件中的最小可测试单元进行检查和验证。
 通常任何软件都会划分为不同的模块和组件。单独测试一个组件时，我们叫做单元测试。单元测试用于验证相关的一小段代码是否正常工作。单元测试不是用于发现应用程序范围内的 bug，或者回归测试的 bug，而是分别检测每个代码片段。
@@ -33,7 +33,7 @@
 - 方法执行快，500ms以内（也和不启动 Spring 有关）。
 - 同一单元测试可重复执行N次，并每次运行结果相同。
 
-### 1.2. 集成测试
+### 集成测试
 
 集成测试：在单元测试的基础上，将所有模块按照设计要求组装成为子系统或系统，进行集成测试。
 集成测试主要用于发现用户端到端请求时不同模块交互产生的问题。集成测试范围可以是整个应用程序，也可以是一个单独的模块，取决于要测试什么。
@@ -47,9 +47,9 @@
 
   
 
-## 2. Mock实战
+## Mock实战
 
-### 2.1 Mock依赖引入
+### Mock依赖引入
 
 在Spring Boot项目中，使用 `spring-boot-starter-test` 依赖，它包含了JUnit、Spring Test、Mockito等测试相关的库。
 
@@ -61,9 +61,9 @@
 </dependency>
 ```
 
-### 2.2 启用Mockito注解
+### 启用Mockito注解
 
-#### 2.2.1. *MockitoJUnitRunner*
+#### *MockitoJUnitRunner*
 
 我们的第一个选择是**使用\*MockitoJUnitRunner\*注解JUnit测试**：
 
@@ -74,7 +74,7 @@ public class MockitoAnnotationUnitTest {
 }
 ```
 
-#### 2.2.2. MockitoAnnotations.openMocks（）
+#### MockitoAnnotations.openMocks（）
 
 或者，我们可以通过调用*MockitoAnnotations.openMocks（）***以编程方式启用Mockito注解**：
 
@@ -85,7 +85,7 @@ public void init() {
 }
 ```
 
-####  2.2.3. mockitoJUnit.rule（）
+####  mockitoJUnit.rule（）
 
 最后，**我们可以使用\*MockitoJUnit.rule（）\***：
 
@@ -363,18 +363,19 @@ public class MockitoAnnotationsUninitializedUnitTest {
 - 它们使测试更具可读性。
 - *@InjectMocks*对于注入*@Spy*和*@Mock*实例是必需的。
 
-## 3. Web项目中使用Mockito
+## Web项目中使用Mockito
 
-### 3.1 使用Mockito模拟对象
+### 使用Mockito模拟对象
 
-#### 3.1.1 模拟对象
+#### 模拟对象
 
 ```java
 // 模拟一个UserService对象
 UserService mockUserService = Mockito.mock(UserService.class);
 ```
 
-#### 3.1.2 验证方法调用
+#### 验证方法调用
+
 示例：下面是测试通过和不通过的代码
 
 ```java
@@ -407,9 +408,11 @@ void testFindUserById() {
 }
 ```
 
-### 3.2 使用SpringTest模拟Bean
+### 使用SpringTest模拟Bean
+
 Spring Test提供了@MockBean和@Mock注解，用于在Spring应用上下文中模拟Bean。
-#### 3.2.1 使用@MockBean模拟Bean
+#### 使用@MockBean模拟Bean
+
 @MockBean注解用于在Spring应用上下文中添加一个模拟的Bean，它将在测试开始时自动添加到Spring应用上下文中。
 示例：
 
@@ -437,7 +440,8 @@ public class MyServiceTest {
 }
 ```
 
-#### 3.3.2 使用@Mock模拟Bean
+#### 使用@Mock模拟Bean
+
 @Mock注解用于创建一个模拟对象，但它不会自动添加到Spring应用上下文中。需要手动将其添加到Spring应用上下文中。
 示例：
 
@@ -462,7 +466,8 @@ public class MyServiceTest {
 }
 ```
 
-### 3.3 使用RestTemplate进行Web层测试
+### 使用RestTemplate进行Web层测试
+
 RestTemplate是Spring提供的一个用于测试Web层的工具类，它可以发送HTTP请求并验证响应。
 示例：
 
@@ -486,7 +491,8 @@ public class MyControllerTest {
 
 
 
-## 4. 要注意的问题
+## 要注意的问题
+
 Mockito 是一个流行的 Java 测试框架，用于模拟依赖关系和编写单元测试。在使用 Mockito 的过程中，开发人员可能会遇到一些常见的问题和错误。以下是一些使用 Mockito 时的坑点总结 ：
 
 1. 滥用 @Mock 和 @InjectMocks 注解：

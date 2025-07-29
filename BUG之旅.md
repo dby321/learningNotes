@@ -1,6 +1,6 @@
 
 
-## 1. 前端登录页面$route是什么？
+## 前端登录页面$route是什么？
 
 ### 问题描述
 
@@ -308,40 +308,4 @@ public class TimeResponse {
 3. **使用 `@JsonFormat` 注解**：如果不需要全局修改，可以在特定字段上使用注解来指定格式和时区。
 
 这种方法相对简单，只需要几行代码即可实现，同时确保了时间和时区信息的一致性和准确性。
-
-
-
-## 3. nacos找不到配置文件怎么办？
-
-1. 查看配置文件nacos地址和账号密码是否配置正确
-2. 查看配置文件的**命名空间**
-3. 检查nacos命名空间下配置文件名字是否正确
-4. 配置正确的命名空间，上传项目nacos配置压缩包
-
-
-
-## 4. Mysql Too Many Connections怎么办？
-
-1. 修改my.ini
-
-```
-#加大连接列表数量
-
-max_connections = 2000
-
-# 调整失效连接清理时长 缩短
-
-wait_timeout=7200
-
-interactive_timeout=7200
-```
-
-## 5. 实体类名字重复怎么办？
-
-```
-nested exception is org.apache.ibatis.type.TypeException: The alias 'SmsLoginLog' is already mapped to the value 'com.ivu.system.api.domain.SmsLoginLog'.
-	
-```
-
-1. 删除这个实体类，不让项目下有重复名字的实体类
 

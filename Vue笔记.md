@@ -1,6 +1,8 @@
 
 # Vue2笔记
 
+
+
 [黑马-Vue教程](https://www.bilibili.com/video/BV11s411A7h6/?spm_id_from=333.337.search-card.all.click&vd_source=f58f2e2144be4e99a8cf800afeecbbcb)
 
 [尚硅谷-张天禹老师笔记+代码](https://github.com/yangxuesong0122/ssg--vue23-)
@@ -17,7 +19,7 @@ npm install packageName --registry=http://registry.npmmirror.com
 > - 声明式编码 
 > - 虚拟DOM+优秀的Diff算法
 
-## 1.Vue.js基本操作
+## Vue.js基本操作
 
 > 容器和Vue实例是一一对应的。
 
@@ -767,7 +769,7 @@ var myPlugin = {
 
 
 
-## 2.Vue中的过渡和动画
+## Vue中的过渡和动画
 
 > [Vue官网-动画](https://cn.vuejs.org/v2/guide/transitions.html)
 >
@@ -1006,7 +1008,7 @@ $("#dummy").velocity({
 
 
 
-## 3.Vue组件
+## Vue组件
 
 > [Vue官网 Vue.extend](https://cn.vuejs.org/v2/api/#Vue-extend)
 > [Vue官网-Vue.component](https://cn.vuejs.org/v2/api/#Vue-component)
@@ -1259,7 +1261,8 @@ PubSub.unsubscribe(token);
 
 
 
-## 4.VueX
+## VueX
+
 > [Vuex官网](https://v3.vuex.vuejs.org/zh/)
 > Vuex 是一个专为 Vue.js 应用程序开发的状态管理库。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。
 
@@ -1452,7 +1455,7 @@ export default {
  
 ```
 
-## 5.Vue-router
+## Vue-router
 > [Vue-router官网](https://router.vuejs.org/zh/)
 > Vue-router 是一个与 Vue.js 核心深度集成的路由器库。它为单页应用提供了导航，并支持异步组件。
 > 每次切换路由，原组件会被销毁，重新渲染新的组件。
@@ -2048,7 +2051,7 @@ const history = require('connect-history-api-fallback')
 app.use('/', history());
 ```
 
-## 6.Vue请求数据
+## Vue请求数据
 
 > [菜鸟教程-AJAX-向服务器发送请求](https://www.w3school.com.cn/ajax/ajax_xmlhttprequest_send.asp)
 
@@ -2114,7 +2117,7 @@ fetch(url, {
 
 > [Github-axios](https://github.com/axios/axios)
 
-## 7.Vue-cli
+## Vue-cli
 
 > [Vue-cli官网 vue.config.js基础配置](https://cli.vuejs.org/zh/config/#pages)
 ```js
@@ -2144,12 +2147,12 @@ module.exports = {
 }
 ```
 
-## 8.Scss和Sass
+## Scss和Sass
 
 - SCSS 需要使用分号和花括号而不是换行和缩进 **好用**
 - Sass 使用换行和缩进而不是分号和花括号 **难用**
 
-## 9.Vue原理
+## Vue原理
 
 ### 数据代理
 
@@ -2179,7 +2182,7 @@ console.log(Object.keys(object));
 
 > Vue通过Object.defineProperty()将data中的属性添加到Vue实例的属性上，并使用getter/setter来拦截对Vue实例属性的访问和修改。
 
-## 10.Element-UI
+## Element-UI
 
 > [Element-UI官网](https://element.eleme.cn/#/zh-CN/component/quickstart)
 
@@ -2187,7 +2190,7 @@ console.log(Object.keys(object));
 
 [Vue3笔记](https://gitee.com/marina-37/vue3_vite_ts)
 
-## 1.Vue核心语法
+## Vue核心语法
 
 > - Vue2是OptionsAPI
 > - Vue3是CompositionAPI
@@ -2791,7 +2794,7 @@ onMounted(() => {
 </style>
 ```
 
-## 2.Vue生命周期
+## Vue生命周期
 
 - `setup`:创建阶段
 
@@ -2805,7 +2808,7 @@ onMounted(() => {
 - `onDeactivated` – 被 `keep-alive` 缓存的组件停用时调用。
 - `onErrorCaptured` – 当捕获一个来自子孙组件的错误时被调用。此钩子会收到三个参数：错误对象、发生错误的组件实例以及一个包含错误来源信息的字符串。此钩子可以返回 `false` 以阻止该错误继续向上传播。
 
-## 3.Hooks
+## Hooks
 
 - 加法功能-Hook
 
@@ -2876,13 +2879,13 @@ subFn(num1.value, num2.value)
 
 ```
 
-## 4.Vue-router
+## Vue-router
 
 > OptionsAPI和CompositionAPI对应着写
 
-## 5.Pinia
+## Pinia
 
-## 6.组件通信
+## 组件通信
 
 ### 子传父 $emit
 
@@ -2924,7 +2927,7 @@ const ziChuanFu = () => {
 
 
 
-## 7.其他API
+## 其他API
 
 
 
