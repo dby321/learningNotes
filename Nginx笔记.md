@@ -1,6 +1,6 @@
 # Nginx笔记
 
-## 1. Nginx简介
+## Nginx简介
 
 Nginx 是由俄罗斯开发者Igor Sysoev创建的，主要作为一个高性能的HTTP和反向代理服务器。它还支持作为SMTP、POP3和IMAP协议的代理服务器，有报告称，Nginx在能处理50000并发连接数。国内百度、新浪、腾讯等公司都使用Nginx作为WEB服务器。
 
@@ -8,27 +8,27 @@ Nginx 是由俄罗斯开发者Igor Sysoev创建的，主要作为一个高性能
 - **配置生成工具**: [DigitalOcean-Nginx配置在线生成](https://www.digitalocean.com/community/tools/nginx?global.app.lang=zhCN)
 - [Linux搭建nginx+keepalived 高可用(主备+双主模式)](https://blog.csdn.net/weixin_52270081/article/details/118341576)
 
-## 2. Nginx常见概念
+## Nginx常见概念
 
-### 2.1 正向代理
+### 正向代理
 
 正向代理（Proxy Server）是介于客户端与服务器之间的一个中间代理服务器，它用于拦截客户端的请求，并把请求转发给服务器，然后再把服务器的响应返回给客户端，VPN就是正向代理的一种。
 
-### 2.2 反向代理
+### 反向代理
 
 客户端对反向代理是无感知的，我们只需要把请求发给反向代理服务器，暴露的是代理服务器的地址，隐藏了服务器真实地址。
 
-### 2.3 负载均衡
+### 负载均衡
 
 负载均衡（Load Balancing）是计算机网络技术，它将请求分发到多个服务器上，从而提高服务器的处理能力。
 
-### 2.4 动静分离
+### 动静分离
 
 动静分离（Static/Dynamic Separation）是网站部署的一种方式，它将静态资源（如HTML、CSS、JavaScript、图片等）和动态资源（如PHP、ASP、JSP等）分离，从而提高网站性能。
 
-## 3. Nginx安装
+## Nginx安装
 
-### 3.1 在线安装Nginx
+### 在线安装Nginx
 
 Nginx 是一款高性能的 Web 服务器，广泛用于托管网站和应用程序。本文将介绍如何在 Linux 系统上安装、配置和启动 Nginx，并将其设置为系统服务。
 
@@ -164,7 +164,7 @@ systemctl restart nginx
 
 通过以上步骤，您可以在 Linux 系统上成功安装、配置和启动 Nginx，并将其设置为系统服务，以便在系统启动时自动启动 Nginx。这将为您的 Web 应用程序提供稳定性和高性能，同时为您提供了丰富的自定义选项，以满足各种需求。
 
-### 3.2 使用Docker安装Nginx
+### 使用Docker安装Nginx
 
 Docker 是一个强大的容器化工具，而 Nginx 是一个高性能的 Web 服务器和反向代理。将两者结合可以为 Web 服务提供强大且可扩展的解决方案。以下是使用 Docker 部署 Nginx 的分步指南。
 
@@ -240,7 +240,7 @@ docker restart nginx
 
 使用 Docker 部署 Nginx 简化了 Web 服务器的设置过程，并确保你的配置在不同环境中具有可移植性和一致性。通过以上步骤，你可以快速使用 Docker 启动并运行 Nginx。
 
-## 4. Nginx常见命令
+## Nginx常见命令
 
 - **启动Nginx**：`nginx`
 - **停止Nginx**：`nginx -s stop`
@@ -249,7 +249,7 @@ docker restart nginx
 - **查看Nginx状态**：`nginx -t`
 - **查看Nginx版本**：`nginx -v`
 
-## 5. Nginx配置文件概述
+## Nginx配置文件概述
 
 Nginx的配置文件通常位于`/etc/nginx/nginx.conf`，可以通过`nginx -t`命令来检查配置文件的语法是否正确。
 
@@ -262,14 +262,16 @@ worker_processes  1;  # 设置进程数
 events {}  # 事件块，基本不需要修改
 http {}  # http块，主要修改位置
 ```
-## 6. Nginx常见命令
+## Nginx常见命令
+
 - **启动Nginx**：`nginx`
 - **停止Nginx**：`nginx -s stop`
 - **重新加载Nginx**：`nginx -s reload`
 - **重启Nginx**：`nginx -s restart`
 - **查看Nginx状态**：`nginx -t`
 - **查看Nginx版本**：`nginx -v`
-## 7. Tomcat安装
+## Tomcat安装
+
 Tomcat是一个开放源代码的Java Servlet容器，用于在服务器上运行Java Web应用程序。以下是在Linux系统上安装Tomcat的分步指南：
 1. 下载Tomcat：
  - 从Tomcat官网下载最新的Tomcat安装包。
@@ -290,12 +292,13 @@ Tomcat是一个开放源代码的Java Servlet容器，用于在服务器上运�
 6. 卸载Tomcat：
  - `rm -rf $CATALINA_HOME`
 
-## 8. 防火墙开放端口
+## 防火墙开放端口
+
 防火墙的端口需要根据实际情况进行开放。
 - **防火墙永久开放8080端口**：`firewall-cmd --add-port=8080/tcp --permanent`
 - **重新加载防火墙配置**：`firewall-cmd --reload`
 - **查看已经开放的端口**：`firewall-cmd --list-all`
-## 9. 反向代理配置
+## 反向代理配置
 
 ```
 server {
@@ -324,7 +327,8 @@ server {
 - `^~`:用于表示uri不包含正则表达式，并且区分大小写
 - `=`:表示uri等于正则表达式，并且区分大小写
 
-## 10. 负载均衡配置
+## 负载均衡配置
+
 Nginx 负载均衡是一种高效的网络流量分配方式，它可以将客户端的请求分散到多个服务器上，从而提高整个应用的吞吐率和容错能力。在配置 Nginx 进行负载均衡时，主要涉及到 `proxy_pass` 指令和 `upstream` 模块。通过这些配置，Nginx 可以将请求代理转发到一组服务器，即虚拟服务池。
 
 ### 配置示例
@@ -392,7 +396,8 @@ Nginx 支持多种负载均衡策略，包括但不限于以下几种：
        server srv3.example.com;
    }
    ```
-## 11. 动静分离配置
+## 动静分离配置
+
 以下是优化后的 Markdown 格式内容，可直接复制到笔记中：
 
 ### 基础配置文件 (`nginx.conf`)
@@ -460,7 +465,9 @@ http {
 
 - **动态请求**  
   访问 `http://localhost/api`，请求被转发至 `localhost:81` 处理，后端服务器日志中会记录客户端真实 IP。
-## 12. 高可用集群配置-主从节点
+
+## 高可用集群配置-主从节点
+
 以下是 Nginx 高可用集群的配置示例，包括主从节点和热备节点。
 ### keepAlived 安装
 1. 安装基础依赖包
@@ -677,7 +684,7 @@ server {
    ```bash
    systemctl start keepalived
    ```
-## 13. 高可用集群配置-双主模式
+## 高可用集群配置-双主模式
 
 
 1. Nginx1 配置文件
@@ -825,8 +832,8 @@ server {
    - [http://192.168.200.200](http://192.168.200.200)
    - [http://192.168.200.210](http://192.168.200.210)
 
+## keepAlived配置参考
 
-## 14. keepAlived配置参考
 ```
 #全局配置
 global_defs {
@@ -997,7 +1004,7 @@ virtual_server 10.10.10.2 1358 {
 }
 
 ```
-## 15. Nginx架构原理与优化
+## Nginx架构原理与优化
 
 ### 进程模型
 - Master-Worker架构
