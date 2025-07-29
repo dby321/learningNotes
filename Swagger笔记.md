@@ -1,53 +1,124 @@
+
+# Swagger 笔记
+
+## 概述
+
+Swagger 是一套围绕 OpenAPI 规范的开源工具集，用于设计、构建、记录和使用 RESTful API。它提供了一个交互式的 API 文档界面，可以自动生成、可视化，并支持在线测试。
+
+## 核心组件
+
+*   **OpenAPI Specification (OAS)**: Swagger 的核心，一个描述 RESTful API 的标准、语言无关的规范（通常以 YAML 或 JSON 格式编写）。
+*   **Swagger UI**: 一个可视化工具，将 OpenAPI 定义转换为交互式 HTML 文档，用户可以在浏览器中查看 API 端点、参数、模型，并直接进行测试。
+*   **Swagger Editor**: 一个基于浏览器的编辑器，用于编写和设计 OpenAPI 规范，提供实时预览和语法验证。
+*   **Swagger Codegen**: 根据 OpenAPI 定义生成服务器端骨架代码和客户端 SDK 的工具。
+*   **Swagger Inspector**: 用于测试 API 并生成 OpenAPI 定义的工具。
+
+## 主要优势
+
+*   **自动化文档**: 减少手动编写和维护文档的工作量，文档与代码保持同步。
+*   **交互式体验**: 提供 UI 界面，方便开发者和测试人员直接调用 API 进行测试。
+*   **设计优先**: 支持先设计 API 接口（使用 Swagger Editor），再生成代码，促进前后端并行开发。
+*   **标准化**: 遵循 OpenAPI 规范，便于工具集成和跨团队协作。
+*   **客户端生成**: 可以快速生成多种编程语言的客户端库。
+
+## 常用注解 (以 Springfox/Springdoc 为例)
+
+> **注意**: Springfox Swagger 2.x 与 Springdoc OpenAPI 3.x 注解有所不同。以下是 Springdoc OpenAPI 3.x (基于 OpenAPI 3) 的常用注解。
+
+###  控制器/类级别
+
+*   `@Tag(name = "分组名称", description = "分组描述")`: 为 Controller 分组，显示在 UI 的标签页。
+*   `@SecurityRequirement(name = "安全方案名称")`: 为整个 Controller 指定所需的安全方案。
+
+### 接口方法级别
+
+*   `@Operation(summary = "简要描述", description = "详细描述")`: 描述单个 API 操作。
+*   `@Parameters({@Parameter(...)})`: 定义一组参数（较少用，通常用 `@Parameter` 直接标注在参数上）。
+*   `@Parameter(name = "参数名", description = "参数描述", required = true, example = "示例值")`: 描述单个参数（通常用于 `@RequestParam`, `@PathVariable` 等）。
+*   `@RequestBody(description = "请求体描述", required = true, content = @Content(schema = @Schema(implementation = YourDTO.class)))`: 描述请求体。
+*   `@ApiResponses`: 包含多个 `@ApiResponse`。
+*   `@ApiResponse(responseCode = "200", description = "成功响应描述", content = @Content(schema = @Schema(implementation = YourDTO.class)))`: 描述特定 HTTP 状态码的响应。
+*   `@Hidden`: 隐藏某个 API 方法，不显示在文档中。
+
+### 模型 (DTO/Entity) 级别
+
+*   `@Schema(description = "模型描述", example = "{ \"id\": 1, \"name\": \"example\" }")`: 描述数据模型。
+*   `@Schema(description = "字段描述", example = "John Doe", required = true)`: 描述模型中的字段。
+*   `@ArraySchema(schema = @Schema(implementation = YourItem.class))`: 描述数组类型的字段。
+
+## 集成 (以 Spring Boot + Springdoc OpenAPI 为例)
+
+1.  **添加依赖** (Maven):
+    ```xml
+    <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-ui</artifactId>
+        <version>1.7.0</version> <!-- 请使用最新稳定版本 -->
+    </dependency>
+    ```
+
+2.  **配置** (可选，`application.yml`):
+    ```yaml
+    springdoc:
+      # 自定义 API 文档路径
+      api-docs:
+        path: /v3/api-docs
+      # 自定义 Swagger UI 路径
+      swagger-ui:
+        path: /swagger-ui.html
+        # 启用或禁用
+        enabled: true
+      # 包扫描路径
+      packages-to-scan: com.example.api
+      # 扫描的类路径
+      # classes-to-scan: com.example.api.MyController
+    ```
+
+3.  **访问**:
+    *   JSON/YAML 格式的 OpenAPI 定义: `http://localhost:8080/v3/api-docs`
+    *   Swagger UI 界面: `http://localhost:8080/swagger-ui.html`
+
+## 常见配置
+
+*   **API 信息**: 在配置类中使用 `@OpenAPIDefinition` 或通过配置文件设置标题、版本、描述、联系人、许可证等。
+*   **服务器配置**: 定义 API 的服务器 URL (`@Server` 或配置 `springdoc.server-url`)。
+*   **安全方案**: 配置 JWT、OAuth2 等安全方案 (`@SecurityScheme` 注解或配置)。
+*   **分组**: 使用 `GroupedOpenApi` 创建多个文档分组（如按版本、模块）。
+
+## 最佳实践
+
+*   **保持同步**: 确保代码实现与 Swagger 文档描述一致。
+*   **详细描述**: 为 API、参数、模型、字段提供清晰、准确的描述。
+*   **使用示例**: 为请求/响应提供示例数据，方便理解。
+*   **版本管理**: 妥善管理 API 版本，文档也应体现版本。
+*   **安全考虑**: 在生产环境中谨慎暴露 Swagger UI，可通过配置禁用或添加访问控制。
+*   **利用工具**: 使用 Swagger Editor 设计 API，Swagger Codegen 生成客户端。
+
+## 注意事项
+
+*   **性能**: 大型 API 的文档生成可能消耗资源，注意监控。
+*   **敏感信息**: 避免在公开的文档中暴露敏感的内部信息或测试数据。
+*   **规范更新**: OpenAPI 规范在演进（如 3.0, 3.1），注意工具和注解的兼容性。
+*   **替代方案**: 了解其他 API 文档工具，如 Postman, Apidoc, RapiDoc 等。
+
+## 资源
+
+*   **OpenAPI Specification**: https://spec.openapis.org/
+*   **Swagger 官网**: https://swagger.io/
+*   **Springdoc OpenAPI**: https://springdoc.org/
+*   **Swagger Editor 在线版**: https://editor.swagger.io/
+
+
+
+
+# 网上博客的swagger笔记
+
   [CSDN-Swagger3.0介绍及springboot整合Swagger3.0](https://blog.csdn.net/qq\_43521797/article/details/115835771)
+
+
 
 Swagger
 ----------------------------------------------------------------------
-
-学习目标：
-
-*   了解Swagger的作用和概念
-*   了解前后端分离
-*   在SpringBoot中集成Swagger
-
-### 一、Swagger出现的原因
-
-**前后端分离**  
-Vue+SpringBoot  
-后端时代：前端只用管理静态页面;html==>后端。模板引擎 JSP=>后端是主力
-
-前后端分离时代：
-
-*   后端：后端控制层，服务层，数据访问层 【后端团队】
-*   前端：前端控制层，视图层 【前端团队】
-    *   伪造后端数据，json。已经存在了，不需要后端，前端工程依|旧能够跑起来·前端后如何交互?===>API
-*   前后端相对独立，松耦合;
-*   前后端甚至可以部署在不同的服务器上;
-
-产生一个问题：
-
-*   前后端集成联调，前端人员和后端人员无法做到，即使协商，尽早解决”，最终导致问题集中爆发;
-
-解决方案
-
-*   首先指定schema\[计划的提纲\]，实时更新最新API，降低集成的风险;
-*   早些年：指定word计划文档;  
-    \-前后端分离：
-
-前后端分离:
-
-*   前端测试后端接口:postman（测试工具）
-*   后端提供接口，需要实时更新最新的消息及改动!
-
-### 二、Swagger介绍
-
-*   号称世界上最流行的Api框架；
-*   Restful Api 文档在线自动生成工具=>Api文档与API定义同步更新
-*   直接运行，可以在在线测试API 接口
-*   支持多种语言：（java，Php…）
-
-官网：[https://swagger.io/](https://swagger.io/)
-
-#### 1、springfox-swagger 2
 
 SpringBoot项目整合swagger2需要用到两个依赖：springfox-swagger2和springfox-swagger-ui，用于自动生成swagger文档。
 
@@ -572,5 +643,4 @@ public class User {
  
 
   
-
 
