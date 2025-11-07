@@ -1,6 +1,14 @@
 
 
-## 前端登录页面$route是什么？
+
+
+[TOC]
+
+# BUG之旅
+
+
+
+## 1. 前端登录页面$route是什么？
 
 ### 问题描述
 
@@ -308,4 +316,30 @@ public class TimeResponse {
 3. **使用 `@JsonFormat` 注解**：如果不需要全局修改，可以在特定字段上使用注解来指定格式和时区。
 
 这种方法相对简单，只需要几行代码即可实现，同时确保了时间和时区信息的一致性和准确性。
+
+## 3.富文本处理办法
+
+1. 字段必须叫request.js中encode的字段(包括但不限于detail、suggestion等)，如果字段名不在request.js中，可以自行补充要编码的判断（因为http链接无法传递到后端，所以需要**URL 编码（URL Encoding,百分号编码）**）
+
+```js
+if (dataObj ? dataObj.suggestion : "") {
+          config.data.suggestion = encodeURIComponent(config.data.suggestion);
+}
+```
+
+2. 富文本编辑器必须写v-if="open"否则图片会不显示
+3. 后端必须写富文本解析代码
+
+```java
+//富文本解析
+        if (StringUtils.isNotEmpty(villageTownMemory.getDetail())) {
+            try {
+                villageTownMemory.setDetail(URLDecoder.decode(villageTownMemory.getDetail(), "utf-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new CustomException("富文本内容解码失败");
+            }
+        }
+```
+
+
 
