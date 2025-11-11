@@ -624,4 +624,71 @@ class ReflectionDemo {
 
 ## 3. Java8特性
 
-[腾讯云-这篇最全 Java 8 讲解，有没有之一看完再说](https://cloud.tencent.com/developer/article/1746037)
+### Stream流
+
+[stream流讲解](https://juejin.cn/post/7528619001359024154)
+
+### Optional
+
+#### 案例1
+
+```java
+Optional.ofNullable(list).orElse(new ArrayList<>()).stream().forEach(e->{
+            if(StringUtils.isEmpty(e.getPhotoUrl())){
+                e.setPhotoUrl(defalutUrl);
+            }
+        });
+```
+
+```java
+if (list != null && !list.isEmpty()) {
+    for (Object e : list) {
+        if (StringUtils.isEmpty(e.getPhotoUrl())) {
+            e.setPhotoUrl(defalutUrl);
+        }
+    }
+}
+```
+
+#### 案例2 
+
+
+```java
+Optional message = Optional.ofNullable(record.value());
+        if (message.isPresent()) {
+        }
+```
+
+```java
+Object message = record.value();
+if (message != null) {
+    // 处理message
+}
+```
+
+#### 案例3
+
+```java
+Optional<TrashCan> first = trashCanLatestPushDataList.stream().filter(e -> e.getSerialNumber().equals(info.getImei())).findFirst();
+                    if (first.isPresent()) {
+                        info.setEqStatus("0");
+                    } else {
+                        info.setEqStatus("-1");
+                    }
+```
+
+```java
+boolean found = false;
+for (WaterQuality e : listWaterQuality) {
+    if (e.getSerialNumber().equals(info.getImei())) {
+        found = true;
+        break;
+    }
+}
+if (found) {
+    info.setEqStatus("0");
+} else {
+    info.setEqStatus("-1");
+}
+```
+
