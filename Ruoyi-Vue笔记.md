@@ -1159,3 +1159,1062 @@ ServiceLoader<MyService> loader = ServiceLoader.load(MyService.class);
 
 
 SPI 是一种强大的解耦机制，为应用程序提供了良好的扩展性和插件化能力，是现代 Java 框架广泛采用的设计模式。
+
+## 注解
+
+
+
+### @Desensitization
+
+- `@JacksonAnnotationsInside`这是Jackson库提供的注解，用于标记这是一个组合注解，它会将其他Jackson注解组合在一起。
+  - 没有 `@JacksonAnnotationsInside` 的情况下，Jackson 只会直接检查字段上的注解。但有了这个注解后，Jackson 会"深入"到 @Desensitization 注解内部，查找它包含的 Jackson 注解（这里是 @JsonSerialize），并应用相应的处理逻辑。
+
+- `@JsonSerialize(using = DesensitizedFilter.class)`这是关键部分，指定使用 DesensitizedFilter 类来进行序列化处理。当带有此注解的字段被序列化为JSON时，会通过 DesensitizedFilter 进行处理
+
+```java
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@JacksonAnnotationsInside
+@JsonSerialize(using = DesensitizedFilter.class)
+public @interface Desensitization {
+
+    DesensitizedType type() default DesensitizedType.NAME;
+}
+
+```
+
+
+
+```java
+/**
+ * @Description:脱敏filter
+ * @Author：licy
+ * @Date：2023/5/10
+ */
+public class DesensitizedFilter extends JsonSerializer<String> implements ContextualSerializer {
+
+    private DesensitizedType type;
+
+    public DesensitizedFilter() {
+    }
+
+    public DesensitizedFilter(DesensitizedType type) {
+        this.type = type;
+    }
+
+    @Override
+    public void serialize(String value, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        if (ObjectUtils.isEmpty(value)) {
+            return;
+        }
+        String val;
+        switch (type) {
+            case NAME:
+                val = DesensitizedUtil.chineseName(value);
+                break;
+            case ID_CARD:
+                val = DesensitizedUtil.idCardNum(value,5,2);
+                break;
+            case MOBILE:
+                val = DesensitizedUtil.mobilePhone(value);
+                break;
+            case EMAIL:
+                val = DesensitizedUtil.email(value);
+                break;
+            case PASSWORD:
+                val = DesensitizedUtil.password(value);
+                break;
+            case RSA:
+                try {
+                    val = SysRsaUtils.encryptByPublicKey(value);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            default:
+                val = value;
+                break;
+        }
+        jsonGenerator.writeString(val);
+    }
+
+    @Override
+    public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) throws JsonMappingException {
+        if (ObjectUtils.isEmpty(property)) {
+            return prov.findNullValueSerializer(property);
+        }
+        if (!Objects.equals(property.getType().getRawClass(), String.class)) {
+            return prov.findNullValueSerializer(property);
+        }
+        Desensitization annotation = property.getAnnotation(Desensitization.class);
+        if (ObjectUtils.isEmpty(annotation)) {
+            return prov.findNullValueSerializer(property);
+        }
+        return new DesensitizedFilter(annotation.type());
+    }
+}
+
+```
+
+
+
+
+
+```java
+package com.ivu.common.core.utils;
+
+import cn.hutool.core.util.StrUtil;
+
+public class DesensitizedUtil {
+    public DesensitizedUtil() {
+    }
+
+    public static String chineseName(String fullName) {
+        return StrUtil.isBlank(fullName) ? "" : StrUtil.hide(fullName, 1, fullName.length());
+    }
+
+    public static String idCardNum(String idCardNum, int front, int end) {
+        if (StrUtil.isBlank(idCardNum)) {
+            return "";
+        } else if (front + end > idCardNum.length()) {
+            return "";
+        } else {
+            return front >= 0 && end >= 0 ? StrUtil.hide(idCardNum, front, idCardNum.length() - end) : "";
+        }
+    }
+
+    public static String fixedPhone(String num) {
+        return StrUtil.isBlank(num) ? "" : StrUtil.hide(num, 4, num.length() - 2);
+    }
+
+    public static String mobilePhone(String num) {
+        return StrUtil.isBlank(num) ? "" : StrUtil.hide(num, 3, num.length() - 4);
+    }
+
+    public static String address(String address, int sensitiveSize) {
+        if (StrUtil.isBlank(address)) {
+            return "";
+        } else {
+            int length = address.length();
+            return StrUtil.hide(address, length - sensitiveSize, length);
+        }
+    }
+
+    public static String email(String email) {
+        if (StrUtil.isBlank(email)) {
+            return "";
+        } else {
+            int index = StrUtil.indexOf(email, '@');
+            return index <= 1 ? email : StrUtil.hide(email, 3, index);
+        }
+    }
+
+    public static String password(String password) {
+        return StrUtil.isBlank(password) ? "" : StrUtil.repeat('*', password.length());
+    }
+
+    public static String carLicense(String carLicense) {
+        if (StrUtil.isBlank(carLicense)) {
+            return "";
+        } else {
+            if (carLicense.length() == 7) {
+                carLicense = StrUtil.hide(carLicense, 3, 6);
+            } else if (carLicense.length() == 8) {
+                carLicense = StrUtil.hide(carLicense, 3, 7);
+            }
+
+            return carLicense;
+        }
+    }
+
+    public static String bankCard(String bankCardNo) {
+        if (StrUtil.isBlank(bankCardNo)) {
+            return bankCardNo;
+        } else {
+            bankCardNo = StrUtil.trim(bankCardNo);
+            if (bankCardNo.length() < 9) {
+                return bankCardNo;
+            } else {
+                int length = bankCardNo.length();
+                int midLength = length - 8;
+                StringBuilder buf = new StringBuilder();
+                buf.append(bankCardNo, 0, 4);
+
+                for(int i = 0; i < midLength; ++i) {
+                    if (i % 4 == 0) {
+                        buf.append(' ');
+                    }
+
+                    buf.append('*');
+                }
+
+                buf.append(' ').append(bankCardNo, length - 4, length);
+                return buf.toString();
+            }
+        }
+    }
+
+}
+
+```
+
+#### 具体脱敏情况
+
+##### 1. 姓名脱敏 (NAME)
+
+```java
+public static String chineseName(String fullName) {
+    return StrUtil.isBlank(fullName) ? "" : StrUtil.hide(fullName, 1, fullName.length());
+}
+```
+
+
+使用 `StrUtil.hide(fullName, 1, fullName.length())` 方法，保留第一个字符，其余用 `*` 替换。
+
+**示例结果：**
+- "张三" → "张*"
+- "李小明" → "李**"
+- "王小花花" → "王***"
+
+##### 2. 身份证号脱敏 (ID_CARD)
+
+```java
+public static String idCardNum(String idCardNum, int front, int end) {
+    // ...
+    return front >= 0 && end >= 0 ? StrUtil.hide(idCardNum, front, idCardNum.length() - end) : "";
+}
+```
+
+
+调用时使用 [DesensitizedUtil.idCardNum(value,5,2)](file://D:\idea_workspace\face-rec-saas\ivu-common\ivu-common-core\src\main\java\com\ivu\common\core\utils\DesensitizedUtil.java#L17-L25)，保留前5位和后2位。
+
+**示例结果：**
+- "110101199001011234" → "11010***********34"
+- "440106199001012345" → "44010***********45"
+
+##### 3. 手机号脱敏 (MOBILE)
+
+```java
+public static String mobilePhone(String num) {
+    return StrUtil.isBlank(num) ? "" : StrUtil.hide(num, 3, num.length() - 4);
+}
+```
+
+
+保留前3位和后4位。
+
+**示例结果：**
+- "13812345678" → "138****5678"
+- "15987654321" → "159****4321"
+
+##### 4. 邮箱脱敏 (EMAIL)
+
+```java
+public static String email(String email) {
+    if (StrUtil.isBlank(email)) {
+        return "";
+    } else {
+        int index = StrUtil.indexOf(email, '@');
+        return index <= 1 ? email : StrUtil.hide(email, 3, index);
+    }
+}
+```
+
+
+保留前3位和@及之后的部分。
+
+**示例结果：**
+- "example@qq.com" → "exa***@qq.com"
+- "test@example.com" → "tes***@example.com"
+- "ab@163.com" → "ab@163.com" (用户名太短则不脱敏)
+
+##### 5. 密码脱敏 (PASSWORD)
+
+```java
+public static String password(String password) {
+    return StrUtil.isBlank(password) ? "" : StrUtil.repeat('*', password.length());
+}
+```
+
+
+用 `*` 替换所有字符。
+
+**示例结果：**
+- "123456" → "******"
+- "password123" → "***********"
+
+##### 6. RSA加密 (RSA)
+
+```java
+public static String encryptByPublicKey(String text) throws Exception {
+    // ...
+    X509EncodedKeySpec x509EncodedKeySpec2 = new X509EncodedKeySpec(Base64.decodeBase64(Constants.Keys.PUBLIC_KEY));
+    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+    PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec2);
+    Cipher cipher = Cipher.getInstance("RSA");
+    cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+    byte[] result = cipher.doFinal(text.getBytes());
+    return Base64.encodeBase64String(result);
+}
+```
+
+
+使用系统公钥进行RSA加密，结果是Base64编码的密文。
+
+**示例结果：**
+- "hello" → "加密后的Base64字符串，长度较长"
+
+##### 总结
+
+不同类型的脱敏处理方式和效果：
+
+1. **姓名** - 保留姓氏，名字用*替换
+2. **身份证** - 保留前5位和后2位，中间用*替换
+3. **手机号** - 保留前3位和后4位，中间4位用*替换
+4. **邮箱** - 保留前3位和@及之后部分，中间用*替换
+5. **密码** - 全部用*替换
+6. **RSA加密** - 使用公钥加密，输出Base64编码的密文
+
+这些脱敏方式在保护用户隐私的同时，还能保留部分信息供业务使用，比如通过手机号前三位可以知道运营商，通过邮箱后缀可以知道邮箱服务商等。
+
+
+
+### @Excel
+
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.math.BigDecimal;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Excel
+{
+    /**
+     * 导出时在excel中排序
+     */
+    public int sort() default Integer.MAX_VALUE;
+
+    /**
+     * 导出到Excel中的名字.
+     */
+    public String name() default "";
+
+    /**
+     * 日期格式, 如: yyyy-MM-dd
+     */
+    public String dateFormat() default "";
+
+    /**
+     * 读取内容转表达式 (如: 0=男,1=女,2=未知)
+     */
+    public String readConverterExp() default "";
+
+    /**
+     * 分隔符，读取字符串组内容
+     */
+    public String separator() default ",";
+
+    /**
+     * BigDecimal 精度 默认:-1(默认不开启BigDecimal格式化)
+     */
+    public int scale() default -1;
+
+    /**
+     * BigDecimal 舍入规则 默认:BigDecimal.ROUND_HALF_EVEN
+     */
+    public int roundingMode() default BigDecimal.ROUND_HALF_EVEN;
+
+    /**
+     * 导出类型（0数字 1字符串）
+     */
+    public ColumnType cellType() default ColumnType.STRING;
+
+    /**
+     * 导出时在excel中每个列的高度 单位为字符
+     */
+    public double height() default 14;
+
+    /**
+     * 导出时在excel中每个列的宽 单位为字符
+     */
+    public double width() default 16;
+
+    /**
+     * 文字后缀,如% 90 变成90%
+     */
+    public String suffix() default "";
+
+    /**
+     * 当值为空时,字段的默认值
+     */
+    public String defaultValue() default "";
+
+    /**
+     * 提示信息
+     */
+    public String prompt() default "";
+
+    /**
+     * 设置只能选择不能输入的列内容.
+     */
+    public String[] combo() default {};
+
+    /**
+     * 是否导出数据,应对需求:有时我们需要导出一份模板,这是标题需要但内容需要用户手工填写.
+     */
+    public boolean isExport() default true;
+
+    /**
+     * 另一个类中的属性名称,支持多级获取,以小数点隔开
+     */
+    public String targetAttr() default "";
+
+    /**
+     * 是否自动统计数据,在最后追加一行统计数据总和
+     */
+    public boolean isStatistics() default false;
+
+    /**
+     * 导出字段对齐方式（0：默认；1：靠左；2：居中；3：靠右）
+     */
+    Align align() default Align.AUTO;
+
+    public enum Align
+    {
+        AUTO(0), LEFT(1), CENTER(2), RIGHT(3);
+        private final int value;
+
+        Align(int value)
+        {
+            this.value = value;
+        }
+
+        public int value()
+        {
+            return this.value;
+        }
+    }
+
+    /**
+     * 字段类型（0：导出导入；1：仅导出；2：仅导入）
+     */
+    Type type() default Type.ALL;
+
+    public enum Type
+    {
+        ALL(0), EXPORT(1), IMPORT(2);
+        private final int value;
+
+        Type(int value)
+        {
+            this.value = value;
+        }
+
+        public int value()
+        {
+            return this.value;
+        }
+    }
+
+    public enum ColumnType
+    {
+        NUMERIC(0), STRING(1), IMAGE(2);
+        private final int value;
+
+        ColumnType(int value)
+        {
+            this.value = value;
+        }
+
+        public int value()
+        {
+            return this.value;
+        }
+    }
+
+```
+
+#### 实际案例
+
+```java
+@Excel(name = "党员姓名",prompt = "必填项",type = Excel.Type.ALL)
+@Excel(name = "性别", readConverterExp= "0=男,1=女,2=未知",combo = "男,女,未知",type = Excel.Type.ALL)
+@Excel(name = "入党日期",width = 30,dateFormat = "yyyy-MM-dd",prompt = "必填项",type = Excel.Type.EXPORT)
+@Excel(name = "转正日期",width = 30,dateFormat = "yyyy-MM-dd",prompt = "必填项",type = Excel.Type.EXPORT)
+```
+
+### @Excels
+
+```java
+@Excels({
+        @Excel(name = "部门名称", targetAttr = "deptName", type = Type.EXPORT),
+        @Excel(name = "部门负责人", targetAttr = "leader", type = Type.EXPORT)
+    })
+    private SysDept dept;
+```
+
+当导出 Excel 时：
+
+- 系统会通过 dept 对象获取 deptName 属性值，填入"部门名称"列
+
+- 系统会通过 dept 对象获取 leader 属性值，填入"部门负责人"列
+
+targetAttr 的作用
+
+- targetAttr 支持多级属性获取，例如：
+- targetAttr = "deptName"：获取一级属性
+- targetAttr = "dept.deptName"：获取二级属性
+- targetAttr = "company.dept.deptName"：获取三级属性
+
+### @JsonFormat()
+
+```java
+@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+```
+
+## 工具类
+
+### R
+
+```java
+import java.io.Serializable;
+import com.ivu.common.core.constant.Constants;
+public class R<T> implements Serializable
+{
+    private static final long serialVersionUID = 1L;
+
+    /** 成功 */
+    public static final int SUCCESS = Constants.SUCCESS;
+
+    /** 失败 */
+    public static final int FAIL = Constants.FAIL;
+
+    private int code;
+
+    private String msg;
+
+    private T data;
+
+    public static <T> R<T> ok()
+    {
+        return restResult(null, SUCCESS, null);
+    }
+
+    public static <T> R<T> ok(T data)
+    {
+        return restResult(data, SUCCESS, null);
+    }
+
+    public static <T> R<T> ok(T data, String msg)
+    {
+        return restResult(data, SUCCESS, msg);
+    }
+
+    public static <T> R<T> fail()
+    {
+        return restResult(null, FAIL, null);
+    }
+
+    public static <T> R<T> fail(String msg)
+    {
+        return restResult(null, FAIL, msg);
+    }
+
+    public static <T> R<T> fail(T data)
+    {
+        return restResult(data, FAIL, null);
+    }
+
+    public static <T> R<T> fail(T data, String msg)
+    {
+        return restResult(data, FAIL, msg);
+    }
+
+    public static <T> R<T> fail(int code, String msg)
+    {
+        return restResult(null, code, msg);
+    }
+
+    private static <T> R<T> restResult(T data, int code, String msg)
+    {
+        R<T> apiResult = new R<>();
+        apiResult.setCode(code);
+        apiResult.setData(data);
+        apiResult.setMsg(msg);
+        return apiResult;
+    }
+
+    public int getCode()
+    {
+        return code;
+    }
+
+    public void setCode(int code)
+    {
+        this.code = code;
+    }
+
+    public String getMsg()
+    {
+        return msg;
+    }
+
+    public void setMsg(String msg)
+    {
+        this.msg = msg;
+    }
+
+    public T getData()
+    {
+        return data;
+    }
+
+    public void setData(T data)
+    {
+        this.data = data;
+    }
+}
+```
+
+### BeanUtils
+
+这是比较好的正则表达式案例和反射案例
+
+```java
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+/**
+ * Bean 工具类
+ * 
+ * @author ivu
+ */
+public class BeanUtils extends org.springframework.beans.BeanUtils
+{
+    /** Bean方法名中属性名开始的下标 */
+    private static final int BEAN_METHOD_PROP_INDEX = 3;
+
+    /** * 匹配getter方法的正则表达式 */
+    private static final Pattern GET_PATTERN = Pattern.compile("get(\\p{javaUpperCase}\\w*)");
+
+    /** * 匹配setter方法的正则表达式 */
+    private static final Pattern SET_PATTERN = Pattern.compile("set(\\p{javaUpperCase}\\w*)");
+
+    /**
+     * Bean属性复制工具方法。
+     * 
+     * @param dest 目标对象
+     * @param src 源对象
+     */
+    public static void copyBeanProp(Object dest, Object src)
+    {
+        try
+        {
+            copyProperties(src, dest);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取对象的setter方法。
+     * 
+     * @param obj 对象
+     * @return 对象的setter方法列表
+     */
+    public static List<Method> getSetterMethods(Object obj)
+    {
+        // setter方法列表
+        List<Method> setterMethods = new ArrayList<Method>();
+
+        // 获取所有方法
+        Method[] methods = obj.getClass().getMethods();
+
+        // 查找setter方法
+
+        for (Method method : methods)
+        {
+            Matcher m = SET_PATTERN.matcher(method.getName());
+            if (m.matches() && (method.getParameterTypes().length == 1))
+            {
+                setterMethods.add(method);
+            }
+        }
+        // 返回setter方法列表
+        return setterMethods;
+    }
+
+    /**
+     * 获取对象的getter方法。
+     * 
+     * @param obj 对象
+     * @return 对象的getter方法列表
+     */
+
+    public static List<Method> getGetterMethods(Object obj)
+    {
+        // getter方法列表
+        List<Method> getterMethods = new ArrayList<Method>();
+        // 获取所有方法
+        Method[] methods = obj.getClass().getMethods();
+        // 查找getter方法
+        for (Method method : methods)
+        {
+            Matcher m = GET_PATTERN.matcher(method.getName());
+            if (m.matches() && (method.getParameterTypes().length == 0))
+            {
+                getterMethods.add(method);
+            }
+        }
+        // 返回getter方法列表
+        return getterMethods;
+    }
+
+    /**
+     * 检查Bean方法名中的属性名是否相等。<br>
+     * 如getName()和setName()属性名一样，getName()和setAge()属性名不一样。
+     * 
+     * @param m1 方法名1
+     * @param m2 方法名2
+     * @return 属性名一样返回true，否则返回false
+     */
+
+    public static boolean isMethodPropEquals(String m1, String m2)
+    {
+        return m1.substring(BEAN_METHOD_PROP_INDEX).equals(m2.substring(BEAN_METHOD_PROP_INDEX));
+    }
+}
+
+```
+
+### HttpHelper
+
+```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import javax.servlet.ServletRequest;
+public class HttpHelper {
+    /**
+     * 获取请求Body
+     *
+     * @param request
+     * @return
+     */
+    public static String getBodyString(ServletRequest request) {
+        StringBuilder sb = new StringBuilder();
+        InputStream inputStream = null;
+        BufferedReader reader = null;
+        try {
+            inputStream = request.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return sb.toString();
+    }
+}
+
+```
+
+
+
+### File工具类
+
+> 看不懂，IO和输入输出学的不好
+
+## 异常
+
+### BaseException
+
+代码中` throw new BaseException("未找到该用户");`这样使用比较普遍
+
+```java
+public class BaseException extends RuntimeException
+{
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 所属模块
+     */
+    private String module;
+
+    /**
+     * 错误码
+     */
+    private String code;
+
+    /**
+     * 错误码对应的参数
+     */
+    private Object[] args;
+
+    /**
+     * 错误消息
+     */
+    private String defaultMessage;
+
+    public BaseException(String module, String code, Object[] args, String defaultMessage)
+    {
+        this.module = module;
+        this.code = code;
+        this.args = args;
+        this.defaultMessage = defaultMessage;
+    }
+
+    public BaseException(String module, String code, Object[] args)
+    {
+        this(module, code, args, null);
+    }
+
+    public BaseException(String module, String defaultMessage)
+    {
+        this(module, null, null, defaultMessage);
+    }
+
+    public BaseException(String code, Object[] args)
+    {
+        this(null, code, args, null);
+    }
+
+    public BaseException(String defaultMessage)
+    {
+        this(null, null, null, defaultMessage);
+    }
+
+    public String getModule()
+    {
+        return module;
+    }
+
+    public String getCode()
+    {
+        return code;
+    }
+
+    public Object[] getArgs()
+    {
+        return args;
+    }
+
+    public String getDefaultMessage()
+    {
+        return defaultMessage;
+    }
+}
+```
+
+### CheckedException
+
+从类名来看，"CheckedException" 可能是为了与Java标准的检查型异常（checked exceptions）区分开来，但实际上它是一个非检查型异常。这种设计可能有以下考虑：
+
+- 统一异常处理：在整个系统中提供统一的异常类型，便于全局异常处理
+- 业务异常封装：用于封装业务逻辑中的异常情况，而不是系统级异常
+- 避免强制处理：作为运行时异常，不需要在每个方法签名中声明 throws，减少代码冗余
+
+```java
+public class CheckedException extends RuntimeException
+{
+    private static final long serialVersionUID = 1L;
+
+    public CheckedException(String message)
+    {
+        super(message);
+    }
+
+    public CheckedException(Throwable cause)
+    {
+        super(cause);
+    }
+
+    public CheckedException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
+
+    public CheckedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+    {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+}
+```
+
+### TaskException
+
+可以学习内部枚举的写法，从0开始
+
+```java
+public class TaskException extends Exception
+{
+    private static final long serialVersionUID = 1L;
+
+    private Code code;
+
+    public TaskException(String msg, Code code)
+    {
+        this(msg, code, null);
+    }
+
+    public TaskException(String msg, Code code, Exception nestedEx)
+    {
+        super(msg, nestedEx);
+        this.code = code;
+    }
+
+    public Code getCode()
+    {
+        return code;
+    }
+
+    public enum Code
+    {
+        TASK_EXISTS, NO_TASK_EXISTS, TASK_ALREADY_STARTED, UNKNOWN, CONFIG_ERROR, TASK_NODE_NOT_AVAILABLE
+    }
+}
+```
+
+```java
+Code.TASK_EXISTS.ordinal()  // 返回 0
+Code.NO_TASK_EXISTS.ordinal()  // 返回 1
+Code.TASK_NODE_NOT_AVAILABLE.ordinal()  // 返回 5
+```
+
+### InvalidExtensionException
+
+可以学习内部静态类的写法
+
+````java
+public class InvalidExtensionException extends FileUploadException
+{
+    private static final long serialVersionUID = 1L;
+
+    private String[] allowedExtension;
+    private String extension;
+    private String filename;
+
+    public InvalidExtensionException(String[] allowedExtension, String extension, String filename)
+    {
+        super("filename : [" + filename + "], extension : [" + extension + "], allowed extension : [" + Arrays.toString(allowedExtension) + "]");
+        this.allowedExtension = allowedExtension;
+        this.extension = extension;
+        this.filename = filename;
+    }
+
+    public String[] getAllowedExtension()
+    {
+        return allowedExtension;
+    }
+
+    public String getExtension()
+    {
+        return extension;
+    }
+
+    public String getFilename()
+    {
+        return filename;
+    }
+
+    public static class InvalidImageExtensionException extends InvalidExtensionException
+    {
+        private static final long serialVersionUID = 1L;
+
+        public InvalidImageExtensionException(String[] allowedExtension, String extension, String filename)
+        {
+            super(allowedExtension, extension, filename);
+        }
+    }
+
+    public static class InvalidFlashExtensionException extends InvalidExtensionException
+    {
+        private static final long serialVersionUID = 1L;
+
+        public InvalidFlashExtensionException(String[] allowedExtension, String extension, String filename)
+        {
+            super(allowedExtension, extension, filename);
+        }
+    }
+
+    public static class InvalidMediaExtensionException extends InvalidExtensionException
+    {
+        private static final long serialVersionUID = 1L;
+
+        public InvalidMediaExtensionException(String[] allowedExtension, String extension, String filename)
+        {
+            super(allowedExtension, extension, filename);
+        }
+    }
+    
+    public static class InvalidVideoExtensionException extends InvalidExtensionException
+    {
+        private static final long serialVersionUID = 1L;
+
+        public InvalidVideoExtensionException(String[] allowedExtension, String extension, String filename)
+        {
+            super(allowedExtension, extension, filename);
+        }
+    }
+}
+
+````
+
+## 生成签名sign与验证
+
+生成签名
+
+```java
+Date d = new Date();
+SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+String timestamp = sdf.format(d); //时间参数
+String tempSign = config.getMessageAccount() + config.getMessagePwd() + timestamp;
+String sign = DigestUtils.md5DigestAsHex(tempSign.getBytes());//数字签名
+```
+
+验证签名
+
+```java
+public boolean verifySignature(String account, String timestamp, String sign) {
+    // 1. 根据账户名获取对应的密码（通常从数据库中查询）
+    String password = getPasswordByAccount(account);
+    
+    // 2. 按照相同规则拼接字符串
+    String tempSign = account + password + timestamp;
+    
+    // 3. 使用相同算法生成签名
+    String expectedSign = DigestUtils.md5DigestAsHex(tempSign.getBytes());
+    
+    // 4. 比较签名是否一致
+    return expectedSign.equals(sign);
+}
+```
+
