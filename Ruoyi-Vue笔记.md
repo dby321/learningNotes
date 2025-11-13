@@ -512,9 +512,7 @@ SLF4J（Simple Logging Facade for Java）是一个日志门面框架，它本身
 
 在实际项目中，Logback和Log4j 2是最常用的选择。从您项目中的`logback.xml`文件可以看出，您的项目使用的是Logback作为SLF4J的具体实现。
 
-### Logback.xml详解
-
-您的 [logback.xml](file://D:\idea_workspace\face-rec-saas\ivu-auth\target\classes\logback.xml) 是 Logback 日志框架的配置文件，下面是对各部分的详细解释：
+### Logback.xml详情
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -931,9 +929,6 @@ private PhoneInfoDTO phoneInfo; // Java中的字段名为"phoneInfo"
   }
 }
 ```
-
-
-Fastjson 会自动将 JSON 中的 [errcode](file://D:\idea_workspace\face-rec-saas\ivu-modules\ivu-smart-scenic\src\main\java\com\ivu\smart\domain\WxPhoneNumber.java#L5-L6) 映射到 Java 对象的 [errcode](file://D:\idea_workspace\face-rec-saas\ivu-modules\ivu-smart-scenic\src\main\java\com\ivu\smart\domain\WxPhoneNumber.java#L5-L6) 字段，`phone_info` 映射到 [phoneInfo](file://D:\idea_workspace\face-rec-saas\ivu-modules\ivu-smart-scenic\src\main\java\com\ivu\smart\domain\WxPhoneNumber.java#L9-L10) 字段。
 
 #### 其他常用属性
 
