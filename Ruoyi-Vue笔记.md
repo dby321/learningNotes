@@ -475,7 +475,7 @@ private static final Logger log = LoggerFactory.getLogger(RemoteAuthFallBackFact
 让我解释一下日志的各个部分：
 
 1. **时间戳**: `2025-11-11 14:30:25.123` - 日志记录的时间
-2. **日志级别**: [ERROR](file://D:\idea_workspace\face-rec-saas\ivu-modules\ivu-village\src\main\java\com\ivu\village\domain\ElifeResCode.java#L13-L13) - 表示这是一个错误级别的日志
+2. **日志级别**: ERROR - 表示这是一个错误级别的日志
 3. **进程ID**: `12345` - 应用程序的进程ID
 4. **线程信息**: `[nio-8080-exec-1]` - 产生日志的线程名称
 5. **日志记录器名称**: `c.i.a.f.RemoteAuthFallBackFactory` - 简化的类名（通常是包名首字母缩写+类名）
@@ -2216,5 +2216,397 @@ public boolean verifySignature(String account, String timestamp, String sign) {
     // 4. 比较签名是否一致
     return expectedSign.equals(sign);
 }
+```
+
+## AOP
+
+### AllowOnlyAspect
+
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * 定义 限定请求ip注解
+ */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface AllowIpOnly {
+}
+
+```
+
+
+
+```java
+
+import com.ivu.common.core.exception.CustomException;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+@Aspect
+@Component
+public class AllowIpOnlyAspect {
+    //从nacos里动态读取ip列表
+    @Value("${allowed.ips}")
+    private String allowedIpsConfig;
+
+    private List<String> allowedIps;
+
+    @PostConstruct
+    public void init() {
+        if (allowedIpsConfig != null && !allowedIpsConfig.isEmpty()) {
+            allowedIps = Arrays.asList(allowedIpsConfig.split(","));
+        } else {
+            allowedIps = Collections.emptyList();
+        }
+    }
+    @Pointcut("@annotation(com.ivu.common.datascope.annotation.AllowIpOnly)")
+    public void allowIpPointCut() {
+    }
+
+    @Before("allowIpPointCut()")
+    public void doBefore(JoinPoint point) {
+        restrictIpAccess(point);
+    }
+    public void restrictIpAccess(JoinPoint joinPoint) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            throw new CustomException("请求上下文为空", 455);
+        }
+        HttpServletRequest request = attributes.getRequest();
+
+        String clientIp = getClientIpAddress(request);
+        if (allowedIps != null  && !allowedIps.contains(clientIp)) {
+            throw new CustomException("无权访问此接口", 455);
+        }
+    }
+
+    /**
+     * 获取客户端真实IP（处理代理的情况）
+     * 第一个 IP：原始客户端 IP（最远端）
+     * 最后一个 IP：离服务器最近的一级代理 IP
+     * @param request
+     * @return
+     */
+    private String getClientIpAddress(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        System.out.println("请求ip:"+ip);
+
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            //当 X-Forwarded-For 请求头为空、为空字符串或值为 "unknown" 时，
+            // 使用 request.getRemoteAddr() 获取客户端的直接 IP 地址。
+            ip = request.getRemoteAddr();
+        } else {
+            // 取最后一个IP（即最靠近客户端的一级代理）
+            String[] ips = ip.split(",");
+            for (int i = 0; i <= ips.length - 1; i++) {
+                String candidate = ips[i].trim();
+                if (!candidate.isEmpty() && !"unknown".equalsIgnoreCase(candidate)) {
+                    ip = candidate;
+                    break;
+                }
+            }
+        }
+        // 特殊处理本地地址
+        ip = "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
+        System.out.println("请求ip2:"+ip);
+        return ip;
+    }
+
+    /**
+     * 获取客户端真实IP地址
+     * @param request HttpServletRequest对象
+     * @return 真实IP地址
+     */
+    public static String getClientIp(HttpServletRequest request) {
+        // 1. 优先从代理头获取
+        String[] headers = {
+                "X-Forwarded-For",   // 标准代理头
+                "Proxy-Client-IP",    // Apache代理
+                "WL-Proxy-Client-IP",// WebLogic代理
+                "HTTP_X_FORWARDED_FOR",
+                "HTTP_CLIENT_IP"
+        };
+
+        String ip = null;
+        for (String header : headers) {
+            ip = request.getHeader(header);
+            if (isValidIp(ip)) {
+                break;
+            }
+        }
+
+        // 2. 如果代理头未获取到有效IP，使用remoteAddr
+        if (!isValidIp(ip)) {
+            ip = request.getRemoteAddr();
+        }
+
+        // 3. 处理多级代理情况
+        if (ip != null && ip.contains(",")) {
+            // 取最后一个IP（即最靠近客户端的一级代理）
+            String[] ips = ip.split(",");
+            for (int i = ips.length - 1; i >= 0; i--) {
+                String candidate = ips[i].trim();
+                if (!candidate.isEmpty() && !"unknown".equalsIgnoreCase(candidate)) {
+                    ip = candidate;
+                    break;
+                }
+            }
+        }
+
+        // 特殊处理本地地址
+        return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
+    }
+    private static boolean isValidIp(String ip) {
+        return ip != null && ip.length() != 0
+                && !"unknown".equalsIgnoreCase(ip)
+                && !ip.startsWith("0.");
+    }
+
+}
+```
+
+### DataAuthAspect
+
+```java
+import java.lang.annotation.*;
+
+/**
+ * 数据权限过滤注解
+ *
+ * @author ivu
+ */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface DataAuth {
+    /**
+     * 查询参数的名字
+     */
+    public String pName() default "";
+}
+```
+
+```java
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ivu.common.core.domain.R;
+import com.ivu.common.core.exception.CustomException;
+import com.ivu.common.core.utils.StringUtils;
+import com.ivu.common.datascope.annotation.DataAuth;
+import com.ivu.common.redis.service.RedisService;
+import com.ivu.common.security.service.TokenService;
+import com.ivu.system.api.RemoteDeptService;
+import com.ivu.system.api.RemoteWxDeptService;
+import com.ivu.system.api.model.LoginUser;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import static com.ivu.common.core.constant.Constants.REDIS_KEY_DEPTID;
+
+/**
+ * 数据过滤处理
+ *
+ */
+@Aspect
+@Component
+public class DataAuthAspect {
+    private static final Logger log = LoggerFactory.getLogger(DataAuthAspect.class);
+    private static final int MAX_BODY_SIZE = 10 * 1024;
+
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private RemoteWxDeptService remoteWxDeptService;
+    @Autowired
+    private RemoteDeptService deptService;
+    @Autowired
+    private RedisService redisService;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    // 配置织入点
+    @Pointcut("@annotation(com.ivu.common.datascope.annotation.DataAuth)")
+    public void dataAuthPointCut() {
+    }
+
+    @Before("dataAuthPointCut()")
+    public void doBefore(JoinPoint point) {
+        handleDataAuth(point);
+    }
+
+    protected void handleDataAuth(final JoinPoint joinPoint) {
+        // 获得注解.对于注解方法才处理
+        DataAuth controllerDataAuth = getAnnotationLog(joinPoint);
+        if (controllerDataAuth == null) {
+            return;
+        }
+        //获取需要鉴别的参数名称
+        String pName = controllerDataAuth.pName();
+        if (StringUtils.isEmpty(pName)) {
+            //设置默认参数名称
+            pName = "deptId";
+        }
+        // 1.获取当前的request
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        // 2.获取登录用户信息
+        LoginUser loginUser = tokenService.getLoginUser();
+        //3.未登录接口处理
+        if (null == loginUser) {
+            throw new CustomException("未登录，无权限访问该区域数据", 455);
+        }
+        //获取登录的 deptId 是Long
+        Long d = loginUser.getSysUser().getDeptId();
+        if (null != d) {
+            //当前登录用户部门id
+            String userDeptId = Objects.toString(d, "");
+            //传入参数deptId
+            String paramValue = "";
+            //4. 参数，则尝试从 request.getParameterMap() 中查找（GET 或 POST 表单） body
+            Map<String, String[]> parameterMap = request.getParameterMap();
+            if (parameterMap.containsKey(pName)) {
+                paramValue = parameterMap.get(pName)[0];
+            }
+            //5. 尝试从 request.getReader() 中获取 body
+            if (StringUtils.isBlank(paramValue)) {
+                // 获取 body 内容
+                String body = getBody(request);
+                paramValue = getDeptIdFromJsonBody(body, pName);
+            }
+            //6. 尝试从 path 中获取 deptId
+            if (StringUtils.isBlank(paramValue)) {
+                // 获取路径参数
+                String pathInfo = request.getRequestURI();
+                pathInfo = pathInfo.substring(pathInfo.lastIndexOf("/") + 1);
+                paramValue = pathInfo;
+            }
+            // 传入deptId是否在 当前登录用户的部门范围中判断
+            if (StringUtils.isNotBlank(paramValue)) {
+                //先从缓存获取 部门范围信息  ， "deptId:"
+                String ancestors = redisService.getCacheObject(REDIS_KEY_DEPTID + paramValue);
+                if (StringUtils.isBlank(ancestors)) {
+                    // 从数据库中查询 部门范围信息
+                    R<String> ancestorR = deptService.selectDeptAncestorsById(paramValue);
+                    ancestors = ancestorR.getData();
+                    if (StringUtils.isNotBlank(ancestors)) {
+                        // 缓存部门范围信息
+                        redisService.setCacheObject(REDIS_KEY_DEPTID + paramValue, ancestors, 1L, TimeUnit.DAYS);
+                    } else {
+                        //数据库中查询不到deptId 非法
+                        log.warn("远程调用错误，无法获取deptId：{} 的父级列表", paramValue);
+                    }
+                } else {
+                    //刷新缓存时间
+                    redisService.expire(REDIS_KEY_DEPTID + paramValue, 1L, TimeUnit.DAYS);
+                }
+                //传入deptId不在 当前登录用户的
+                if (StringUtils.isNotBlank(ancestors) && !ancestors.contains(userDeptId)) {
+                    // 拒绝访问，直接返回 455 状态码，并输出 JSON 提示信息
+                    throw new CustomException("无权限访问该区域数据", 455);
+                }
+            }
+
+        } else {
+            throw new CustomException("未登录，无权限访问该区域数据", 455);
+        }
+    }
+
+    /**
+     * 获取body内容
+     *
+     * @param request
+     * @return
+     */
+    public String getBody(HttpServletRequest request) {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader reader = request.getReader()) {
+            String line;
+            int totalSize = 0;
+            while ((line = reader.readLine()) != null) {
+                totalSize += line.length();
+                if (totalSize > MAX_BODY_SIZE) {
+                    log.warn("请求体过大，已超过限制");
+                    return "";
+                }
+                sb.append(line);
+            }
+        } catch (IOException e) {
+            log.warn("读取请求体失败", e);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 获取deptId
+     *
+     * @param jsonBody
+     * @return
+     */
+    public String getDeptIdFromJsonBody(String jsonBody, String pName) {
+        if (StringUtils.isBlank(jsonBody)) {
+            return null;
+        }
+        try {
+            JsonNode jsonNode = objectMapper.readTree(jsonBody);
+            if (jsonNode.has(pName)) {
+                return jsonNode.get(pName).asText();
+            }
+        } catch (JsonProcessingException e) {
+            log.warn("解析JSON请求体失败", e);
+        }
+        return null;
+    }
+
+    /**
+     * 是否存在注解，如果存在就获取
+     */
+    private DataAuth getAnnotationLog(JoinPoint joinPoint) {
+        Signature signature = joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
+        Method method = methodSignature.getMethod();
+
+        if (method != null) {
+            return method.getAnnotation(DataAuth.class);
+        }
+        return null;
+    }
+}
+
 ```
 
