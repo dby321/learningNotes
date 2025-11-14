@@ -1381,10 +1381,8 @@ public static String idCardNum(String idCardNum, int front, int end) {
 }
 ```
 
+**示例结果**
 
-调用时使用 [DesensitizedUtil.idCardNum(value,5,2)](file://D:\idea_workspace\face-rec-saas\ivu-common\ivu-common-core\src\main\java\com\ivu\common\core\utils\DesensitizedUtil.java#L17-L25)，保留前5位和后2位。
-
-**示例结果：**
 - "110101199001011234" → "11010***********34"
 - "440106199001012345" → "44010***********45"
 
@@ -1670,6 +1668,732 @@ targetAttr 的作用
 ```java
 @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+```
+
+### @Master
+
+@Master 是一个方便的注解别名，当开发者需要明确指定某部分代码应使用主数据库时，可以直接使用 @Master 而不必每次都写 @DS("master")。这种设计通常出现在读写分离的场景中，主库用于写操作，而从库用于读操作。
+
+```java
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import com.baomidou.dynamic.datasource.annotation.DS;
+/**
+ * 主库数据源
+ */
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@DS("master")
+public @interface Master
+{
+
+}
+```
+
+### @Slave
+
+
+```java
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import com.baomidou.dynamic.datasource.annotation.DS;
+/**
+ * 从库数据源
+ * 
+ */
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@DS("slave")
+public @interface Slave
+{
+
+}
+```
+
+### @Log
+
+```java
+/**
+ * 自定义操作日志记录注解
+ * 
+ *
+ */
+@Target({ ElementType.PARAMETER, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Log
+{
+    /**
+     * 模块
+     */
+    public String title() default "";
+
+    /**
+     * 功能
+     */
+    public BusinessType businessType() default BusinessType.OTHER;
+
+    /**
+     * 操作人类别
+     */
+    public OperatorType operatorType() default OperatorType.MANAGE;
+
+    /**
+     * 是否保存请求的参数
+     */
+    public boolean isSaveRequestData() default true;
+}
+```
+
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import com.ivu.system.api.RemoteLogService;
+import com.ivu.system.api.domain.SysOperLog;
+/**
+ * 异步调用日志服务
+ * 
+ */
+@Service
+public class AsyncLogService
+{
+    @Autowired
+    private RemoteLogService remoteLogService;
+
+    /**
+     * 保存系统日志记录
+     */
+    @Async
+    public void saveSysLog(SysOperLog sysOperLog)
+    {
+        remoteLogService.saveLog(sysOperLog);
+    }
+}
+
+```
+
+```java
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import com.alibaba.fastjson.JSON;
+import com.ivu.common.core.utils.SecurityUtils;
+import com.ivu.common.core.utils.ServletUtils;
+import com.ivu.common.core.utils.StringUtils;
+import com.ivu.common.core.utils.ip.IpUtils;
+import com.ivu.common.log.annotation.Log;
+import com.ivu.common.log.enums.BusinessStatus;
+import com.ivu.common.log.service.AsyncLogService;
+import com.ivu.system.api.domain.SysOperLog;
+
+/**
+ * 操作日志记录处理
+ *
+ * @author ivu
+ */
+@Aspect
+@Component
+public class LogAspect
+{
+    private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
+
+    @Autowired
+    private AsyncLogService asyncLogService;
+
+    // 配置织入点
+    @Pointcut("@annotation(com.ivu.common.log.annotation.Log)")
+    public void logPointCut()
+    {
+    }
+
+    /**
+     * 处理完请求后执行
+     *
+     * @param joinPoint 切点
+     */
+    @AfterReturning(pointcut = "logPointCut()", returning = "jsonResult")
+    public void doAfterReturning(JoinPoint joinPoint, Object jsonResult)
+    {
+        handleLog(joinPoint, null, jsonResult);
+    }
+
+    /**
+     * 拦截异常操作
+     *
+     * @param joinPoint 切点
+     * @param e 异常
+     */
+    @AfterThrowing(value = "logPointCut()", throwing = "e")
+    public void doAfterThrowing(JoinPoint joinPoint, Exception e)
+    {
+        handleLog(joinPoint, e, null);
+    }
+
+    protected void handleLog(final JoinPoint joinPoint, final Exception e, Object jsonResult)
+    {
+        try
+        {
+            // 获得注解
+            Log controllerLog = getAnnotationLog(joinPoint);
+            if (controllerLog == null)
+            {
+                return;
+            }
+
+            // *========数据库日志=========*//
+            SysOperLog operLog = new SysOperLog();
+            operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
+            // 请求的地址
+            String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
+            operLog.setOperIp(ip);
+            // 返回参数
+            operLog.setJsonResult(JSON.toJSONString(jsonResult));
+
+            operLog.setOperUrl(ServletUtils.getRequest().getRequestURI());
+            String username =null;
+            try {
+                 username = SecurityUtils.getUsername();
+            }catch (Exception ee){
+                //do nothing
+            }
+            if (StringUtils.isNotBlank(username))
+            {
+                operLog.setOperName(username);
+            }
+
+            if (e != null)
+            {
+                operLog.setStatus(BusinessStatus.FAIL.ordinal());
+                operLog.setErrorMsg(StringUtils.substring(e.getMessage(), 0, 2000));
+            }
+            // 设置方法名称
+            String className = joinPoint.getTarget().getClass().getName();
+            String methodName = joinPoint.getSignature().getName();
+            operLog.setMethod(className + "." + methodName + "()");
+            // 设置请求方式
+            operLog.setRequestMethod(ServletUtils.getRequest().getMethod());
+            // 处理设置注解上的参数
+            getControllerMethodDescription(joinPoint, controllerLog, operLog);
+            // 保存数据库
+            asyncLogService.saveSysLog(operLog);
+        }
+        catch (Exception exp)
+        {
+            // 记录本地异常日志
+            log.error("==前置通知异常==");
+            log.error("异常信息:{}", exp.getMessage());
+            exp.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取注解中对方法的描述信息 用于Controller层注解
+     *
+     * @param log 日志
+     * @param operLog 操作日志
+     * @throws Exception
+     */
+    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLog operLog) throws Exception
+    {
+        // 设置action动作
+        operLog.setBusinessType(log.businessType().ordinal());
+        // 设置标题
+        operLog.setTitle(log.title());
+        // 设置操作人类别
+        operLog.setOperatorType(log.operatorType().ordinal());
+        // 是否需要保存request，参数和值
+        if (log.isSaveRequestData())
+        {
+            // 获取参数的信息，传入到数据库中。
+            setRequestValue(joinPoint, operLog);
+        }
+    }
+
+    /**
+     * 获取请求的参数，放到log中
+     *
+     * @param operLog 操作日志
+     * @throws Exception 异常
+     */
+    private void setRequestValue(JoinPoint joinPoint, SysOperLog operLog) throws Exception
+    {
+        String requestMethod = operLog.getRequestMethod();
+        if (HttpMethod.PUT.name().equals(requestMethod) || HttpMethod.POST.name().equals(requestMethod))
+        {
+            String params = argsArrayToString(joinPoint.getArgs());
+            operLog.setOperParam(StringUtils.substring(params, 0, 2000));
+        }
+    }
+
+    /**
+     * 是否存在注解，如果存在就获取
+     */
+    private Log getAnnotationLog(JoinPoint joinPoint) throws Exception
+    {
+        Signature signature = joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
+        Method method = methodSignature.getMethod();
+
+        if (method != null)
+        {
+            return method.getAnnotation(Log.class);
+        }
+        return null;
+    }
+
+    /**
+     * 参数拼装
+     */
+    private String argsArrayToString(Object[] paramsArray)
+    {
+        String params = "";
+        if (paramsArray != null && paramsArray.length > 0)
+        {
+            for (int i = 0; i < paramsArray.length; i++)
+            {
+                if (!isFilterObject(paramsArray[i]))
+                {
+                    try
+                    {
+                        Object jsonObj = JSON.toJSON(paramsArray[i]);
+                        params += jsonObj.toString() + " ";
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
+            }
+        }
+        return params.trim();
+    }
+
+    /**
+     * 判断是否需要过滤的对象。
+     *
+     * @param o 对象信息。
+     * @return 如果是需要过滤的对象，则返回true；否则返回false。
+     */
+    @SuppressWarnings("rawtypes")
+    public boolean isFilterObject(final Object o)
+    {
+        Class<?> clazz = o.getClass();
+        if (clazz.isArray())
+        {
+            return clazz.getComponentType().isAssignableFrom(MultipartFile.class);
+        }
+        else if (Collection.class.isAssignableFrom(clazz))
+        {
+            Collection collection = (Collection) o;
+            for (Iterator iter = collection.iterator(); iter.hasNext();)
+            {
+                return iter.next() instanceof MultipartFile;
+            }
+        }
+        else if (Map.class.isAssignableFrom(clazz))
+        {
+            Map map = (Map) o;
+            for (Iterator iter = map.entrySet().iterator(); iter.hasNext();)
+            {
+                Map.Entry entry = (Map.Entry) iter.next();
+                return entry.getValue() instanceof MultipartFile;
+            }
+        }
+        return o instanceof MultipartFile || o instanceof HttpServletRequest || o instanceof HttpServletResponse;
+    }
+}
+
+```
+
+### @PreAuthorize
+
+```java
+/**
+ * 权限注解
+ */
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface PreAuthorize
+{
+    /**
+     * 验证用户是否具备某权限
+     */
+    public String hasPermi() default "";
+
+    /**
+     * 验证用户是否不具备某权限，与 hasPermi逻辑相反
+     */
+    public String lacksPermi() default "";
+
+    /**
+     * 验证用户是否具有以下任意一个权限
+     */
+    public String[] hasAnyPermi() default {};
+
+    /**
+     * 判断用户是否拥有某个角色
+     */
+    public String hasRole() default "";
+
+    /**
+     * 验证用户是否不具备某角色，与 isRole逻辑相反
+     */
+    public String lacksRole() default "";
+
+    /**
+     * 验证用户是否具有以下任意一个角色
+     */
+    public String[] hasAnyRoles() default {};
+}
+```
+
+```java
+import cn.hutool.core.lang.Console;
+import com.ivu.common.core.constant.Constants;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.PatternMatchUtils;
+import org.springframework.util.StringUtils;
+import com.ivu.common.core.exception.PreAuthorizeException;
+import com.ivu.common.security.annotation.PreAuthorize;
+import com.ivu.common.security.service.TokenService;
+import com.ivu.common.security.utils.TaskEnvironmentUtil;
+import com.ivu.system.api.model.LoginUser;
+
+/**
+ * 自定义权限实现
+ *
+ */
+@Aspect
+@Component
+public class PreAuthorizeAspect {
+    @Autowired
+    private TokenService tokenService;
+
+    private static final Logger logger = LoggerFactory.getLogger(PreAuthorizeAspect.class);
+
+    /**
+     * 所有权限标识
+     */
+    private static final String ALL_PERMISSION = "*:*:*";
+
+    /**
+     * 管理员角色权限标识
+     */
+    private static final String SUPER_ADMIN = "admin";
+
+    /**
+     * 数组为0时
+     */
+    private static final Integer ARRAY_EMPTY = 0;
+
+    @Around("@annotation(com.ivu.common.security.annotation.PreAuthorize)")
+    public Object around(ProceedingJoinPoint point) throws Throwable {
+        // 检查是否是定时任务环境
+        if (isTaskEnvironment()) {
+            // 定时任务直接执行，跳过权限检查
+            return point.proceed();
+        }
+
+
+
+        LoginUser loginUser = tokenService.getLoginUser();
+        //当登录类型不是微信登录时才做权限判断
+        if (loginUser.getUserLoginType() != Constants.LoginUserType.WECHAT) {
+            Signature signature = point.getSignature();
+            MethodSignature methodSignature = (MethodSignature) signature;
+            Method method = methodSignature.getMethod();
+            PreAuthorize annotation = method.getAnnotation(PreAuthorize.class);
+            if (annotation == null) {
+                return point.proceed();
+            }
+
+            if (!StringUtils.isEmpty(annotation.hasPermi())) {
+                if (hasPermi(annotation.hasPermi())) {
+                    return point.proceed();
+                }
+                throw new PreAuthorizeException();
+            } else if (!StringUtils.isEmpty(annotation.lacksPermi())) {
+                if (lacksPermi(annotation.lacksPermi())) {
+                    return point.proceed();
+                }
+                throw new PreAuthorizeException();
+            } else if (ARRAY_EMPTY < annotation.hasAnyPermi().length) {
+                if (hasAnyPermi(annotation.hasAnyPermi())) {
+                    return point.proceed();
+                }
+                throw new PreAuthorizeException();
+            } else if (!StringUtils.isEmpty(annotation.hasRole())) {
+                if (hasRole(annotation.hasRole())) {
+                    return point.proceed();
+                }
+                throw new PreAuthorizeException();
+            } else if (!StringUtils.isEmpty(annotation.lacksRole())) {
+                if (lacksRole(annotation.lacksRole())) {
+                    return point.proceed();
+                }
+                throw new PreAuthorizeException();
+            } else if (ARRAY_EMPTY < annotation.hasAnyRoles().length) {
+                if (hasAnyRoles(annotation.hasAnyRoles())) {
+                    return point.proceed();
+                }
+                throw new PreAuthorizeException();
+            }
+        }
+        return point.proceed();
+    }
+
+    /**
+     * 验证用户是否具备某权限
+     *
+     * @param permission 权限字符串
+     * @return 用户是否具备某权限
+     */
+    public boolean hasPermi(String permission) {
+        LoginUser userInfo = tokenService.getLoginUser();
+        if (StringUtils.isEmpty(userInfo) || CollectionUtils.isEmpty(userInfo.getPermissions())) {
+            return false;
+        }
+        return hasPermissions(userInfo.getPermissions(), permission);
+    }
+
+    /**
+     * 验证用户是否不具备某权限，与 hasPermi逻辑相反
+     *
+     * @param permission 权限字符串
+     * @return 用户是否不具备某权限
+     */
+    public boolean lacksPermi(String permission) {
+        return hasPermi(permission) != true;
+    }
+
+    /**
+     * 验证用户是否具有以下任意一个权限
+     *
+     * @param permissions 权限列表
+     * @return 用户是否具有以下任意一个权限
+     */
+    public boolean hasAnyPermi(String[] permissions) {
+        LoginUser userInfo = tokenService.getLoginUser();
+        if (StringUtils.isEmpty(userInfo) || CollectionUtils.isEmpty(userInfo.getPermissions())) {
+            return false;
+        }
+        Collection<String> authorities = userInfo.getPermissions();
+        for (String permission : permissions) {
+            if (permission != null && hasPermissions(authorities, permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断用户是否拥有某个角色
+     *
+     * @param role 角色字符串
+     * @return 用户是否具备某角色
+     */
+    public boolean hasRole(String role) {
+        LoginUser userInfo = tokenService.getLoginUser();
+        if (StringUtils.isEmpty(userInfo) || CollectionUtils.isEmpty(userInfo.getRoles())) {
+            return false;
+        }
+        for (String roleKey : userInfo.getRoles()) {
+            if (SUPER_ADMIN.equals(roleKey) || roleKey.equals(role)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 验证用户是否不具备某角色，与 isRole逻辑相反。
+     *
+     * @param role 角色名称
+     * @return 用户是否不具备某角色
+     */
+    public boolean lacksRole(String role) {
+        return hasRole(role) != true;
+    }
+
+    /**
+     * 验证用户是否具有以下任意一个角色
+     *
+     * @param roles 角色列表
+     * @return 用户是否具有以下任意一个角色
+     */
+    public boolean hasAnyRoles(String[] roles) {
+        LoginUser userInfo = tokenService.getLoginUser();
+        if (StringUtils.isEmpty(userInfo) || CollectionUtils.isEmpty(userInfo.getRoles())) {
+            return false;
+        }
+        for (String role : roles) {
+            if (hasRole(role)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否包含权限
+     *
+     * @param authorities 权限列表
+     * @param permission  权限字符串
+     * @return 用户是否具备某权限
+     */
+    private boolean hasPermissions(Collection<String> authorities, String permission) {
+        return authorities.stream().filter(StringUtils::hasText)
+                .anyMatch(x -> ALL_PERMISSION.contains(x) || PatternMatchUtils.simpleMatch(permission, x));
+    }
+
+    /**
+     * 检查是否是定时任务执行环境
+     */
+    private boolean isTaskEnvironment() {
+        // 1. 首先检查ThreadLocal标记
+
+        logger.debug("PreAuthorizeAspect，线程ID: {}", Thread.currentThread().getId());
+
+        if (TaskEnvironmentUtil.isTaskEnvironment()) {
+            return true;
+        }
+
+        // 2. 然后检查调用栈中是否包含定时任务相关类
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (StackTraceElement element : stackTrace) {
+            String className = element.getClassName();
+            // 扩展检测范围，包括更多定时任务相关的类和包
+            if (className.contains("com.ivu.job") ||
+                className.contains("QuartzJobExecution") ||
+                className.contains("QuartzDisallowConcurrentExecution") ||
+                className.contains("AbstractQuartzJob") ||
+                className.contains("JobInvokeUtil") ||
+                className.contains("FuncLogTask")) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+### @ResponseDataEncrypt
+
+```java
+import java.lang.annotation.*;  
+  
+/**  
+ * 响应数据加密注解，主要针对敏感信息  
+ *  
+ * @author lc  
+ */
+@Target(ElementType.METHOD)  
+@Retention(RetentionPolicy.RUNTIME)  
+@Documented  
+public @interface ResponseDataEncrypt  
+{  
+  
+}
+```
+
+```java
+  
+import cn.hutool.core.util.URLUtil;  
+import cn.hutool.json.JSONUtil;  
+import com.alibaba.fastjson.JSONObject;  
+import com.alibaba.fastjson.serializer.SerializerFeature;  
+import com.ivu.common.core.constant.Constants;  
+import com.ivu.common.core.utils.RSAUtils;  
+import com.ivu.common.core.utils.StringUtils;  
+import com.ivu.common.core.web.domain.AjaxResult;  
+import com.ivu.common.core.web.page.TableDataInfo;  
+import org.aspectj.lang.JoinPoint;  
+import org.aspectj.lang.ProceedingJoinPoint;  
+import org.aspectj.lang.annotation.AfterReturning;  
+import org.aspectj.lang.annotation.Around;  
+import org.aspectj.lang.annotation.Aspect;  
+import org.aspectj.lang.annotation.Pointcut;  
+import org.slf4j.Logger;  
+import org.slf4j.LoggerFactory;  
+import org.springframework.stereotype.Component;  
+  
+import java.util.ArrayList;  
+import java.util.Collections;  
+import java.util.List;  
+  
+  
+/**  
+ * 用于向第三方推送AI消息时加密  
+ * 数据过滤处理  
+ *   
+ */
+@Aspect
+@Component
+public class ResponseDataEncryptAspect
+{
+
+    private static final Logger log = LoggerFactory.getLogger(ResponseDataEncryptAspect.class);
+
+    @Around("@annotation(com.ivu.common.security.annotation.ResponseDataEncrypt)")
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object jsonResult = joinPoint.proceed();
+        if (jsonResult instanceof AjaxResult) {
+            AjaxResult ajaxResult = (AjaxResult) jsonResult;
+            Object dataObj = ajaxResult.get(AjaxResult.DATA_TAG);
+            if (dataObj != null && StringUtils.isNotEmpty(dataObj.toString())) {
+                String json = JSONObject.toJSONString(dataObj, SerializerFeature.WriteMapNullValue);
+                String encode = URLUtil.encode(json);
+                return ajaxResult.put(AjaxResult.DATA_TAG,System.currentTimeMillis()  + encode);
+            }
+        }else if (jsonResult instanceof TableDataInfo){
+                TableDataInfo dataInfo = (TableDataInfo) jsonResult;
+            List<?> rows = dataInfo.getRows();
+            if (rows != null && rows.size() != 0) {
+                String json = JSONObject.toJSONString(rows, SerializerFeature.WriteMapNullValue);
+                String encode = URLUtil.encode(json);
+                dataInfo.setRows(Collections.singletonList(System.currentTimeMillis()  + encode));
+                return dataInfo;
+            }
+        }
+
+        return jsonResult;
+
+    }
+
+}
 ```
 
 ## 工具类
@@ -2600,6 +3324,40 @@ public class DataAuthAspect {
             return method.getAnnotation(DataAuth.class);
         }
         return null;
+    }
+}
+
+```
+
+## Kafka配置
+
+```java
+/**
+ * spring kafka 工具类
+ * 
+ **/
+@Component
+public class KafkaService
+{
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
+
+    public void send(String topic, Object obj) {
+        //发送消息
+        ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(StringUtils.isEmpty(topic) ? TOPIC_DEFAULT : topic, obj);
+        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                //发送失败的处理
+                System.out.println("消息发送失败");
+                throw new KafkaException(throwable.getMessage());
+            }
+
+            @Override
+            public void onSuccess(SendResult<String, Object> stringObjectSendResult) {
+                System.out.println("消息发送成功");
+            }
+        });
     }
 }
 
