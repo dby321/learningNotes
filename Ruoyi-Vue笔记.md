@@ -3392,10 +3392,41 @@ WebFlux是Spring 5引入的响应式编程框架，具有以下优势：
 - 更好地应对突发流量
 
 ```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.server.RequestPredicates;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.RouterFunctions;
+import com.ivu.gateway.handler.ValidateCodeHandler;
+
+/**
+ * 路由配置信息
+ * 
+ */
+@Configuration
+public class RouterFunctionConfiguration
+{
+    @Autowired
+    private ValidateCodeHandler validateCodeHandler;
+
+    @Bean
+    public RouterFunction<ServerResponse> routerFunction()
+    {
+        return RouterFunctions.route(
+                RequestPredicates.GET("/code").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)),
+                validateCodeHandler);
+    }
+}
+```
+
+
+
+```java
 /**
  * 验证码获取 handler
  * 
- * @author ivu
  */
 @Component
 public class ValidateCodeHandler implements HandlerFunction<ServerResponse>
