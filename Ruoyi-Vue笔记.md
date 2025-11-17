@@ -3363,3 +3363,67 @@ public class KafkaService
 
 ```
 
+## 验证码
+
+WebFlux是Spring 5引入的响应式编程框架，具有以下优势：
+
+- 非阻塞I/O：验证码生成涉及图片处理和Redis操作，使用非阻塞方式可以提高并发处理能力
+
+- 资源利用率高：相比传统Servlet，在高并发场景下能更好地利用系统资源
+
+- 响应速度快：对于简单的验证码生成这种I/O密集型操作，响应式处理更加高效
+
+  
+
+传统Servlet处理方式的局限：
+
+- 每个请求占用一个线程
+
+- 在高并发下需要大量线程资源
+
+- 线程切换开销大
+
+  
+
+而WebFlux的事件驱动模型：
+
+- 少量线程处理大量请求
+- 通过事件循环机制提高效率
+- 更好地应对突发流量
+
+```java
+/**
+ * 验证码获取 handler
+ * 
+ * @author ivu
+ */
+@Component
+public class ValidateCodeHandler implements HandlerFunction<ServerResponse>
+{
+    @Autowired
+    private ValidateCodeService validateCodeService;
+
+    @Override
+    public Mono<ServerResponse> handle(ServerRequest serverRequest)
+    {
+        try
+        {
+            AjaxResult ajax = validateCodeService.createCapcha();
+            return ServerResponse.status(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(ajax));
+        }
+        catch (CaptchaException | IOException e)
+        {
+            // 记录异常日志
+            log.error("生成验证码失败", e);
+            // 返回友好的错误信息
+            AjaxResult errorResult = AjaxResult.error("验证码生成失败，请稍后重试");
+            return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(errorResult));
+        }
+    }
+}
+```
+
