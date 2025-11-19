@@ -67,7 +67,6 @@ dckr_pat_In8uOrtm4MTirXD_1-Q9w0KiCso
     "https-proxy": "http://127.0.0.1:7890"
   },
   "registry-mirrors": [
-    "https://hlgjbozg.mirror.aliyuncs.com",
     "https://ccr.ccs.tencentyun.com",
     "https://docker.rainbond.cc",
     "https://elastic.m.daocloud.io",
