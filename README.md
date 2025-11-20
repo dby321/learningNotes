@@ -3,6 +3,8 @@
 
 ![Alt](https://repobeats.axiom.co/api/embed/595f9849e48bbe3d474acbf95db4dbb98826d58a.svg "Repobeats analytics image")
 
+![Alt](https://wakatime.com/share/@e615fc2e-d42d-456e-bf15-40fea0deb9b9/26690f5d-b8c2-4a12-81c7-2803336c6069.svg)
+
 ## Git
 
 ```cmd
