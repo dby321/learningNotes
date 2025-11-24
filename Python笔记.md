@@ -177,14 +177,14 @@ markmap:
 print("Helloworld");
 print(100+200);
 print(2**10);
-print('董滨雨', '啊啊啊')
+print('waterplants', '啊啊啊')
 ```
 
 ```
 Helloworld
 300
 1024
-董滨雨 啊啊啊
+waterplants 啊啊啊
 ```
 
 ## Python基础语法
