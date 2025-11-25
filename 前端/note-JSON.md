@@ -1,4 +1,4 @@
-    
+
 # JSON(JavaScript Object Notation)
 ## JSON的作用
 - JS的对象---JSON--->Java的对象
@@ -19,4 +19,4 @@
 ## JSON的相互转换
 - JSON工具类
 - JSON字符串--->JS对象 `JSON.parse(obj)` `JSON.parse(arr)`
-- JS对象--->JSON字符串  ` var obj2={name:"董滨雨"} `   ` JSON.stringify(obj2) ` 
+- JS对象--->JSON字符串  ` var obj2={name:"Xxx"} `   ` JSON.stringify(obj2) ` 
