@@ -1,5 +1,7 @@
 # 实战篇Redis
 
+> CSDN Redis笔记：https://blog.csdn.net/qq_66345100/article/details/131986713
+
 ## 开篇导读
 
 亲爱的小伙伴们大家好，马上咱们就开始实战篇的内容了，相信通过本章的学习，小伙伴们就能理解各种redis的使用啦，接下来咱们来一起看看实战篇我们要学习一些什么样的内容
@@ -377,7 +379,7 @@
         String code = RandomUtil.randomNumbers(6);
 
         // 4.保存验证码到 session
-        session.setAttribute("code",code);
+        session.setAttribute("code",code);// session.setAttribute(SystemConstants.VERIFY_CODE, code);
         // 5.发送验证码
         log.debug("发送短信验证码成功，验证码：{}", code);
         // 返回ok
@@ -386,6 +388,18 @@
 ```
 
 * 登录
+
+> Objects.isNull和==null：
+>
+> ```java
+> // 普通判断
+> if (name == null) { ... }
+> 
+> // Stream 中过滤 null
+> list.stream().filter(Objects::isNull).forEach(...);
+> ```
+>
+> 
 
 ```java
     @Override
@@ -407,7 +421,7 @@
         User user = query().eq("phone", phone).one();
 
         //5.判断用户是否存在
-        if(user == null){
+        if(user == null){//Objects.isNull(user)
             //不存在，则创建
             user =  createUserWithPhone(phone);
         }
@@ -417,6 +431,23 @@
         return Result.ok();
     }
 ```
+
+- 根据手机号创建用户
+
+```java
+ /**
+  * 根据手机号创建用户
+  */
+private User createUserWithPhone(String phone) {
+    User user = new User();
+    user.setPhone(phone);
+    user.setNickName(SystemConstants.USER_NICK_NAME_PREFIX + RandomUtil.randomString(10));
+    this.save(user);
+    return user;
+}
+```
+
+
 
 ### 1.4、实现登录拦截功能
 
@@ -462,6 +493,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 }
 ```
+
+
 
 让拦截器生效
 
@@ -533,9 +566,9 @@ public class UserHolder {
 
 **核心思路分析：**
 
-每个tomcat中都有一份属于自己的session,假设用户第一次访问第一台tomcat，并且把自己的信息存放到第一台服务器的session中，但是第二次这个用户访问到了第二台tomcat，那么在第二台服务器上，肯定没有第一台服务器存放的session，所以此时 整个登录拦截功能就会出现问题，我们能如何解决这个问题呢？早期的方案是session拷贝，就是说虽然每个tomcat上都有不同的session，但是每当任意一台服务器的session修改时，都会同步给其他的Tomcat服务器的session，这样的话，就可以实现session的共享了
+每个tomcat中都有一份属于自己的session,假设用户第一次访问第一台tomcat，并且把自己的信息存放到第一台服务器的session中，但是第二次这个用户访问到了第二台tomcat，那么在第二台服务器上，肯定没有第一台服务器存放的session，所以此时 整个登录拦截功能就会出现问题，我们能如何解决这个问题呢？早期的方案是**session拷贝**，就是说虽然每个tomcat上都有不同的session，但是每当任意一台服务器的session修改时，都会同步给其他的Tomcat服务器的session，这样的话，就可以实现session的共享了
 
-但是这种方案具有两个大问题
+但是这种方案具有两个大问题:
 
 1、每台服务器中都有完整的一份session数据，服务器压力过大。
 
@@ -790,7 +823,40 @@ public Result queryShopById(@PathVariable("id") Long id) {
 
 ![1653322190155](.\Redis实战篇.assets\1653322190155.png)
 
+```java
+    /**
+     * 根据id查询商铺数据
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Result queryById(Long id) {
+        String key = CACHE_SHOP_KEY + id;
+        // 1、从Redis中查询店铺数据
+        String shopJson = stringRedisTemplate.opsForValue().get(key);
 
+        Shop shop = null;
+        // 2、判断缓存是否命中
+        if (StrUtil.isNotBlank(shopJson)) {
+            // 2.1 缓存命中，直接返回店铺数据
+            shop = JSONUtil.toBean(shopJson, Shop.class);
+            return Result.ok(shop);
+        }
+        // 2.2 缓存未命中，从数据库中查询店铺数据
+        shop = this.getById(id);
+
+        // 4、判断数据库是否存在店铺数据
+        if (Objects.isNull(shop)) {
+            // 4.1 数据库中不存在，返回失败信息
+            return Result.fail("店铺不存在");
+        }
+        // 4.2 数据库中存在，写入Redis，并返回店铺数据
+        stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(shop));
+        return Result.ok(shop);
+    }
+
+```
 
 ### 2.3 缓存更新策略
 
