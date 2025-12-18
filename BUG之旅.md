@@ -341,5 +341,34 @@ if (dataObj ? dataObj.suggestion : "") {
         }
 ```
 
+## 4. form enter事件提交自动刷新页面问题
 
+实际上默认情况下表单的提交行为应该是向服务器发送一个请求并刷新页面。但在现代前端框架（如Vue）中，我们通常会阻止这个默认行为，并使用JavaScript来处理表单提交。
+
+在你的情况下，问题是：
+
+1. HTML表单元素（`<form>`）有一个默认的提交行为，当你在一个表单内的输入框中按Enter键时，它会触发表单提交。
+2. 这个默认提交会导致整个页面刷新，而不是执行你定义的Vue方法。
+3. 为了防止这种情况，我们需要阻止表单的默认提交行为。
+
+我们在代码中添加的`@submit.native.prevent`就是用来阻止这个默认行为的：
+- `@submit` - 监听表单的提交事件
+- `.native` - 监听原生的DOM事件（而非Vue组件事件）
+- `.prevent` - 调用`event.preventDefault()`来阻止默认行为
+
+所以当你在输入框中按Enter键时，不会再触发页面刷新，而是按照我们的预期执行`submitForm`方法。
+
+这是使用Vue和Element UI开发中的常见技巧，用于控制表单的行为。
+
+```vue
+<el-form ref="form" :model="form" :rules="rules" label-width="80px" @keyup.enter.native="submitForm"   @submit.native.prevent>
+  <el-form-item label="品类名称" prop="categoryName">
+    <el-input v-model="form.categoryName" show-word-limit maxlength="20" placeholder="请输入品类名称" />
+  </el-form-item>
+  <el-form-item label="" >
+    <el-button type="primary" @click="submitForm" >确 定</el-button>
+    <el-button @click="cancel">取 消</el-button>
+  </el-form-item>
+</el-form>
+```
 
