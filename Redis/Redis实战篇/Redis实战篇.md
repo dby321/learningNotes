@@ -2791,7 +2791,7 @@ private static final DefaultRedisScript<Long> UNLOCK_SCRIPT;
         UNLOCK_SCRIPT.setLocation(new ClassPathResource("unlock.lua"));
         UNLOCK_SCRIPT.setResultType(Long.class);
     }
-
+// 经过以上代码改造后，我们就能够实现 拿锁比锁删锁的原子性动作了~
 public void unlock() {
     // 调用lua脚本
     stringRedisTemplate.execute(
@@ -2799,7 +2799,7 @@ public void unlock() {
             Collections.singletonList(KEY_PREFIX + name),
             ID_PREFIX + Thread.currentThread().getId());
 }
-经过以上代码改造后，我们就能够实现 拿锁比锁删锁的原子性动作了~
+
 ```
 
 小总结：
