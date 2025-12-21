@@ -2790,7 +2790,7 @@ private static final DefaultRedisScript<Long> UNLOCK_SCRIPT;
         UNLOCK_SCRIPT.setLocation(new ClassPathResource("unlock.lua"));
         UNLOCK_SCRIPT.setResultType(Long.class);
     }
-
+// 经过以上代码改造后，我们就能够实现 拿锁比锁删锁的原子性动作了~
 public void unlock() {
     // 调用lua脚本
     stringRedisTemplate.execute(
@@ -2798,14 +2798,14 @@ public void unlock() {
             Collections.singletonList(KEY_PREFIX + name),
             ID_PREFIX + Thread.currentThread().getId());
 }
-经过以上代码改造后，我们就能够实现 拿锁比锁删锁的原子性动作了~
+
 ```
 
 小总结：
 
 基于Redis的分布式锁实现思路：
 
-* 利用set nx ex获取锁，并设置过期时间，保存线程标示
+* 利用set nx ex获取锁，并设置过期时间，保存线程标识
 * 释放锁时先判断线程标示是否与自己一致，一致则删除锁
   * 特性：
     * 利用set nx满足互斥性
@@ -2818,7 +2818,7 @@ public void unlock() {
 
 **测试逻辑：**
 
-第一个线程进来，得到了锁，手动删除锁，模拟锁超时了，其他线程会执行lua来抢锁，当第一天线程利用lua删除锁时，lua能保证他不能删除他的锁，第二个线程删除锁时，利用lua同样可以保证不会删除别人的锁，同时还能保证原子性。
+第一个线程进来，得到了锁，手动删除锁，模拟锁超时了，其他线程会执行lua来抢锁，当第一个线程利用lua删除锁时，lua能保证他不能删除他的锁，第二个线程删除锁时，利用lua同样可以保证不会删除别人的锁，同时还能保证原子性。
 
 ## 5、分布式锁-redission
 
@@ -2897,15 +2897,10 @@ void testRedisson() throws Exception{
         }
         
     }
-    
-    
-    
 }
 ```
 
-在 VoucherOrderServiceImpl
-
-注入RedissonClient
+在 VoucherOrderServiceImpl注入RedissonClient
 
 ```java
 @Resource
@@ -2988,7 +2983,7 @@ redis.call('hincrby', KEYS[1], ARGV[2], 1)
 
 将当前这个锁的value进行+1 ，redis.call('pexpire', KEYS[1], ARGV[1]); 然后再对其设置过期时间，如果以上两个条件都不满足，则表示当前这把锁抢锁失败，最后返回pttl，即为当前这把锁的失效时间
 
-如果小伙帮们看了前边的源码， 你会发现他会去判断当前这个方法的返回值是否为null，如果是null，则对应则前两个if对应的条件，退出抢锁逻辑，如果返回的不是null，即走了第三个分支，在源码处会进行while(true)的自旋抢锁。
+如果小伙伴们看了前边的源码， 你会发现他会去判断当前这个方法的返回值是否为null，如果是null，则对应则前两个if对应的条件，退出抢锁逻辑，如果返回的不是null，即走了第三个分支，在源码处会进行while(true)的自旋抢锁。
 
 ```lua
 "if (redis.call('exists', KEYS[1]) == 0) then " +
