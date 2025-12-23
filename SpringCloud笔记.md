@@ -81,7 +81,11 @@
   - Spring Cloud Alibaba 官方文档：[https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md(opens new window)](https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md)
   - ⭐ Swagger 教学文档：[https://doc.xiaominfo.com/ (opens new window)](https://doc.xiaominfo.com/)（跟着快速开始直接用就好了）
 
+## RestTemplate
 
+https://www.baeldung-cn.com/rest-template
+
+https://www.baeldung-cn.com/java-lombok-constructor-annotation
 
 ## 5. Eureka服务注册与发现
 
@@ -656,6 +660,8 @@ public String getPaymentLB() {
 
 ## 9 OpenFeign远程过程调用
 
+Feign和HttpClient / OkHttp集成：提高API调用效率的最佳实践：https://ryanchan.top/archives/springboot-feign-okhttp-httpclient-best-practices
+
 > Feign可以和Eureka和Ribbon组合使用以支持负载均衡
 
 ### OpenFeign的使用
@@ -717,15 +723,20 @@ OpenFeign默认等待1秒钟，如果服务端处理需要超过1秒钟，导致
 
 对Feign接口的调用情况进行监控和输出
 
-日志级别：
+```java
+public enum Level {
+  //默认，不显示任何日志
+  NONE,
+  //仅记录请求方法、url、响应状态码及执行时间
+  BASIC,
+  //除记录BASIC信息外，还记录请求头和响应头
+  HEADERS,
+  // 除了HEADERS信息外，还有请求和响应正文以及元数据
+  FULL
+}
+```
 
-- NONE
 
-- BASIC
-
-- HEADERS
-
-- FULL
 
 ```yml
 logging:
@@ -969,7 +980,20 @@ public class PaymentHystrixMain8001 {
 
 [Spring Cloud Gateway Cors跨域问题的解决](https://www.cnblogs.com/duniqb/p/12702542.html)
 
+https://segmentfault.com/a/1190000045200059
+
+- **GlobalFilter**：适用于全局性的操作，易于实现但缺乏细粒度控制。
+- **GatewayFilter**：提供细粒度控制，可以针对特定路由应用，通过 `@Component` 注解自动扫描。
+- **AbstractGatewayFilterFactory**：提供更高级别的定制性和灵活性，适用于复杂的场景，并且可以通过 YAML 文件来配置，同样通过 `@Component` 注解自动扫描
+
 > 什么是websocket，什么是netty，什么是非阻塞IO？
+
+| 阶段                  | 组件                               | 功能                                                         |
+| --------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| **1. 客户端请求**     | 浏览器/APP                         | 发起请求，携带 Token（如 JWT）                               |
+| **2. 网关层**         | `GlobalFilter`                     | - 登录校验 - 将用户信息提取并放入请求头（如 `X-User-ID`） - 转发请求到下游微服务 |
+| **3. 微服务 A**       | `HandlerInterceptor`               | - 从请求头获取用户信息 - 存入 `ThreadLocal`，供业务逻辑使用  |
+| **4. 调用其他微服务** | `OpenFeign` + `RequestInterceptor` | - 在 Feign 请求前拦截 - 将当前线程中的用户信息重新写入请求头 - 保证调用链中用户上下文不丢失 |
 
 ### 概述
 
