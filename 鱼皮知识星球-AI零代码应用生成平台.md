@@ -170,3 +170,16 @@ knife4j:
 - 下方展示版权信息，独立创建GlobalFooter组件，位置十种固定在底部，内容为：编程导航原创项目 by 千里水草
 ```
 
+按这个顺序操作，通常可以消除红线：
+
+1. 重启 Vue 语言服务
+   
+   - 打开命令面板： Cmd + Shift + P
+   - 输入并执行： Vue: Restart Vue Language Server
+2. 如果还不行，再重载窗口
+   
+   - 命令面板： Developer: Reload Window
+3. 确保已经安装并启用：
+   
+   - Vue - Official（原 Volar）
+   - TypeScript 使用“工作区版本”（而不是内置版本）
