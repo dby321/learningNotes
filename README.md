@@ -84,5 +84,13 @@ dckr_pat_In8uOrtm4MTirXD_1-Q9w0KiCso
 }
 ```
 
+## CMD常见命令
+
+查询占用端口10086的进程PID
+
+```cmd
+netstat -ano | findstr "10086" 
+```
+
 
 
