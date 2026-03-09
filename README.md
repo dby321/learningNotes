@@ -93,5 +93,3 @@ netstat -ano | findstr "10086"
 ```
 
 
-
-Db 230
