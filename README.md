@@ -92,4 +92,3 @@ dckr_pat_In8uOrtm4MTirXD_1-Q9w0KiCso
 netstat -ano | findstr "10086" 
 ```
 
-
